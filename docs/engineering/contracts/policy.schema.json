@@ -8,7 +8,13 @@
     },
     "epoch": {
       "type": "integer",
-      "minimum": 0
+      "minimum": 0,
+      "description": "Durable monotonic snapshot sequence, not a timestamp. An unchanged scoped snapshot retains its exact signed payload; equal sequence with different payload is invalid."
+    },
+    "visibility_scope": {
+      "type": "string",
+      "enum": ["official", "internal"],
+      "description": "Signed visibility bucket added by ADR 0007. Optional for legacy response compatibility; new clients keep legacy responses in a separate bucket."
     },
     "issued_at": {
       "$ref": "domain.schema.json#/$defs/UtcTime"

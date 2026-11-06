@@ -42,8 +42,9 @@ class AppUpdater(private val repository: HallRepository) {
         require(current.signingInfo!!.apkContentsSigners.any { sha256(it.toByteArray()) == approved } && next.signingInfo!!.apkContentsSigners.any { sha256(it.toByteArray()) == approved }) { "应用更新签名与已安装版本不一致" }
         require(next.packageName == repository.context.packageName && next.longVersionCode == metadata.getLong("version_code"))
         repository.operationLock.withLock {
-            require(repository.dao.unfinished().isEmpty()) { "请先退出游戏，再准备应用更新" }
+            repository.requireIdle()
             val saves = SaveManager(repository)
+            saves.recoverAllUnderOperationLock()
             repository.dao.allGames().filter { it.activeRelease.isNotEmpty() }.forEach { game ->
                 if (repository.saveRoot(game.id).walkTopDown().any { it.isFile }) saves.backupUnderOperationLock(game.id, "before-app-update")
             }

@@ -40,7 +40,7 @@ class GameActivity : NativeActivity() {
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         val pending = GameProcess.context
-        if (pending == null || GameProcess.consumed || intent.getStringExtra("nonce") != pending.optString("nonce") || intent.getStringExtra("session_id") != pending.optString("session_id")) {
+        if (pending == null || GameProcess.lease == null || GameProcess.consumed || intent.getStringExtra("nonce") != pending.optString("nonce") || intent.getStringExtra("session_id") != pending.optString("session_id")) {
             // NativeActivity must never load code for an unauthenticated or replayed launch.
             finish(); Process.killProcess(Process.myPid()); return
         }

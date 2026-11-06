@@ -28,6 +28,8 @@ interface HallDao {
     @Query("DELETE FROM transfers WHERE id=:id") suspend fun deleteTransfer(id: String)
     @Query("SELECT * FROM installs WHERE gameId=:gameId AND releaseId=:releaseId") suspend fun install(gameId: String, releaseId: String): InstallRecord?
     @Query("SELECT * FROM installs WHERE gameId=:gameId ORDER BY installed DESC") suspend fun installs(gameId: String): List<InstallRecord>
+    @Query("SELECT * FROM installs") fun installed(): Flow<List<InstallRecord>>
+    @Query("SELECT * FROM installs") suspend fun allInstalls(): List<InstallRecord>
     @Upsert suspend fun putInstall(install: InstallRecord)
     @Query("DELETE FROM installs WHERE gameId=:gameId AND releaseId=:releaseId") suspend fun deleteInstall(gameId: String, releaseId: String)
     @Query("SELECT * FROM sessions ORDER BY started DESC LIMIT 1") fun latestSession(): Flow<SessionRecord?>
@@ -35,7 +37,9 @@ interface HallDao {
     @Query("SELECT * FROM sessions WHERE state NOT IN ('ended','failed','cancelled','crashed') ORDER BY started DESC") suspend fun unfinished(): List<SessionRecord>
     @Upsert suspend fun putSession(session: SessionRecord)
     @Query("SELECT * FROM facts WHERE `key`=:key") suspend fun fact(key: String): Fact?
+    @Query("SELECT * FROM facts WHERE `key`=:key") fun observeFact(key: String): Flow<Fact?>
     @Upsert suspend fun putFact(fact: Fact)
+    @Query("DELETE FROM facts WHERE `key`=:key") suspend fun deleteFact(key: String)
 }
 
 @Database(entities = [GameRecord::class, TransferRecord::class, InstallRecord::class, SessionRecord::class, Fact::class], version = 1, exportSchema = false)

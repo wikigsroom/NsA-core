@@ -11,6 +11,7 @@ import java.io.RandomAccessFile
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.util.zip.ZipFile
+import kotlinx.coroutines.sync.withLock
 
 fun atomicJson(file: File, json: JSONObject) {
     file.parentFile!!.mkdirs()
@@ -63,7 +64,10 @@ class Installation(private val repository: HallRepository) {
         }
         require(total == checkedBytes(manifest.getString("unpacked_bytes")) && total == checkedBytes(index.getString("unpacked_bytes")))
         atomicJson(journalFile, journal.put("phase", "EXTRACTED"))
-        atomicJson(File(staging, ".file-index.json"), index)
+        val rawIndex = File(File(repository.transferRoot, safeId(record.id)), "file_index.json")
+        val expectedIndex = manifest.getJSONObject("file_index")
+        require(rawIndex.length() == checkedBytes(expectedIndex.getString("bytes")) && sha256(rawIndex) == expectedIndex.getString("sha256"))
+        rawIndex.inputStream().use { input -> File(staging, ".file-index.json").outputStream().use { output -> input.copyTo(output); output.fd.sync() } }
         atomicJson(File(staging, ".ready.json"), JSONObject().put("release_id", record.releaseId).put("manifest_sha256", manifest.getString("_verified_sha256")).put("file_count", entries.size))
         syncDirectory(staging)
         atomicJson(journalFile, journal.put("phase", "VERIFIED"))
@@ -96,6 +100,7 @@ class Installation(private val repository: HallRepository) {
         journalFile.delete(); syncDirectory(journals)
     }
     private suspend fun activate(gameId: String, releaseId: String, manifest: JSONObject) {
+        require(StorageReconciliation(repository).installationProblem(InstallRecord(gameId, releaseId, manifest.toString())) == null) { "安装发布校验未通过，已保留恢复记录" }
         repository.database.withTransaction {
             repository.dao.putInstall(InstallRecord(gameId, releaseId, manifest.toString()))
             val game = repository.dao.game(gameId) ?: error("游戏资料不存在")
@@ -125,12 +130,20 @@ class Installation(private val repository: HallRepository) {
             file.delete()
         }
     }
-    suspend fun repair(gameId: String): List<String> {
-        require(repository.dao.unfinished().none { it.gameId == gameId }) { "请先退出游戏" }
+    suspend fun repair(gameId: String): List<String> = repository.operationLock.withLock {
+        repository.requireIdle(gameId)
         val game = repository.dao.game(gameId) ?: error("游戏不存在")
+        val install = repository.dao.install(gameId, game.activeRelease) ?: error("安装记录缺失")
         val root = repository.releaseRoot(gameId, game.activeRelease)
+        val problem = StorageReconciliation(repository).installationProblem(install)
+        if (problem != null) {
+            repository.dao.putInstall(install.copy(state = "repair_required", healthy = false))
+            return@withLock listOf(problem)
+        }
         val index = strictObject(File(root, ".file-index.json").readBytes())
-        return index.getJSONArray("files").objects().mapNotNull { expected -> val path = safeChild(root, expected.getString("path")); if (!path.isFile || path.length() != checkedBytes(expected.getString("bytes")) || sha256(path) != expected.getString("sha256")) expected.getString("path") else null }
+        val bad = index.getJSONArray("files").objects().mapNotNull { expected -> val path = safeChild(root, expected.getString("path")); if (!path.isFile || path.length() != checkedBytes(expected.getString("bytes")) || sha256(path) != expected.getString("sha256")) expected.getString("path") else null }
+        repository.dao.putInstall(install.copy(state = if (bad.isEmpty()) "ready" else "repair_required", healthy = install.healthy && bad.isEmpty()))
+        bad
     }
 }
 

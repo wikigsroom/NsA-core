@@ -29,6 +29,7 @@ from .contracts import OPENAPI, strict_json, validate
 from .crypto import Signer, canonical, digest, seal, token_hash, unseal
 from .db import Audit, Base, Conflict, Record, change, connect, create, rows
 from .storage import Objects
+from .policy import initialize_policy_sequence, policy_snapshot
 
 logger = logging.getLogger('nsa.contracts')
 
@@ -60,6 +61,7 @@ class Platform:
         self.engine, self.sessions = connect(settings.database_url)
         if settings.mode != 'production':
             Base.metadata.create_all(self.engine)
+            initialize_policy_sequence(self.sessions)
         self.signer, self.objects, self.auth = Signer(settings), Objects(settings), Auth(settings)
         self.limits = defaultdict(deque)
         self.rate_lock = Lock()
@@ -261,9 +263,7 @@ class Platform:
             if not self.visible(db, release, actor): raise ApiError('RELEASE_BLOCKED', 'Release was unlisted or blocked', 403)
             return self.download_grant(row.identity, data, actor.identity)
         if op == 'getReleasePolicies':
-            epoch = max([r.updated for r in rows(db, 'release')] + [0])
-            policies = [{'release_id': r.identity, 'state': r.state, 'reason_code': r.data().get('policy_reason', 'publication_state')} for r in rows(db, 'release') if r.state in ('published', 'blocked', 'unlisted') and (r.data()['channel'] != 'internal' or 'internal_content' in actor.scopes)]
-            return self.signer.envelope('policy', {'policy_schema': 1, 'epoch': epoch, 'issued_at': utc(), 'releases': policies, 'revoked_key_ids': []})
+            return policy_snapshot(db, self.signer, 'internal_content' in actor.scopes)
         if op == 'getAppUpdate':
             candidates = [r for r in rows(db, 'app_update') if r.state == 'published']
             if not candidates: return None

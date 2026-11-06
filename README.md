@@ -1,5 +1,7 @@
 # NsA · Unified Android game hall
 
+The new [recovery correction round](docs/hall/recovery-round-2026-11-07.md) implements the audited policy, process ownership and save-exchange changes. Its checks and installation status are tracked separately from the historical APK/media below. The other project's phone test is preserved.
+
 [简体中文](README.zh-CN.md) · [Detailed setup and usage](docs/hall/README.md) · [Implementation status](docs/hall/implementation-status.md) · [Product requirements](docs/product/README.md) · [Engineering baseline](docs/engineering/README.md)
 
 **One installed app: discover → download → verify and install → play in landscape → save and return to the portrait hall.**

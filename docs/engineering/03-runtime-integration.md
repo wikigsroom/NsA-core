@@ -1,5 +1,7 @@
 # 03 · 原生模块、进程、IPC 与启动协议
 
+实施补充见 [ADR 0007](decisions/0007-policy-runtime-save-recovery.md)：游戏进程全生命周期持有内核租约，主进程丢失后按持久 session/generation/nonce 重连；不能只凭数据库行判定运行中或结束。未知归属继续保护资源与存档，确认租约释放后才登记终止。新增私有 IPC 7/8 不改变 bootstrap ABI v1；实际主进程丢失恢复仍须真机验收。
+
 ## 1. 模块注册
 
 APK 内固定 bootstrap 和 [runtime-registry.schema.json](contracts/runtime-registry.schema.json)。注册表被 APK 签名保护；library_name 只从该表选择，slot、SONAME和摘要唯一，禁止重复默认libdmhost覆盖。模块对应 core commit、profile digest、完整 module Build ID、shader链、驱动与settings schema。

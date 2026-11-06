@@ -1,5 +1,7 @@
 # Implementation and verification record
 
+New source batch / 新源码批次：[恢复与存档修正轮次](recovery-round-2026-11-07.md)单独记录 APP-05、APP-08、SAVE-04 的修正与集中检查。本页此前的 APK、手机操作与素材证据保留原构建身份，不自动适用于新源码。
+
 Updated 2026-11-07, Asia/Taipei. Internal development version; full game/device and production acceptance remain open. Merged source `3c096c8` has been pushed to `origin/main`, retaining remote main `4d1348c` and feature `8709245`. The physical device is a Motorola edge plus, Android 12 / API 31, arm64-v8a, Adreno 650, with 4096-byte pages.
 
 The implementation includes the portrait Compose hall, persisted downloads, signed ZIP64 installation, save exchange and backups, isolated native runtime slots, catalogue/worker/operations services, native Windows tooling and bilingual documentation. See the [90-item source map](requirement-coverage.md), [operating guide](README.md), [中文手册](README.zh-CN.md), [reviewed media](../media/README.md), [measured storage](storage.md), [next device procedure](device-validation.md), [machine-readable execution summary](verification/2026-11-07-main.json) and [targeted source review](source-review.md). Source mapping is not acceptance of every rule.

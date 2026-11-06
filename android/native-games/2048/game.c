@@ -5,6 +5,7 @@
 #include <android/native_window.h>
 #include <aaudio/AAudio.h>
 #include <fcntl.h>
+#include <errno.h>
 #include <math.h>
 #include <pthread.h>
 #include <stdatomic.h>
@@ -46,13 +47,25 @@ static void event(const char *type, uint32_t save) {
 static uint32_t random_next(void) { uint32_t x = state.random; x ^= x << 13; x ^= x >> 17; x ^= x << 5; return state.random = x ? x : 0x13579bdf; }
 static uint32_t checksum(State *s) { const unsigned char *p = (const unsigned char *)s; uint32_t h = 2166136261u; for (size_t i = 0; i < sizeof *s - 4; i++) h = (h ^ p[i]) * 16777619u; return h; }
 static int save(void) {
-    char current[4096], next[4096]; snprintf(current, sizeof current, "%s/state.dat", context.save_root); snprintf(next, sizeof next, "%s/state.new", context.save_root);
+    char current[4096], next[4096], parent[4096];
+    if (snprintf(current, sizeof current, "%s/state.dat", context.save_root) >= sizeof current ||
+        snprintf(next, sizeof next, "%s/../.2048-state.tmp", context.save_root) >= sizeof next ||
+        snprintf(parent, sizeof parent, "%s/..", context.save_root) >= sizeof parent) return -1;
     state.magic = 0x4e534132; state.version = 1; state.checksum = checksum(&state);
     int file = open(next, O_WRONLY | O_CREAT | O_TRUNC, 0600);
     if (file < 0) return -1;
-    ssize_t count = write(file, &state, sizeof state); int error = fsync(file); close(file);
-    if (count != sizeof state || error || rename(next, current)) return -1;
+    size_t count = 0;
+    while (count < sizeof state) {
+        ssize_t n = write(file, (const char *)&state + count, sizeof state - count);
+        if (n < 0 && errno == EINTR) continue;
+        if (n <= 0) { close(file); unlink(next); return -1; }
+        count += (size_t)n;
+    }
+    int error = fsync(file); if (close(file)) error = -1;
+    if (error || rename(next, current)) { unlink(next); return -1; }
     int directory = open(context.save_root, O_RDONLY | O_DIRECTORY); if (directory < 0) return -1;
+    error = fsync(directory); close(directory); if (error) return -1;
+    directory = open(parent, O_RDONLY | O_DIRECTORY); if (directory < 0) return -1;
     error = fsync(directory); close(directory); if (error) return -1;
     event("save_committed", ++commit_sequence); return 0;
 }

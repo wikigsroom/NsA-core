@@ -71,16 +71,22 @@ private val Palette = darkColorScheme(primary = Accent, onPrimary = Color(0xFF10
 @Composable fun HallApp(model: HallViewModel, activity: MainActivity) {
     val repository = model.repository
     val games by model.games.collectAsStateWithLifecycle()
+    val installs by model.installs.collectAsStateWithLifecycle()
+    val pendingSave by model.pendingSave.collectAsStateWithLifecycle()
     val transfers by model.transfers.collectAsStateWithLifecycle()
     val settings by model.settings.collectAsStateWithLifecycle()
     val catalogue by repository.catalog.collectAsStateWithLifecycle()
     val networkError by repository.catalogueError.collectAsStateWithLifecycle()
     val catalogueUpdated by repository.catalogueUpdated.collectAsStateWithLifecycle()
+    val hasCache by repository.hasCatalogueCache.collectAsStateWithLifecycle()
+    val ready by repository.ready.collectAsStateWithLifecycle()
+    val initializationError by repository.initializationError.collectAsStateWithLifecycle()
     val loading by repository.busy.collectAsStateWithLifecycle()
     val working by model.working.collectAsStateWithLifecycle()
     val notice by model.notice.collectAsStateWithLifecycle()
     val launchMessage by model.controller.message.collectAsStateWithLifecycle()
     val launching by model.controller.launching.collectAsStateWithLifecycle()
+    val protectedRuntime by model.controller.protectedRuntime.collectAsStateWithLifecycle()
     val latest by model.session.collectAsStateWithLifecycle()
     var tab by rememberSaveable { mutableStateOf("discover") }
     var route by rememberSaveable { mutableStateOf("root") }
@@ -97,10 +103,11 @@ private val Palette = darkColorScheme(primary = Accent, onPrimary = Color(0xFF10
     var cellular by rememberSaveable { mutableStateOf(false) }
     var experimental by rememberSaveable { mutableStateOf(false) }
     var keepSaves by rememberSaveable { mutableStateOf(true) }
-    var importArchive by remember { mutableStateOf<Pair<File, JSONObject>?>(null) }
+    var restoredCatalogueContext by rememberSaveable { mutableStateOf(false) }
     var resultText by rememberSaveable { mutableStateOf("") }
     val scope = rememberCoroutineScope()
     val selectedRecord = games.firstOrNull { it.id == selected }
+    val selectedInstall = installs.firstOrNull { it.gameId == selected && it.releaseId == selectedRecord?.activeRelease }
     val selectedTransfer = transfers.firstOrNull { it.gameId == selected && it.state !in listOf("completed", "cancelled") }
     val visibleCatalogue = catalogue.filter { summary ->
         val state = summary.optJSONObject("compatibility")?.optString("status")
@@ -110,16 +117,28 @@ private val Palette = darkColorScheme(primary = Accent, onPrimary = Color(0xFF10
             else -> state == "verified"
         }
     }
-    val export = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/zip")) { uri -> if (uri != null) model.perform { SaveManager(repository).exportTo(selected, uri); model.notice.value = "存档已导出，请妥善保存备份文件" } }
-    val import = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri -> if (uri != null) model.perform { val inspected = SaveManager(repository).inspectImport(selected, uri); withContext(Dispatchers.Main) { importArchive = inspected; dialog = "import" } } }
+    val export = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/zip")) { uri -> model.saveResult("export", uri) }
+    val import = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri -> model.saveResult("import", uri) }
     val notifications = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { enabled -> model.perform { repository.preferences.boolean("notifications", enabled) } }
     fun go(next: String) { if (next != route) { backStack = ArrayList(if (route == "root") listOf("root") else (backStack + route).takeLast(16)); route = next } }
     fun back() { route = backStack.lastOrNull() ?: "root"; backStack = ArrayList(backStack.dropLast(1)) }
     fun openGame(id: String, next: String = "detail") { selected = id; detail = null; go(next); detailRequest++ }
-    fun startGame() { model.launch(activity, selected) }
+    fun startGame() {
+        val game = games.firstOrNull { it.id == selected }
+        if (installs.none { it.gameId == selected && it.releaseId == game?.activeRelease && it.state == "ready" }) go("repair") else model.launch(activity, selected)
+    }
     fun transferAction(id: String, action: String) { if (action == "cancel") { cancelTransfer = id; dialog = "cancel-transfer" } else model.perform { repository.transferAction(id, action) } }
-    LaunchedEffect(route, selected, detailRequest) {
-        if (route in listOf("detail", "game-update") && selected.isNotEmpty() && detail == null) {
+    LaunchedEffect(ready) {
+        if (ready && !restoredCatalogueContext) { query = repository.catalogueContext.value.optString("query"); genre = repository.catalogueContext.value.optString("genre"); restoredCatalogueContext = true }
+    }
+    LaunchedEffect(ready, pendingSave?.optString("id"), pendingSave?.optString("stage")) {
+        val pending = pendingSave
+        if (ready && pending?.optString("stage") == "picker") model.openSavePicker(pending.getString("id")) { kind ->
+            if (kind == "export") export.launch("${pending.getString("game_id")}-${System.currentTimeMillis()}.nsa-save.zip") else import.launch(arrayOf("application/zip", "application/octet-stream"))
+        }
+    }
+    LaunchedEffect(ready, route, selected, detailRequest) {
+        if (ready && route in listOf("detail", "game-update") && selected.isNotEmpty() && detail == null) {
             model.perform { val restored = repository.detail(selected); withContext(Dispatchers.Main) { if (selected == restored.getJSONObject("game").getString("game_id")) detail = restored } }
         }
     }
@@ -127,7 +146,7 @@ private val Palette = darkColorScheme(primary = Accent, onPrimary = Color(0xFF10
     MaterialTheme(colorScheme = Palette) {
         BackHandler(enabled = route != "root" || tab != "discover") { if (route != "root") back() else tab = "discover" }
         Scaffold(containerColor = Bg, bottomBar = {
-            if (settings.welcomed && route == "root") NavigationBar(containerColor = Bg, tonalElevation = 0.dp, modifier = Modifier.border(BorderStroke(1.dp, Border))) {
+            if (ready && settings.welcomed && route == "root") NavigationBar(containerColor = Bg, tonalElevation = 0.dp, modifier = Modifier.border(BorderStroke(1.dp, Border))) {
                 listOf(Triple("discover", "发现游戏", Icons.Outlined.Explore), Triple("library", "我的游戏", Icons.Outlined.SportsEsports), Triple("downloads", "下载", Icons.Outlined.Download), Triple("settings", "设置", Icons.Outlined.Settings)).forEach { (key, label, icon) ->
                     NavigationBarItem(selected = tab == key, onClick = { tab = key; query = "" }, icon = { BadgedBox(badge = { if (key == "downloads" && transfers.any { it.state !in listOf("completed", "cancelled") }) Badge(containerColor = Accent, contentColor = Bg) { Text(transfers.count { it.state !in listOf("completed", "cancelled") }.toString()) } }) { Icon(icon, label) } }, label = { Text(label, maxLines = 1) }, colors = NavigationBarItemDefaults.colors(selectedIconColor = Accent, selectedTextColor = Accent, indicatorColor = Accent.copy(alpha = .12f), unselectedIconColor = Secondary, unselectedTextColor = Secondary))
                 }
@@ -144,13 +163,18 @@ private val Palette = darkColorScheme(primary = Accent, onPrimary = Color(0xFF10
                         Spacer(Modifier.weight(1f))
                         if (loading || working) CircularProgressIndicator(Modifier.size(20.dp), strokeWidth = 2.dp)
                     }
-                    if (!settings.welcomed) Welcome { model.perform { repository.preferences.boolean("welcome", true); repository.refresh() } }
+                    if (!ready) {
+                        PageHeading("正在恢复本地数据", "核对安装、下载任务与存档，完成后显示游戏大厅。")
+                        if (initializationError.isBlank()) LinearProgressIndicator(Modifier.fillMaxWidth())
+                        else MessageCard("恢复尚未完成", initializationError, Icons.Outlined.Restore, "重试恢复") { model.initialize() }
+                    }
+                    else if (!settings.welcomed) Welcome { model.perform { repository.preferences.boolean("welcome", true); repository.refresh() } }
                     else pageStates.SaveableStateProvider(if (route == "root") tab else "$tab/$route/$selected") { when (route) {
                         "root" -> when (tab) {
                             "discover" -> LazyColumn(verticalArrangement = Arrangement.spacedBy(16.dp), contentPadding = PaddingValues(bottom = 24.dp)) {
                                 item { PageHeading("发现游戏", "找到下一段属于你的旅程") }
                                 item { SearchField(query, { query = it }, { go("search"); model.refresh(query, genre) }) }
-                                if (networkError.isNotEmpty()) item { MessageCard("暂时无法更新目录", "正在展示缓存资料（" + catalogueUpdated.ifBlank { "时间未知" } + "）。已安装游戏仍可按离线策略运行。", Icons.Outlined.CloudOff, "重试") { model.refresh() } }
+                                if (networkError.isNotEmpty()) item { MessageCard("暂时无法更新目录", if (hasCache) "正在展示缓存资料（" + catalogueUpdated.ifBlank { "时间未知" } + "）。已安装游戏仍可按离线策略运行。" else "此设备尚无目录缓存，请联网获取游戏列表。可在我的游戏中查看本地安装。", Icons.Outlined.CloudOff, "重试") { model.refresh(query, genre) } }
                                 item { CatalogueFilters(catalogueFilter) { catalogueFilter = it } }
                                 if (catalogue.isEmpty() && !loading) item { Empty("等待新的旅程", if (networkError.isNotBlank()) "目录连接失败，可前往网络恢复页面检查。" else "当前目录暂无可用游戏。发布后的游戏会显示在这里。", Icons.Outlined.Explore, "刷新目录") { model.refresh() } }
                                 if (catalogue.isNotEmpty() && visibleCatalogue.isEmpty()) item { Empty("当前筛选暂无游戏", "本机已验证与实验适配分别展示。也可以加载更多目录内容。", Icons.Outlined.FilterList, "查看实验游戏") { catalogueFilter = "experimental" } }
@@ -166,7 +190,7 @@ private val Palette = darkColorScheme(primary = Accent, onPrimary = Color(0xFF10
                                     item { PageHeading("我的游戏", "随时回到你的游戏世界") }
                                     item { SearchField(query, { query = it }, {}) }
                                     if (installed.isEmpty()) item { Empty(if (query.isBlank()) "游戏库等待你的第一款游戏" else "没有找到相关游戏", "前往发现游戏，选择内容并完成下载，便可在这里继续游玩。", Icons.Outlined.SportsEsports, "发现游戏") { tab = "discover"; query = "" } }
-                                    installed.firstOrNull()?.let { game -> item { Featured(JSONObject(game.summary), game, { selected = game.id; startGame() }, { openGame(game.id, "manage") }, { openGame(game.id) }) } }
+                                    installed.firstOrNull()?.let { game -> item { val usable = installs.any { it.gameId == game.id && it.releaseId == game.activeRelease && it.state == "ready" }; Featured(JSONObject(game.summary), game, { selected = game.id; startGame() }, { openGame(game.id, "manage") }, { openGame(game.id) }, if (usable) "继续游戏" else "资源需要修复") } }
                                     items(installed.drop(1).chunked(2)) { row ->
                                         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                                             row.forEach { game ->
@@ -209,7 +233,7 @@ private val Palette = darkColorScheme(primary = Accent, onPrimary = Color(0xFF10
                                 if (currentDetail.optBoolean("cached")) Notice("当前显示缓存资料；下载与更新需要重新连接目录。")
                                 Group("游戏信息") { InfoRow("下载大小", formatBytes(currentDetail.getString("download_bytes").toLong())); InfoRow("展开大小", formatBytes(currentDetail.getString("unpacked_bytes").toLong())); InfoRow("语言", currentDetail.getJSONArray("languages").strings().joinToString("、") { languageLabel(it) }); InfoRow("操作方式", currentDetail.getJSONArray("input_modes").strings().joinToString("、") { inputLabel(it) }); InfoRow("离线游玩", if (currentDetail.getBoolean("offline_permitted")) "首次准备完成后支持" else "需要联网验证") }
                                 Notice("本次完整准备至少需要 " + formatBytes(detailSpace(repository, currentDetail)) + " 可用空间（包含下载、展开、工作空间与安全预留）。已有下载任务以任务中的实际进度为准。")
-                                if (selectedRecord?.activeRelease?.isNotEmpty() == true) { PrimaryButton("继续游戏", Icons.Outlined.PlayArrow) { startGame() }; SecondaryButton("管理游戏") { go("manage") } }
+                                if (selectedRecord?.activeRelease?.isNotEmpty() == true) { PrimaryButton(if (selectedInstall?.state == "ready") "继续游戏" else "资源需要修复", Icons.Outlined.PlayArrow) { startGame() }; SecondaryButton("管理游戏") { go("manage") } }
                                 if (selectedRecord?.activeRelease != summary.getString("release_id")) when (summary.optJSONObject("compatibility")?.optString("status")) {
                                     "app_update_required" -> PrimaryButton("需要更新 App", Icons.Outlined.SystemUpdate) { go("app-update") }
                                     "unsupported", "blocked" -> Notice("当前设备或版本暂不支持下载，请查看适配说明。")
@@ -241,8 +265,8 @@ private val Palette = darkColorScheme(primary = Accent, onPrimary = Color(0xFF10
                         "saves" -> ScrollPage {
                             PageHeading("存档与备份", "游戏真实保存后，进度才会更新")
                             Notice("退出游戏后再操作备份。自动备份会在更新与导入前保留原有存档；卸载 App 会删除未导出的本地数据。")
-                            PrimaryButton("导出游戏存档", Icons.Outlined.Upload) { export.launch("$selected-${System.currentTimeMillis()}.nsa-save.zip") }
-                            SecondaryButton("导入存档备份") { import.launch(arrayOf("application/zip", "application/octet-stream")) }
+                            PrimaryButton("导出游戏存档", Icons.Outlined.Upload) { model.beginSave(selected, "export", route) }
+                            SecondaryButton("导入存档备份") { model.beginSave(selected, "import", route) }
                             Group("本地备份") {
                                 val backups = File(activity.filesDir, "players/local/backups/$selected").listFiles()?.sortedByDescending { it.lastModified() }.orEmpty()
                                 if (backups.isEmpty()) Text("暂无自动备份", color = Secondary)
@@ -306,7 +330,8 @@ private val Palette = darkColorScheme(primary = Accent, onPrimary = Color(0xFF10
                         "network-error" -> ScrollPage {
                             PageHeading("恢复目录连接", "已安装内容与存档仍保留在本机")
                             Notice(networkError.ifBlank { "请确认网络连接正常，或稍后重试。" })
-                            PrimaryButton("重新连接", Icons.Outlined.Refresh) { model.refresh(); route = "root" }
+                            Notice(if (hasCache) "目录缓存更新时间：${catalogueUpdated.ifBlank { "时间未知" }}。当前缓存包含 ${catalogue.size} 款游戏。" else "尚无可用目录缓存。联网获取目录后，游戏列表才会显示内容。")
+                            PrimaryButton("重新连接", Icons.Outlined.Refresh) { model.refresh(query, genre); back() }
                             SecondaryButton("打开系统网络设置") { activity.startActivity(Intent(AndroidSettings.ACTION_WIRELESS_SETTINGS)) }
                             SecondaryButton("前往我的游戏") { tab = "library"; route = "root" }
                         }
@@ -324,7 +349,7 @@ private val Palette = darkColorScheme(primary = Accent, onPrimary = Color(0xFF10
         }
         if (notice.isNotEmpty()) AlertDialog(onDismissRequest = model::dismissNotice, title = { Text("操作提示") }, text = { Text(notice) }, confirmButton = { TextButton(onClick = model::dismissNotice) { Text("知道了") } })
         if (launching) AlertDialog(onDismissRequest = {}, title = { Text("正在启动游戏") }, text = { Column(verticalArrangement = Arrangement.spacedBy(16.dp)) { LinearProgressIndicator(Modifier.fillMaxWidth()); Text(launchMessage.ifEmpty { "检查组件、资源与存档，准备进入横屏。" }) } }, confirmButton = { TextButton(onClick = { model.controller.cancel() }) { Text("取消启动") } })
-        if (!launching && launchMessage.isNotEmpty()) AlertDialog(onDismissRequest = { model.controller.message.value = "" }, title = { Text("游戏运行提示") }, text = { Text(launchMessage) }, confirmButton = { TextButton(onClick = { model.controller.message.value = "" }) { Text("返回大厅") } }, dismissButton = { if (latest?.state !in listOf(null, "ended", "failed", "cancelled", "crashed")) TextButton(onClick = { dialog = "force-exit" }) { Text("结束游戏进程") } })
+        if (!launching && launchMessage.isNotEmpty()) AlertDialog(onDismissRequest = { model.controller.message.value = "" }, title = { Text("游戏运行提示") }, text = { Text(launchMessage) }, confirmButton = { TextButton(onClick = { model.controller.message.value = "" }) { Text("返回大厅") } }, dismissButton = { Row { if (protectedRuntime) TextButton(onClick = { model.controller.reconnect() }) { Text("重试连接") }; if (protectedRuntime || latest?.state !in listOf(null, "ended", "failed", "cancelled", "crashed")) TextButton(onClick = { dialog = "force-exit" }) { Text("结束游戏进程") } } })
         when (dialog) {
             "cancel-transfer" -> AlertDialog(onDismissRequest = { dialog = "" }, title = { Text("取消此下载任务？") }, text = { Text("此任务尚未完成的下载文件会被删除。已安装的资源与存档会保留；需要保留下载进度时请选择暂停。") }, confirmButton = { TextButton(onClick = { model.perform { repository.transferAction(cancelTransfer, "cancel"); withContext(Dispatchers.Main) { dialog = ""; cancelTransfer = "" } } }) { Text("取消任务", color = Error) } }, dismissButton = { TextButton(onClick = { dialog = "" }) { Text("保留任务") } })
             "delete-saves" -> AlertDialog(onDismissRequest = { dialog = "" }, title = { Text("删除此游戏的存档？") }, text = { Text((selectedRecord?.let { JSONObject(it.summary).optString("name") } ?: selected) + "\n将删除当前存档与 App 内本地备份，无法撤销。已导出至外部位置的文件会保留。建议先导出重要进度。") }, confirmButton = { TextButton(onClick = { model.perform { repository.deleteSaves(selected); withContext(Dispatchers.Main) { dialog = ""; model.notice.value = "此游戏的本地存档与备份已删除" } } }) { Text("确认删除存档", color = Error) } }, dismissButton = { TextButton(onClick = { dialog = "" }) { Text("取消") } })
@@ -337,9 +362,25 @@ private val Palette = darkColorScheme(primary = Accent, onPrimary = Color(0xFF10
                 if (value.getJSONObject("game").getJSONObject("compatibility").optString("status") != "verified") { Text("此设备组合属于实验适配，可能无法启动或完整游玩。", color = Warning); CheckRow("我了解实验适配的限制，继续内部测试", experimental) { experimental = it } }
             } }, confirmButton = { TextButton(enabled = !working && (value.getJSONObject("game").getJSONObject("compatibility").optString("status") == "verified" || experimental), onClick = { model.perform { repository.enqueue(value, cellular, experimental); withContext(Dispatchers.Main) { dialog = ""; tab = "downloads"; route = "root" } } }) { Text("确认下载") } }, dismissButton = { TextButton(onClick = { dialog = "" }) { Text("取消") } }) }
             "delete" -> AlertDialog(onDismissRequest = { dialog = "" }, title = { Text("删除游戏资源？") }, text = { Column { Text("下载后的资源文件会被移除，之后可重新下载。") ; CheckRow("保留游戏存档与本地备份", keepSaves) { keepSaves = it }; if (!keepSaves) Text("取消勾选会同时删除本地存档，无法撤销。建议先导出备份。", color = Error) } }, confirmButton = { TextButton(onClick = { model.perform { repository.deleteResources(selected, keepSaves); withContext(Dispatchers.Main) { dialog = ""; route = "root"; tab = "library" } } }) { Text("确认删除", color = Error) } }, dismissButton = { TextButton(onClick = { dialog = "" }) { Text("取消") } })
-            "import" -> AlertDialog(onDismissRequest = { importArchive?.first?.delete(); importArchive = null; dialog = "" }, title = { Text("导入此存档备份？") }, text = { Text("已检查备份信息。继续后会校验所有文件，确认游戏与版本兼容，再备份当前存档并导入。") }, confirmButton = { TextButton(onClick = { val backup = importArchive ?: return@TextButton; model.perform { SaveManager(repository).importVerified(selected, backup.first, backup.second); withContext(Dispatchers.Main) { importArchive = null; dialog = ""; model.notice.value = "存档已导入；重新启动游戏后读取" } } }) { Text("确认导入") } }, dismissButton = { TextButton(onClick = { importArchive?.first?.delete(); importArchive = null; dialog = "" }) { Text("取消") } })
             "force-exit" -> AlertDialog(onDismissRequest = { dialog = "" }, title = { Text("强制结束游戏？") }, text = { Text("尚未保存的进度可能丢失，此操作不会生成存档成功记录。") }, confirmButton = { TextButton(onClick = { model.controller.forceExit(); dialog = "" }) { Text("结束进程", color = Error) } }, dismissButton = { TextButton(onClick = { dialog = "" }) { Text("继续等待") } })
             "player" -> { var name by remember { mutableStateOf(settings.player) }; AlertDialog(onDismissRequest = { dialog = "" }, title = { Text("本地玩家") }, text = { OutlinedTextField(name, { name = it.take(24) }, label = { Text("玩家称呼") }, singleLine = true) }, confirmButton = { TextButton(enabled = name.isNotBlank(), onClick = { model.perform { repository.preferences.string("player", name.trim()); withContext(Dispatchers.Main) { dialog = "" } } }) { Text("保存") } }, dismissButton = { TextButton(onClick = { dialog = "" }) { Text("取消") } }) }
+        }
+        pendingSave?.let { pending ->
+            val stage = pending.getString("stage"); val id = pending.getString("id")
+            val processing = working || stage in listOf("preparing", "copying", "applying", "writing")
+            if (stage !in listOf("picker", "awaiting-result")) AlertDialog(
+                onDismissRequest = { if (!processing) model.perform { repository.saveExchange.cancel(id) } },
+                title = { Text(if (stage == "failed") "存档操作尚未完成" else if (processing) "正在处理存档" else "导入此存档备份？") },
+                text = { Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    val game = games.firstOrNull { it.id == pending.getString("game_id") }
+                    Text(game?.let { JSONObject(it.summary).optString("name", it.id) } ?: pending.getString("game_id"))
+                    if (processing) { LinearProgressIndicator(Modifier.fillMaxWidth()); Text("正在校验、备份或写入存档。请等待完成，处理中无法取消。") }
+                    else if (stage == "failed") Text(pending.optString("error", "可重试或取消备份草稿。"))
+                    else { Text("备份版本：${pending.optString("source_release_id")}\n展开大小：${formatBytes(pending.optString("expanded_bytes", "0").toLong())}"); Text("确认后将重新校验全部文件、备份当前有效存档，再完成导入。导入后由你手动启动游戏。") }
+                } },
+                confirmButton = { TextButton(enabled = !processing, onClick = { if (!processing) { if (stage == "confirm") model.confirmSave(id) else model.perform { repository.saveExchange.retry(id) } } }) { Text(if (stage == "confirm") "确认导入" else "重试") } },
+                dismissButton = { TextButton(enabled = !processing, onClick = { if (!processing) model.perform { repository.saveExchange.cancel(id) } }) { Text("取消草稿") } }
+            )
         }
     }
 }
@@ -361,7 +402,7 @@ private val Palette = darkColorScheme(primary = Accent, onPrimary = Color(0xFF10
 @Composable private fun GenreChips(selected: String, onSelect: (String) -> Unit) { Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) { listOf("" to "全部类型", "adventure" to "冒险", "action" to "动作", "puzzle" to "益智", "role_playing" to "角色扮演").forEach { (key, label) -> FilterChip(selected == key, { onSelect(key) }, label = { Text(label) }, modifier = Modifier.heightIn(min = 48.dp)) } } }
 @Composable private fun CatalogueFilters(selected: String, onSelect: (String) -> Unit) { Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) { listOf("verified" to "本机可玩", "installed" to "已安装", "experimental" to "实验游戏").forEach { (key, label) -> FilterChip(selected == key, { onSelect(key) }, label = { Text(label) }, modifier = Modifier.heightIn(min = 48.dp)) } } }
 @Composable private fun Cover(summary: JSONObject, height: Int) { val url = summary.optString("cover_url"); Box(Modifier.fillMaxWidth().height(height.dp).clip(RoundedCornerShape(14.dp)).background(Brush.linearGradient(listOf(Color(0xFF29454D), Color(0xFF17202E), Color(0xFF3B3852)))), contentAlignment = Alignment.Center) { if (url.startsWith("https://")) AsyncImage(url, summary.optString("name"), Modifier.fillMaxSize(), contentScale = ContentScale.Crop) else { Icon(Icons.Outlined.SportsEsports, summary.optString("name"), Modifier.size(64.dp), tint = Accent.copy(alpha = .65f)); Text("PLAY NEXT", Modifier.align(Alignment.BottomStart).padding(16.dp), color = Accent.copy(alpha = .6f), fontSize = 11.sp, letterSpacing = 3.sp) } } }
-@Composable private fun Featured(summary: JSONObject, game: GameRecord?, onPlay: () -> Unit, onManage: (() -> Unit)?, onOpen: () -> Unit = onPlay) { Surface(shape = RoundedCornerShape(18.dp), border = BorderStroke(1.dp, Border), color = Surface) { Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) { Column(Modifier.clickable(onClick = onOpen), verticalArrangement = Arrangement.spacedBy(14.dp)) { Cover(summary, 172); Text(summary.optString("name"), fontSize = 24.sp, fontWeight = FontWeight.Bold, maxLines = 2, overflow = TextOverflow.Ellipsis) }; Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) { Icon(if (game?.activeRelease?.isNotEmpty() == true) Icons.Outlined.CheckCircle else Icons.Outlined.Explore, null, tint = Accent, modifier = Modifier.size(18.dp)); Text(if (game?.activeRelease?.isNotEmpty() == true) "已安装" else "等待探索", color = Accent, fontSize = 14.sp); if (game != null && game.lastPlayed > 0) Text("· " + DateTimeFormatter.ofPattern("MM-dd HH:mm").withZone(ZoneId.systemDefault()).format(Instant.ofEpochMilli(game.lastPlayed)), color = Secondary, fontSize = 12.sp) }; PrimaryButton(if (game?.activeRelease?.isNotEmpty() == true && onManage != null) "继续游戏" else "查看游戏", Icons.Outlined.PlayArrow, onPlay); if (onManage != null) SecondaryButton("管理游戏", onManage) } } }
+@Composable private fun Featured(summary: JSONObject, game: GameRecord?, onPlay: () -> Unit, onManage: (() -> Unit)?, onOpen: () -> Unit = onPlay, playLabel: String? = null) { Surface(shape = RoundedCornerShape(18.dp), border = BorderStroke(1.dp, Border), color = Surface) { Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) { Column(Modifier.clickable(onClick = onOpen), verticalArrangement = Arrangement.spacedBy(14.dp)) { Cover(summary, 172); Text(summary.optString("name"), fontSize = 24.sp, fontWeight = FontWeight.Bold, maxLines = 2, overflow = TextOverflow.Ellipsis) }; Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) { Icon(if (game?.activeRelease?.isNotEmpty() == true) Icons.Outlined.CheckCircle else Icons.Outlined.Explore, null, tint = Accent, modifier = Modifier.size(18.dp)); Text(if (playLabel == "资源需要修复") "待修复" else if (game?.activeRelease?.isNotEmpty() == true) "已安装" else "等待探索", color = Accent, fontSize = 14.sp); if (game != null && game.lastPlayed > 0) Text("· " + DateTimeFormatter.ofPattern("MM-dd HH:mm").withZone(ZoneId.systemDefault()).format(Instant.ofEpochMilli(game.lastPlayed)), color = Secondary, fontSize = 12.sp) }; PrimaryButton(playLabel ?: if (game?.activeRelease?.isNotEmpty() == true && onManage != null) "继续游戏" else "查看游戏", Icons.Outlined.PlayArrow, onPlay); if (onManage != null) SecondaryButton("管理游戏", onManage) } } }
 @Composable private fun CompactGame(summary: JSONObject, game: GameRecord?, onClick: () -> Unit) { Surface(onClick, shape = RoundedCornerShape(16.dp), color = Surface, border = BorderStroke(1.dp, Border)) { Column(Modifier.padding(10.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) { Cover(summary, 116); Text(summary.optString("name"), fontWeight = FontWeight.SemiBold, maxLines = 2, overflow = TextOverflow.Ellipsis); Text(if (game?.activeRelease?.isNotEmpty() == true) "● 已安装" else "查看详情", color = Accent, fontSize = 12.sp) } } }
 @Composable private fun GameRow(summary: JSONObject, game: GameRecord?, onClick: () -> Unit) { Surface(onClick, shape = RoundedCornerShape(16.dp), color = Surface, border = BorderStroke(1.dp, Border)) { Row(Modifier.padding(12.dp), verticalAlignment = Alignment.CenterVertically) { Box(Modifier.width(82.dp)) { Cover(summary, 82) }; Column(Modifier.weight(1f).padding(start = 14.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) { Text(summary.optString("name"), fontWeight = FontWeight.SemiBold, maxLines = 2, overflow = TextOverflow.Ellipsis); Text(if (game?.activeRelease?.isNotEmpty() == true) "已安装" else summary.optString("download_bytes").toLongOrNull()?.let(::formatBytes) ?: "查看游戏", color = Accent, fontSize = 12.sp) }; Icon(Icons.Outlined.ChevronRight, null, tint = Secondary) } } }
 private fun genreLabel(value: String) = mapOf("adventure" to "冒险", "action" to "动作", "puzzle" to "益智", "role_playing" to "角色扮演", "simulation" to "模拟", "strategy" to "策略", "sports" to "体育", "racing" to "竞速", "other" to "其他")[value] ?: value

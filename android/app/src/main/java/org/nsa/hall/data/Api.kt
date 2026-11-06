@@ -32,6 +32,7 @@ import javax.net.ssl.TrustManagerFactory
 import javax.net.ssl.X509TrustManager
 
 class ApiException(val code: String, message: String, val status: Int = 0, val retryAfter: Long = 0) : Exception(message)
+data class PolicyResponse(val scope: String, val endpoint: String, val envelope: JSONObject)
 class Vault(context: Context) {
     private val preferences = context.getSharedPreferences("credentials", Context.MODE_PRIVATE)
     private val key: SecretKey by lazy {
@@ -106,6 +107,17 @@ class Api(private val context: Context, private val preferences: Preferences) {
             if (error.status != 401 || error.code != "AUTH_EXPIRED") throw error
             return send(path, body, credentials(true, auth.getString("access_token")).getString("access_token"))
         }
+    }
+    suspend fun policyResponse(): PolicyResponse {
+        var auth = credentials()
+        val response = try { send("/v1/policies", null, auth.getString("access_token")) }
+        catch (error: ApiException) {
+            if (error.status != 401 || error.code != "AUTH_EXPIRED") throw error
+            auth = credentials(true, auth.getString("access_token"))
+            send("/v1/policies", null, auth.getString("access_token"))
+        }
+        val address = endpoint()
+        return PolicyResponse(sha256((address + "\u0000" + auth.getString("installation_id")).toByteArray()), address, response)
     }
     private suspend fun send(path: String, body: JSONObject?, token: String?, idempotencyKey: String? = null): JSONObject = withContext(Dispatchers.IO) {
         val url = endpoint() + path

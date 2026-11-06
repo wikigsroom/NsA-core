@@ -33,12 +33,33 @@ fun jsonEquivalent(left: Any?, right: Any?): Boolean = when {
     left is Number && right is Number -> left.toString().toBigDecimal().compareTo(right.toString().toBigDecimal()) == 0
     else -> left == right
 }
+/** Canonical UTF-8 used by service indexes, including legacy reserialized copies. */
+fun canonicalIndexBytes(value: Any): ByteArray {
+    fun encode(item: Any): String = when (item) {
+        is JSONObject -> item.keys().asSequence().sorted().joinToString(",", "{", "}") { encode(it) + ":" + encode(item.get(it)) }
+        is JSONArray -> (0 until item.length()).joinToString(",", "[", "]") { encode(item.get(it)) }
+        is String -> buildString {
+            append('"'); item.forEach { c -> when (c) {
+                '"' -> append("\\\""); '\\' -> append("\\\\"); '\b' -> append("\\b"); '\t' -> append("\\t"); '\n' -> append("\\n"); '\r' -> append("\\r"); '\u000c' -> append("\\f")
+                else -> if (c.code < 32) append("\\u%04x".format(c.code)) else append(c)
+            } }; append('"')
+        }
+        is Boolean -> item.toString()
+        is Number -> item.toString().also { require(it.matches(Regex("0|[1-9][0-9]*"))) }
+        else -> { require(item === JSONObject.NULL); "null" }
+    }
+    return encode(value).toByteArray(Charsets.UTF_8)
+}
 fun safeId(value: String): String = value.also { require(it.matches(Regex("[A-Za-z0-9][A-Za-z0-9._-]{0,159}"))) { "无效的内容标识" } }
-fun safeChild(root: File, relative: String): File {
-    require(relative.isNotEmpty() && relative.toByteArray().size <= 1024 && !relative.contains('\\') && !relative.contains(':') && !relative.startsWith('/'))
+fun safeRelativePath(relative: String): String {
+    require(relative.isNotEmpty() && relative.toByteArray().size <= 1024 && !relative.contains('\\') && !relative.contains(':') && !relative.startsWith('/') && relative.none { Character.isISOControl(it) }) { "文件路径不安全" }
     val parts = relative.split('/')
     require(parts.size <= 32 && parts.all { it.isNotEmpty() && it != "." && it != ".." && !it.endsWith('.') && !it.endsWith(' ') }) { "文件路径不安全" }
     require(java.text.Normalizer.normalize(relative, java.text.Normalizer.Form.NFC) == relative)
+    return relative
+}
+fun safeChild(root: File, relative: String): File {
+    safeRelativePath(relative)
     val file = File(root, relative)
     require(file.canonicalPath.startsWith(root.canonicalPath + File.separator))
     return file
@@ -49,11 +70,12 @@ class Trust(private val context: Context) {
     val registry: JSONObject by lazy { JSONObject(context.assets.open("runtime-registry.json").bufferedReader().use { it.readText() }) }
     val registryHash: String by lazy { sha256(context.assets.open("runtime-registry.json").use { it.readBytes() }) }
     private val keys by lazy { JSONObject(context.assets.open("trusted-keys.json").bufferedReader().use { it.readText() }).getJSONArray("keys") }
-    fun verify(raw: ByteArray, purpose: String, expected: String? = null): JSONObject {
+    fun verify(raw: ByteArray, purpose: String, expected: String? = null, installedPayload: Boolean = false): JSONObject {
         require(raw.size <= 3 * 1024 * 1024) { "签名响应过大" }
         val envelope = JSONObject(String(raw, Charsets.UTF_8))
         require(envelope.getInt("envelope_schema") == 1 && envelope.getString("purpose") == purpose && envelope.getString("algorithm") == "Ed25519")
-        require(envelope.getString("key_id") !in revokedKeys) { "此内容签名密钥已撤销" }
+        require(!installedPayload || (purpose == "release" && expected != null))
+        require(installedPayload || envelope.getString("key_id") !in revokedKeys) { "此内容签名密钥已撤销" }
         val key = (0 until keys.length()).map { keys.getJSONObject(it) }.single { it.getString("key_id") == envelope.getString("key_id") }
         require((0 until key.getJSONArray("purposes").length()).any { key.getJSONArray("purposes").getString(it) == purpose })
         val payload = Base64.decode(envelope.getString("payload_base64"), Base64.NO_WRAP)

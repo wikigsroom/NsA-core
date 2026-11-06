@@ -1,5 +1,7 @@
 # 04 · 传输、安装、空间、更新与存档事务
 
+实施补充见 [ADR 0007](decisions/0007-policy-runtime-save-recovery.md)：后台下载先等待初始化，安装恢复与写入同锁；存档入口访问或创建提交目录前先恢复交换记录。草稿归属持久保存，导入前校验完整元数据、合计与空间，每次写入前执行展开预算；目录交换与本地索引可幂等恢复。确认导入后全程禁取消/重复提交并显示进度。统一大厅构建关闭原生旁路交换入口，独立构建保留。原规则与验收编号不变，新增实现不代表真机验收通过。
+
 ## 1. 执行器与持久化
 
 TransferEngine只负责HTTP、流式写入、段校验与检查点；Android适配器负责何时可执行。API34+用户可见发起的大传输使用UIDT，API31–33采用合法前台传输，均需可见状态和持久恢复。系统停止不保证回调，不能只在onStop中保存。参见 [UIDT](https://developer.android.com/develop/background-work/background-tasks/uidt)、[前台服务时限](https://developer.android.com/develop/background-work/services/fgs/timeout)。

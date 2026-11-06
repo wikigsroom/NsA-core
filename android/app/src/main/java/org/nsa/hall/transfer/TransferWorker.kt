@@ -21,6 +21,7 @@ import org.nsa.hall.MainActivity
 import org.nsa.hall.R
 import org.nsa.hall.data.*
 import org.nsa.hall.security.*
+import org.nsa.hall.runtime.RuntimeLease
 import java.io.File
 import java.io.RandomAccessFile
 import java.util.concurrent.CancellationException
@@ -29,6 +30,7 @@ class TransferWorker(context: Context, parameters: WorkerParameters) : Coroutine
     private val repository = (context.applicationContext as HallApplication).repository
     private class Interrupted : Exception()
     override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
+        try { repository.initialize() } catch (error: CancellationException) { throw error } catch (_: Exception) { return@withContext Result.retry() }
         setForeground(notification("准备游戏下载"))
         val candidates = repository.dao.allTransfers().filter { it.intent == "run" && it.state !in listOf("completed", "cancelled", "failed") }
         var retry = false
@@ -64,7 +66,7 @@ class TransferWorker(context: Context, parameters: WorkerParameters) : Coroutine
         if (caps?.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED) != true) blockers += "network"
         val freeNetwork = caps?.hasCapability(NetworkCapabilities.NET_CAPABILITY_NOT_METERED) == true && (caps.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) || caps.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET))
         if (repository.preferences.get().wifiOnly && !freeNetwork && !row.cellularApproved) blockers += "cellular_consent"
-        if (repository.dao.unfinished().isNotEmpty()) blockers += "game_running"
+        if (repository.dao.unfinished().isNotEmpty() || RuntimeLease.held(repository.context.filesDir)) blockers += "game_running"
         if (blockers.isNotEmpty()) {
             repository.dao.putTransfer(row.copy(state = "waiting", blockers = org.json.JSONArray(blockers).toString()))
             throw Interrupted()
@@ -144,7 +146,7 @@ class TransferWorker(context: Context, parameters: WorkerParameters) : Coroutine
         repository.dao.putTransfer(row.copy(state = "verifying"))
         require(sha256(archive) == manifest.getJSONObject("archive").getString("sha256")) { "完整文件校验失败" }
         repository.operationLock.withLock {
-            require(repository.dao.unfinished().none { it.gameId == row.gameId }) { "请先退出此游戏再安装更新" }
+            repository.requireIdle()
             Installation(repository).install(row, archive, files) { checkpoint(id) }
         }
         repository.dao.transfer(id)?.let { repository.dao.putTransfer(it.copy(state = "completed", bytes = it.total, error = "")) }

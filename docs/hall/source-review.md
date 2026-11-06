@@ -1,5 +1,7 @@
 # Targeted source review / 定向源码核对
 
+Follow-up / 后续：[整批修正轮次](recovery-round-2026-11-07.md)记录新的实现与验证状态。本页以下内容及独立报告保留为已固定源码上的历史核对，不改写原始判断。
+
 2026-11-07 · Reviewed source: `cdedc7179ec1842592243a052525e021d8cf70f1`.
 
 This is a documentation handoff for the next complete implementation round. The findings below remain **open**. No application code was changed, no new APK was built, and no phone input was sent in this documentation round. The other project's physical-device test was preserved at the user's request.
