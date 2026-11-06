@@ -3,6 +3,8 @@
 # Scratch work and probe outputs (some are made from game files)
 /work/
 /build/
+# Raw design generations, reference downloads and local image-generation diagnostics
+/output/imagegen/
 
 # Android build outputs
 /nxnative/dm/android/out/

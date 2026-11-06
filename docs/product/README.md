@@ -14,6 +14,8 @@
 
 阅读顺序：先确认需求说明书中的产品边界，再看技术方案，最后按验收矩阵拆任务。功能编号用于跨文档追踪，不表示功能已经开发完成。
 
+非游戏大厅的视觉探索另见 [三套大厅设计选型](../design/hall-options/README.md)，包含参考 NS2 菜单思路的页面规划、A/B/C 方向和出图提示词。视觉方向在用户选定前不作为已冻结的实现规格。
+
 已确定的基础：
 
 - 开发仓库：[wikigsroom/NsA-core](https://github.com/wikigsroom/NsA-core)，SSH 地址 `git@github.com:wikigsroom/NsA-core.git`。
