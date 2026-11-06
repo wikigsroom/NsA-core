@@ -1,0 +1,20 @@
+{
+  "source": "USB physical Android device",
+  "application_id": "org.nsa.hall.debug",
+  "captured_at": "2026-11-06T20:45:43.941039+00:00",
+  "synthetic": false,
+  "installed_apk_sha256": "5c451e68509bcb1d6e7018475cbf1325465980b7b759c19a4d40d71ffe78a8e8",
+  "source_sha256": "a05ee445942c24744b4091c1ae599c226584118abd2a5ff33e253484b6194685",
+  "artifacts": [
+    {
+      "name": "game-detail.png",
+      "sha256": "a05ee445942c24744b4091c1ae599c226584118abd2a5ff33e253484b6194685",
+      "width": 1080,
+      "height": 2340,
+      "duration_seconds": null
+    }
+  ],
+  "transform": "copy",
+  "start_seconds": 0,
+  "requested_duration_seconds": 15
+}

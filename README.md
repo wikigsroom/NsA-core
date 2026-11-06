@@ -6,7 +6,7 @@
 
 This fork builds a unified Kotlin/Compose Android hall on [nx2android](https://github.com/shirai91/nx2android) and [nxnative](https://github.com/seedds/nxnative). The finalized D Obsidian design uses a dark portrait interface with Discovery, Library, Downloads and Settings. A separate operations site handles content rights, builds, uploads, independent review, publication, compatibility evidence and audit.
 
-**Current state: integrated development build, not accepted as a complete playable release.** New source is not device acceptance evidence. Existing standalone game results below belong to the upstream/per-game workflow; they do not establish unified-hall compatibility. Track actual builds, tests, limitations and media in the [implementation record](docs/hall/implementation-status.md).
+**Current state: built, installed internal development version; full game acceptance remains open.** The merged `main` build passes Android checks and two physical-device instrumentation tests. A preceding build passes the complete hall/2048 input-save-reload sequence. BotW reaches an imported Shrine of Resurrection scene in the merged APK; its movement, new progress save/reload and sustained performance remain unaccepted. Track exact build identities and limits in the [implementation record](docs/hall/implementation-status.md).
 
 | Layer | Concrete behavior |
 |---|---|
@@ -20,8 +20,10 @@ This fork builds a unified Kotlin/Compose Android hall on [nx2android](https://g
 Actual Android captures (the app interface currently uses Simplified Chinese):
 
 <table>
-<tr><td>Library</td><td>Settings</td><td>Saves and backups</td></tr>
-<tr><td><img src="docs/media/library.png" width="230" alt="Actual portrait game library"></td><td><img src="docs/media/settings.png" width="230" alt="Actual settings page"></td><td><img src="docs/media/saves.png" width="230" alt="Actual save management page"></td></tr>
+<tr><td>Discovery</td><td>Library</td><td>Downloads</td></tr>
+<tr><td><img src="docs/media/discovery.png" width="230" alt="Actual portrait discovery page"></td><td><img src="docs/media/library.png" width="230" alt="Actual portrait game library"></td><td><img src="docs/media/downloads.png" width="230" alt="Actual download history"></td></tr>
+<tr><td>Settings</td><td>Saves and backups</td><td>Download confirmation</td></tr>
+<tr><td><img src="docs/media/settings.png" width="230" alt="Actual settings page"></td><td><img src="docs/media/saves.png" width="230" alt="Actual save management page"></td><td><img src="docs/media/download-confirmation.png" width="230" alt="Actual size and compatibility confirmation"></td></tr>
 </table>
 
 <details>
@@ -31,7 +33,7 @@ Actual Android captures (the app interface currently uses Simplified Chinese):
 
 ![Real directional input in the original native 2048 game](docs/media/native-2048.gif)
 
-[Hall MP4](docs/media/hall-walkthrough.mp4) · [2048 MP4](docs/media/native-2048.mp4) · [All screenshots and provenance](docs/media/README.md). These are silent physical-device captures, not design renders. They demonstrate the shown sequence; game acceptance remains in the [verification record](docs/hall/implementation-status.md).
+[Hall MP4](docs/media/hall-walkthrough.mp4) · [2048 MP4](docs/media/native-2048.mp4) · [16 Android screenshots, 3 desktop screenshots and provenance](docs/media/README.md). These silent captures show the 171-byte open-source demo download and short real game input. Each artifact records its own APK identity; the gallery includes a preceding build with identical Android/service source. See the [verification record](docs/hall/implementation-status.md) and [next device-validation procedure](docs/hall/device-validation.md).
 
 </details>
 

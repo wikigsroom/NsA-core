@@ -1,14 +1,14 @@
 {
   "source": "USB physical Android device",
   "application_id": "org.nsa.hall.debug",
-  "captured_at": "2026-11-06T19:06:17.015448+00:00",
+  "captured_at": "2026-11-06T21:02:15.361217+00:00",
   "synthetic": false,
-  "installed_apk_sha256": "b1772e30ecb130bd631fd31a68cfaf99efc6d1fa91f9ee19009838a4d1a72920",
-  "source_sha256": "fff406edb544398ff0ae072e943ff86547aa3a573b5282842c73371c9b9f2351",
+  "installed_apk_sha256": "cd2b565141e81b1f7c73a1757eaa32b775495d96f0fcbd19b912b6475ed9a027",
+  "source_sha256": "a5b6b01d709d74ea1d512251f3f87304e445cde230a951f033ac28ef3b0d4c9a",
   "artifacts": [
     {
       "name": "library.png",
-      "sha256": "fff406edb544398ff0ae072e943ff86547aa3a573b5282842c73371c9b9f2351",
+      "sha256": "a5b6b01d709d74ea1d512251f3f87304e445cde230a951f033ac28ef3b0d4c9a",
       "width": 1080,
       "height": 2340,
       "duration_seconds": null

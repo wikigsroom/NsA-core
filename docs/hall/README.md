@@ -2,6 +2,8 @@
 
 [中文使用说明](README.zh-CN.md) · [Main README](../../README.md) · [Product baseline](../product/README.md) · [Engineering constraints](../engineering/README.md)
 
+[Actual verification](implementation-status.md) · [Next device run](device-validation.md) · [Execution summary](verification/2026-11-07-main.json) · [Screenshots and recordings](../media/README.md) · [Storage](storage.md)
+
 ## What runs where
 
 The main-process Application retains one runtime coordinator across Activity recreation. A prepared launch waits for a resumed hall Activity. Session creation, installation and save exchanges share a mutex, and import rechecks the currently active save compatibility group at commit. After verifying an App-update APK, the client backs up existing saves for installed games before handing it to the system installer; backup failure prevents that hand-off. Cancellation drains the pending checkpoint, and delayed process callbacks remain bound to their original session.
@@ -11,6 +13,22 @@ The Android application owns the catalogue cache, library, persisted transfer qu
 FastAPI handles installation credentials, scoped catalogue queries, compatibility evaluations, manifests, download grants, feedback, uploads and publication. The worker reads stored objects back, checks the complete archive and its indexes, and records publication verification. An independent reviewer approves records before publication. PostgreSQL and S3 are production providers; native Windows development uses SQLite and a private local directory. Neither mode needs virtualization.
 
 The APK includes a bootstrap and explicitly selected native slots. Game content is downloaded separately. Registry hashes bind the slot, profile, module IDs and shader chain; no catalogue response installs a new runtime `.so`. A fresh `:game` process runs each session. The native bootstrap owns Activity callbacks and replays existing Surface/InputQueue state. Room writes remain in the main process.
+
+```mermaid
+flowchart TD
+    Staff[Separate operations site] --> API[HTTPS catalogue and publication API]
+    API --> Worker[Archive verification and independent review]
+    Worker --> Store[Private immutable objects]
+    Hall[Portrait discovery and library] --> API
+    API --> Transfer[Signed manifest and checked download]
+    Store --> Transfer
+    Transfer --> Install[Verified local installation]
+    Install --> Game[Fresh landscape game process with compiled slot]
+    Game --> Saves[Per-game committed saves]
+    Game --> Hall
+```
+
+The target player flow is install the App → find a supported game → confirm its download → prepare resources → play → save and return. A content operator prepares and publishes each supported release beforehand. Downloading a game cannot add an absent compiled slot; that case requires an App update. The current local setup is an invited development channel, while a public downloadable App/service is a separate deployment step.
 
 ## Source and device layout
 
@@ -173,6 +191,10 @@ audible output. The current app interface is Simplified Chinese.
 Device media is first written to ignored `.gamedump/Hall/device-evidence`, with provenance. Review it for private game material and identifiers, then copy suitable app UI images and generated GIFs to `docs/media`. Recordings of game content remain private unless separately suitable for publication. Design-prototype screenshots are not runtime evidence. The [implementation status](implementation-status.md) records actual check results and remaining gates; it must be updated from real executions.
 
 The [media index](../media/README.md) links the actual screenshots, GIFs, MP4s and their hashes. The [90-item requirement map](requirement-coverage.md) connects the normative rules to source entry points and outstanding acceptance boundaries. The operations screenshots are explicitly identified as desktop web captures. Source media, personal saves and raw device diagnostics remain outside Git.
+
+The [execution summary](verification/2026-11-07-main.json) separates merged-main checks from the preceding complete hall/2048 run. The current merged APK loads BotW's imported Shrine scene; movement, a new progress save/reload, audio and combined G0 acceptance remain open. Use the [device procedure](device-validation.md) when the phone becomes available. Do not combine results from different APKs into a same-artifact acceptance claim.
+
+Completed code, documentation and reviewed media are committed and pushed to `git@github.com:wikigsroom/NsA-core.git`, branch `main`. Fetch and preserve remote updates before merging; do not force-push. Private debug provisioning/APKs, game files, keys and raw evidence stay ignored. Current historical internal runtime labels are explained in the [implementation record](implementation-status.md); issue new matching identities/releases before production.
 
 ## Troubleshooting
 

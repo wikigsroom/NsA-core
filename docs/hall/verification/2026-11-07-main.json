@@ -1,0 +1,94 @@
+{
+  "record_version": 1,
+  "date_local": "2026-11-07",
+  "timezone": "Asia/Taipei",
+  "scope": "Executed development checks; not normative game or production acceptance",
+  "formal_acceptance": "not_accepted",
+  "source": {
+    "repository": "https://github.com/wikigsroom/NsA-core",
+    "branch": "main",
+    "artifact_commit": "3c096c8f7f1892b2391f9ab254557507393abbf9",
+    "retained_remote_main": "4d1348cbfcf79c0375fe21649f9034fd9dc51c0a",
+    "preceding_feature_commit": "8709245",
+    "unchanged_between_feature_and_merge": ["android", "services", "content_tools", "devtools/hall_smoke.py"]
+  },
+  "main_apk": {
+    "application_id": "org.nsa.hall.debug",
+    "version_name": "0.1.0-dev",
+    "version_code": 1,
+    "bytes": 82203131,
+    "sha256": "cd2b565141e81b1f7c73a1757eaa32b775495d96f0fcbd19b912b6475ed9a027",
+    "distribution": "private debug artifact; not committed or published",
+    "nominal_internal_core_revision": "80340c5521b589a4dd82b89306e680c8e5174c02",
+    "identity_limit": "Historical local fixture label retained. Current compiled source is artifact_commit. Regenerate matching identities and immutable releases before production.",
+    "native_library_sha256": {
+      "nsa-2048-v1": "9ac6aad3cf6d414bd7ed421c22379452a59d0e3c0c64e92fd16f7b7ee2bce40c",
+      "botw-190-arm64-v1": "3eda71ce7ef9f6ed5234a909f7e2593772651afd36443372d83eef9c1cdda20f"
+    }
+  },
+  "device": {
+    "kind": "USB physical Android device",
+    "model": "motorola edge plus",
+    "api_level": 31,
+    "abi": "arm64-v8a",
+    "gpu": "Adreno 650",
+    "page_size_bytes": 4096,
+    "emulator_or_virtualization_used": false
+  },
+  "checks": [
+    {"name": "native_main_build", "status": "passed", "botw_sources": 145, "failed_sources": 0, "packaged_runtime_slots": 2},
+    {"name": "android_assemble_and_packaged_verification", "status": "passed"},
+    {"name": "android_jvm", "status": "passed", "passed": 6, "failed": 0},
+    {"name": "android_lint", "status": "passed"},
+    {"name": "main_device_instrumentation", "status": "passed", "passed": 2, "cases": ["measuredCapabilitiesKeepTheirWireTypes", "settingsAndRuntimeCoordinatorSurviveActivityRecreation"]},
+    {"name": "services", "status": "passed", "passed": 32, "basis": "Executed on preceding source; service source unchanged by main merge"},
+    {"name": "core_windows", "status": "passed_with_skips", "total": 131, "passed": 92, "skipped": 39, "failed": 0},
+    {"name": "contract_document_baseline", "status": "passed", "passed_groups": 8, "scope": "Documentation and machine contracts only"},
+    {"name": "hall_readme_links_and_media", "status": "passed", "markdown_documents": 9, "local_links": 519, "media_artifacts": 23, "provenance_records": 19, "checks": ["local_targets_and_anchors", "original_source_hashes", "artifact_hashes", "image_dimensions", "clip_duration_bounds", "full_clip_decode", "silent_public_videos", "actual_apk_hash_and_size"]}
+  ],
+  "scenarios": [
+    {
+      "name": "preceding_apk_hall_and_2048",
+      "status": "passed",
+      "apk_sha256": "5c451e68509bcb1d6e7018475cbf1325465980b7b759c19a4d40d71ffe78a8e8",
+      "observed": ["catalogue", "download_confirmation", "real_download_and_install", "resource_reinstall_preserves_save", "portrait_pages", "8_directional_inputs", "changed_save", "normal_exit", "fresh_process_reload", "16_rendered_tiles_match", "portrait_return"],
+      "hall_pid": 5981,
+      "game_pids": [7546, 7983],
+      "committed_and_reloaded_save_sha256": "b85235a04195b42d60b7148c0670380aceb7de37a49d9107aefa1770300be8a3",
+      "audible_output": "not_accepted",
+      "counts_as_switch_compatibility": false
+    },
+    {
+      "name": "main_apk_botw",
+      "status": "interrupted",
+      "release_id": "botw-local-v1",
+      "hall_pid": 11498,
+      "game_pid": 11728,
+      "observed": ["separate_game_process", "title", "imported_save_list", "continue_and_start_input", "imported_shrine_scene"],
+      "termination_local": "2026-11-07T05:08:24+08:00",
+      "termination": "External USB test force-stopped NsA; Android USER REQUESTED exit record",
+      "next_device_actions": "Deferred at user request to preserve the other test and finish documentation",
+      "movement": "not_accepted",
+      "new_gameplay_progress_save_and_reload": "not_accepted",
+      "audible_output": "not_accepted",
+      "sustained_performance": "not_accepted",
+      "full_playability_accepted": false
+    }
+  ],
+  "media": {
+    "android_screenshots": 16,
+    "desktop_screenshots": 3,
+    "gifs": 2,
+    "mp4s": 2,
+    "public_video_audio_tracks": 0,
+    "provenance": "Each artifact identifies its own source build and actual bytes; gallery includes two distinct APKs"
+  },
+  "remaining_gates": [
+    "Complete same-artifact hall/2048 regression on merged main",
+    "BotW movement, new progress save, normal exit and actual fresh-process reload",
+    "Combined same-APK G0 data/process/audio isolation and repeated A-B-A switching",
+    "Audible output and representative 30-minute gameplay/performance",
+    "Full P0 recovery/device matrix acceptance",
+    "Production identities, release signing, deployment and accepted content/device evidence"
+  ]
+}

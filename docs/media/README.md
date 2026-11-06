@@ -6,12 +6,20 @@ Capture with `devtools/hall_device.py`, review private information and game cont
 
 Actual captures date: 2026-11-07, Asia/Taipei. Device: Motorola edge plus, Android 12 / API 31, arm64-v8a, Adreno 650. The installed APK digest is recorded beside every USB image/clip. Source recordings, raw diagnostics and personal game saves remain private. The app interface currently uses Simplified Chinese; the project guides are bilingual.
 
+This set contains **16 Android screenshots, 3 desktop screenshots, 2 GIFs and 2 MP4s**. The library image comes from merged-main APK `cd2b565141e81b1f7c73a1757eaa32b775495d96f0fcbd19b912b6475ed9a027`; the other USB sources come from the completed hall/2048 run on APK `5c451e68509bcb1d6e7018475cbf1325465980b7b759c19a4d40d71ffe78a8e8`. Android and service source are identical between feature commit `8709245` and merge commit `3c096c8`; native upstream changes make the APKs distinct. These are separate execution records. A neighboring capture timestamp denotes when its provenance was recorded, which can be at recording completion; encoded video timestamps determine excerpt duration.
+
 | Actual Android page | Screenshot | Provenance |
 |---|---|---|
+| Discovery / 发现游戏（实验筛选） | [PNG](discovery.png) | [JSON](discovery.json) |
+| Detail, information section / 详情信息区 | [PNG](game-detail.png) | [JSON](game-detail.json) |
+| Download confirmation / 下载确认 | [PNG](download-confirmation.png) | [JSON](download-confirmation.json) |
+| Downloads and completed history / 下载与已完成记录 | [PNG](downloads.png) | [JSON](downloads.json) |
+| Prepared resources / 资源准备完成 | [PNG](installed.png) | [JSON](installed.json) |
 | Library / 我的游戏 | [PNG](library.png) | [JSON](library.json) |
 | Settings / 设置 | [PNG](settings.png) | [JSON](settings.json) |
 | Device support / 设备支持 | [PNG](device-support.png) | [JSON](device-support.json) |
 | Storage / 存储空间 | [PNG](storage.png) | [JSON](storage.json) |
+| Help and feedback / 帮助与反馈 | [PNG](feedback.png) | [JSON](feedback.json) |
 | Manage game / 管理游戏 | [PNG](manage-game.png) | [JSON](manage-game.json) |
 | Saves / 存档与备份 | [PNG](saves.png) | [JSON](saves.json) |
 | Native pause menu / 横屏暂停 | [PNG](game-pause.png) | [JSON](game-pause.json) |
@@ -21,10 +29,12 @@ Actual captures date: 2026-11-07, Asia/Taipei. Device: Motorola edge plus, Andro
 
 | Sequence | GIF | MP4 | Provenance and limits |
 |---|---|---|---|
-| Confirm download → prepare resources → library | [GIF](hall-walkthrough.gif) | [MP4](hall-walkthrough.mp4) | [JSON](hall-walkthrough.json); a continuous excerpt, approximately 38 seconds |
+| Detail → confirm download → prepared resources → library → settings | [GIF](hall-walkthrough.gif) | [MP4](hall-walkthrough.mp4) | [JSON](hall-walkthrough.json); continuous 38-second excerpt starting at source second 49 |
 | Directional input in original native 2048 | [GIF](native-2048.gif) | [MP4](native-2048.mp4) | [JSON](native-2048.json); short input excerpt, approximately 7 seconds according to encoded timestamps |
 
 The videos have no audio track. GIF conversion resizes and encodes the real frames; no design-prototype frames were inserted. Exact durations, dimensions and SHA-256 digests are in each JSON. A public clip is selected to exclude other applications and private game progress.
+
+The walkthrough uses the original 2048 fixture: 171 downloaded bytes and 41 unpacked bytes. It establishes the actual service/download/install UI flow for that fixture, rather than the transfer time of a commercial game. Completed rows are retained task history. The detail/return captures retain the actual scroll position and show the information section. Commercial game title metadata may be visible; its program, resources and personal progress are not included in these media files.
 
 The staff site is a separate **desktop web application**, captured from the real local HTTPS service. It is not an Android screenshot: [game metadata](operations-games.png), [publication management](operations-releases.png), [service health](operations-health.png), [desktop provenance](operations.json). Its browser/context were closed after capture; login credential fields were cleared before screenshots.
 

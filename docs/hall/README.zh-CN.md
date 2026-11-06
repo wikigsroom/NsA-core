@@ -2,7 +2,25 @@
 
 [English](README.md) · [项目首页](../../README.zh-CN.md) · [完整产品需求](../product/README.md) · [技术开发约束](../engineering/README.md)
 
+[实际验证](implementation-status.md) · [后续真机步骤](device-validation.md) · [机器可读执行记录](verification/2026-11-07-main.json) · [截图与录屏](../media/README.md) · [空间实测](storage.md)
+
 [90 项需求实现对照](requirement-coverage.md)关联原有 360 条细则、代码入口与验收边界；[验证记录](implementation-status.md)只登记真实执行结果。
+
+```mermaid
+flowchart TD
+    Staff[独立运营后台] --> API[HTTPS 目录与发布服务]
+    API --> Worker[归档校验与独立审核]
+    Worker --> Store[私有不可变资源对象]
+    Hall[竖屏发现与游戏库] --> API
+    API --> Transfer[签名清单与分块下载]
+    Store --> Transfer
+    Transfer --> Install[完整校验后的本地安装]
+    Install --> Game[横屏独立游戏进程与内置运行槽位]
+    Game --> Saves[按游戏隔离的已提交存档]
+    Game --> Hall
+```
+
+目标使用流程为：安装 App → 找到支持的游戏 → 确认下载 → 准备资源 → 游玩 → 保存并返回。运营人员须提前完成对应版本的适配、打包、审核和发布；缺少 App 内置运行组件的游戏先更新 App，不能仅靠资源下载获得新运行能力。当前本地方案为受邀开发渠道，公开下载的正式 App 与线上服务仍需单独部署。
 
 安装凭据在续期前加密并同步写入，临时连接失败保留待处理记录；重试复用同一回执。凭据过期返回 `AUTH_EXPIRED`/401，内容权限不足保持 403。内测邀请已消耗且恢复窗口已过时，可执行 `services/.venv/Scripts/python.exe devtools/hall_local.py init`，再执行 `hall.ps1 build` 和 `hall.ps1 install` 获取新的本地调试邀请；保留已有资源与存档，也不重新生成运行身份或已发布内容。续期回执保留 24 小时，首次登记回执为十分钟；这些恢复窗口不延长内容授权。详见 [ADR 0006](../engineering/decisions/0006-durable-credential-renewal.md)。原创 2048 采用独立 [MIT 许可](../../android/native-games/2048/LICENSE)，其他组件保留各自上游许可。
 
@@ -206,3 +224,7 @@ services/.venv/Scripts/python.exe devtools/hall_media.py --source .gamedump/Hall
 ```
 
 `all` 复测会删除并重新下载已安装的 **2048 示例资源**，默认保留存档，并核对删除、重新安装前后的存档字节一致。测试仅操作独立 NsA 调试 App，不修改原有商业游戏 App。NsA 一旦失去前台，工具会停止发送输入。视频为静音屏幕录制，不能据此认定声音验收通过。
+
+[执行记录](verification/2026-11-07-main.json)分别登记合并后的 main 与前一 APK，不能把不同 APK 的测试拼成同一构建通过。main 已将《旷野之息》原始存档读入神庙场景；移动、新保存重读、声音和完整 G0 尚待验收，待手机可用后按[真机步骤](device-validation.md)继续。
+
+已完成的代码、文档和审核素材统一提交、推送到 `git@github.com:wikigsroom/NsA-core.git` 的 `main`，先获取并保留远端更新，不强制覆盖历史。私有调试配置、APK、游戏文件、密钥、存档和原始证据保持忽略。[验证记录](implementation-status.md)说明本地历史运行身份的保留范围；正式发布前必须重新生成匹配身份和不可变版本，完成签名、线上服务与设备验收。

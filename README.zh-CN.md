@@ -8,7 +8,7 @@
 
 基于 [nx2android](https://github.com/shirai91/nx2android) 与 [nxnative](https://github.com/seedds/nxnative) 开发。新增 Kotlin/Compose 大厅、独立游戏进程、内容目录与发布服务，沿用已定稿的 D「曜黑极简」设计。源码更新目标是 [wikigsroom/NsA-core](https://github.com/wikigsroom/NsA-core)。
 
-**当前是整批开发中的内部构建，未通过完整真机验收。** 页面源码、下载/安装/存档流程与服务端实现，不等同于《旷野之息》已在新大厅内完整可玩。真实构建、测试、截图与录屏结果见 [实现与验证记录](docs/hall/implementation-status.md)。原有单游戏测试结果与新大厅测试分开记录。
+**当前已构建并安装内部开发版，完整游戏验收仍未完成。** 合并后的 main 通过 Android 检查和两项真机仪器测试；前一构建已通过完整大厅及 2048 操作、写档和重读流程。《旷野之息》已在 main 构建中读出复苏神庙场景，移动、新进度保存重读和持续性能仍待验收。具体构建身份与结果见[实现与验证记录](docs/hall/implementation-status.md)。
 
 | 入口 | 使用逻辑 |
 |---|---|
@@ -23,8 +23,10 @@
 以下为 USB 真机上的实际页面，当前 App 界面使用简体中文：
 
 <table>
-<tr><td>我的游戏</td><td>设置</td><td>存档与备份</td></tr>
-<tr><td><img src="docs/media/library.png" width="230" alt="实际竖屏游戏库"></td><td><img src="docs/media/settings.png" width="230" alt="实际设置页"></td><td><img src="docs/media/saves.png" width="230" alt="实际存档管理页"></td></tr>
+<tr><td>发现游戏</td><td>我的游戏</td><td>下载中心</td></tr>
+<tr><td><img src="docs/media/discovery.png" width="230" alt="实际竖屏发现页"></td><td><img src="docs/media/library.png" width="230" alt="实际竖屏游戏库"></td><td><img src="docs/media/downloads.png" width="230" alt="实际下载记录"></td></tr>
+<tr><td>设置</td><td>存档与备份</td><td>下载确认</td></tr>
+<tr><td><img src="docs/media/settings.png" width="230" alt="实际设置页"></td><td><img src="docs/media/saves.png" width="230" alt="实际存档管理页"></td><td><img src="docs/media/download-confirmation.png" width="230" alt="实际空间与适配确认"></td></tr>
 </table>
 
 <details>
@@ -34,7 +36,7 @@
 
 ![原创原生 2048 的实际方向输入](docs/media/native-2048.gif)
 
-[大厅 MP4 录屏](docs/media/hall-walkthrough.mp4) · [2048 MP4 录屏](docs/media/native-2048.mp4) · [全部截图及来源记录](docs/media/README.md)。录屏不含音轨，展示范围以实录片段为限；完整可玩结论见[实现与验证记录](docs/hall/implementation-status.md)。
+[大厅 MP4 录屏](docs/media/hall-walkthrough.mp4) · [2048 MP4 录屏](docs/media/native-2048.mp4) · [16 张手机截图、3 张后台截图及来源记录](docs/media/README.md)。录屏展示 171 字节开源示例包下载与短时实际操作，不含音轨。每份素材分别记录 APK 身份；部分来自 Android/服务源码与 main 相同的前一构建。完整可玩结论见[验证记录](docs/hall/implementation-status.md)，后续操作按[真机验收步骤](docs/hall/device-validation.md)执行。
 
 </details>
 

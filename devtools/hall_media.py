@@ -31,9 +31,11 @@ def main():
         artifacts = [destination]
     else:
         destination = target / (name + '.gif')
-        subprocess.run(['ffmpeg', '-hide_banner', '-loglevel', 'error', '-y', '-ss', str(args.start), '-t', str(min(args.duration, 60)), '-i', str(source),
-                        '-filter_complex', f'[0:v]fps=10,scale={args.width}:-2:flags=lanczos,split[a][b];[a]palettegen=max_colors=96[p];[b][p]paletteuse=dither=bayer:bayer_scale=3', '-loop', '0', str(destination)], check=True)
-        subprocess.run(['ffmpeg', '-hide_banner', '-loglevel', 'error', '-y', '-ss', str(args.start), '-t', str(min(args.duration, 60)), '-i', str(source), '-vf', 'scale=720:-2', '-c:v', 'libx264', '-crf', '26', '-pix_fmt', 'yuv420p', '-an', '-movflags', '+faststart', str(target / (name + '.mp4'))], check=True)
+        # Limit output time: Android screen recordings have variable cadence,
+        # so limiting input packets can retain an oversized final frame.
+        subprocess.run(['ffmpeg', '-hide_banner', '-loglevel', 'error', '-y', '-ss', str(args.start), '-i', str(source),
+                        '-filter_complex', f'[0:v]fps=10,scale={args.width}:-2:flags=lanczos,split[a][b];[a]palettegen=max_colors=96[p];[b][p]paletteuse=dither=bayer:bayer_scale=3', '-t', str(args.duration), '-loop', '0', str(destination)], check=True)
+        subprocess.run(['ffmpeg', '-hide_banner', '-loglevel', 'error', '-y', '-ss', str(args.start), '-i', str(source), '-map', '0:v:0', '-vf', 'scale=720:-2', '-c:v', 'libx264', '-crf', '26', '-pix_fmt', 'yuv420p', '-fps_mode', 'vfr', '-t', str(args.duration), '-an', '-movflags', '+faststart', str(target / (name + '.mp4'))], check=True)
         artifacts = [destination, target / (name + '.mp4')]
     with source.open('rb') as incoming: sha = hashlib.file_digest(incoming, 'sha256').hexdigest()
     exported = []
