@@ -4381,6 +4381,7 @@ article{margin-top:76px;padding-top:20px;border-top:1px solid var(--line);min-wi
 </tbody>
 </table></div>
 <p>验收：AC-N06；工作项：T-19。实现前核对关联技术章与页面条件；结果登记在版本验收记录，不能把“预期”改成无证据“通过”。</p><a class="backtop" href="#top">返回目录 ↑</a></article><article id="doc-screens"><p class="source">规范源文件 · <a href="%E9%A1%B5%E9%9D%A2%E4%B8%8E%E4%BA%A4%E4%BA%92%E9%AA%8C%E6%94%B6%E8%A7%84%E6%A0%BC.md">页面与交互验收规格.md</a></p><h1 id="doc-screens-_1">页面与交互验收规格</h1>
+<p>2026-11-07 实施补充：S15/S16 的存档草稿按原游戏与操作身份持久保存；导出先固定快照再打开目标选择器，导入确认前可取消草稿。确认导入后全程禁取消、外部点按关闭与重复确认，并展示处理中；完成或恢复后再开放操作。S27 按真实缓存有无、条目数与更新时间说明状态。完整边界及迁移见 <a href="../engineering/decisions/0007-policy-runtime-save-recovery.md">ADR 0007</a>，本说明不改变原有需求和验收编号。</p>
 <p>基线 v2.0 · 2026-11-06。直接沿用定稿的 32 页、73 个典型命名状态；逐页视觉以 <a href="../design/obsidian-portrait/03-screen-specs.md">定稿规格</a> 为准。本文件补足数据来源、命令、防重、边界和恢复，作为研发行为约束。</p>
 <p>原型中的演示 task/state 名不是生产枚举；生产枚举统一见 <a href="../engineering/contracts/state-machines.json">状态契约</a>。系统权限、文件选择器和原生游戏画面由相应系统/运行层提供。</p>
 <h2 id="doc-screens-_2">全局执行约束</h2>
@@ -7062,6 +7063,7 @@ porter / nxnative              现有制作与运行代码
 <p>原生验证覆盖360/393/412/600宽、100/130/200%字号、系统insets/IME、TalkBack、键盘/手柄和系统返回。已有浏览器34条断言/56组合只属于设计证据，不替代上述真实系统验收。</p>
 <h2 id="doc-eng02-7">7. 生命周期</h2>
 <p>进程重启先打开数据库、执行有限对账，再渲染真实库与任务。重建失败不能调用清库恢复默认；提供可恢复错误和诊断。声音/输入/Surface随当前会话生命周期，页面退出和大厅重建不能触发全应用终止。</p><a class="backtop" href="#top">返回目录 ↑</a></article><article id="doc-eng03"><p class="source">规范源文件 · <a href="../engineering/03-runtime-integration.md">03-runtime-integration.md</a></p><h1 id="doc-eng03-03-ipc">03 · 原生模块、进程、IPC 与启动协议</h1>
+<p>实施补充见 <a href="../engineering/decisions/0007-policy-runtime-save-recovery.md">ADR 0007</a>：游戏进程全生命周期持有内核租约，主进程丢失后按持久 session/generation/nonce 重连；不能只凭数据库行判定运行中或结束。未知归属继续保护资源与存档，确认租约释放后才登记终止。新增私有 IPC 7/8 不改变 bootstrap ABI v1；实际主进程丢失恢复仍须真机验收。</p>
 <h2 id="doc-eng03-1">1. 模块注册</h2>
 <p>APK 内固定 bootstrap 和 <a href="../engineering/contracts/runtime-registry.schema.json">runtime-registry.schema.json</a>。注册表被 APK 签名保护；library_name 只从该表选择，slot、SONAME和摘要唯一，禁止重复默认libdmhost覆盖。模块对应 core commit、profile digest、完整 module Build ID、shader链、驱动与settings schema。</p>
 <p>模块装载使用受控 APK 内库与局部符号范围，验证依赖SONAME及构造器行为；构造器不得在上下文授权前执行游戏读取/线程启动。受控环境映射必须在首次读取前设置。只把原 ANativeActivity_onCreate 再调用一次会重写路径，必须抽出公共初始化并接入显式上下文。</p>
@@ -7116,6 +7118,7 @@ files/nsa/sessions/&lt;session&gt;/...
 <p>回大厅只移除game_running阻断，保留手动、系统、网络/空间阻断。游戏失败页只承诺已提交进度保留，提供主动重试、返回和反馈。</p>
 <h2 id="doc-eng03-7">7. 必须证明的集成结果</h2>
 <p>双模块加载/符号、构造器和路径初始化；真实4/16KiB页面及W^X；启动取消；旋转不重复start；锁屏/来电；正常/强制/崩溃退出；大厅和游戏分别回收；A/B独立存读档与设置；活动版本不被更新或删除。对应RUN、SAVE与AC-R/AC-S，未有证据不得标已实现。</p><a class="backtop" href="#top">返回目录 ↑</a></article><article id="doc-eng04"><p class="source">规范源文件 · <a href="../engineering/04-transfer-install-save.md">04-transfer-install-save.md</a></p><h1 id="doc-eng04-04">04 · 传输、安装、空间、更新与存档事务</h1>
+<p>实施补充见 <a href="../engineering/decisions/0007-policy-runtime-save-recovery.md">ADR 0007</a>：后台下载先等待初始化，安装恢复与写入同锁；存档入口访问或创建提交目录前先恢复交换记录。草稿归属持久保存，导入前校验完整元数据、合计与空间，每次写入前执行展开预算；目录交换与本地索引可幂等恢复。确认导入后全程禁取消/重复提交并显示进度。统一大厅构建关闭原生旁路交换入口，独立构建保留。原规则与验收编号不变，新增实现不代表真机验收通过。</p>
 <h2 id="doc-eng04-1">1. 执行器与持久化</h2>
 <p>TransferEngine只负责HTTP、流式写入、段校验与检查点；Android适配器负责何时可执行。API34+用户可见发起的大传输使用UIDT，API31–33采用合法前台传输，均需可见状态和持久恢复。系统停止不保证回调，不能只在onStop中保存。参见 <a href="https://developer.android.com/develop/background-work/background-tasks/uidt">UIDT</a>、<a href="https://developer.android.com/develop/background-work/services/fgs/timeout">前台服务时限</a>。</p>
 <p>全局单任务、单连接、8MiB校验段；至少每完成一段同步文件后提交可信记录。每游戏一个活动内容任务；完成传输后的安装为独立记录。user_intent与blockers分开：user/network/metered_policy/storage/system/game_running/authorization可共存，只在全部解除且用户仍要运行时继续。</p>

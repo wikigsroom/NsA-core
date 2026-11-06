@@ -31,7 +31,7 @@ def test_repeat_fetch_keeps_exact_signed_payload_and_scope_visibility(system):
     assert [r['release_id'] for r in payload(official)['releases']] == ['public-release']
     assert [r['release_id'] for r in payload(internal)['releases']] == ['private-release', 'public-release']
     credentials = bootstrap(platform, client, False)
-    response = client.get('/v1/policies/releases', headers={'Authorization': 'Bearer ' + credentials})
+    response = client.get('/v1/policies', headers={'Authorization': 'Bearer ' + credentials})
     assert response.status_code == 200
     assert response.json() == official
 

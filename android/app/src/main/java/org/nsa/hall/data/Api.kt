@@ -110,17 +110,18 @@ class Api(private val context: Context, private val preferences: Preferences) {
     }
     suspend fun policyResponse(): PolicyResponse {
         var auth = credentials()
-        val response = try { send("/v1/policies", null, auth.getString("access_token")) }
+        var address = auth.getString("endpoint")
+        val response = try { send("/v1/policies", null, auth.getString("access_token"), baseEndpoint = address) }
         catch (error: ApiException) {
             if (error.status != 401 || error.code != "AUTH_EXPIRED") throw error
             auth = credentials(true, auth.getString("access_token"))
-            send("/v1/policies", null, auth.getString("access_token"))
+            address = auth.getString("endpoint")
+            send("/v1/policies", null, auth.getString("access_token"), baseEndpoint = address)
         }
-        val address = endpoint()
         return PolicyResponse(sha256((address + "\u0000" + auth.getString("installation_id")).toByteArray()), address, response)
     }
-    private suspend fun send(path: String, body: JSONObject?, token: String?, idempotencyKey: String? = null): JSONObject = withContext(Dispatchers.IO) {
-        val url = endpoint() + path
+    private suspend fun send(path: String, body: JSONObject?, token: String?, idempotencyKey: String? = null, baseEndpoint: String? = null): JSONObject = withContext(Dispatchers.IO) {
+        val url = (baseEndpoint ?: endpoint()) + path
         val request = Request.Builder().url(url).header("Accept", "application/json")
         if (token != null) request.header("Authorization", "Bearer $token")
         if (body != null) request.header("Idempotency-Key", idempotencyKey ?: UUID.randomUUID().toString()).post(body.toString().toRequestBody("application/json".toMediaType()))
