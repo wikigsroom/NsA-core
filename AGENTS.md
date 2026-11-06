@@ -10,3 +10,11 @@ These standing instructions were provided by the user on 2026-11-06.
 - When using a browser, close every tab that is no longer needed after the operation.
 
 Read `CLAUDE.md` and applicable instructions under `nxnative/` for implementation rules, subject to the user instructions above.
+
+## Game hall product and engineering baseline
+
+- For hall-related development, read [the product baseline](docs/product/README.md), [the detailed requirements](docs/product/产品需求细则.md), [the page and interaction specification](docs/product/页面与交互验收规格.md), and [the engineering baseline](docs/engineering/README.md). These v2.0 documents constrain subsequent implementation; they are not implementation or device acceptance evidence.
+- Follow the selected D Obsidian portrait design: non-game flows remain portrait; the actual game runtime boundary is landscape; cancellation, failure and exit restore the source portrait flow. Use the finalized design tokens and page catalogue.
+- Preserve requirement, work-item and acceptance identities. When behavior, persistence, HTTP contracts, runtime ABI or design changes, update the affected specification, machine contracts and appropriate verification together; record incompatible decisions and migration plans.
+- Follow G0 before broad hall implementation: prove two real games in the same APK with independent runtime processes/data, safe return to the hall, and actual save/reload. A prototype, video, first frame or documentation check does not satisfy this gate.
+- Apply the documented engineering defaults without repeatedly seeking permission. Resolve release/content/device/business decisions before their dependent release gates; continue independent authorized work. Do not treat undecided branding or deployment details as a reason to stop all development.

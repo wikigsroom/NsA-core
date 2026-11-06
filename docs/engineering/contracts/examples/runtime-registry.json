@@ -1,0 +1,26 @@
+{
+  "registry_schema": 1,
+  "app_version_code": 100,
+  "bootstrap_api_version": 1,
+  "slots": [
+    {
+      "runtime_slot_id": "demo.echo.core1",
+      "library_name": "libnsa_demo_echo.so",
+      "library_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "runtime_api_version": 1,
+      "core_revision": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+      "profile_digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "supported_module_build_ids": [
+        "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+      ],
+      "shader_chain_id": "demo.shader.v1",
+      "shader_bundle_versions": [
+        1
+      ],
+      "approved_driver_ids": [
+        "system-validated"
+      ],
+      "settings_schema_version": 1
+    }
+  ]
+}

@@ -1,0 +1,706 @@
+{
+  "fixture": true,
+  "examples": [
+    {
+      "definition": "BootstrapRequest",
+      "value": {
+        "app_version_code": 100,
+        "installation_nonce": "nonce.fixture.only",
+        "locale": "zh-CN",
+        "channel": "official"
+      }
+    },
+    {
+      "definition": "FeedbackRequest",
+      "value": {
+        "category": "app",
+        "description": "这是虚构的反馈内容，仅用于验证协议字段。"
+      }
+    },
+    {
+      "definition": "DownloadGrant",
+      "value": {
+        "download_session_id": "download.fixture",
+        "release_id": "demo.echo.r1",
+        "manifest_sha256": "2f9554032a6d7e666f00cfc1c0103225b9f52c4ecfc6db69ec6512fa92a49bca",
+        "object_id": "demo.echo.archive",
+        "bytes": "1024",
+        "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "etag": "\"fixture-object-version\"",
+        "url": "https://objects.example.invalid/fixture",
+        "expires_at": "2026-11-06T00:00:00Z"
+      }
+    },
+    {
+      "definition": "ArtifactUploadGrant",
+      "value": {
+        "object_id": "upload.fixture",
+        "revision": 0,
+        "mode": "multipart",
+        "upload_session_expires_at": "2026-11-06T00:00:00Z",
+        "part_bytes": "67108864",
+        "part_count": 160
+      }
+    },
+    {
+      "definition": "ArtifactUploadComplete",
+      "value": {
+        "expected_revision": 0,
+        "reason": "Fictional protocol fixture completion.",
+        "parts": [
+          {
+            "part_number": 1,
+            "etag": "\"fixture-part-1\""
+          },
+          {
+            "part_number": 2,
+            "etag": "\"fixture-part-2\""
+          },
+          {
+            "part_number": 3,
+            "etag": "\"fixture-part-3\""
+          },
+          {
+            "part_number": 4,
+            "etag": "\"fixture-part-4\""
+          },
+          {
+            "part_number": 5,
+            "etag": "\"fixture-part-5\""
+          },
+          {
+            "part_number": 6,
+            "etag": "\"fixture-part-6\""
+          },
+          {
+            "part_number": 7,
+            "etag": "\"fixture-part-7\""
+          },
+          {
+            "part_number": 8,
+            "etag": "\"fixture-part-8\""
+          },
+          {
+            "part_number": 9,
+            "etag": "\"fixture-part-9\""
+          },
+          {
+            "part_number": 10,
+            "etag": "\"fixture-part-10\""
+          },
+          {
+            "part_number": 11,
+            "etag": "\"fixture-part-11\""
+          },
+          {
+            "part_number": 12,
+            "etag": "\"fixture-part-12\""
+          },
+          {
+            "part_number": 13,
+            "etag": "\"fixture-part-13\""
+          },
+          {
+            "part_number": 14,
+            "etag": "\"fixture-part-14\""
+          },
+          {
+            "part_number": 15,
+            "etag": "\"fixture-part-15\""
+          },
+          {
+            "part_number": 16,
+            "etag": "\"fixture-part-16\""
+          },
+          {
+            "part_number": 17,
+            "etag": "\"fixture-part-17\""
+          },
+          {
+            "part_number": 18,
+            "etag": "\"fixture-part-18\""
+          },
+          {
+            "part_number": 19,
+            "etag": "\"fixture-part-19\""
+          },
+          {
+            "part_number": 20,
+            "etag": "\"fixture-part-20\""
+          },
+          {
+            "part_number": 21,
+            "etag": "\"fixture-part-21\""
+          },
+          {
+            "part_number": 22,
+            "etag": "\"fixture-part-22\""
+          },
+          {
+            "part_number": 23,
+            "etag": "\"fixture-part-23\""
+          },
+          {
+            "part_number": 24,
+            "etag": "\"fixture-part-24\""
+          },
+          {
+            "part_number": 25,
+            "etag": "\"fixture-part-25\""
+          },
+          {
+            "part_number": 26,
+            "etag": "\"fixture-part-26\""
+          },
+          {
+            "part_number": 27,
+            "etag": "\"fixture-part-27\""
+          },
+          {
+            "part_number": 28,
+            "etag": "\"fixture-part-28\""
+          },
+          {
+            "part_number": 29,
+            "etag": "\"fixture-part-29\""
+          },
+          {
+            "part_number": 30,
+            "etag": "\"fixture-part-30\""
+          },
+          {
+            "part_number": 31,
+            "etag": "\"fixture-part-31\""
+          },
+          {
+            "part_number": 32,
+            "etag": "\"fixture-part-32\""
+          },
+          {
+            "part_number": 33,
+            "etag": "\"fixture-part-33\""
+          },
+          {
+            "part_number": 34,
+            "etag": "\"fixture-part-34\""
+          },
+          {
+            "part_number": 35,
+            "etag": "\"fixture-part-35\""
+          },
+          {
+            "part_number": 36,
+            "etag": "\"fixture-part-36\""
+          },
+          {
+            "part_number": 37,
+            "etag": "\"fixture-part-37\""
+          },
+          {
+            "part_number": 38,
+            "etag": "\"fixture-part-38\""
+          },
+          {
+            "part_number": 39,
+            "etag": "\"fixture-part-39\""
+          },
+          {
+            "part_number": 40,
+            "etag": "\"fixture-part-40\""
+          },
+          {
+            "part_number": 41,
+            "etag": "\"fixture-part-41\""
+          },
+          {
+            "part_number": 42,
+            "etag": "\"fixture-part-42\""
+          },
+          {
+            "part_number": 43,
+            "etag": "\"fixture-part-43\""
+          },
+          {
+            "part_number": 44,
+            "etag": "\"fixture-part-44\""
+          },
+          {
+            "part_number": 45,
+            "etag": "\"fixture-part-45\""
+          },
+          {
+            "part_number": 46,
+            "etag": "\"fixture-part-46\""
+          },
+          {
+            "part_number": 47,
+            "etag": "\"fixture-part-47\""
+          },
+          {
+            "part_number": 48,
+            "etag": "\"fixture-part-48\""
+          },
+          {
+            "part_number": 49,
+            "etag": "\"fixture-part-49\""
+          },
+          {
+            "part_number": 50,
+            "etag": "\"fixture-part-50\""
+          },
+          {
+            "part_number": 51,
+            "etag": "\"fixture-part-51\""
+          },
+          {
+            "part_number": 52,
+            "etag": "\"fixture-part-52\""
+          },
+          {
+            "part_number": 53,
+            "etag": "\"fixture-part-53\""
+          },
+          {
+            "part_number": 54,
+            "etag": "\"fixture-part-54\""
+          },
+          {
+            "part_number": 55,
+            "etag": "\"fixture-part-55\""
+          },
+          {
+            "part_number": 56,
+            "etag": "\"fixture-part-56\""
+          },
+          {
+            "part_number": 57,
+            "etag": "\"fixture-part-57\""
+          },
+          {
+            "part_number": 58,
+            "etag": "\"fixture-part-58\""
+          },
+          {
+            "part_number": 59,
+            "etag": "\"fixture-part-59\""
+          },
+          {
+            "part_number": 60,
+            "etag": "\"fixture-part-60\""
+          },
+          {
+            "part_number": 61,
+            "etag": "\"fixture-part-61\""
+          },
+          {
+            "part_number": 62,
+            "etag": "\"fixture-part-62\""
+          },
+          {
+            "part_number": 63,
+            "etag": "\"fixture-part-63\""
+          },
+          {
+            "part_number": 64,
+            "etag": "\"fixture-part-64\""
+          },
+          {
+            "part_number": 65,
+            "etag": "\"fixture-part-65\""
+          },
+          {
+            "part_number": 66,
+            "etag": "\"fixture-part-66\""
+          },
+          {
+            "part_number": 67,
+            "etag": "\"fixture-part-67\""
+          },
+          {
+            "part_number": 68,
+            "etag": "\"fixture-part-68\""
+          },
+          {
+            "part_number": 69,
+            "etag": "\"fixture-part-69\""
+          },
+          {
+            "part_number": 70,
+            "etag": "\"fixture-part-70\""
+          },
+          {
+            "part_number": 71,
+            "etag": "\"fixture-part-71\""
+          },
+          {
+            "part_number": 72,
+            "etag": "\"fixture-part-72\""
+          },
+          {
+            "part_number": 73,
+            "etag": "\"fixture-part-73\""
+          },
+          {
+            "part_number": 74,
+            "etag": "\"fixture-part-74\""
+          },
+          {
+            "part_number": 75,
+            "etag": "\"fixture-part-75\""
+          },
+          {
+            "part_number": 76,
+            "etag": "\"fixture-part-76\""
+          },
+          {
+            "part_number": 77,
+            "etag": "\"fixture-part-77\""
+          },
+          {
+            "part_number": 78,
+            "etag": "\"fixture-part-78\""
+          },
+          {
+            "part_number": 79,
+            "etag": "\"fixture-part-79\""
+          },
+          {
+            "part_number": 80,
+            "etag": "\"fixture-part-80\""
+          },
+          {
+            "part_number": 81,
+            "etag": "\"fixture-part-81\""
+          },
+          {
+            "part_number": 82,
+            "etag": "\"fixture-part-82\""
+          },
+          {
+            "part_number": 83,
+            "etag": "\"fixture-part-83\""
+          },
+          {
+            "part_number": 84,
+            "etag": "\"fixture-part-84\""
+          },
+          {
+            "part_number": 85,
+            "etag": "\"fixture-part-85\""
+          },
+          {
+            "part_number": 86,
+            "etag": "\"fixture-part-86\""
+          },
+          {
+            "part_number": 87,
+            "etag": "\"fixture-part-87\""
+          },
+          {
+            "part_number": 88,
+            "etag": "\"fixture-part-88\""
+          },
+          {
+            "part_number": 89,
+            "etag": "\"fixture-part-89\""
+          },
+          {
+            "part_number": 90,
+            "etag": "\"fixture-part-90\""
+          },
+          {
+            "part_number": 91,
+            "etag": "\"fixture-part-91\""
+          },
+          {
+            "part_number": 92,
+            "etag": "\"fixture-part-92\""
+          },
+          {
+            "part_number": 93,
+            "etag": "\"fixture-part-93\""
+          },
+          {
+            "part_number": 94,
+            "etag": "\"fixture-part-94\""
+          },
+          {
+            "part_number": 95,
+            "etag": "\"fixture-part-95\""
+          },
+          {
+            "part_number": 96,
+            "etag": "\"fixture-part-96\""
+          },
+          {
+            "part_number": 97,
+            "etag": "\"fixture-part-97\""
+          },
+          {
+            "part_number": 98,
+            "etag": "\"fixture-part-98\""
+          },
+          {
+            "part_number": 99,
+            "etag": "\"fixture-part-99\""
+          },
+          {
+            "part_number": 100,
+            "etag": "\"fixture-part-100\""
+          },
+          {
+            "part_number": 101,
+            "etag": "\"fixture-part-101\""
+          },
+          {
+            "part_number": 102,
+            "etag": "\"fixture-part-102\""
+          },
+          {
+            "part_number": 103,
+            "etag": "\"fixture-part-103\""
+          },
+          {
+            "part_number": 104,
+            "etag": "\"fixture-part-104\""
+          },
+          {
+            "part_number": 105,
+            "etag": "\"fixture-part-105\""
+          },
+          {
+            "part_number": 106,
+            "etag": "\"fixture-part-106\""
+          },
+          {
+            "part_number": 107,
+            "etag": "\"fixture-part-107\""
+          },
+          {
+            "part_number": 108,
+            "etag": "\"fixture-part-108\""
+          },
+          {
+            "part_number": 109,
+            "etag": "\"fixture-part-109\""
+          },
+          {
+            "part_number": 110,
+            "etag": "\"fixture-part-110\""
+          },
+          {
+            "part_number": 111,
+            "etag": "\"fixture-part-111\""
+          },
+          {
+            "part_number": 112,
+            "etag": "\"fixture-part-112\""
+          },
+          {
+            "part_number": 113,
+            "etag": "\"fixture-part-113\""
+          },
+          {
+            "part_number": 114,
+            "etag": "\"fixture-part-114\""
+          },
+          {
+            "part_number": 115,
+            "etag": "\"fixture-part-115\""
+          },
+          {
+            "part_number": 116,
+            "etag": "\"fixture-part-116\""
+          },
+          {
+            "part_number": 117,
+            "etag": "\"fixture-part-117\""
+          },
+          {
+            "part_number": 118,
+            "etag": "\"fixture-part-118\""
+          },
+          {
+            "part_number": 119,
+            "etag": "\"fixture-part-119\""
+          },
+          {
+            "part_number": 120,
+            "etag": "\"fixture-part-120\""
+          },
+          {
+            "part_number": 121,
+            "etag": "\"fixture-part-121\""
+          },
+          {
+            "part_number": 122,
+            "etag": "\"fixture-part-122\""
+          },
+          {
+            "part_number": 123,
+            "etag": "\"fixture-part-123\""
+          },
+          {
+            "part_number": 124,
+            "etag": "\"fixture-part-124\""
+          },
+          {
+            "part_number": 125,
+            "etag": "\"fixture-part-125\""
+          },
+          {
+            "part_number": 126,
+            "etag": "\"fixture-part-126\""
+          },
+          {
+            "part_number": 127,
+            "etag": "\"fixture-part-127\""
+          },
+          {
+            "part_number": 128,
+            "etag": "\"fixture-part-128\""
+          },
+          {
+            "part_number": 129,
+            "etag": "\"fixture-part-129\""
+          },
+          {
+            "part_number": 130,
+            "etag": "\"fixture-part-130\""
+          },
+          {
+            "part_number": 131,
+            "etag": "\"fixture-part-131\""
+          },
+          {
+            "part_number": 132,
+            "etag": "\"fixture-part-132\""
+          },
+          {
+            "part_number": 133,
+            "etag": "\"fixture-part-133\""
+          },
+          {
+            "part_number": 134,
+            "etag": "\"fixture-part-134\""
+          },
+          {
+            "part_number": 135,
+            "etag": "\"fixture-part-135\""
+          },
+          {
+            "part_number": 136,
+            "etag": "\"fixture-part-136\""
+          },
+          {
+            "part_number": 137,
+            "etag": "\"fixture-part-137\""
+          },
+          {
+            "part_number": 138,
+            "etag": "\"fixture-part-138\""
+          },
+          {
+            "part_number": 139,
+            "etag": "\"fixture-part-139\""
+          },
+          {
+            "part_number": 140,
+            "etag": "\"fixture-part-140\""
+          },
+          {
+            "part_number": 141,
+            "etag": "\"fixture-part-141\""
+          },
+          {
+            "part_number": 142,
+            "etag": "\"fixture-part-142\""
+          },
+          {
+            "part_number": 143,
+            "etag": "\"fixture-part-143\""
+          },
+          {
+            "part_number": 144,
+            "etag": "\"fixture-part-144\""
+          },
+          {
+            "part_number": 145,
+            "etag": "\"fixture-part-145\""
+          },
+          {
+            "part_number": 146,
+            "etag": "\"fixture-part-146\""
+          },
+          {
+            "part_number": 147,
+            "etag": "\"fixture-part-147\""
+          },
+          {
+            "part_number": 148,
+            "etag": "\"fixture-part-148\""
+          },
+          {
+            "part_number": 149,
+            "etag": "\"fixture-part-149\""
+          },
+          {
+            "part_number": 150,
+            "etag": "\"fixture-part-150\""
+          },
+          {
+            "part_number": 151,
+            "etag": "\"fixture-part-151\""
+          },
+          {
+            "part_number": 152,
+            "etag": "\"fixture-part-152\""
+          },
+          {
+            "part_number": 153,
+            "etag": "\"fixture-part-153\""
+          },
+          {
+            "part_number": 154,
+            "etag": "\"fixture-part-154\""
+          },
+          {
+            "part_number": 155,
+            "etag": "\"fixture-part-155\""
+          },
+          {
+            "part_number": 156,
+            "etag": "\"fixture-part-156\""
+          },
+          {
+            "part_number": 157,
+            "etag": "\"fixture-part-157\""
+          },
+          {
+            "part_number": 158,
+            "etag": "\"fixture-part-158\""
+          },
+          {
+            "part_number": 159,
+            "etag": "\"fixture-part-159\""
+          },
+          {
+            "part_number": 160,
+            "etag": "\"fixture-part-160\""
+          }
+        ]
+      }
+    },
+    {
+      "definition": "Error",
+      "value": {
+        "request_id": "request.fixture",
+        "code": "STORAGE_INSUFFICIENT",
+        "message": "存储空间不足，请管理空间后重试。",
+        "details": {
+          "missing_bytes": "9007199254740993"
+        }
+      }
+    }
+  ]
+}

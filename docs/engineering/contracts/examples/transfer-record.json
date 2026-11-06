@@ -1,0 +1,19 @@
+{
+  "record_schema": 1,
+  "record_kind": "transfer",
+  "task_id": "task.fixture",
+  "operation_id": "operation.fixture",
+  "game_id": "demo.echo",
+  "release_id": "demo.echo.r1",
+  "object_id": "demo.echo.archive",
+  "manifest_sha256": "2f9554032a6d7e666f00cfc1c0103225b9f52c4ecfc6db69ec6512fa92a49bca",
+  "state": "paused",
+  "user_intent": "paused",
+  "blockers": [
+    "user",
+    "network"
+  ],
+  "durable_bytes": "0",
+  "total_bytes": "1024",
+  "revision": 1
+}

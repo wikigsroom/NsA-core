@@ -1,0 +1,105 @@
+{
+  "type": "object",
+  "properties": {
+    "event_schema": {
+      "const": 1
+    },
+    "session_id": {
+      "$ref": "domain.schema.json#/$defs/Id"
+    },
+    "generation": {
+      "$ref": "domain.schema.json#/$defs/Revision"
+    },
+    "seq": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 2147483647
+    },
+    "event_type": {
+      "enum": [
+        "validating",
+        "loading_modules",
+        "preparing_graphics",
+        "runtime_entered",
+        "first_frame",
+        "interactive",
+        "save_committed",
+        "exit_requested",
+        "exit_complete",
+        "fatal_error"
+      ]
+    },
+    "monotonic_elapsed_ms": {
+      "$ref": "domain.schema.json#/$defs/ByteCount"
+    },
+    "save_commit_seq": {
+      "$ref": "domain.schema.json#/$defs/Revision"
+    },
+    "error_code": {
+      "$ref": "domain.schema.json#/$defs/ErrorCode"
+    },
+    "progress": {
+      "type": "object",
+      "properties": {
+        "completed_units": {
+          "$ref": "domain.schema.json#/$defs/ByteCount"
+        },
+        "total_units": {
+          "$ref": "domain.schema.json#/$defs/ByteCount"
+        }
+      },
+      "required": [
+        "completed_units",
+        "total_units"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "event_schema",
+    "session_id",
+    "generation",
+    "seq",
+    "event_type",
+    "monotonic_elapsed_ms"
+  ],
+  "additionalProperties": false,
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.nsa.invalid/v1/runtime-event.schema.json",
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "event_type": {
+            "const": "save_committed"
+          }
+        },
+        "required": [
+          "event_type"
+        ]
+      },
+      "then": {
+        "required": [
+          "save_commit_seq"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "event_type": {
+            "const": "fatal_error"
+          }
+        },
+        "required": [
+          "event_type"
+        ]
+      },
+      "then": {
+        "required": [
+          "error_code"
+        ]
+      }
+    }
+  ]
+}

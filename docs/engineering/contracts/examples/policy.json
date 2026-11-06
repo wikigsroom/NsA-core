@@ -1,0 +1,13 @@
+{
+  "policy_schema": 1,
+  "epoch": 1,
+  "issued_at": "2026-11-06T00:00:00Z",
+  "releases": [
+    {
+      "release_id": "demo.echo.r1",
+      "state": "published",
+      "reason_code": "fixture_only"
+    }
+  ],
+  "revoked_key_ids": []
+}

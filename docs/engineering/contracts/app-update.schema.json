@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.nsa.invalid/v1/app-update.schema.json",
+  "type": "object",
+  "properties": {
+    "update_schema": {
+      "const": 1
+    },
+    "application_id": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 200
+    },
+    "version_code": {
+      "$ref": "domain.schema.json#/$defs/Revision"
+    },
+    "version_name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 40
+    },
+    "min_api": {
+      "type": "integer",
+      "minimum": 31
+    },
+    "abis": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "arm64-v8a"
+        ]
+      },
+      "minItems": 1,
+      "maxItems": 1
+    },
+    "apk": {
+      "$ref": "domain.schema.json#/$defs/Artifact"
+    },
+    "signing_certificate_sha256": {
+      "$ref": "domain.schema.json#/$defs/Sha256"
+    },
+    "release_notes": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 8000
+    },
+    "published_at": {
+      "$ref": "domain.schema.json#/$defs/UtcTime"
+    }
+  },
+  "required": [
+    "update_schema",
+    "application_id",
+    "version_code",
+    "version_name",
+    "min_api",
+    "abis",
+    "apk",
+    "signing_certificate_sha256",
+    "release_notes",
+    "published_at"
+  ],
+  "additionalProperties": false
+}

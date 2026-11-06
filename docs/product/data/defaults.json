@@ -1,0 +1,109 @@
+{
+  "baseline": "2.0",
+  "date": "2026-11-06",
+  "classification": "engineering defaults; change through ADR/CR; not claims of achieved performance or commercial approval",
+  "android": {
+    "min_api": 31,
+    "compile_api": 36,
+    "target_api": 36,
+    "abi": [
+      "arm64-v8a"
+    ],
+    "runtime_process": ":game",
+    "single_active_session": true
+  },
+  "catalogue": {
+    "page_size": 24,
+    "max_page_size": 50,
+    "max_query_chars": 64,
+    "snapshot_cursor_ttl_seconds": 900,
+    "refresh_after_seconds": 3600,
+    "order": "published_at desc, game_id asc"
+  },
+  "transfer": {
+    "active_tasks": 1,
+    "active_task_per_game": 1,
+    "connections_per_task": 1,
+    "chunk_bytes": 8388608,
+    "connect_timeout_seconds": 20,
+    "read_timeout_seconds": 30,
+    "no_progress_seconds": 120,
+    "automatic_retry_limit": 5,
+    "retry_base_seconds": 2,
+    "retry_cap_seconds": 60,
+    "max_retry_after_seconds": 3600
+  },
+  "limits": {
+    "signed_payload_bytes": 2097152,
+    "file_index_bytes": 67108864,
+    "chunk_index_bytes": 16777216,
+    "file_count": 250000,
+    "path_utf8_bytes": 1024,
+    "path_depth": 32,
+    "max_signed_count_bytes": "9223372036854775807",
+    "max_diagnostic_bytes": 10485760,
+    "max_save_archive_bytes": 2147483648,
+    "max_feedback_chars": 2000,
+    "min_feedback_chars": 10,
+    "max_contact_chars": 254,
+    "max_save_expanded_bytes": 2147483648,
+    "max_save_files": 10000,
+    "max_envelope_bytes": 3145728,
+    "max_api_json_bytes": 262144
+  },
+  "storage": {
+    "minimum_reserve_bytes": "2147483648",
+    "reserve_unpacked_ratio": 0.05,
+    "formula": "max(minimum_reserve_bytes, ceil(unpacked_bytes * reserve_unpacked_ratio))",
+    "same_volume_required": true
+  },
+  "runtime": {
+    "preflight_timeout_seconds": 15,
+    "phase_no_heartbeat_seconds": 60,
+    "default_launch_deadline_seconds": 120,
+    "graphics_preparation_max_seconds": 600,
+    "normal_exit_grace_seconds": 10,
+    "force_exit_requires_confirmation": true
+  },
+  "privacy": {
+    "local_log_bytes": 52428800,
+    "local_log_days": 7,
+    "uploaded_diagnostic_days": 30,
+    "diagnostic_default_opt_in": false,
+    "data_region": "DEC-09 unresolved; must resolve before deployment"
+  },
+  "quality_targets": {
+    "cached_cold_start_p95_seconds": 3,
+    "first_catalogue_p95_seconds": 2,
+    "catalogue_monthly_availability": 0.995,
+    "playtest_minutes": 30,
+    "fps30_average_min": 27,
+    "fps30_frame_p95_ms_max": 50,
+    "fps30_low1_min": 20,
+    "fps60_average_min": 54,
+    "fps60_frame_p95_ms_max": 25,
+    "fps60_low1_min": 40,
+    "game_speed_min": 0.95,
+    "game_speed_max": 1.05
+  },
+  "identity": {
+    "bootstrap_replay_seconds": 600,
+    "access_token_seconds": 3600,
+    "refresh_idle_seconds": 2592000,
+    "idempotency_receipt_seconds": 86400
+  },
+  "delivery": {
+    "download_session_seconds": 604800,
+    "download_url_seconds": 900,
+    "capability_context_seconds": 3600
+  },
+  "publishing_upload": {
+    "multipart_threshold_bytes": 67108864,
+    "default_part_bytes": 67108864,
+    "max_parts": 10000,
+    "parts_per_grant": 100,
+    "part_url_seconds": 900,
+    "session_seconds": 86400,
+    "max_complete_json_bytes": 4194304
+  }
+}

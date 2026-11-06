@@ -1,0 +1,322 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.nsa.invalid/v1/local-records.schema.json",
+  "$defs": {
+    "ReadyMarker": {
+      "type": "object",
+      "properties": {
+        "record_schema": {
+          "const": 1
+        },
+        "record_kind": {
+          "const": "ready"
+        },
+        "game_id": {
+          "$ref": "domain.schema.json#/$defs/Id"
+        },
+        "release_id": {
+          "$ref": "domain.schema.json#/$defs/Id"
+        },
+        "manifest_sha256": {
+          "$ref": "domain.schema.json#/$defs/Sha256"
+        },
+        "file_index_sha256": {
+          "$ref": "domain.schema.json#/$defs/Sha256"
+        },
+        "runtime_slot_id": {
+          "$ref": "domain.schema.json#/$defs/Id"
+        },
+        "profile_digest": {
+          "$ref": "domain.schema.json#/$defs/Sha256"
+        },
+        "verified_at": {
+          "$ref": "domain.schema.json#/$defs/UtcTime"
+        },
+        "file_count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 250000
+        },
+        "unpacked_bytes": {
+          "$ref": "domain.schema.json#/$defs/ByteCount"
+        }
+      },
+      "required": [
+        "record_schema",
+        "record_kind",
+        "game_id",
+        "release_id",
+        "manifest_sha256",
+        "file_index_sha256",
+        "runtime_slot_id",
+        "profile_digest",
+        "verified_at",
+        "file_count",
+        "unpacked_bytes"
+      ],
+      "additionalProperties": false
+    },
+    "TransferRecord": {
+      "type": "object",
+      "properties": {
+        "record_schema": {
+          "const": 1
+        },
+        "record_kind": {
+          "const": "transfer"
+        },
+        "task_id": {
+          "$ref": "domain.schema.json#/$defs/Id"
+        },
+        "operation_id": {
+          "$ref": "domain.schema.json#/$defs/Id"
+        },
+        "game_id": {
+          "$ref": "domain.schema.json#/$defs/Id"
+        },
+        "release_id": {
+          "$ref": "domain.schema.json#/$defs/Id"
+        },
+        "object_id": {
+          "$ref": "domain.schema.json#/$defs/Id"
+        },
+        "manifest_sha256": {
+          "$ref": "domain.schema.json#/$defs/Sha256"
+        },
+        "state": {
+          "$ref": "domain.schema.json#/$defs/TransferState"
+        },
+        "user_intent": {
+          "enum": [
+            "run",
+            "paused",
+            "cancelled"
+          ]
+        },
+        "blockers": {
+          "type": "array",
+          "items": {
+            "$ref": "domain.schema.json#/$defs/Blocker"
+          },
+          "uniqueItems": true
+        },
+        "durable_bytes": {
+          "$ref": "domain.schema.json#/$defs/ByteCount"
+        },
+        "total_bytes": {
+          "$ref": "domain.schema.json#/$defs/ByteCount"
+        },
+        "revision": {
+          "$ref": "domain.schema.json#/$defs/Revision"
+        }
+      },
+      "required": [
+        "record_schema",
+        "record_kind",
+        "task_id",
+        "operation_id",
+        "game_id",
+        "release_id",
+        "object_id",
+        "manifest_sha256",
+        "state",
+        "user_intent",
+        "blockers",
+        "durable_bytes",
+        "total_bytes",
+        "revision"
+      ],
+      "additionalProperties": false
+    },
+    "InstallJournal": {
+      "type": "object",
+      "properties": {
+        "record_schema": {
+          "const": 1
+        },
+        "record_kind": {
+          "const": "install_journal"
+        },
+        "install_id": {
+          "$ref": "domain.schema.json#/$defs/Id"
+        },
+        "operation_id": {
+          "$ref": "domain.schema.json#/$defs/Id"
+        },
+        "game_id": {
+          "$ref": "domain.schema.json#/$defs/Id"
+        },
+        "release_id": {
+          "$ref": "domain.schema.json#/$defs/Id"
+        },
+        "manifest_sha256": {
+          "$ref": "domain.schema.json#/$defs/Sha256"
+        },
+        "phase": {
+          "enum": [
+            "CREATED",
+            "EXTRACTED",
+            "VERIFIED",
+            "DIRECTORY_PUBLISHED",
+            "DB_ACTIVATED",
+            "CLEANED"
+          ]
+        },
+        "staging_name": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"
+        },
+        "final_name": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"
+        },
+        "previous_active_release_id": {
+          "anyOf": [
+            {
+              "$ref": "domain.schema.json#/$defs/Id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "revision": {
+          "$ref": "domain.schema.json#/$defs/Revision"
+        }
+      },
+      "required": [
+        "record_schema",
+        "record_kind",
+        "install_id",
+        "operation_id",
+        "game_id",
+        "release_id",
+        "manifest_sha256",
+        "phase",
+        "staging_name",
+        "final_name",
+        "previous_active_release_id",
+        "revision"
+      ],
+      "additionalProperties": false
+    },
+    "SessionRecord": {
+      "type": "object",
+      "properties": {
+        "record_schema": {
+          "const": 1
+        },
+        "record_kind": {
+          "const": "session"
+        },
+        "session_id": {
+          "$ref": "domain.schema.json#/$defs/Id"
+        },
+        "generation": {
+          "$ref": "domain.schema.json#/$defs/Revision"
+        },
+        "game_id": {
+          "$ref": "domain.schema.json#/$defs/Id"
+        },
+        "release_id": {
+          "$ref": "domain.schema.json#/$defs/Id"
+        },
+        "runtime_slot_id": {
+          "$ref": "domain.schema.json#/$defs/Id"
+        },
+        "state": {
+          "$ref": "domain.schema.json#/$defs/SessionState"
+        },
+        "last_event_seq": {
+          "$ref": "domain.schema.json#/$defs/Revision"
+        },
+        "source_screen": {
+          "type": "string",
+          "pattern": "^S[0-3][0-9]$"
+        },
+        "revision": {
+          "$ref": "domain.schema.json#/$defs/Revision"
+        }
+      },
+      "required": [
+        "record_schema",
+        "record_kind",
+        "session_id",
+        "generation",
+        "game_id",
+        "release_id",
+        "runtime_slot_id",
+        "state",
+        "last_event_seq",
+        "source_screen",
+        "revision"
+      ],
+      "additionalProperties": false
+    },
+    "SaveCommit": {
+      "type": "object",
+      "properties": {
+        "record_schema": {
+          "const": 1
+        },
+        "record_kind": {
+          "const": "save_commit"
+        },
+        "game_id": {
+          "$ref": "domain.schema.json#/$defs/Id"
+        },
+        "local_player_id": {
+          "$ref": "domain.schema.json#/$defs/Id"
+        },
+        "source_release_id": {
+          "$ref": "domain.schema.json#/$defs/Id"
+        },
+        "compatibility_group": {
+          "$ref": "domain.schema.json#/$defs/Id"
+        },
+        "commit_seq": {
+          "$ref": "domain.schema.json#/$defs/Revision"
+        },
+        "total_bytes": {
+          "$ref": "domain.schema.json#/$defs/ByteCount"
+        },
+        "tree_sha256": {
+          "$ref": "domain.schema.json#/$defs/Sha256"
+        },
+        "committed_at": {
+          "$ref": "domain.schema.json#/$defs/UtcTime"
+        }
+      },
+      "required": [
+        "record_schema",
+        "record_kind",
+        "game_id",
+        "local_player_id",
+        "source_release_id",
+        "compatibility_group",
+        "commit_seq",
+        "total_bytes",
+        "tree_sha256",
+        "committed_at"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "oneOf": [
+    {
+      "$ref": "#/$defs/ReadyMarker"
+    },
+    {
+      "$ref": "#/$defs/TransferRecord"
+    },
+    {
+      "$ref": "#/$defs/InstallJournal"
+    },
+    {
+      "$ref": "#/$defs/SessionRecord"
+    },
+    {
+      "$ref": "#/$defs/SaveCommit"
+    }
+  ]
+}

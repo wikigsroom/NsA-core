@@ -1,0 +1,41 @@
+{
+  "scope": "offline handbook presentation; not Android product acceptance",
+  "checked_at_utc": "2026-11-06T14:42:14.253Z",
+  "document_sha256": "b3ad5ef8c74bac7b90e20f88728e7b81e043abf9a1fd4185a6b32e2c98c40f12",
+  "views": [
+    {
+      "width": 1360,
+      "height": 900,
+      "title": "NsA · 产品与技术开发基线 v2.0",
+      "articles": 14,
+      "viewport_width": 1360,
+      "document_width": 1360,
+      "duplicate_ids": 0,
+      "broken_anchors": 0,
+      "broken_images": 0,
+      "tables": 188,
+      "internal_links": 77,
+      "screenshot": "handbook-1360.png",
+      "result": "passed"
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "title": "NsA · 产品与技术开发基线 v2.0",
+      "articles": 14,
+      "viewport_width": 390,
+      "document_width": 390,
+      "duplicate_ids": 0,
+      "broken_anchors": 0,
+      "broken_images": 0,
+      "tables": 188,
+      "internal_links": 77,
+      "screenshot": "handbook-390.png",
+      "result": "passed"
+    }
+  ],
+  "external_requests": [],
+  "browser_closed": true,
+  "file_protocol": true,
+  "result": "passed"
+}

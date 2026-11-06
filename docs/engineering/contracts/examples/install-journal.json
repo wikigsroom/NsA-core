@@ -1,0 +1,14 @@
+{
+  "record_schema": 1,
+  "record_kind": "install_journal",
+  "install_id": "install.fixture",
+  "operation_id": "operation.fixture",
+  "game_id": "demo.echo",
+  "release_id": "demo.echo.r1",
+  "manifest_sha256": "2f9554032a6d7e666f00cfc1c0103225b9f52c4ecfc6db69ec6512fa92a49bca",
+  "phase": "VERIFIED",
+  "staging_name": "install.fixture",
+  "final_name": "demo.echo.r1",
+  "previous_active_release_id": null,
+  "revision": 3
+}

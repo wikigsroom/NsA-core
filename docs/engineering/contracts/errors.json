@@ -1,0 +1,456 @@
+{
+  "version": 1,
+  "date": "2026-11-06",
+  "errors": [
+    {
+      "code": "AUTH_EXPIRED",
+      "http_status": 401,
+      "retry": "refresh_credentials",
+      "recovery_action": "刷新访问凭证",
+      "player_copy": "登录凭证已过期，请重试。",
+      "copy_key": "error.auth_expired",
+      "sensitive_details_in_response": false
+    },
+    {
+      "code": "CAT_SCOPE_DENIED",
+      "http_status": 403,
+      "retry": "never",
+      "recovery_action": "查看可用内容",
+      "player_copy": "当前内容暂未向你开放。",
+      "copy_key": "error.cat_scope_denied",
+      "sensitive_details_in_response": false
+    },
+    {
+      "code": "CATALOGUE_UNAVAILABLE",
+      "http_status": 503,
+      "retry": "auto_bounded",
+      "recovery_action": "重试或我的游戏",
+      "player_copy": "游戏目录暂时不可用，已安装内容仍可查看。",
+      "copy_key": "error.catalogue_unavailable",
+      "sensitive_details_in_response": false
+    },
+    {
+      "code": "CURSOR_EXPIRED",
+      "http_status": 409,
+      "retry": "user",
+      "recovery_action": "刷新结果",
+      "player_copy": "列表已更新，请刷新后继续。",
+      "copy_key": "error.cursor_expired",
+      "sensitive_details_in_response": false
+    },
+    {
+      "code": "APP_UPDATE_REQUIRED",
+      "http_status": 409,
+      "retry": "after_condition",
+      "recovery_action": "更新App",
+      "player_copy": "更新App后可下载这款游戏。",
+      "copy_key": "error.app_update_required",
+      "sensitive_details_in_response": false
+    },
+    {
+      "code": "MODULE_MISSING",
+      "http_status": 409,
+      "retry": "after_condition",
+      "recovery_action": "更新App",
+      "player_copy": "当前App缺少这款游戏的运行支持。",
+      "copy_key": "error.module_missing",
+      "sensitive_details_in_response": false
+    },
+    {
+      "code": "MODULE_MISMATCH",
+      "http_status": 409,
+      "retry": "never",
+      "recovery_action": "更新或修复",
+      "player_copy": "游戏与运行支持不匹配，请更新或修复。",
+      "copy_key": "error.module_mismatch",
+      "sensitive_details_in_response": false
+    },
+    {
+      "code": "DEVICE_UNSUPPORTED",
+      "http_status": 422,
+      "retry": "never",
+      "recovery_action": "查看本机支持",
+      "player_copy": "这款游戏暂不支持本机。",
+      "copy_key": "error.device_unsupported",
+      "sensitive_details_in_response": false
+    },
+    {
+      "code": "DEVICE_UNVERIFIED",
+      "http_status": 422,
+      "retry": "never",
+      "recovery_action": "查看本机支持",
+      "player_copy": "这款游戏尚未在本机条件下验证。",
+      "copy_key": "error.device_unverified",
+      "sensitive_details_in_response": false
+    },
+    {
+      "code": "RELEASE_UNAVAILABLE",
+      "http_status": 410,
+      "retry": "never",
+      "recovery_action": "返回详情",
+      "player_copy": "此版本已停止新下载。",
+      "copy_key": "error.release_unavailable",
+      "sensitive_details_in_response": false
+    },
+    {
+      "code": "RELEASE_BLOCKED",
+      "http_status": 403,
+      "retry": "never",
+      "recovery_action": "查看恢复方案",
+      "player_copy": "此版本暂不能启动，请查看恢复方案。",
+      "copy_key": "error.release_blocked",
+      "sensitive_details_in_response": false
+    },
+    {
+      "code": "RIGHTS_REQUIRED",
+      "http_status": 403,
+      "retry": "after_condition",
+      "recovery_action": "查看访问条件",
+      "player_copy": "当前内容需要对应访问资格。",
+      "copy_key": "error.rights_required",
+      "sensitive_details_in_response": false
+    },
+    {
+      "code": "NETWORK_UNAVAILABLE",
+      "http_status": null,
+      "retry": "after_condition",
+      "recovery_action": "等待网络",
+      "player_copy": "当前未连接可用网络，已保留进度。",
+      "copy_key": "error.network_unavailable",
+      "sensitive_details_in_response": false
+    },
+    {
+      "code": "METERED_CONSENT_REQUIRED",
+      "http_status": null,
+      "retry": "after_condition",
+      "recovery_action": "确认网络",
+      "player_copy": "继续前请选择是否使用计费网络。",
+      "copy_key": "error.metered_consent_required",
+      "sensitive_details_in_response": false
+    },
+    {
+      "code": "SYSTEM_STOPPED",
+      "http_status": null,
+      "retry": "user",
+      "recovery_action": "继续任务",
+      "player_copy": "任务已由系统停止，可在App内继续。",
+      "copy_key": "error.system_stopped",
+      "sensitive_details_in_response": false
+    },
+    {
+      "code": "STORAGE_INSUFFICIENT",
+      "http_status": 507,
+      "retry": "after_condition",
+      "recovery_action": "管理空间",
+      "player_copy": "空间不足，已保留可恢复进度。",
+      "copy_key": "error.storage_insufficient",
+      "sensitive_details_in_response": false
+    },
+    {
+      "code": "IO_WRITE_FAILED",
+      "http_status": 500,
+      "retry": "user",
+      "recovery_action": "检查空间后重试",
+      "player_copy": "文件写入未完成，请检查存储后重试。",
+      "copy_key": "error.io_write_failed",
+      "sensitive_details_in_response": false
+    },
+    {
+      "code": "OBJECT_EXPIRED",
+      "http_status": 403,
+      "retry": "refresh_url",
+      "recovery_action": "刷新下载地址",
+      "player_copy": "下载地址已过期，正在获取同一版本的新地址。",
+      "copy_key": "error.object_expired",
+      "sensitive_details_in_response": false
+    },
+    {
+      "code": "OBJECT_CHANGED",
+      "http_status": 409,
+      "retry": "never",
+      "recovery_action": "重新检查版本",
+      "player_copy": "下载对象已改变，不能继续拼接旧文件。",
+      "copy_key": "error.object_changed",
+      "sensitive_details_in_response": false
+    },
+    {
+      "code": "HTTP_RANGE_MISMATCH",
+      "http_status": 502,
+      "retry": "user",
+      "recovery_action": "重新检查下载",
+      "player_copy": "下载服务返回的文件范围不一致。",
+      "copy_key": "error.http_range_mismatch",
+      "sensitive_details_in_response": false
+    },
+    {
+      "code": "NETWORK_RETRY_EXHAUSTED",
+      "http_status": 503,
+      "retry": "user",
+      "recovery_action": "重试",
+      "player_copy": "多次连接未完成，进度已保留。",
+      "copy_key": "error.network_retry_exhausted",
+      "sensitive_details_in_response": false
+    },
+    {
+      "code": "MANIFEST_SIGNATURE_INVALID",
+      "http_status": 422,
+      "retry": "never",
+      "recovery_action": "反馈问题",
+      "player_copy": "内容验证未通过，未运行该内容。",
+      "copy_key": "error.manifest_signature_invalid",
+      "sensitive_details_in_response": false
+    },
+    {
+      "code": "MANIFEST_INVALID",
+      "http_status": 422,
+      "retry": "never",
+      "recovery_action": "反馈问题",
+      "player_copy": "内容信息不完整或格式不支持。",
+      "copy_key": "error.manifest_invalid",
+      "sensitive_details_in_response": false
+    },
+    {
+      "code": "INDEX_INVALID",
+      "http_status": 422,
+      "retry": "never",
+      "recovery_action": "反馈问题",
+      "player_copy": "内容索引验证未通过。",
+      "copy_key": "error.index_invalid",
+      "sensitive_details_in_response": false
+    },
+    {
+      "code": "CHUNK_HASH_MISMATCH",
+      "http_status": 422,
+      "retry": "user",
+      "recovery_action": "重试受影响分段",
+      "player_copy": "部分下载文件校验失败。",
+      "copy_key": "error.chunk_hash_mismatch",
+      "sensitive_details_in_response": false
+    },
+    {
+      "code": "PACKAGE_HASH_MISMATCH",
+      "http_status": 422,
+      "retry": "user",
+      "recovery_action": "重新验证下载",
+      "player_copy": "下载包校验未通过，尚未安装。",
+      "copy_key": "error.package_hash_mismatch",
+      "sensitive_details_in_response": false
+    },
+    {
+      "code": "ARCHIVE_UNSAFE",
+      "http_status": 422,
+      "retry": "never",
+      "recovery_action": "反馈问题",
+      "player_copy": "内容包结构不符合安装要求。",
+      "copy_key": "error.archive_unsafe",
+      "sensitive_details_in_response": false
+    },
+    {
+      "code": "FILE_HASH_MISMATCH",
+      "http_status": 422,
+      "retry": "user",
+      "recovery_action": "检查并修复",
+      "player_copy": "游戏文件校验未通过，请修复。",
+      "copy_key": "error.file_hash_mismatch",
+      "sensitive_details_in_response": false
+    },
+    {
+      "code": "DEPENDENCY_MISMATCH",
+      "http_status": 409,
+      "retry": "after_condition",
+      "recovery_action": "更新或修复",
+      "player_copy": "内容依赖与当前运行支持不匹配。",
+      "copy_key": "error.dependency_mismatch",
+      "sensitive_details_in_response": false
+    },
+    {
+      "code": "INSTALL_COMMIT_FAILED",
+      "http_status": 500,
+      "retry": "user",
+      "recovery_action": "恢复安装",
+      "player_copy": "安装登记未完成，原有有效版本已保留。",
+      "copy_key": "error.install_commit_failed",
+      "sensitive_details_in_response": false
+    },
+    {
+      "code": "INSTALL_REPAIR_REQUIRED",
+      "http_status": 409,
+      "retry": "after_condition",
+      "recovery_action": "修复游戏",
+      "player_copy": "游戏资源需要修复后才能开始。",
+      "copy_key": "error.install_repair_required",
+      "sensitive_details_in_response": false
+    },
+    {
+      "code": "SESSION_BUSY",
+      "http_status": 409,
+      "retry": "after_condition",
+      "recovery_action": "返回当前游戏",
+      "player_copy": "请先结束当前游戏，再开始另一款。",
+      "copy_key": "error.session_busy",
+      "sensitive_details_in_response": false
+    },
+    {
+      "code": "SESSION_STALE",
+      "http_status": 409,
+      "retry": "never",
+      "recovery_action": "刷新会话",
+      "player_copy": "此操作对应的游戏会话已结束。",
+      "copy_key": "error.session_stale",
+      "sensitive_details_in_response": false
+    },
+    {
+      "code": "LAUNCH_TIMEOUT",
+      "http_status": 504,
+      "retry": "user",
+      "recovery_action": "等待或返回",
+      "player_copy": "启动准备时间较长，你可以返回后重试。",
+      "copy_key": "error.launch_timeout",
+      "sensitive_details_in_response": false
+    },
+    {
+      "code": "RUNTIME_CRASHED",
+      "http_status": null,
+      "retry": "user",
+      "recovery_action": "重新打开或反馈",
+      "player_copy": "游戏运行中断，最近已提交的进度仍保留。",
+      "copy_key": "error.runtime_crashed",
+      "sensitive_details_in_response": false
+    },
+    {
+      "code": "RUNTIME_EXIT_TIMEOUT",
+      "http_status": null,
+      "retry": "user",
+      "recovery_action": "等待或确认强制结束",
+      "player_copy": "游戏尚未完成退出，请选择等待或结束。",
+      "copy_key": "error.runtime_exit_timeout",
+      "sensitive_details_in_response": false
+    },
+    {
+      "code": "SAVE_BUSY",
+      "http_status": 409,
+      "retry": "after_condition",
+      "recovery_action": "先结束占用操作",
+      "player_copy": "存档正在使用，请稍后再试。",
+      "copy_key": "error.save_busy",
+      "sensitive_details_in_response": false
+    },
+    {
+      "code": "SAVE_INCOMPATIBLE",
+      "http_status": 422,
+      "retry": "never",
+      "recovery_action": "选择其他备份",
+      "player_copy": "该备份与当前游戏不兼容，不能覆盖。",
+      "copy_key": "error.save_incompatible",
+      "sensitive_details_in_response": false
+    },
+    {
+      "code": "SAVE_INVALID",
+      "http_status": 422,
+      "retry": "never",
+      "recovery_action": "选择有效备份",
+      "player_copy": "备份验证未通过，当前存档未修改。",
+      "copy_key": "error.save_invalid",
+      "sensitive_details_in_response": false
+    },
+    {
+      "code": "SAVE_IMPORT_FAILED",
+      "http_status": 500,
+      "retry": "user",
+      "recovery_action": "重试导入",
+      "player_copy": "导入未完成，已保留原存档和操作前备份。",
+      "copy_key": "error.save_import_failed",
+      "sensitive_details_in_response": false
+    },
+    {
+      "code": "SAVE_EXPORT_FAILED",
+      "http_status": 500,
+      "retry": "user",
+      "recovery_action": "重新选择导出位置",
+      "player_copy": "备份导出未完成，原存档仍保留。",
+      "copy_key": "error.save_export_failed",
+      "sensitive_details_in_response": false
+    },
+    {
+      "code": "APP_INSTALL_CANCELLED",
+      "http_status": null,
+      "retry": "user",
+      "recovery_action": "稍后更新",
+      "player_copy": "未完成App安装，当前版本仍可使用。",
+      "copy_key": "error.app_install_cancelled",
+      "sensitive_details_in_response": false
+    },
+    {
+      "code": "APP_SIGNATURE_MISMATCH",
+      "http_status": 422,
+      "retry": "never",
+      "recovery_action": "反馈问题",
+      "player_copy": "更新包与当前App身份不匹配。",
+      "copy_key": "error.app_signature_mismatch",
+      "sensitive_details_in_response": false
+    },
+    {
+      "code": "FEEDBACK_INVALID",
+      "http_status": 422,
+      "retry": "user",
+      "recovery_action": "修改描述",
+      "player_copy": "请填写10至2000字符的问题描述。",
+      "copy_key": "error.feedback_invalid",
+      "sensitive_details_in_response": false
+    },
+    {
+      "code": "RATE_LIMITED",
+      "http_status": 429,
+      "retry": "auto_bounded",
+      "recovery_action": "稍后重试",
+      "player_copy": "请求较频繁，请稍后再试。",
+      "copy_key": "error.rate_limited",
+      "sensitive_details_in_response": false
+    },
+    {
+      "code": "REVISION_CONFLICT",
+      "http_status": 409,
+      "retry": "user",
+      "recovery_action": "刷新当前状态",
+      "player_copy": "状态已更新，请刷新后重试此操作。",
+      "copy_key": "error.revision_conflict",
+      "sensitive_details_in_response": false
+    },
+    {
+      "code": "INTERNAL_ERROR",
+      "http_status": 500,
+      "retry": "user",
+      "recovery_action": "重试或反馈",
+      "player_copy": "操作暂未完成，请重试或提交问题。",
+      "copy_key": "error.internal_error",
+      "sensitive_details_in_response": false
+    },
+    {
+      "code": "REQUEST_INVALID",
+      "http_status": 422,
+      "retry": "never",
+      "recovery_action": "检查输入",
+      "player_copy": "输入内容有误，请检查后重试。",
+      "copy_key": "error.request_invalid",
+      "sensitive_details_in_response": false
+    },
+    {
+      "code": "NOT_FOUND",
+      "http_status": 404,
+      "retry": "never",
+      "recovery_action": "刷新页面",
+      "player_copy": "目标内容已不可用，请刷新后重试。",
+      "copy_key": "error.not_found",
+      "sensitive_details_in_response": false
+    },
+    {
+      "code": "PERMISSION_DENIED",
+      "http_status": 403,
+      "retry": "never",
+      "recovery_action": "返回可用内容",
+      "player_copy": "当前操作暂未开放。",
+      "copy_key": "error.permission_denied",
+      "sensitive_details_in_response": false
+    }
+  ]
+}

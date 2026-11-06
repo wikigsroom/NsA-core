@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.nsa.invalid/v1/chunk-index.schema.json",
+  "type": "object",
+  "properties": {
+    "index_schema": {
+      "const": 1
+    },
+    "object_id": {
+      "$ref": "domain.schema.json#/$defs/Id"
+    },
+    "bytes": {
+      "$ref": "domain.schema.json#/$defs/ByteCount"
+    },
+    "chunk_size_bytes": {
+      "const": "8388608"
+    },
+    "chunks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "index": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "offset_bytes": {
+            "$ref": "domain.schema.json#/$defs/ByteCount"
+          },
+          "length_bytes": {
+            "$ref": "domain.schema.json#/$defs/ByteCount"
+          },
+          "sha256": {
+            "$ref": "domain.schema.json#/$defs/Sha256"
+          }
+        },
+        "required": [
+          "index",
+          "offset_bytes",
+          "length_bytes",
+          "sha256"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 1,
+      "maxItems": 1048576
+    }
+  },
+  "required": [
+    "index_schema",
+    "object_id",
+    "bytes",
+    "chunk_size_bytes",
+    "chunks"
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,6 @@
+{
+  "key_id": "fixture-root-only",
+  "purpose": "release",
+  "public_key_base64": "FhxZfrvQCLCfYSe0v7wgN4adO+KN0iZntMvK8aH9aqg=",
+  "production_trust_root": false
+}

@@ -1,0 +1,12 @@
+{
+  "record_schema": 1,
+  "record_kind": "save_commit",
+  "game_id": "demo.echo",
+  "local_player_id": "local-default",
+  "source_release_id": "demo.echo.r1",
+  "compatibility_group": "demo.echo.save1",
+  "commit_seq": 1,
+  "total_bytes": "31",
+  "tree_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+  "committed_at": "2026-11-06T00:00:00Z"
+}

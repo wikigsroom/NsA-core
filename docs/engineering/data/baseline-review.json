@@ -1,0 +1,268 @@
+{
+  "baseline": "2.0",
+  "checked_at_utc": "2026-11-06T14:45:25.857943+00:00",
+  "scope": "documentation and contract conformance only",
+  "app_service_game_acceptance": "not executed; implementation gates remain open",
+  "network_required_for_checks": false,
+  "checks": [
+    {
+      "name": "requirement_and_acceptance_traceability",
+      "status": "passed",
+      "details": {
+        "requirements": 90,
+        "subrules": 360,
+        "screens": 32,
+        "typical_states": 73,
+        "work_items": 24,
+        "original_cases": 58,
+        "supplemental_cases": 20,
+        "supplemental_interactions": 10
+      }
+    },
+    {
+      "name": "json_schema_definitions",
+      "status": "passed",
+      "details": {
+        "draft": "2020-12",
+        "schemas": 11,
+        "resolver": "local registry only"
+      }
+    },
+    {
+      "name": "openapi_and_operation_guards",
+      "status": "passed",
+      "details": {
+        "openapi": "3.1.1",
+        "paths": 40,
+        "operations": 43,
+        "auth_and_idempotency": "checked"
+      }
+    },
+    {
+      "name": "offline_json_references",
+      "status": "passed",
+      "details": {
+        "resolved_local_references": 452
+      }
+    },
+    {
+      "name": "positive_examples_and_signed_byte_bindings",
+      "status": "passed",
+      "details": {
+        "schema_valid_examples": 19,
+        "cross_object_bindings": "passed",
+        "signature": "real Ed25519 test vector; no private key saved",
+        "game_archive": "absent by design"
+      }
+    },
+    {
+      "name": "boundary_and_tampering_negative_vectors",
+      "status": "passed",
+      "details": {
+        "rejected_negative_vectors": 32,
+        "vectors": [
+          {
+            "case": "duplicate_json_key",
+            "result": "rejected",
+            "exception": "ValueError"
+          },
+          {
+            "case": "non_finite_number",
+            "result": "rejected",
+            "exception": "ValueError"
+          },
+          {
+            "case": "invalid_byte_count_-1",
+            "result": "rejected",
+            "exception": "ValueError"
+          },
+          {
+            "case": "invalid_byte_count_01",
+            "result": "rejected",
+            "exception": "ValueError"
+          },
+          {
+            "case": "invalid_byte_count_1e3",
+            "result": "rejected",
+            "exception": "ValueError"
+          },
+          {
+            "case": "invalid_byte_count_9223372036854775808",
+            "result": "rejected",
+            "exception": "ValueError"
+          },
+          {
+            "case": "unsafe_path_'../save'",
+            "result": "rejected",
+            "exception": "ValueError"
+          },
+          {
+            "case": "unsafe_path_'/absolute'",
+            "result": "rejected",
+            "exception": "ValueError"
+          },
+          {
+            "case": "unsafe_path_'C:/outside'",
+            "result": "rejected",
+            "exception": "ValueError"
+          },
+          {
+            "case": "unsafe_path_'a\\\\b'",
+            "result": "rejected",
+            "exception": "ValueError"
+          },
+          {
+            "case": "unsafe_path_'a//b'",
+            "result": "rejected",
+            "exception": "ValueError"
+          },
+          {
+            "case": "unsafe_path_'a/./b'",
+            "result": "rejected",
+            "exception": "ValueError"
+          },
+          {
+            "case": "unsafe_path_'a/../b'",
+            "result": "rejected",
+            "exception": "ValueError"
+          },
+          {
+            "case": "unsafe_path_'CON.txt'",
+            "result": "rejected",
+            "exception": "ValueError"
+          },
+          {
+            "case": "unsafe_path_'a\\x00b'",
+            "result": "rejected",
+            "exception": "ValueError"
+          },
+          {
+            "case": "unsafe_path_'x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/x/file'",
+            "result": "rejected",
+            "exception": "ValueError"
+          },
+          {
+            "case": "unsafe_path_'字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字字'",
+            "result": "rejected",
+            "exception": "ValueError"
+          },
+          {
+            "case": "file_count_mismatch",
+            "result": "rejected",
+            "exception": "ValueError"
+          },
+          {
+            "case": "duplicate_file",
+            "result": "rejected",
+            "exception": "ValueError"
+          },
+          {
+            "case": "chunk_gap",
+            "result": "rejected",
+            "exception": "ValueError"
+          },
+          {
+            "case": "chunk_length",
+            "result": "rejected",
+            "exception": "ValueError"
+          },
+          {
+            "case": "durable_progress_over_total",
+            "result": "rejected",
+            "exception": "ValueError"
+          },
+          {
+            "case": "feedback_too_short",
+            "result": "rejected",
+            "exception": "ValidationError"
+          },
+          {
+            "case": "weak_range_validator",
+            "result": "rejected",
+            "exception": "ValidationError"
+          },
+          {
+            "case": "multipart_incomplete",
+            "result": "rejected",
+            "exception": "ValueError"
+          },
+          {
+            "case": "multipart_duplicate_part",
+            "result": "rejected",
+            "exception": "ValueError"
+          },
+          {
+            "case": "save_expanded_limit",
+            "result": "rejected",
+            "exception": "ValueError"
+          },
+          {
+            "case": "insufficient_playability_evidence",
+            "result": "rejected",
+            "exception": "ValueError"
+          },
+          {
+            "case": "save_event_without_commit",
+            "result": "rejected",
+            "exception": "ValidationError"
+          },
+          {
+            "case": "tampered_payload_with_updated_hash",
+            "result": "rejected",
+            "exception": "InvalidSignature"
+          },
+          {
+            "case": "signature_domain_separation",
+            "result": "rejected",
+            "exception": "InvalidSignature"
+          },
+          {
+            "case": "unknown_trust_root",
+            "result": "rejected",
+            "exception": "ValueError"
+          }
+        ],
+        "integer_precision_positive": "passed"
+      }
+    },
+    {
+      "name": "state_and_error_contract_consistency",
+      "status": "passed",
+      "details": {
+        "state_machines": 4,
+        "error_codes": 50,
+        "event_types": 10
+      }
+    },
+    {
+      "name": "markdown_links_and_structure",
+      "status": "passed",
+      "details": {
+        "markdown_documents": 19,
+        "local_links": 425
+      }
+    },
+    {
+      "name": "offline_handbook_browser_review",
+      "status": "passed",
+      "details": {
+        "viewports": [
+          1360,
+          390
+        ],
+        "direct_offline_file": true,
+        "external_requests": 0,
+        "browser_closed": true,
+        "document_sha256": "b3ad5ef8c74bac7b90e20f88728e7b81e043abf9a1fd4185a6b32e2c98c40f12"
+      }
+    },
+    {
+      "name": "protected_runtime_work_preserved",
+      "status": "passed",
+      "details": {
+        "unchanged_files": 10
+      }
+    }
+  ],
+  "passed": true
+}

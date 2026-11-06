@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.nsa.invalid/v1/file-index.schema.json",
+  "type": "object",
+  "properties": {
+    "index_schema": {
+      "const": 1
+    },
+    "release_id": {
+      "$ref": "domain.schema.json#/$defs/Id"
+    },
+    "file_count": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 250000
+    },
+    "unpacked_bytes": {
+      "$ref": "domain.schema.json#/$defs/ByteCount"
+    },
+    "files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024,
+            "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\).+$"
+          },
+          "bytes": {
+            "$ref": "domain.schema.json#/$defs/ByteCount"
+          },
+          "sha256": {
+            "$ref": "domain.schema.json#/$defs/Sha256"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "program",
+              "resource",
+              "shader",
+              "configuration"
+            ]
+          }
+        },
+        "required": [
+          "path",
+          "bytes",
+          "sha256",
+          "role"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 1,
+      "maxItems": 250000
+    }
+  },
+  "required": [
+    "index_schema",
+    "release_id",
+    "file_count",
+    "unpacked_bytes",
+    "files"
+  ],
+  "additionalProperties": false
+}
