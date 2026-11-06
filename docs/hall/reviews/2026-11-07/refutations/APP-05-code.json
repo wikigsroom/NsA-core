@@ -1,0 +1,232 @@
+{
+  "schema_version": 1,
+  "requirement_id": "APP-05",
+  "review_type": "independent_code_refutation",
+  "commit": "cdedc7179ec1842592243a052525e021d8cf70f1",
+  "authored_original": false,
+  "scope": [
+    "APP-05-D01",
+    "APP-05-D04",
+    "APP-05-D03",
+    "APP-05-D02",
+    "APP-05-D05"
+  ],
+  "inputs": [
+    "requirements/APP-05.md",
+    "requirements/APP-05.json"
+  ],
+  "executed": {
+    "tests": false,
+    "builds": false,
+    "device_reads": false,
+    "device_input": false,
+    "browser": false,
+    "virtualization": false,
+    "product_edits": false,
+    "agents": false
+  },
+  "results": [
+    {
+      "id": "APP-05-D01",
+      "verdict": "survives",
+      "confidence": "high",
+      "retainedClaim": "Client accepts equal-epoch policies with differing signed payloads; the bundled service can generate them, so signature verification and older-epoch rejection do not preserve a known block against a stale equal-epoch response.",
+      "counterargumentsTested": [
+        "Signer canonicalization/signature might stabilize snapshot identity: canonicalization sorts keys but includes a newly generated issued_at and current release states.",
+        "Release revision CAS might make policy epoch strictly monotonic: change increments revision but epoch ignores it and uses integer-second updated.",
+        "HTTP cache control/credential mutex might prevent replay: no-store addresses caches, not equal-epoch acceptance; credentialLock ends before protected resource send.",
+        "A later runtime check might preserve the block: preflight uses the policy fact that was overwritten; slot/hardware/native configuration has no independent policy authority."
+      ],
+      "evidence": [
+        "services/catalog/app.py:38-39 utc includes current fractional time",
+        "services/catalog/app.py:263-266 policy epoch=max(updated), new issued_at, current release states",
+        "services/catalog/db.py:19-20,56-64 timestamps are integer seconds; independent revision increment",
+        "services/catalog/app.py:453-466 approved publisher can block/unblock through normal mutation",
+        "services/catalog/crypto.py:31-39 canonical payload digest and signature include those changing fields",
+        "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt:140-145 equal epoch accepted and payload digest discarded",
+        "android/app/src/main/java/org/nsa/hall/data/Api.kt:76-107 credential lock is not a whole-request policy lock",
+        "services/catalog/app.py:485-486 no-store does not pin policy identity",
+        "android/app/src/main/java/org/nsa/hall/data/Database.kt:37-38 fact read and Upsert are separate"
+      ],
+      "callChain": "GET /v1/policies -> endpoint auth/dispatch -> current release rows -> Signer.envelope -> Api.request -> Trust.verify -> updatePolicies >= compare -> replace policy fact -> preflight exact-release check",
+      "qualification": "The stale-policy rollback impact requires an older valid signed response to be delivered/replayed after the newer one; no HTTPS bypass or attacker-controlled signature is established. UI action serialization is not independently reported as a proven concurrency exploit.",
+      "validationNeed": "Same second publish/block snapshots and no-mutation repeated GET identity; equal-epoch/different-digest rejection retaining the block; later consolidated concurrency checks."
+    },
+    {
+      "id": "APP-05-D04",
+      "verdict": "survives",
+      "confidence": "high",
+      "retainedClaim": "For offline_permitted=false, the mandatory second updatePolicies call can persist a block after the sole release-block comparison, then return a launch selection.",
+      "counterargumentsTested": [
+        "The policy endpoint might itself reject blocked releases: it returns a signed policy entry with state=blocked.",
+        "operationLock might prevent a server-side block: it coordinates local operations only; publisher mutations are independent.",
+        "trust.slot/SessionController or runtime handshake might repeat the release-state check: they validate module identity, cancellation and session identity, not the newly persisted policy.",
+        "A failed second update might still launch: it propagates and fails; the candidate only concerns a successful second response with a block."
+      ],
+      "evidence": [
+        "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt:157-167 final block comparison precedes second update",
+        "services/catalog/app.py:263-266 blocked entry is returned in signed policy",
+        "android/app/src/main/java/org/nsa/hall/security/Trust.kt:66-79 slot has module identity checks only",
+        "android/app/src/main/java/org/nsa/hall/security/Capability.kt:6-26 hardware checks only",
+        "android/app/src/main/java/org/nsa/hall/runtime/SessionController.kt:64-80 selection followed by cancellation check and SessionRecord",
+        "android/app/src/main/java/org/nsa/hall/runtime/SessionController.kt:91-109 sends trusted selection context without policy replay",
+        "android/app/src/main/java/org/nsa/hall/runtime/GameProcessService.kt:24-29 PREPARE is context/handshake only",
+        "android/app/src/main/java/org/nsa/hall/runtime/GameActivity.kt:41-61 validates session/library, not release policy"
+      ],
+      "callChain": "preflight -> optional policy A -> load/check A -> mandatory policy B(blocked) -> local module/files/space checks -> selection -> SessionRecord -> PREPARE",
+      "qualification": "The installed module, files, hardware and other preconditions must pass; failure there can stop a launch but does not enforce policy.",
+      "validationNeed": "Two successful snapshots published then blocked; require no SessionRecord or PREPARE. Separately assert mandatory-refresh failure stops online-only content."
+    },
+    {
+      "id": "APP-05-D03",
+      "verdict": "unverified",
+      "previousVerdict": "survives",
+      "adjudication": {
+        "date": "2026-11-07",
+        "promptedBy": "refutations/APP-05-spec.md and .json, D03 narrowed interpretation",
+        "effectiveVerdict": "unverified",
+        "disposition": "unresolved_documentation_and_ux_clarification",
+        "confirmedDefect": false,
+        "sourcePathConfirmed": true,
+        "initialPolicyGateRemovalSupported": false,
+        "rationale": "Installation completion with no policy and later null-policy rejection are confirmed source facts. They do not establish that necessary initial offline preparation has completed. No inspected UI explicitly states that offline preparation is complete; generic readiness and a Start game action do not establish that stronger claim when launch revalidates.",
+        "uiEvidence": [
+          "android/app/src/main/java/org/nsa/hall/ui/HallApp.kt:210 conditional offline text is 首次准备完成后支持, not an observed complete flag",
+          "android/app/src/main/java/org/nsa/hall/ui/HallApp.kt:221-225 completed transfer exposes 开始游戏 under 准备游戏 / 下载、校验与安装进度",
+          "android/app/src/main/java/org/nsa/hall/ui/HallApp.kt:402 completed transfer is labeled 游戏已准备好 without a policy field; ambiguous preparation wording, not an explicit offline-complete assertion",
+          "android/app/src/main/java/org/nsa/hall/ui/HallApp.kt:153 banner qualifies installed operation as 按离线策略运行",
+          "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt:157-161 revalidates at launch and explains 首次启动需要连接目录获取策略 when no initial policy exists"
+        ],
+        "qualification": "A readiness-UX inconsistency remains plausible, but accepting it as a confirmed APP-05 defect requires a normative definition that the displayed preparation-complete state includes initial trusted policy preparation. install.ready alone is insufficient. Existing trusted policy, known block and null initial policy must remain distinct.",
+        "nextStep": "Clarify necessary initial preparation and its visible state/retry wording; if a product change follows, keep installation activation separate and retain the initial trusted-policy gate unless an explicitly specified trusted alternative is adopted."
+      },
+      "confidence": "high",
+      "retainedClaim": "A valid offline-permitted installation can be committed without any policy fact; later offline preflight rejects it because a nonnull policy is required before consulting offline_permitted.",
+      "counterargumentsTested": [
+        "First catalogue initialization might require policy success: refresh persists catalogue before wrapping updatePolicies in runCatching.",
+        "Manifest/grant or installation might require/cache policy: they enforce current server visibility/signatures/capability but do not write the local policy fact.",
+        "The initial-failure scenario might require tampering: route-specific policy failure followed by successful content operations suffices; no database deletion is needed.",
+        "Existing local blocks might be removed as part of fallback: no such fallback exists; this candidate is strictly the never-synced-policy case."
+      ],
+      "evidence": [
+        "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt:77-84 catalogue persists, policy errors swallowed",
+        "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt:86-118 detail/enqueue/grant have no local policy prerequisite",
+        "android/app/src/main/java/org/nsa/hall/transfer/TransferWorker.kt:97-150 existing content path has no updatePolicies call",
+        "android/app/src/main/java/org/nsa/hall/transfer/Installation.kt:98-103 ready activation contains no policy condition",
+        "services/catalog/app.py:237-255 grant checks server visibility/capability but carries no policy snapshot",
+        "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt:157-161 require(policy != null) occurs before offline_permitted branch",
+        "android/app/src/main/java/org/nsa/hall/ui/HallApp.kt:210 promises offline after initial preparation"
+      ],
+      "callChain": "initial refresh -> policy failure swallowed -> detail/enqueue -> worker/install activate ready -> disconnect -> preflight best-effort refresh fails -> null policy rejected",
+      "qualification": "Usually a successful initial policy GET prevents this state; the retained claim is a partial outage/never-synced-policy path. Whether product security should instead require a prepared offline authorization belongs to the independent specification review.",
+      "validationNeed": "Fail only first policy retrieval, complete all content steps normally, disconnect, and check offline launch; keep allow/block snapshots as controls."
+    },
+    {
+      "id": "APP-05-D02",
+      "verdict": "narrowed",
+      "confidence": "high",
+      "retainedClaim": "For an already persisted valid policy with a nonempty revoked_key_ids list, preflight rejects an existing installation signed by that key before reading the exact release status.",
+      "counterargumentsTested": [
+        "Expected installed manifest digest might bypass key revocation: Trust.verify rejects revoked key first, before expected digest and signature checks.",
+        "A fresh release policy might override the key rejection: preflight verifies installed envelope before updatePolicies/read release state.",
+        "Current service might not produce the prerequisite: confirmed; the sole production issuer hardcodes revoked_key_ids=[] and no revocation mutation was found.",
+        "The candidate might require trusting new policy signed by a revoked key: it does not; use a still-trusted policy signing key, as the author already qualifies."
+      ],
+      "evidence": [
+        "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt:56 loads persisted revocation state",
+        "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt:153-160 installed envelope verified before exact release-policy read",
+        "android/app/src/main/java/org/nsa/hall/security/Trust.kt:52-64 generic verify rejects revoked key at line 56 before digest check",
+        "services/catalog/app.py:263-266 current only policy issuer hardcodes empty revocation list",
+        "docs/engineering/contracts/policy.schema.json:51-57 accepts a nonempty revocation list"
+      ],
+      "callChain": "initialize reads persisted policy.revoked_key_ids -> preflight installed Trust.verify -> revoked key check throws -> exact release state unreachable",
+      "qualification": "Retain as a conditional consumer/contract branch, not a demonstrated current end-to-end production failure. The original author already discloses this limitation; narrowing only makes the current-source reachability distinction explicit.",
+      "validationNeed": "Later client integration fixture signed by a still-trusted policy key; key-revoked new content versus digest-pinned existing allow/unlisted/blocked installations."
+    },
+    {
+      "id": "APP-05-D05",
+      "verdict": "narrowed",
+      "confidence": "high",
+      "retainedClaim": "Once first-launch refresh fails, the discovery error banner falsely says cached data is displayed even when no catalogue cache exists; the network-error route has no cache-presence/time projection.",
+      "counterargumentsTested": [
+        "Fresh offline may be unable to enter hall: Welcome writes welcome=true before network refresh, so entry and local library remain reachable.",
+        "Some genuine first-connect/network explanation may already exist: Welcome line 349 says first connection needs network and the empty card line 155 reports catalogue failure.",
+        "An empty local library or online entries might be fabricated: neither; local library uses actual games and catalogue starts empty.",
+        "The existing first-connect note might fix the cache claim: it does not change the unconditional cache banner at line 153."
+      ],
+      "evidence": [
+        "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt:30-32 initial empty catalogue/time",
+        "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt:51-53 no cache leaves both empty",
+        "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt:84 sets network error",
+        "android/app/src/main/java/org/nsa/hall/ui/HallApp.kt:147 permits entering hall before refresh success",
+        "android/app/src/main/java/org/nsa/hall/ui/HallApp.kt:153 unconditional cached-data banner",
+        "android/app/src/main/java/org/nsa/hall/ui/HallApp.kt:155 existing catalogue-failure explanation",
+        "android/app/src/main/java/org/nsa/hall/ui/HallApp.kt:164-168 real local empty library",
+        "android/app/src/main/java/org/nsa/hall/ui/HallApp.kt:306-312 network page lacks cache status/time",
+        "android/app/src/main/java/org/nsa/hall/ui/HallApp.kt:349 genuine first-connect network note"
+      ],
+      "callChain": "fresh local DB -> enter hall -> refresh API failure -> networkError nonempty -> unconditional line-153 banner; optional network-error route",
+      "qualification": "Do not describe all first-offline explanation as absent or the app as an offline-entry/login wall. Keep the low-impact inaccurate cache fact and missing contextual cache status only.",
+      "validationNeed": "Later consolidated first-launch/no-cache, populated cache, cached-empty catalogue and server-failure UI review; no new mirror unit tests needed."
+    }
+  ],
+  "searches": [
+    {
+      "scope": "services/catalog, services/tests, android/app/src/main, content_tools",
+      "patterns": [
+        "revoked_key_ids",
+        "revokedKeys",
+        "updatePolicies(",
+        "fact(\"policy\")",
+        "Fact(\"policy\")",
+        "policy_scope",
+        "signed_digest"
+      ],
+      "result": "One service policy issuer; always empty revocations. Only one local policy writer and three update call sites; no digest/epoch-CAS or alternate installed-envelope verifier."
+    },
+    {
+      "scope": "services/catalog/app.py, db.py, crypto.py, auth.py; contracts OpenAPI/policy",
+      "patterns": [
+        "getReleasePolicies",
+        "blockRelease",
+        "unblockRelease",
+        "updated",
+        "revision",
+        "utc",
+        "canonical",
+        "Cache-Control"
+      ],
+      "result": "Actual registered/authenticated dispatch and signer traced; integer timestamps and per-request fractional issued_at confirmed."
+    },
+    {
+      "scope": "android/app/src/main/java/org/nsa/hall/runtime, security, transfer, ui",
+      "patterns": [
+        "preflight",
+        "slot",
+        "PREPARE",
+        "offline_permitted",
+        "policy",
+        "catalogueUpdated",
+        "networkError"
+      ],
+      "result": "All downstream policy candidate counterchecks inspected; no final release-state replay after mandatory online refresh."
+    }
+  ],
+  "limitations": [
+    "Static code refutation only; no execution or phone observation.",
+    "Normative applicability remains for the separate specification refuter.",
+    "D02 current issuer cannot generate the prerequisite nonempty revocation list; preserve its conditional status."
+  ],
+  "_publication": {
+    "original_record_sha256": "e6b6673d470e16147db36aaf085bd54f35e468c555a6d73c5695c00233496df1",
+    "review_stage": "independent_code_refutation",
+    "reviewed_source_revision": "cdedc7179ec1842592243a052525e021d8cf70f1",
+    "normalizations": [
+      "checkout path made relative",
+      "record paths made collection-relative",
+      "Markdown source file/line links pinned to the reviewed Git revision",
+      "Markdown trailing whitespace normalized"
+    ],
+    "final_adjudication": "docs/hall/verification/2026-11-07-source-review.json"
+  }
+}

@@ -1,0 +1,989 @@
+{
+  "schema_version": 1,
+  "requirement_id": "APP-05",
+  "title": "离线大厅、有效安装与持久阻断",
+  "priority": "P0",
+  "commit": "cdedc7179ec1842592243a052525e021d8cf70f1",
+  "repository": ".",
+  "statement": "无网络时可打开大厅和我的游戏；已安装且允许离线的内容仍可启动。首次没有目录缓存时明确解释，不伪造在线列表。",
+  "verdict": "partial",
+  "confidence": "high",
+  "review_status": "author_analysis_pending_independent_refutation",
+  "mode": "read_only_static_audit",
+  "executed": {
+    "source_mutations": false,
+    "tests": false,
+    "builds": false,
+    "phone_queries": false,
+    "phone_input": false,
+    "browser": false,
+    "virtualization": false,
+    "subagents": false
+  },
+  "specification": [
+    {
+      "file": "docs/product/产品需求细则.md",
+      "lines": [
+        89,
+        102
+      ],
+      "section": "APP-05",
+      "force": "P0 required"
+    },
+    {
+      "file": "docs/engineering/07-build-release-operations.md",
+      "lines": [
+        47,
+        47
+      ],
+      "section": "签名策略单调性、相同 epoch 摘要、撤销 key 与已安装 release"
+    },
+    {
+      "file": "docs/engineering/05-data-state.md",
+      "lines": [
+        28,
+        43
+      ],
+      "section": "目录与持久安全事实分离"
+    },
+    {
+      "file": "docs/engineering/05-data-state.md",
+      "lines": [
+        93,
+        93
+      ],
+      "section": "旧 UI 不绕过后同步阻断"
+    },
+    {
+      "file": "docs/product/产品需求细则.md",
+      "lines": [
+        1123,
+        1142
+      ],
+      "section": "UPD-06.01-.04、UPD-07.01-.04"
+    },
+    {
+      "file": "docs/engineering/03-runtime-integration.md",
+      "lines": [
+        70,
+        76
+      ],
+      "section": "取消、时限"
+    },
+    {
+      "file": "docs/design/obsidian-portrait/03-screen-specs.md",
+      "lines": [
+        930,
+        945
+      ],
+      "section": "S27 缓存时间或无缓存说明"
+    },
+    {
+      "file": "docs/design/obsidian-portrait/03-screen-specs.md",
+      "lines": [
+        970,
+        970
+      ],
+      "section": "S28 首开离线"
+    },
+    {
+      "file": "docs/engineering/decisions/0005-client-guardrails-and-cache.md",
+      "lines": [
+        11,
+        13
+      ],
+      "section": "取消与缓存"
+    },
+    {
+      "file": "docs/engineering/decisions/0006-durable-credential-renewal.md",
+      "lines": [
+        7,
+        11
+      ],
+      "section": "凭据失败保留"
+    }
+  ],
+  "subrules": [
+    {
+      "id": "APP-05.01",
+      "quote": "无缓存离线时显示联网说明和空本地库；有缓存显示更新时间，不填造在线条目。",
+      "spec_line": 97,
+      "verdict": "partial",
+      "confidence": "high",
+      "finding_ids": [
+        "APP-05-D05"
+      ],
+      "supported_behavior": [
+        "真实 API 或持久缓存条目",
+        "我的游戏独立空库",
+        "缓存目录刷新失败后保留列表"
+      ],
+      "code_evidence": [
+        {
+          "file": "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt",
+          "lines": [
+            48,
+            84
+          ]
+        },
+        {
+          "file": "android/app/src/main/java/org/nsa/hall/ui/HallApp.kt",
+          "lines": [
+            147,
+            180
+          ]
+        },
+        {
+          "file": "android/app/src/main/java/org/nsa/hall/ui/HallApp.kt",
+          "lines": [
+            306,
+            312
+          ]
+        }
+      ]
+    },
+    {
+      "id": "APP-05.02",
+      "quote": "已安装开放内容在无本地阻断且安装有效时可离线启动；目录刷新失败不能成为统一登录墙。",
+      "spec_line": 98,
+      "verdict": "partial",
+      "confidence": "high",
+      "finding_ids": [
+        "APP-05-D02",
+        "APP-05-D03"
+      ],
+      "supported_behavior": [
+        "缓存策略存在且没有精确 block 时，离线安装不要求新凭据成功",
+        "网络/403/续签错误不删除安装、存档或 policy",
+        "新内容由已知撤销 key 签名时仍被拒绝"
+      ],
+      "code_evidence": [
+        {
+          "file": "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt",
+          "lines": [
+            140,
+            167
+          ]
+        },
+        {
+          "file": "android/app/src/main/java/org/nsa/hall/security/Trust.kt",
+          "lines": [
+            52,
+            64
+          ]
+        },
+        {
+          "file": "android/app/src/main/java/org/nsa/hall/data/Api.kt",
+          "lines": [
+            76,
+            109
+          ]
+        }
+      ]
+    },
+    {
+      "id": "APP-05.03",
+      "quote": "联网恢复只刷新目录和任务，不自动启动游戏或改变页面方向。",
+      "spec_line": 99,
+      "verdict": "implemented",
+      "confidence": "high",
+      "finding_ids": [],
+      "interpretation": "检查恢复副作用；本条未明确要求无需点击即自动刷新目录。当前目录由初始化/显式重试刷新，任务由 WorkManager CONNECTED 调度。",
+      "code_evidence": [
+        {
+          "file": "android/app/src/main/java/org/nsa/hall/MainActivity.kt",
+          "lines": [
+            38,
+            44
+          ]
+        },
+        {
+          "file": "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt",
+          "lines": [
+            63,
+            84
+          ]
+        },
+        {
+          "file": "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt",
+          "lines": [
+            126,
+            128
+          ]
+        },
+        {
+          "file": "android/app/src/main/java/org/nsa/hall/transfer/TransferWorker.kt",
+          "lines": [
+            31,
+            73
+          ]
+        },
+        {
+          "file": "android/app/src/main/java/org/nsa/hall/runtime/SessionController.kt",
+          "lines": [
+            50,
+            80
+          ]
+        },
+        {
+          "file": "android/app/src/main/java/org/nsa/hall/runtime/SessionController.kt",
+          "lines": [
+            123,
+            137
+          ]
+        },
+        {
+          "file": "android/app/src/main/AndroidManifest.xml",
+          "lines": [
+            12,
+            17
+          ]
+        }
+      ]
+    },
+    {
+      "id": "APP-05.04",
+      "quote": "缓存失效和内容撤回是不同事实；已知阻断必须持久保存，不能被旧目录覆盖。",
+      "spec_line": 100,
+      "verdict": "partial",
+      "confidence": "high",
+      "finding_ids": [
+        "APP-05-D01",
+        "APP-05-D04"
+      ],
+      "supported_behavior": [
+        "目录和 policy 分离",
+        "普通缓存清理保留 policy",
+        "更低 epoch 被拒绝",
+        "精确已知 blocked 在尽力刷新失败时仍被拒绝"
+      ],
+      "code_evidence": [
+        {
+          "file": "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt",
+          "lines": [
+            140,
+            167
+          ]
+        },
+        {
+          "file": "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt",
+          "lines": [
+            180,
+            184
+          ]
+        },
+        {
+          "file": "services/catalog/app.py",
+          "lines": [
+            263,
+            266
+          ]
+        },
+        {
+          "file": "services/catalog/db.py",
+          "lines": [
+            56,
+            64
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "id": "APP-05-D01",
+      "title": "相同 epoch 的不同签名策略可覆盖已知阻断",
+      "severity": "high",
+      "priority": "P1",
+      "confidence": "high",
+      "subrules": [
+        "APP-05.04"
+      ],
+      "spec_evidence": [
+        {
+          "file": "docs/product/产品需求细则.md",
+          "lines": [
+            100,
+            100
+          ],
+          "quote": "缓存失效和内容撤回是不同事实；已知阻断必须持久保存，不能被旧目录覆盖。"
+        },
+        {
+          "file": "docs/engineering/07-build-release-operations.md",
+          "lines": [
+            47,
+            47
+          ],
+          "quote": "恢复旧目录缓存不降低策略；同 epoch 不同摘要拒绝。"
+        }
+      ],
+      "code_evidence": [
+        {
+          "file": "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt",
+          "lines": [
+            140,
+            145
+          ],
+          "role": "只用 >= 比 epoch，丢弃 signed payload digest 后整条 Upsert"
+        },
+        {
+          "file": "android/app/src/main/java/org/nsa/hall/data/Database.kt",
+          "lines": [
+            37,
+            38
+          ],
+          "role": "读写分开，没有策略 CAS"
+        },
+        {
+          "file": "services/catalog/app.py",
+          "lines": [
+            263,
+            266
+          ],
+          "role": "epoch=max release.updated，issued_at 每请求重新生成"
+        },
+        {
+          "file": "services/catalog/db.py",
+          "lines": [
+            19,
+            20
+          ],
+          "role": "updated 默认整数秒"
+        },
+        {
+          "file": "services/catalog/db.py",
+          "lines": [
+            56,
+            59
+          ],
+          "role": "更新仍为 int(time.time())，revision 没用于策略 epoch"
+        },
+        {
+          "file": "services/catalog/app.py",
+          "lines": [
+            453,
+            466
+          ],
+          "role": "正常发布/阻断路径"
+        },
+        {
+          "file": "services/catalog/crypto.py",
+          "lines": [
+            31,
+            39
+          ],
+          "role": "签名包含原始 issued_at 与状态"
+        }
+      ],
+      "trigger": [
+        "同秒 T 内先获取 R=published 的签名策略 A，再 block R 并获取 B；A/B 可具有同一 epoch T。",
+        "客户端先保存 B，然后收到较旧但签名有效的 A。",
+        "epoch>=old 接受 A，替换整个 policy，使本地 R 的 block 消失。"
+      ],
+      "impact": "已知精确紧急阻断可回退为允许新启动；需要较旧有效签名响应被迟到交付/重放，不主张能伪造签名或任意绕过 HTTPS。",
+      "qualifications": [
+        "同状态不同时间 GET 也生成同 epoch 不同 signed digest，服务本身没有稳定快照身份。",
+        "策略旧值比较和写入没有原子事务/共享策略锁；修复应同时覆盖并发。"
+      ],
+      "minimal_correction": "服务使用持久递增序列和每 epoch 稳定原始快照；客户端保存 signed payload digest，相同 epoch 要求同 digest，并原子比较/写入，保留有效范围隔离。",
+      "recommended_tests": [
+        "冻结时钟，同秒 block 必须提升策略序列",
+        "同 epoch 同 digest 幂等；异 digest 拒绝且 block 保留",
+        "低序列与迟到并发提交不能回退；清缓存/重启保留 block 和 revoked keys"
+      ],
+      "status": "pending_independent_refutation"
+    },
+    {
+      "id": "APP-05-D02",
+      "title": "撤销签名 key 一律停用其既有安装",
+      "severity": "medium",
+      "priority": "P2",
+      "confidence": "high",
+      "subrules": [
+        "APP-05.02"
+      ],
+      "spec_evidence": [
+        {
+          "file": "docs/product/产品需求细则.md",
+          "lines": [
+            98,
+            98
+          ],
+          "quote": "已安装开放内容在无本地阻断且安装有效时可离线启动；目录刷新失败不能成为统一登录墙。"
+        },
+        {
+          "file": "docs/engineering/07-build-release-operations.md",
+          "lines": [
+            47,
+            47
+          ],
+          "quote": "已知 revoked key 不能验证新内容；已安装内容如何处理由签名策略的精确 release 状态决定"
+        }
+      ],
+      "code_evidence": [
+        {
+          "file": "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt",
+          "lines": [
+            56,
+            56
+          ],
+          "role": "恢复已知撤销 key"
+        },
+        {
+          "file": "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt",
+          "lines": [
+            153,
+            160
+          ],
+          "role": "先对既有安装调用通用 Trust.verify，后读精确 release 策略"
+        },
+        {
+          "file": "android/app/src/main/java/org/nsa/hall/security/Trust.kt",
+          "lines": [
+            52,
+            64
+          ],
+          "role": "L56 对所有用途无条件过滤 revoked key"
+        },
+        {
+          "file": "services/catalog/app.py",
+          "lines": [
+            263,
+            266
+          ],
+          "role": "当前服务 revoked_key_ids 固定 []，该状态尚不由当前服务主动签发"
+        }
+      ],
+      "trigger": [
+        "R 已可信安装且 offline_permitted=true。",
+        "有效持久策略由仍可信 policy key 签发，撤销安装清单 key K，但 R 仍 published/unlisted。",
+        "初始化恢复 K；下一次 preflight 在读取 R 状态前因 K 撤销拒绝。"
+      ],
+      "impact": "无精确 release block 的既有离线安装被扩大停用；同步撤销前后首次/后续启动行为还不一致。",
+      "qualifications": [
+        "这是规范允许且 Trust 支持的已知撤销状态下的确定性分支问题。当前服务未实际发出非空撤销列表；未观察手机上的真实该状态。",
+        "不要求接受被撤销 key 签发的新策略。"
+      ],
+      "minimal_correction": "区分新内容验证和已固定安装 digest 的完整性再验证；既有安装按精确 release 状态授权，同时维持新内容 revoked-key 拒绝。",
+      "recommended_tests": [
+        "被撤销 K 的新内容拒绝",
+        "已固定 digest、未 blocked 的 K 安装仍可离线",
+        "精确 blocked 始终拒绝；刷新前后和重启后保持一致"
+      ],
+      "status": "pending_independent_refutation"
+    },
+    {
+      "id": "APP-05-D03",
+      "title": "初始策略缺失给有效离线安装增加隐式联网门",
+      "severity": "medium",
+      "priority": "P2",
+      "confidence": "high",
+      "subrules": [
+        "APP-05.02"
+      ],
+      "spec_evidence": [
+        {
+          "file": "docs/product/产品需求细则.md",
+          "lines": [
+            98,
+            98
+          ],
+          "quote": "已安装开放内容在无本地阻断且安装有效时可离线启动；目录刷新失败不能成为统一登录墙。"
+        },
+        {
+          "file": "docs/product/产品需求细则.md",
+          "lines": [
+            1133,
+            1141
+          ],
+          "quote": "更新目录或配置失败不会影响已经安装、允许离线且没有本地阻断记录的游戏启动。要求联网的特殊内容在详情中明确说明有效条件。"
+        }
+      ],
+      "code_evidence": [
+        {
+          "file": "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt",
+          "lines": [
+            77,
+            83
+          ],
+          "role": "先保存目录，再忽略初始策略错误"
+        },
+        {
+          "file": "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt",
+          "lines": [
+            86,
+            118
+          ],
+          "role": "详情和排队没有初始 policy 前置"
+        },
+        {
+          "file": "android/app/src/main/java/org/nsa/hall/transfer/Installation.kt",
+          "lines": [
+            98,
+            103
+          ],
+          "role": "激活 ready 安装无 policy 前置"
+        },
+        {
+          "file": "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt",
+          "lines": [
+            157,
+            161
+          ],
+          "role": "L159 即使 offline_permitted 也要求任意 policy 非空"
+        },
+        {
+          "file": "android/app/src/main/java/org/nsa/hall/ui/HallApp.kt",
+          "lines": [
+            210,
+            210
+          ],
+          "role": "仅说明首次准备完成后支持离线"
+        }
+      ],
+      "trigger": [
+        "首次目录/详情/兼容与下载正常，但 /v1/policies 初次获取失败。",
+        "内容正常校验安装并 ready；policy 仍不存在。",
+        "断网首次启动签名允许离线、无已知 block 的已安装开放内容。"
+      ],
+      "impact": "L159 要求先连接目录取策略，已准备的开放离线内容不能离线使用；无需人为篡改或删数据库。",
+      "minimal_correction": "区分从未同步与已知 block，消除 ready 离线安装的统一网络门；若安全设计要求初始离线授权，则在准备完成前持久化，未完成不能声称 offline-ready，并同步页面/规范。",
+      "recommended_tests": [
+        "仅使初次 policies 请求失败，其他下载/安装成功，随后断网启动",
+        "覆盖无策略/允许/blocked 与离线、续签失败、403 组合，绝不以删 block 放行"
+      ],
+      "status": "pending_independent_refutation"
+    },
+    {
+      "id": "APP-05-D04",
+      "title": "在线专用启动最后同步 blocked 后没有重查",
+      "severity": "high",
+      "priority": "P1",
+      "confidence": "high",
+      "subrules": [
+        "APP-05.04"
+      ],
+      "spec_evidence": [
+        {
+          "file": "docs/product/产品需求细则.md",
+          "lines": [
+            100,
+            100
+          ],
+          "quote": "缓存失效和内容撤回是不同事实；已知阻断必须持久保存，不能被旧目录覆盖。"
+        },
+        {
+          "file": "docs/engineering/05-data-state.md",
+          "lines": [
+            93,
+            93
+          ],
+          "quote": "用户点下时命令层重新验证，旧 UI 快照不能绕过后来同步的阻断。"
+        },
+        {
+          "file": "docs/product/产品需求细则.md",
+          "lines": [
+            1124,
+            1124
+          ],
+          "quote": "阻断策略有单调序号、原因和恢复入口，下一次同步后限制新启动，不远程删档。"
+        }
+      ],
+      "code_evidence": [
+        {
+          "file": "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt",
+          "lines": [
+            157,
+            167
+          ],
+          "role": "L160 检查第一次局部 policy，L161 再写新策略，后面不复检"
+        },
+        {
+          "file": "android/app/src/main/java/org/nsa/hall/runtime/SessionController.kt",
+          "lines": [
+            64,
+            80
+          ],
+          "role": "preflight 后仅查取消和 slot，再建 session/准备上下文"
+        },
+        {
+          "file": "android/app/src/main/java/org/nsa/hall/security/Trust.kt",
+          "lines": [
+            66,
+            79
+          ],
+          "role": "slot 不检查 release policy"
+        }
+      ],
+      "trigger": [
+        "offline_permitted=false 的安装第一轮刷新取得 published，并通过 L160。",
+        "随后服务器 block 该 release，L161 的在线强制刷新取得并持久化 blocked。",
+        "L162-L167 不查新的 policy，返回 selection 后创建 session。"
+      ],
+      "impact": "已经同步的明确阻断仍能被一次新启动绕过。下一次启动才被挡，不能补偿本次。",
+      "minimal_correction": "依据离线许可选择所需刷新，再对最终可信策略判 release block；会话提交与策略版本变化建立明确锁/版本边界，避免判定之后再次无检查刷新。",
+      "recommended_tests": [
+        "两次策略响应 published→blocked 必须没有 session/PREPARE",
+        "online-only 最终刷新失败停止",
+        "offline-permitted 刷新失败保留原有无 block 策略"
+      ],
+      "status": "pending_independent_refutation"
+    },
+    {
+      "id": "APP-05-D05",
+      "title": "首次无缓存错误仍声称展示缓存",
+      "severity": "low",
+      "priority": "P3",
+      "confidence": "high",
+      "subrules": [
+        "APP-05.01"
+      ],
+      "spec_evidence": [
+        {
+          "file": "docs/product/产品需求细则.md",
+          "lines": [
+            91,
+            97
+          ],
+          "quote": "首次没有目录缓存时明确解释，不伪造在线列表。"
+        },
+        {
+          "file": "docs/design/obsidian-portrait/03-screen-specs.md",
+          "lines": [
+            930,
+            931
+          ],
+          "quote": "缓存时间或无缓存说明。"
+        },
+        {
+          "file": "docs/design/obsidian-portrait/03-screen-specs.md",
+          "lines": [
+            970,
+            970
+          ],
+          "quote": "首开离线说明联网后发现游戏。"
+        }
+      ],
+      "code_evidence": [
+        {
+          "file": "android/app/src/main/java/org/nsa/hall/ui/HallApp.kt",
+          "lines": [
+            153,
+            155
+          ],
+          "role": "只看 networkError，始终称正在展示缓存"
+        },
+        {
+          "file": "android/app/src/main/java/org/nsa/hall/ui/HallApp.kt",
+          "lines": [
+            168,
+            168
+          ],
+          "role": "空库无首次离线提示"
+        },
+        {
+          "file": "android/app/src/main/java/org/nsa/hall/ui/HallApp.kt",
+          "lines": [
+            306,
+            312
+          ],
+          "role": "S27 无缓存时间/无缓存分支"
+        }
+      ],
+      "trigger": [
+        "全新库 catalogue/catalogue-updated 为空。",
+        "进入大厅且目录 API 失败。",
+        "显示正在展示缓存资料（时间未知）；S27 同样没有说明从未缓存。"
+      ],
+      "impact": "用户无法准确区分首次离线与旧缓存；无伪造条目、无数据损失，故低严重度。",
+      "minimal_correction": "用持久缓存存在性投影分开无缓存联网说明和有缓存实际时间，合法已缓存空目录也要区分。",
+      "recommended_tests": [
+        "在集中人工/UI 验收对照首次无缓存、有缓存、已缓存空目录和服务故障，无需镜像式文案单元测试"
+      ],
+      "status": "pending_independent_refutation"
+    }
+  ],
+  "paths_walked": [
+    {
+      "id": "P01",
+      "condition": "first launch no cache offline",
+      "result": "empty genuine catalogue and local library available; misleading cached banner D05",
+      "evidence": [
+        "HallRepository.kt:L48-L84",
+        "HallApp.kt:L147-L180"
+      ]
+    },
+    {
+      "id": "P02",
+      "condition": "cached catalogue offline refresh failure",
+      "result": "list and updated time retained; installations not cleared",
+      "evidence": [
+        "HallRepository.kt:L51-L53",
+        "HallRepository.kt:L84",
+        "HallApp.kt:L153"
+      ]
+    },
+    {
+      "id": "P03",
+      "condition": "offline-permitted valid install + cached policy no block + network/auth failure",
+      "result": "optional refresh failure swallowed; local checks can permit launch",
+      "evidence": [
+        "HallRepository.kt:L151-L167",
+        "Api.kt:L76-L109"
+      ]
+    },
+    {
+      "id": "P04",
+      "condition": "known blocked + optional refresh fails/times out",
+      "result": "retained policy exact install.releaseId denies launch",
+      "evidence": [
+        "HallRepository.kt:L157-L160"
+      ]
+    },
+    {
+      "id": "P05",
+      "condition": "higher epoch trusted explicit published/unlisted",
+      "result": "trusted policy can permit installed release; no unjustified permanent block requirement",
+      "evidence": [
+        "HallRepository.kt:L140-L160"
+      ]
+    },
+    {
+      "id": "P06",
+      "condition": "new content signed by known revoked key",
+      "result": "enqueue rejects before task persistence/grant",
+      "evidence": [
+        "HallRepository.kt:L107-L117",
+        "Trust.kt:L56"
+      ]
+    },
+    {
+      "id": "P07",
+      "condition": "already-installed content signed by revoked key, exact release unblocked",
+      "result": "incorrect blanket rejection D02",
+      "evidence": [
+        "HallRepository.kt:L154",
+        "Trust.kt:L56"
+      ]
+    },
+    {
+      "id": "P08",
+      "condition": "revocation learned by optional refresh after initial signature validation",
+      "result": "current launch may continue if exact release not blocked; next launch incorrectly denied by D02",
+      "evidence": [
+        "HallRepository.kt:L154-L161"
+      ]
+    },
+    {
+      "id": "P09",
+      "condition": "known blocked + lower epoch signed response",
+      "result": "lower epoch rejected and retained local block denies",
+      "evidence": [
+        "HallRepository.kt:L143-L160"
+      ]
+    },
+    {
+      "id": "P10",
+      "condition": "known blocked + equal epoch conflicting old signed policy",
+      "result": "block replaced D01",
+      "evidence": [
+        "HallRepository.kt:L140-L145"
+      ]
+    },
+    {
+      "id": "P11",
+      "condition": "online-only first policy published then final refresh blocked",
+      "result": "block persists but launch allowed D04",
+      "evidence": [
+        "HallRepository.kt:L157-L167",
+        "SessionController.kt:L64-L80"
+      ]
+    },
+    {
+      "id": "P12",
+      "condition": "online-only mandatory refresh fails",
+      "result": "exception prevents launch",
+      "evidence": [
+        "HallRepository.kt:L161",
+        "SessionController.kt:L119-L120"
+      ]
+    },
+    {
+      "id": "P13",
+      "condition": "ready offline install with no initial cached policy",
+      "result": "mandatory first connection D03",
+      "evidence": [
+        "HallRepository.kt:L159",
+        "Installation.kt:L98-L103"
+      ]
+    },
+    {
+      "id": "P14",
+      "condition": "network recovery / retry",
+      "result": "facts/tasks refresh only, no automatic GameActivity or orientation write",
+      "evidence": [
+        "MainActivity.kt:L38-L44",
+        "TransferWorker.kt:L31-L73",
+        "AndroidManifest.xml:L12-L17"
+      ]
+    },
+    {
+      "id": "P15",
+      "condition": "user-paused transfer + network recovery",
+      "result": "intent remains paused; worker only chooses run",
+      "evidence": [
+        "TransferWorker.kt:L33-L73"
+      ]
+    },
+    {
+      "id": "P16",
+      "condition": "UI cancel during optional policy refresh, HTTP later success/failure/timeout",
+      "result": "cancelled flag and launch identity checked after preflight before session; finish waits operation lock; no delayed launch",
+      "evidence": [
+        "SessionController.kt:L64-L79",
+        "SessionController.kt:L162-L181"
+      ]
+    },
+    {
+      "id": "P17",
+      "condition": "cancel after cancellation check but during DB write",
+      "result": "post-IO L73 prevents launch; finish reads/writes the same created session after lock release",
+      "evidence": [
+        "SessionController.kt:L66-L79",
+        "SessionController.kt:L174-L181"
+      ]
+    },
+    {
+      "id": "P18",
+      "condition": "late Binder/PREPARED/runtime event after cancel",
+      "result": "flags and original attempt/session/generation/nonce prevent reopening",
+      "evidence": [
+        "SessionController.kt:L102",
+        "SessionController.kt:L123-L145"
+      ]
+    },
+    {
+      "id": "P19",
+      "condition": "entire launch coroutine cancelled",
+      "result": "runCatching alone does not prove launch; cancelled context propagates through later suspend/withContext and caller catches cancellation",
+      "evidence": [
+        "HallRepository.kt:L157-L158",
+        "SessionController.kt:L64-L79",
+        "SessionController.kt:L119"
+      ]
+    }
+  ],
+  "searched": [
+    {
+      "pattern": "updatePolicies",
+      "scope": "android/app/src/main/java",
+      "result": "4 matches: definition L140 and calls L83/L157/L161; all callers read"
+    },
+    {
+      "pattern": "fact(\"policy\") / Fact(\"policy\")",
+      "scope": "android/app/src/main/java",
+      "result": "4 policy fact lines in HallRepository L56/L142/L144/L158; DAO L37-L38 read"
+    },
+    {
+      "pattern": "revokedKeys",
+      "scope": "android/app/src/main/java",
+      "result": "4 lines: Trust L48/L56 and HallRepository L56/L145; no installed-only trust verifier"
+    },
+    {
+      "pattern": "policy_scope|signed_digest|policy.*digest|Policy.*Digest",
+      "scope": "android/app/src/main/java and services/catalog",
+      "result": "0 matches; full updatePolicies and policy dispatch also read to confirm missing digest equality"
+    },
+    {
+      "pattern": "DELETE FROM facts|delete.*Fact",
+      "scope": "android/app/src/main/java",
+      "result": "0 matches; clearCache/temp/maintenance read and preserve policy"
+    },
+    {
+      "pattern": "NetworkCallback|onAvailable|registerDefaultNetworkCallback|CONNECTIVITY_ACTION",
+      "scope": "android/app/src/main/java",
+      "result": "0 matches; directory uses explicit/initial refresh, transfers use WorkManager CONNECTED"
+    },
+    {
+      "pattern": "controller.launch|GameActivity::class|requestedOrientation|screenOrientation",
+      "scope": "android/app/src/main/java and AndroidManifest.xml",
+      "result": "explicit UI launch MainActivity L43; session resume/open L53/L127; orientation only manifest"
+    },
+    {
+      "pattern": "offline_permitted|preflight",
+      "scope": "Android main",
+      "result": "entire preflight L148-L167 and SessionController callers read, plus all local/auth/trust helper paths"
+    },
+    {
+      "pattern": "epoch|revoked|policy|offline|cancel|blocked",
+      "scope": "services/tests, Android test/androidTest",
+      "result": "signature domain, duplicate JSON, catalogue snapshot, renewal cases exist; no targeted offline-policy/block/revocation/launch-refresh cancellation coverage found"
+    },
+    {
+      "pattern": "getReleasePolicies|/v1/policies|publication transitions",
+      "scope": "services/catalog and OpenAPI",
+      "result": "dynamic route registration + actor check traced to dispatch L263-L266 and admin L453-L466"
+    },
+    {
+      "pattern": "top-level service/server/app directories",
+      "scope": "initial inventory",
+      "result": "not present; corrected to actual services and Android paths, not used as absence evidence"
+    }
+  ],
+  "cancellation_analysis": {
+    "incorrect_inference_rejected": "runCatching catches cancellation, therefore a cancelled launch starts anyway",
+    "reason": "SessionController UI cancel sets volatile cancelled before waiting for cleanup; L66/L73/L79/L102/L126 plus session identity guards independently suppress delayed results.",
+    "result": "No confirmed automatic launch after cancellation.",
+    "timing_limit": "Api.send uses blocking execute without cancellation hook; withTimeout(15000) is not proven as a hard HTTP deadline; UI finish waits operationLock. Latency remains untested, not reported as an APP-05 launch bypass."
+  },
+  "code_read": [
+    "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt:L1-L218",
+    "android/app/src/main/java/org/nsa/hall/data/Database.kt:L1-L47",
+    "android/app/src/main/java/org/nsa/hall/data/Api.kt:L1-L142",
+    "android/app/src/main/java/org/nsa/hall/data/Preferences.kt:L1-L18",
+    "android/app/src/main/java/org/nsa/hall/security/Trust.kt:L1-L117",
+    "android/app/src/main/java/org/nsa/hall/security/SignatureVerifier.kt:L1-L14",
+    "android/app/src/main/java/org/nsa/hall/security/Capability.kt:L1-L27",
+    "android/app/src/main/java/org/nsa/hall/data/DeviceCapabilities.kt:L1-L33",
+    "android/app/src/main/java/org/nsa/hall/runtime/SessionController.kt:L1-L184",
+    "android/app/src/main/java/org/nsa/hall/runtime/GameProcessService.kt:L1-L42",
+    "android/app/src/main/java/org/nsa/hall/runtime/GameActivity.kt:L1-L103",
+    "android/app/src/main/java/org/nsa/hall/HallApplication.kt:L1-L22",
+    "android/app/src/main/java/org/nsa/hall/MainActivity.kt:L1-L72",
+    "android/app/src/main/java/org/nsa/hall/ui/HallApp.kt:L70-L180,L191-L239,L265-L341,L349",
+    "android/app/src/main/java/org/nsa/hall/transfer/Installation.kt:L1-L165",
+    "android/app/src/main/java/org/nsa/hall/transfer/TransferWorker.kt:L1-L150",
+    "android/app/src/main/java/org/nsa/hall/transfer/MaintenanceWorker.kt:L1-L20",
+    "android/app/src/main/java/org/nsa/hall/transfer/SaveManager.kt:L127-L135",
+    "android/app/src/main/AndroidManifest.xml:L1-L26",
+    "services/catalog/app.py:L57-L285,L438-L563",
+    "services/catalog/auth.py:L1-L58",
+    "services/catalog/db.py:L1-L67",
+    "services/catalog/crypto.py:L1-L56"
+  ],
+  "test_recommendations_only": true,
+  "not_checked": [
+    "AC-A04/G0 device execution",
+    "real HTTP/cancellation latency",
+    "native gameplay and save/reload",
+    "production key revocation operations",
+    "full PKG installation integrity audit"
+  ],
+  "open_questions": [
+    "All findings require independent refutation before implementation.",
+    "D02 concerns a valid known-revocation policy state, not a policy currently issued by the service's hardcoded empty revocation array.",
+    "No explicit automatic directory-refresh trigger is specified by APP-05.03; current automatic recovery applies to tasks only."
+  ],
+  "_publication": {
+    "original_record_sha256": "4c2af0f490c602b4618723244d6dfd8b9dd3f31e3cfd44ad5230a704b94b64f8",
+    "review_stage": "original_candidate_review",
+    "reviewed_source_revision": "cdedc7179ec1842592243a052525e021d8cf70f1",
+    "normalizations": [
+      "checkout path made relative",
+      "record paths made collection-relative",
+      "Markdown source file/line links pinned to the reviewed Git revision",
+      "Markdown trailing whitespace normalized"
+    ],
+    "final_adjudication": "docs/hall/verification/2026-11-07-source-review.json"
+  }
+}

@@ -1,0 +1,746 @@
+{
+  "schemaVersion": 1,
+  "id": "SAVE-04",
+  "requirement": "Committed save export and offline verified import",
+  "force": "mandatory",
+  "priority": "P0",
+  "verdict": "partial",
+  "confidence": "high",
+  "auditedAt": "2026-11-07",
+  "timezone": "Asia/Taipei",
+  "repository": ".",
+  "sourceRevision": "cdedc7179ec1842592243a052525e021d8cf70f1",
+  "auditMode": "read-only source audit; independent parent code/spec refutation pending",
+  "specification": {
+    "path": "docs/product/产品需求细则.md",
+    "startLine": 952,
+    "endLine": 965,
+    "quote": "提供导出已提交存档至系统选择的持久位置，以及导入相应游戏存档。导入前验证格式、大小与游戏标识，并备份旧档；不在游戏运行中直接替换存档。"
+  },
+  "scope": {
+    "included": [
+      "all four SAVE-04 subrules",
+      "S15/S16 plus INT-03",
+      "SAF entrypoints/results and process recreation",
+      "SaveManager callers/callees/failure branches",
+      "repository locks, installation/update backup, cold-start and launch recovery",
+      "native committed/user/device tree paths and actual 2048 publisher"
+    ],
+    "excluded": [
+      "cloud saves",
+      "other requirements except supporting definitions",
+      "runtime/device acceptance",
+      "product edits",
+      "tests/builds/device reads/input",
+      "browser/virtualization/further agents"
+    ]
+  },
+  "subrules": [
+    {
+      "id": "SAVE-04.01",
+      "specLine": 960,
+      "text": "导出只读取已提交快照，经系统选择器写到玩家选定位置；取消无副作用。",
+      "verdict": "partial",
+      "confidence": "high",
+      "implemented": [
+        "CreateDocument and null-result no-op",
+        "locked idle snapshot and SAF stream; source not deleted"
+      ],
+      "findingIds": [
+        "SAVE-04-F2",
+        "SAVE-04-F8"
+      ]
+    },
+    {
+      "id": "SAVE-04.02",
+      "specLine": 961,
+      "text": "导入校验格式、游戏、兼容组、大小、清单与每文件摘要，拒绝越界和非法链接。",
+      "verdict": "partial",
+      "confidence": "high",
+      "implemented": [
+        "ZIP central-directory mode checks",
+        "strict syntax JSON plus game/player/group checks",
+        "compressed cap, contained paths, archive membership, per-file lengths/hashes"
+      ],
+      "findingIds": [
+        "SAVE-04-F5",
+        "SAVE-04-F6"
+      ]
+    },
+    {
+      "id": "SAVE-04.03",
+      "specLine": 962,
+      "text": "导入前自动保留当前有效档，离线事务替换后更新索引，失败恢复原档。",
+      "verdict": "partial",
+      "confidence": "high",
+      "implemented": [
+        "automatic backup before first rename",
+        "verified staging, journal phases and launch-time recovery"
+      ],
+      "findingIds": [
+        "SAVE-04-F1",
+        "SAVE-04-F3",
+        "SAVE-04-F4",
+        "SAVE-04-F7"
+      ]
+    },
+    {
+      "id": "SAVE-04.04",
+      "specLine": 963,
+      "text": "游戏运行中不开放覆盖，明确先结束游戏；导入完成不直接启动或旋转。",
+      "verdict": "partial",
+      "confidence": "high",
+      "implemented": [
+        "under-lock final idle and current group recheck",
+        "success updates dialog/notice only; stays portrait"
+      ],
+      "findingIds": [
+        "SAVE-04-F2"
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "id": "SAVE-04-F1",
+      "priority": 1,
+      "severity": "high",
+      "subrules": [
+        "SAVE-04.03"
+      ],
+      "title": "Exchange failures are not compensated; an intervening saveRoot mkdir can destroy automatic rollback recovery",
+      "confidence": "high",
+      "trigger": "Fail after old rename or terminate between old/new renames; restart, export before game launch, then launch.",
+      "effect": "Original is not restored on failure; empty committed created by export causes recover to delete before-import/staging. The private old ZIP normally remains; permanent loss of every copy is not claimed.",
+      "evidence": [
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/transfer/SaveManager.kt",
+          "startLine": 117,
+          "endLine": 135,
+          "claim": "Backup, journal/renames, finally cleanup and existence-only recovery"
+        },
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt",
+          "startLine": 42,
+          "endLine": 60,
+          "claim": "saveRoot creates directory; initialize only recovers Installation"
+        },
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/runtime/SessionController.kt",
+          "startLine": 83,
+          "endLine": 97,
+          "claim": "Only save recovery call occurs on launch, before launch saveRoot"
+        }
+      ],
+      "spec": [
+        "docs/product/产品需求细则.md:L962",
+        "docs/product/页面与交互验收规格.md:L247",
+        "docs/engineering/04-transfer-install-save.md:L78-L80"
+      ],
+      "correction": "Recover under operationLock before all committed-path access/creation; preserve verified old/new identities and phase; compensate reported failures before lock release, durably register index before cleanup, and sync backup/staging directory entries.",
+      "verification": "Fault every journal/rename/fsync/index boundary; interpose export/import/upgrade/App backup before launch; repeat recovery and assert valid tree plus index."
+    },
+    {
+      "id": "SAVE-04-F2",
+      "priority": 1,
+      "severity": "high",
+      "subrules": [
+        "SAVE-04.01",
+        "SAVE-04.04"
+      ],
+      "title": "Main-process recreation can turn a live native session into an accepted idle record",
+      "confidence": "high",
+      "trigger": "Native :game survives only main-process reclamation; reconstruct hall and export/import same game.",
+      "effect": "initialize marks unfinished records crashed without live-owner reconciliation; backend and UI allow save operations while native can still own/commit its working save. Device survival precondition is not experimentally verified.",
+      "evidence": [
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt",
+          "startLine": 48,
+          "endLine": 60,
+          "claim": "Blindly ends prior sessions on initialize"
+        },
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/data/Database.kt",
+          "startLine": 35,
+          "endLine": 35,
+          "claim": "crashed state excluded from unfinished"
+        },
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/transfer/SaveManager.kt",
+          "startLine": 20,
+          "endLine": 23,
+          "claim": "Idle authority depends solely on unfinished records"
+        },
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/transfer/SaveManager.kt",
+          "startLine": 86,
+          "endLine": 87,
+          "claim": "Final idle recheck uses same authority"
+        },
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/runtime/GameProcessService.kt",
+          "startLine": 15,
+          "endLine": 41,
+          "claim": "Dead host sends swallowed; no game-side host-death teardown"
+        },
+        {
+          "path": "android/app/src/main/AndroidManifest.xml",
+          "startLine": 15,
+          "endLine": 20,
+          "claim": "Game activity/service have separate process"
+        },
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/ui/HallApp.kt",
+          "startLine": 241,
+          "endLine": 245,
+          "claim": "Import always enabled"
+        }
+      ],
+      "spec": [
+        "docs/product/产品需求细则.md:L960,L963",
+        "docs/engineering/03-runtime-integration.md:L64-L74"
+      ],
+      "correction": "Reconcile or stop actual native owner before ending persistent session; block unresolved ownership, add interprocess save guard where needed, and disable running-state UI import using same authority.",
+      "verification": "Preserve :game across main restart and attempt import/export; separately verify ordinary launch/import lock exclusion."
+    },
+    {
+      "id": "SAVE-04-F3",
+      "priority": 2,
+      "severity": "medium",
+      "subrules": [
+        "SAVE-04.03"
+      ],
+      "title": "Import confirmation and retry do not retain the inspected archive state",
+      "confidence": "high",
+      "trigger": "Recreate confirmation after picker inspection, or fail import then press Confirm again.",
+      "effect": "Restored dialog has null importArchive and Confirm silently returns; failed import retains dialog but deletes its file. Pending URI copy/parse has no durable operation receipt. Picker-open recreation is not asserted to fail.",
+      "evidence": [
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/ui/HallApp.kt",
+          "startLine": 86,
+          "endLine": 114,
+          "claim": "selected/route/dialog saveable; archive pair remember-only; result consumed asynchronously"
+        },
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/ui/HallApp.kt",
+          "startLine": 340,
+          "endLine": 340,
+          "claim": "Null-pair Confirm no-op and success-only UI clear"
+        },
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/transfer/SaveManager.kt",
+          "startLine": 125,
+          "endLine": 125,
+          "claim": "Every entered try exit deletes cache archive"
+        },
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/MainActivity.kt",
+          "startLine": 39,
+          "endLine": 39,
+          "claim": "Failure notice without restoring/clearing import state"
+        }
+      ],
+      "spec": [
+        "docs/product/页面与交互验收规格.md:L233,L247",
+        "docs/design/obsidian-portrait/03-screen-specs.md:L583-L589",
+        "docs/engineering/05-data-state.md:L44"
+      ],
+      "correction": "Persist small owned pending-import context/status and reparse on restore; retain usable cache on recoverable failure; handle reclaimed cache by explicit reselect; clean on cancel/durable success.",
+      "verification": "Recreate while picker open, after result, during copy, on confirmation, and after validation/backup failure."
+    },
+    {
+      "id": "SAVE-04-F4",
+      "priority": 1,
+      "severity": "high",
+      "subrules": [
+        "SAVE-04.03"
+      ],
+      "title": "Visible Cancel dismisses the dialog while the background import continues",
+      "confidence": "high",
+      "trigger": "Confirm; wait until verified staging and old-save backup; tap still-enabled Cancel or dismiss.",
+      "effect": "Captured model action continues through directory exchange even though Cancel returns UI. Repeated Confirm also queues a stale duplicate.",
+      "evidence": [
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/ui/HallApp.kt",
+          "startLine": 340,
+          "endLine": 340,
+          "claim": "Cancel deletes pair/hides dialog, no working guard or cancellation intent"
+        },
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/MainActivity.kt",
+          "startLine": 31,
+          "endLine": 39,
+          "claim": "Model action survives dialog dismissal; queued action mutex"
+        },
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/transfer/SaveManager.kt",
+          "startLine": 101,
+          "endLine": 125,
+          "claim": "No cancellation predicate between extraction, backup and rename"
+        }
+      ],
+      "spec": [
+        "docs/product/页面与交互验收规格.md:L247",
+        "docs/product/页面与交互验收规格.md:L469"
+      ],
+      "correction": "Single operation owner/re-entry guard and safe-boundary cancellation intent; disable Cancel/outside dismissal once publication becomes noncancellable and show truthful phase.",
+      "verification": "Cancel/dismiss through validation/backup/exchange; verify no cancelled overwrite and no duplicate action."
+    },
+    {
+      "id": "SAVE-04-F5",
+      "priority": 2,
+      "severity": "medium",
+      "subrules": [
+        "SAVE-04.02"
+      ],
+      "title": "Expanded-byte cap is enforced after writing and hashing an oversized file",
+      "confidence": "high",
+      "trigger": "Small compressed archive claims total below 2 GiB but indexed entry bytes/ZIP size exceeds cap with matching contents/hash.",
+      "effect": "Full oversized expansion is written before total check; can exhaust internal disk though committed tree is not intentionally moved.",
+      "evidence": [
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/transfer/SaveManager.kt",
+          "startLine": 69,
+          "endLine": 82,
+          "claim": "Compressed copy and claimed total bounded"
+        },
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/transfer/SaveManager.kt",
+          "startLine": 104,
+          "endLine": 116,
+          "claim": "Per-entry self bound only; aggregate maximum after complete write/fsync/hash"
+        }
+      ],
+      "spec": [
+        "docs/product/产品需求细则.md:L961",
+        "docs/engineering/04-transfer-install-save.md:L78"
+      ],
+      "correction": "Preflight checked sum/file caps/equality and independent cumulative expansion budget before every write; keep exact entry/hash checks and space planning.",
+      "verification": "Mock/bound writes to assert cap before oversize allocation; individual and cumulative bomb plus overflow cases."
+    },
+    {
+      "id": "SAVE-04-F6",
+      "priority": 2,
+      "severity": "medium",
+      "subrules": [
+        "SAVE-04.02"
+      ],
+      "title": "Required metadata fields and control-character path rules are not fully enforced",
+      "confidence": "high",
+      "trigger": "Correct archive omits source_release_id/commit_seq/created_at, or has matching file path containing U+000A.",
+      "effect": "Malformed save schema or prohibited control-character path can pass all final checks. No arbitrary root escape is claimed.",
+      "evidence": [
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/transfer/SaveManager.kt",
+          "startLine": 74,
+          "endLine": 82,
+          "claim": "Only selected metadata fields read"
+        },
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/transfer/SaveManager.kt",
+          "startLine": 90,
+          "endLine": 116,
+          "claim": "Final checks do not require provenance/sequence/time"
+        },
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/security/Trust.kt",
+          "startLine": 37,
+          "endLine": 44,
+          "claim": "No control-character exclusion"
+        },
+        {
+          "path": "docs/engineering/contracts/save-backup.schema.json",
+          "startLine": 59,
+          "endLine": 70,
+          "claim": "Required fields and supported property policy"
+        }
+      ],
+      "spec": [
+        "docs/product/产品需求细则.md:L961",
+        "docs/engineering/04-transfer-install-save.md:L47",
+        "docs/product/开发计划与验收矩阵.md:L249"
+      ],
+      "correction": "Enforce complete save-schema shape/type/identifier/time/sequence rules and shared explicit control-character rejection before filesystem writes; do not require platform signature.",
+      "verification": "Missing/invalid fields and control/NUL/DEL paths alongside existing traversal/mode/hash rejection."
+    },
+    {
+      "id": "SAVE-04-F7",
+      "priority": 2,
+      "severity": "medium",
+      "subrules": [
+        "SAVE-04.03"
+      ],
+      "title": "Successful import does not update or register a durable save index",
+      "confidence": "high",
+      "trigger": "Persisted save sequence 12; import compatible source commit 3; immediately export before another native save.",
+      "effect": "Re-export uses old sequence/current active-release metadata; imported origin/digest/commit linkage is lost and no import index transaction exists.",
+      "evidence": [
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/transfer/SaveManager.kt",
+          "startLine": 37,
+          "endLine": 37,
+          "claim": "Export derives metadata from old fact/current install"
+        },
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/transfer/SaveManager.kt",
+          "startLine": 86,
+          "endLine": 135,
+          "claim": "Import and recovery contain no DAO mutation or saved commit record"
+        },
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/runtime/SessionController.kt",
+          "startLine": 151,
+          "endLine": 156,
+          "claim": "Only later native event updates save-seq fact"
+        },
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/data/Database.kt",
+          "startLine": 7,
+          "endLine": 45,
+          "claim": "No save commit/backup entity or import index writer"
+        }
+      ],
+      "spec": [
+        "docs/product/产品需求细则.md:L962",
+        "docs/engineering/05-data-state.md:L40-L41,L105",
+        "docs/engineering/contracts/local-records.schema.json:L256-L302"
+      ],
+      "correction": "Persist verified import commit/source provenance and reconcile index with exchange journal before deleting rollback state; separate local monotonic revision from origin archive sequence.",
+      "verification": "Import/re-export provenance/index consistency and restart at publication/index boundaries; exactly-once recovery."
+    },
+    {
+      "id": "SAVE-04-F8",
+      "priority": 2,
+      "severity": "medium",
+      "subrules": [
+        "SAVE-04.01"
+      ],
+      "title": "2048 staging file is inside the committed tree and included in exports after interrupted saves",
+      "confidence": "high",
+      "trigger": "Short-write/fsync/rename failure or termination after state.new creation before rename, then export idle without another successful save.",
+      "effect": "Uncommitted or partial state.new is packaged, potentially as the only file despite no completed first commit.",
+      "evidence": [
+        {
+          "path": "android/native-games/2048/game.c",
+          "startLine": 48,
+          "endLine": 57,
+          "claim": "Staging state.new inside save_root; failure leaves it"
+        },
+        {
+          "path": "android/native-games/2048/game.c",
+          "startLine": 155,
+          "endLine": 157,
+          "claim": "Startup only loads state.dat, no staging cleanup"
+        },
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/transfer/SaveManager.kt",
+          "startLine": 27,
+          "endLine": 41,
+          "claim": "Every file under root exported without commit-file authority"
+        },
+        {
+          "path": "android/app/src/main/assets/runtime-registry.json",
+          "startLine": 1,
+          "endLine": 1,
+          "claim": "2048 is a current compiled slot"
+        }
+      ],
+      "spec": [
+        "docs/product/产品需求细则.md:L960",
+        "docs/engineering/04-transfer-install-save.md:L74-L76"
+      ],
+      "correction": "Stage demo writes outside committed tree and durably publish only valid state; clean only owned staging or use authoritative committed-file index, avoiding global filename suffix blacklists.",
+      "verification": "2048 short-write/fsync/rename interruption then export: only committed state.dat, no false nonempty backup before first commit."
+    }
+  ],
+  "pathsWalked": [
+    {
+      "path": "SAF export cancel",
+      "evidence": [
+        "android/app/src/main/java/org/nsa/hall/ui/HallApp.kt:L113,L244"
+      ],
+      "result": "null no-op; no false success"
+    },
+    {
+      "path": "SAF export success/failure",
+      "evidence": [
+        "android/app/src/main/java/org/nsa/hall/transfer/SaveManager.kt:L20-L49"
+      ],
+      "result": "idle -> lock -> manifest/root/file checks -> archive -> stream; stream errors preserve source and remove temporary; pre-stream ZIP failure may leak cache only"
+    },
+    {
+      "path": "SAF import inspect",
+      "evidence": [
+        "android/app/src/main/java/org/nsa/hall/ui/HallApp.kt:L114,L245",
+        "android/app/src/main/java/org/nsa/hall/transfer/SaveManager.kt:L61-L84"
+      ],
+      "result": "copy/cap/fsync/mode/metadata/identity/group; failure deletes cache copy, preserves saves"
+    },
+    {
+      "path": "confirm/cancel/recreate/retry",
+      "evidence": [
+        "android/app/src/main/java/org/nsa/hall/ui/HallApp.kt:L86-L114,L340",
+        "android/app/src/main/java/org/nsa/hall/MainActivity.kt:L39"
+      ],
+      "result": "F3,F4; ordinary pre-start cancel only deletes cache"
+    },
+    {
+      "path": "final import validation",
+      "evidence": [
+        "android/app/src/main/java/org/nsa/hall/transfer/SaveManager.kt:L86-L116",
+        "android/app/src/main/java/org/nsa/hall/security/Trust.kt:L37-L44,L85-L116",
+        "android/app/src/main/java/org/nsa/hall/transfer/Installation.kt:L138-L164"
+      ],
+      "result": "idle/group rechecked; traverse/symlink/size/hash failures before exchange; F5,F6"
+    },
+    {
+      "path": "old backup and exchange failure boundaries",
+      "evidence": [
+        "android/app/src/main/java/org/nsa/hall/transfer/SaveManager.kt:L51-L59,L117-L135",
+        "android/app/src/main/java/org/nsa/hall/transfer/Installation.kt:L15-L22"
+      ],
+      "result": "backup failure keeps old; exchange errors not compensated; F1,F7"
+    },
+    {
+      "path": "cold start then export or launch",
+      "evidence": [
+        "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt:L42-L60",
+        "android/app/src/main/java/org/nsa/hall/runtime/SessionController.kt:L64-L97"
+      ],
+      "result": "no initialization save recovery; mkdir hazard F1; stale-session authority F2"
+    },
+    {
+      "path": "upgrade/App backup/maintenance",
+      "evidence": [
+        "android/app/src/main/java/org/nsa/hall/transfer/TransferWorker.kt:L146-L149",
+        "android/app/src/main/java/org/nsa/hall/transfer/Installation.kt:L72-L78,L105-L126",
+        "android/app/src/main/java/org/nsa/hall/transfer/AppUpdater.kt:L44-L49",
+        "android/app/src/main/java/org/nsa/hall/transfer/MaintenanceWorker.kt:L13-L18"
+      ],
+      "result": "locked helpers avoid reentrant mutex; no hidden save import recovery"
+    },
+    {
+      "path": "native save context/mount/commit/event",
+      "evidence": [
+        "android/app/src/main/java/org/nsa/hall/runtime/SessionController.kt:L97,L151-L156",
+        "android/app/src/main/cpp/bootstrap.c:L159",
+        "nxnative/dm/android/hall_adapter.c:L87-L109",
+        "nxnative/dm/host/hle_fs.c:L97-L108,L493-L512,L549-L558"
+      ],
+      "result": "committed.work/new siblings for Switch runtime; event index separate from imported tree; no interprocess save guard"
+    },
+    {
+      "path": "2048 actual publisher",
+      "evidence": [
+        "android/native-games/2048/game.c:L48-L57,L155-L157"
+      ],
+      "result": "state.new inside root; F8"
+    },
+    {
+      "path": "legacy native menu/deferred import",
+      "evidence": [
+        "nxnative/dm/android/build.py:L71-L83",
+        "nxnative/dm/android/overlay_layout.h:L110-L117",
+        "nxnative/dm/android/front_android.c:L433-L434,L849-L868,L1113-L1138",
+        "nxnative/dm/android/saves_android.c:L101-L126,L150-L196"
+      ],
+      "result": "source reachable alternate raw save operations; scope question for independent spec refutation"
+    }
+  ],
+  "searched": [
+    {
+      "scope": "android/app/src/main/java/org/nsa/hall/",
+      "pattern": "SavedStateHandle|pending_result|takePersistableUriPermission",
+      "hits": 0,
+      "result": "No durable pending import context; saveable navigation was checked separately"
+    },
+    {
+      "scope": "android/app/src/main/java/org/nsa/hall/",
+      "pattern": "SaveManager(repository).recover",
+      "hits": 1,
+      "result": "Only SessionController.kt:L83"
+    },
+    {
+      "scope": "android/app/src/main/java/org/nsa/hall/",
+      "pattern": "importVerified(",
+      "hits": 2,
+      "result": "SaveManager declaration and HallApp confirmation caller"
+    },
+    {
+      "scope": "android/app/src/main/java/org/nsa/hall/",
+      "pattern": "backupUnderOperationLock",
+      "hits": 5,
+      "result": "wrapper/declaration/import/installation/App updater; all callers walked"
+    },
+    {
+      "scope": "android/app/src/main/java/org/nsa/hall/",
+      "pattern": "save-seq:",
+      "hits": 2,
+      "result": "SaveManager export read and SessionController native-event write"
+    },
+    {
+      "scope": "android/app/src/main/java/org/nsa/hall/transfer/SaveManager.kt",
+      "pattern": "putFact|putGame|putInstall|putSession|withTransaction",
+      "hits": 0,
+      "result": "No import index/DAO mutation; caller/database also inspected"
+    },
+    {
+      "scope": "android/app/src/main/java/org/nsa/hall/transfer/SaveManager.kt",
+      "pattern": "source_release_id|created_at|commit_seq",
+      "hits": 1,
+      "result": "Only export metadata creation at L37"
+    },
+    {
+      "scope": "android/app/src/main/java/org/nsa/hall/transfer/SaveManager.kt",
+      "pattern": "maximum",
+      "hits": 6,
+      "result": "L19,L34,L43,L69,L82,L113; expanded loop has no aggregate pre-write cap"
+    },
+    {
+      "scope": "android/app/src/main/java/org/nsa/hall/transfer/SaveManager.kt",
+      "pattern": "syncDirectory",
+      "hits": 3,
+      "result": "Only exchange/cleanup parent syncs; helper atomicJson sync inspected"
+    },
+    {
+      "scope": "android/app/src/main/java/org/nsa/hall/runtime/GameProcessService.kt",
+      "pattern": "linkToDeath|onUnbind|onBindingDied|isBinderAlive",
+      "hits": 0,
+      "result": "No native-side dead host reconciliation; reverse listener exists in SessionController"
+    },
+    {
+      "scope": "nxnative/dm/host/hle_fs.c; nxnative/dm/android/saves_android.c; android/app/src/main/java/org/nsa/hall/transfer/SaveManager.kt",
+      "pattern": "flock|F_SETLK|F_SETLKW|lockFile|FileLock",
+      "hits": 0,
+      "result": "Mutex/pthread guards are process-local"
+    },
+    {
+      "scope": "android/app/src/main/java/org/nsa/hall/transfer/SaveManager.kt",
+      "pattern": "state.new|committed_device|_device",
+      "hits": 0,
+      "result": "Read native publishers to identify legitimate committed and staging roots"
+    },
+    {
+      "scope": "android/app/src/main/java/org/nsa/hall/ui/HallApp.kt",
+      "pattern": "var selected|var route|var dialog|var importArchive",
+      "hits": 4,
+      "result": "First three saveable; importArchive remember-only"
+    },
+    {
+      "scope": "android/app/src/main/java/org/nsa/hall/ui/HallApp.kt",
+      "pattern": "CreateDocument|OpenDocument|export.launch|import.launch",
+      "hits": 4,
+      "result": "Both picker entrypoints and callbacks inspected"
+    },
+    {
+      "scope": "android/app/src/test/java/org/nsa/hall/StorageBoundaryTest.kt",
+      "pattern": "read existing tests only",
+      "result": "Traversal/byte-count/duplicate-JSON tests; no transaction/lifecycle coverage; not executed"
+    },
+    {
+      "scope": "search correction",
+      "pattern": "nxnative/dm/hle_fs.c; nxnative/dm/hle; broad tools directory",
+      "result": "Early guessed paths nonexistent, corrected to dm/host/hle_fs.c; overly broad search interrupted and scoped searches completed"
+    }
+  ],
+  "rejectedSuspicions": [
+    {
+      "claim": "Normal new launch can race final import idle check in same main process",
+      "reason": "Session creation and final idle check share operationLock; SessionController.kt:L64-L72 and SaveManager.kt:L86-L87"
+    },
+    {
+      "claim": "Changing active release after inspect bypasses compatibility checks",
+      "reason": "importVerified rechecks current install and group at SaveManager.kt:L88-L91"
+    },
+    {
+      "claim": "Unlocked inspect idle check alone proves import race",
+      "reason": "Final import obtains operationLock and rechecks idle before any staging"
+    },
+    {
+      "claim": "Every process recreation while picker is open drops game/result context",
+      "reason": "selected/route are rememberSaveable and launchers unconditionally registered; proven gap is result consumption/draft confirmation"
+    },
+    {
+      "claim": "Every exchange failure permanently destroys all old copies",
+      "reason": "Private before-import ZIP normally retained by L117; automatic original-path recovery still fails"
+    },
+    {
+      "claim": "saveRoot means every runtime has only committed files",
+      "reason": "Inspected 2048 state.new and Switch sibling transactions; distinguishes F8 from normal HLE flow"
+    },
+    {
+      "claim": "Import needs platform signature",
+      "reason": "S16 explicitly allows unsigned backups with complete structural/ownership/hash validation"
+    }
+  ],
+  "openQuestions": [
+    {
+      "topic": "Legacy native raw save menu in hall bindings",
+      "status": "source reachability proven; spec scope needs independent refutation",
+      "evidence": [
+        "nxnative/dm/android/build.py:L71-L83",
+        "nxnative/dm/android/front_android.c:L433-L434,L849-L868,L1113-L1138",
+        "nxnative/dm/android/saves_android.c:L150-L196"
+      ],
+      "question": "Does user-facing native raw import/export count as internal helpers or alternate SAVE-04 operations? If alternate, disable/delegate in DM_HALL_BINDING: it bypasses SAF/schema/hash/size/index flow and auto-applies requests before mounts. No remote input attack claimed."
+    },
+    {
+      "topic": "committed_device sibling",
+      "status": "conditional future-runtime limitation, excluded from confirmed current-loss findings",
+      "evidence": [
+        "nxnative/dm/host/hle_fs.c:L503-L512",
+        "nxnative/dm/android/saves_android.c:L104-L120",
+        "android/app/src/main/assets/runtime-registry.json:L1"
+      ],
+      "question": "Define aggregate snapshot/import layout before enabling a slot mounting both user and device data; current registry 2048/BotW does not establish active dual-mount use."
+    },
+    {
+      "topic": "Power loss and provider/OS behavior",
+      "status": "not executed",
+      "question": "Actual backup/staging directory durability, SAF close errors and main-surviving-native reclaim behavior require consolidated fault/device verification."
+    }
+  ],
+  "testNeeds": [
+    "AC-S03/CON-10: inject all backup/journal/rename/fsync/index/cleanup failures and process termination boundaries, then export/import/upgrade/App backup/launch in varying order; idempotent recovery and valid old ZIP plus consistent index.",
+    "Recreate picker-open, after URI delivery, during archive copy, confirmation and exchange; restore stable target/route/draft or explicit reselect.",
+    "Confirm then cancel/dismiss before critical publication; cancellation must prevent overwrite or be visibly unavailable; reject repeated Confirm.",
+    "Retain :game while main is reconstructed; block import/export until actual owner released/reconciled and keep ordinary lock exclusion intact.",
+    "CON-03 negative schema/game/group/player/path/control/link/membership/size/hash cases; no original move before rejection.",
+    "Oversized compressible single file/cumulative totals and checked overflow with bounded mocked I/O; assert cap before writes rather than filling disk.",
+    "2048 failed or interrupted staging then export only committed state; import/re-export origin/index consistency exactly once across recovery.",
+    "Authorized real-device successful import remains portrait without launch; null SAF no success; dedicated test external export survives uninstall and actual reload matches progress."
+  ],
+  "executedValidation": [],
+  "notRun": [
+    "all product tests/builds",
+    "all phone/device reads/input",
+    "all browser calls",
+    "all virtualization",
+    "further agents"
+  ],
+  "documentProblem": null,
+  "notChecked": [
+    "other requirement audits",
+    "cloud saves",
+    "runtime acceptance or physical-device reproduction"
+  ],
+  "unverified": [
+    "Independent parent code/spec refutation pending",
+    "All runtime test needs unexecuted"
+  ],
+  "outputFiles": [
+    "requirements/SAVE-04.md",
+    "requirements/SAVE-04.json"
+  ],
+  "_publication": {
+    "original_record_sha256": "00751c060aa5aec7466f56658a9f6bf2e6bfb719bfe71938db23a9fe9bb9c27c",
+    "review_stage": "original_candidate_review",
+    "reviewed_source_revision": "cdedc7179ec1842592243a052525e021d8cf70f1",
+    "normalizations": [
+      "checkout path made relative",
+      "record paths made collection-relative",
+      "Markdown source file/line links pinned to the reviewed Git revision",
+      "Markdown trailing whitespace normalized"
+    ],
+    "final_adjudication": "docs/hall/verification/2026-11-07-source-review.json"
+  }
+}

@@ -1,0 +1,204 @@
+> Archived review record; source snapshot: `cdedc7179ec1842592243a052525e021d8cf70f1`. Initial candidate/pending labels are historical. Final dispositions, including the superseding APP-05-D03 clarification, are in the [consolidated review](../../../source-review.md).
+> 归档核对记录；初核中的候选/待复核状态保留历史，最终结论以汇总及独立复核的追加判定为准。
+
+# APP-08 — independent specification refutation
+
+Source: `cdedc7179ec1842592243a052525e021d8cf70f1` in `.`.
+
+仅反证既有 finding 的规范依据、优先级与建议范围；不新增 finding，不独立确认代码或实机触发。
+
+Outcome: 3 survives, 1 narrowed, 0 refuted, 0 unverified. “survives” 仅表示规范依据经反证保留，不表示代码/设备触发已验证。
+
+## Authority and scope
+
+- [docs/engineering/README.md:25](https://github.com/wikigsroom/NsA-core/blob/cdedc7179ec1842592243a052525e021d8cf70f1/docs/engineering/README.md#L25) (authority): “产品/页面定义行为，机器契约固定线上/本地格式和状态，技术章固定实现约束，设计源固定视觉。冲突需同步修订，不选一个旧稿绕过另一规范。”
+- [docs/product/README.md:24](https://github.com/wikigsroom/NsA-core/blob/cdedc7179ec1842592243a052525e021d8cf70f1/docs/product/README.md#L24) (scope): “90 项中 85 项 P0、5 项 P1；P1 未默认进入首版。”
+- [docs/product/游戏大厅二次开发需求说明书.md:437](https://github.com/wikigsroom/NsA-core/blob/cdedc7179ec1842592243a052525e021d8cf70f1/docs/product/%E6%B8%B8%E6%88%8F%E5%A4%A7%E5%8E%85%E4%BA%8C%E6%AC%A1%E5%BC%80%E5%8F%91%E9%9C%80%E6%B1%82%E8%AF%B4%E6%98%8E%E4%B9%A6.md#L437) (scope): “其中 P1 仅 CAT-10、DL-15、RUN-12、SAVE-07、UPD-08。其余 85 项为 P0；规划表中的“账号”等未单独编号扩展不自动成为 P0。”
+- [docs/product/data/defaults.json:4](https://github.com/wikigsroom/NsA-core/blob/cdedc7179ec1842592243a052525e021d8cf70f1/docs/product/data/defaults.json#L4) (normative-default): “"classification": "engineering defaults; change through ADR/CR; not claims of achieved performance or commercial approval"”
+- [docs/engineering/decisions/0001-integrated-development-round.md:5](https://github.com/wikigsroom/NsA-core/blob/cdedc7179ec1842592243a052525e021d8cf70f1/docs/engineering/decisions/0001-integrated-development-round.md#L5) (current-ADR): “The user requires every development round to implement its complete planned scope before testing and debugging, instead of cycling through individual modules. This supersedes the earlier ordering that required G0 before writing the broad hall. It does not relax G0 acceptance: two real games, actual save/reload, process/data isolation and safe return are still mandatory before claiming the platform is verified.”
+
+- APP-08 的重建恢复/事实对账是 P0。产品 P1 最近搜索历史与当前已提交查询的恢复不是同一要求。
+- 默认 :game 独立进程/单会话是当前可执行架构，不是已通过所有存活组合测试的证据。
+- ADR0005 将 coordinator 生命周期提升到 Application，解决同主进程 Activity/ViewModel 重建；未取消主进程被回收时对真实 :game 的握手/受控恢复。
+- ADR0001 只改变批量实现与验证顺序；不豁免 APP-08 的进程恢复或 READY 完整性。
+- 实施状态的 Activity recreation 两条测试不覆盖 main-only 回收、离线任务文件缺失或 worker 与初次 UI 恢复交错；不能以旧稿的“尚未实现”或当前少量测试取代逐分支义务。
+
+| Finding | Outcome | Retained severity / priority |
+| --- | --- | --- |
+| APP-08-F01 | narrowed | medium / P2 |
+| APP-08-F02 | survives | medium / P2 |
+| APP-08-F03 | survives | high / P1 |
+| APP-08-F04 | survives | high / P1 |
+
+## APP-08-F01 — narrowed
+
+**Demand.** 系统重建后恢复已提交查询及筛选的语义，显示的输入/结果上下文一致；未提交草稿不能冒充已提交查询。允许重新获取同查询的最新结果。
+
+**Exact specification evidence.**
+
+- [docs/product/产品需求细则.md:145](https://github.com/wikigsroom/NsA-core/blob/cdedc7179ec1842592243a052525e021d8cf70f1/docs/product/%E4%BA%A7%E5%93%81%E9%9C%80%E6%B1%82%E7%BB%86%E5%88%99.md#L145) (mandated): “保存根标签、路由、游戏选择、滚动锚点和已提交查询；重建后先读取本地事实再渲染。”
+- [docs/engineering/02-android-client.md:44](https://github.com/wikigsroom/NsA-core/blob/cdedc7179ec1842592243a052525e021d8cf70f1/docs/engineering/02-android-client.md#L44) (mandated): “导航持久化 route、rootTab、gameId、查询/筛选、滚动 item key/offset 和 returnOrigin”
+- [docs/product/页面与交互验收规格.md:48](https://github.com/wikigsroom/NsA-core/blob/cdedc7179ec1842592243a052525e021d8cf70f1/docs/product/%E9%A1%B5%E9%9D%A2%E4%B8%8E%E4%BA%A4%E4%BA%92%E9%AA%8C%E6%94%B6%E8%A7%84%E6%A0%BC.md#L48) (mandated): “错误保留输入和已返回结果；返回来源；清除同时清局部筛选”
+- [docs/product/产品需求细则.md:181](https://github.com/wikigsroom/NsA-core/blob/cdedc7179ec1842592243a052525e021d8cf70f1/docs/product/%E4%BA%A7%E5%93%81%E9%9C%80%E6%B1%82%E7%BB%86%E5%88%99.md#L181) (mandated): “搜索提交使用独立请求 ID，迟到的旧响应不能覆盖新查询；清空后恢复当前筛选。”
+- [docs/product/产品需求细则.md:183](https://github.com/wikigsroom/NsA-core/blob/cdedc7179ec1842592243a052525e021d8cf70f1/docs/product/%E4%BA%A7%E5%93%81%E9%9C%80%E6%B1%82%E7%BB%86%E5%88%99.md#L183) (mandated): “游标过期允许刷新首段并去重，保留查询与选择；无结果提供清除筛选和返回。”
+- [docs/product/游戏大厅二次开发需求说明书.md:157](https://github.com/wikigsroom/NsA-core/blob/cdedc7179ec1842592243a052525e021d8cf70f1/docs/product/%E6%B8%B8%E6%88%8F%E5%A4%A7%E5%8E%85%E4%BA%8C%E6%AC%A1%E5%BC%80%E5%8F%91%E9%9C%80%E6%B1%82%E8%AF%B4%E6%98%8E%E4%B9%A6.md#L157) (deferred-P1): “支持收藏、更多排序、最近搜索和后续个性化入口”
+- [docs/product/data/defaults.json:19](https://github.com/wikigsroom/NsA-core/blob/cdedc7179ec1842592243a052525e021d8cf70f1/docs/product/data/defaults.json#L19) (normative-default): “"snapshot_cursor_ttl_seconds": 900”
+
+**Attempts to refute.**
+
+- 最近搜索是 CAT-10 P1，所以恢复搜索不是首版要求。 → **refuted**。查询历史/个性化与恢复当前已提交查询不同。APP-08.01 明确 P0 保存后者，工程02:L44 同时保留筛选。
+- 输入框记住原文本，就已经恢复已提交查询。 → **refuted**。结果属于无过滤目录时，输入与真实查询事实不一致。APP-08 及页面的 QueryState/request revision 要求上下文一致。
+- 规范要求永久保存并重放完全相同的 catalogue snapshot 和结果 IDs。 → **refuted**。未见此义务；目录可变化、游标默认有 TTL，CAT-02.04 明确过期可刷新第一页而保留查询/选择。可以先显示同上下文缓存，再取最新匹配结果；没有缓存时真实 loading/error 也可。
+- 错误时可以无条件丢掉此前结果。 → **refuted**。S02:L51 要求错误保留输入和已返回结果；但该条不把历史结果集合冻结为永久事实。
+
+**Retained scope.** 原触发中“旧非空搜索文字 + 未过滤目录结果”的不一致保留；将 correction 的 exact catalogue snapshot 收窄为匹配已提交查询/筛选/请求修订的上下文，不要求结果永不变化。
+
+**Excluded claims.**
+
+- 不新增 P1 最近搜索历史/收藏/个性化。
+- 不强制无限期保存旧 cursor 或完全相同结果 IDs。
+- 不允许把未提交草稿自动当成已提交查询。
+
+**Safe correction boundary.** 分离 committed query/filter 与 draft，重建后按已提交上下文恢复匹配缓存或发起相同语义请求；新结果可变化，旧响应按 revision 丢弃。失效 cursor 刷第一页，保留可用选择和锚点。
+
+**Consolidated validation needs; not executed.**
+
+- 重建已提交非空查询并保留不同草稿，检查实际请求仍使用 committed 查询/筛选。
+- 服务目录变化或 cursor 过期时允许新结果，但不得用无过滤目录配旧查询；错误保留可用同上下文结果。
+
+**Code/runtime confidence limit.** 未独立执行或确认；实际 refresh 调用和 UI 数据源交由代码反证。
+
+## APP-08-F02 — survives
+
+**Demand.** 持久任务/安装记录需和必要文件元数据对账，之后才把其作为 verified progress、installed/continue 等事实发布；不能仅恢复旧百分比或无文件的 ready。
+
+**Exact specification evidence.**
+
+- [docs/product/产品需求细则.md:145](https://github.com/wikigsroom/NsA-core/blob/cdedc7179ec1842592243a052525e021d8cf70f1/docs/product/%E4%BA%A7%E5%93%81%E9%9C%80%E6%B1%82%E7%BB%86%E5%88%99.md#L145) (mandated): “任务和安装状态来自持久记录及文件对账，不能仅恢复上一次屏幕上的百分比。”
+- [docs/engineering/05-data-state.md:101](https://github.com/wikigsroom/NsA-core/blob/cdedc7179ec1842592243a052525e021d8cf70f1/docs/engineering/05-data-state.md#L101) (mandated): “启动对账顺序：读取安全策略和迁移状态 → 扫描未完成安装日志 → 检查当前会话是否仍有真实活进程/受控 Binder → 对账 READY/active_release → 恢复任务与待处理系统结果 → 发布 UI 快照。不能一边显示 ready、一边异步发现 active 文件不存在。只做必要元数据检查，完整资源哈希在安装或明确修复时流式执行。”
+- [docs/engineering/05-data-state.md:34](https://github.com/wikigsroom/NsA-core/blob/cdedc7179ec1842592243a052525e021d8cf70f1/docs/engineering/05-data-state.md#L34) (mandated): “已验证位只能在相应字节 fsync 后提交；缺块不能计为耐久完成”
+- [docs/engineering/05-data-state.md:36](https://github.com/wikigsroom/NsA-core/blob/cdedc7179ec1842592243a052525e021d8cf70f1/docs/engineering/05-data-state.md#L36) (mandated): “READY 文件、清单、索引、模块及 DB 事实匹配才 ready”
+- [docs/engineering/02-android-client.md:66](https://github.com/wikigsroom/NsA-core/blob/cdedc7179ec1842592243a052525e021d8cf70f1/docs/engineering/02-android-client.md#L66) (mandated): “进程重启先打开数据库、执行有限对账，再渲染真实库与任务。”
+- [docs/engineering/05-data-state.md:95](https://github.com/wikigsroom/NsA-core/blob/cdedc7179ec1842592243a052525e021d8cf70f1/docs/engineering/05-data-state.md#L95) (mandated): “任何原因变化都不能自动把 `user_intent=paused` 改成 run。”
+
+**Attempts to refute.**
+
+- Room 已经持久化，启动前做过 fsync 就永远不需要读文件。 → **refuted**。APP-08.02 明示文件对账；05:L101 明确禁止先显示 ready 再异步发现 active 文件不存在。持久记录不是文件继续存在的证明。
+- worker 以后会验证，所以启动可先显示老百分比/ready。 → **refuted**。离线/暂停 worker 不一定执行，且规范规定必要对账在事实 UI 快照前。可以显示诚实的恢复检查中，而非未经确认的 ready。
+- 修复需要每次启动全量哈希所有大游戏。 → **refuted**。05:L101 反而限制启动只做必要元数据检查，全量资源哈希留给安装或明确修复。
+- 所有终结历史任务都必须仍保留归档，否则一律降级。 → **refuted**。规范关心恢复中的耐久事实及当前有效安装；正常清理过的历史归档不应因不存在而自动判坏。原 correction 的 every persisted transfer 应按记录状态/当前语义限定。
+
+**Retained scope.** 对可恢复/暂停/离线任务仍声称耐久进度，及当前 active install 仍显示 installed/continue 的记录进行必要元数据对账。原报告缺失/截断文件输入成立与否由代码反证确认。
+
+**Excluded claims.**
+
+- 不要求每次启动哈希所有资源。
+- 不要求为有限对账等待联网、下载完成或阻塞整个静态大厅外壳。
+- 不把正常清理归档的历史成功任务一律当作损坏。
+- 不改变用户暂停意图或自动开始游戏。
+
+**Safe correction boundary.** 先完成与当前状态有关的文件存在性/长度、checkpoint、READY/manifest/index/module/active pointer 元数据对账，再发布确定事实；异常以可恢复/repair 状态呈现。可显示检查中或维护页，无需冻结所有非任务 UI。
+
+**Consolidated validation needs; not executed.**
+
+- 离线暂停任务的 partial 不存在/被截断，首次确定进度快照与文件事实一致。
+- 无未完成 journal 的 active install 缺 READY/关键文件时不显示可继续；用户 pause 保留。
+- 正常历史任务清理与真实恢复缺失区分；启动不做完整多 GiB 哈希。
+
+**Code/runtime confidence limit.** 未独立执行或确认；文件损坏/缺失为既有 finding 输入，不主张正常 fsync 必然丢文件。
+
+## APP-08-F03 — survives
+
+**Demand.** 主进程恢复时核对真实 :game 存活和会话身份，重新握手或受控恢复；未确认资源释放前保留会话 pin/独占保护。不能直接把失联解释为已安全退出。
+
+**Exact specification evidence.**
+
+- [docs/product/产品需求细则.md:147](https://github.com/wikigsroom/NsA-core/blob/cdedc7179ec1842592243a052525e021d8cf70f1/docs/product/%E4%BA%A7%E5%93%81%E9%9C%80%E6%B1%82%E7%BB%86%E5%88%99.md#L147) (mandated): “运行会话只有活进程及有效会话握手才能标记运行中；失联会话转恢复状态。”
+- [docs/engineering/03-runtime-integration.md:64](https://github.com/wikigsroom/NsA-core/blob/cdedc7179ec1842592243a052525e021d8cf70f1/docs/engineering/03-runtime-integration.md#L64) (mandated): “全局一个会话；每次切换新 :game 进程。资源版本用session pin保持，更新/删除取得同游戏独占修改锁前必须确认无活动使用；保存导入使用独占save锁。”
+- [docs/engineering/03-runtime-integration.md:66](https://github.com/wikigsroom/NsA-core/blob/cdedc7179ec1842592243a052525e021d8cf70f1/docs/engineering/03-runtime-integration.md#L66) (mandated): “重建主进程发现仍活:game时重新握手或受控恢复，不启动第二份。”
+- [docs/engineering/03-runtime-integration.md:74](https://github.com/wikigsroom/NsA-core/blob/cdedc7179ec1842592243a052525e021d8cf70f1/docs/engineering/03-runtime-integration.md#L74) (mandated): “主进程也可能被系统回收，恢复时对账session与真实:game，清理旧记录并重建导航。”
+- [docs/engineering/05-data-state.md:111](https://github.com/wikigsroom/NsA-core/blob/cdedc7179ec1842592243a052525e021d8cf70f1/docs/engineering/05-data-state.md#L111) (mandated): “不得通过墙钟 TTL 强抢仍存活进程的会话租约；以 Binder 死亡/操作系统进程退出和最终资源确认关闭。”
+- [docs/engineering/05-data-state.md:101](https://github.com/wikigsroom/NsA-core/blob/cdedc7179ec1842592243a052525e021d8cf70f1/docs/engineering/05-data-state.md#L101) (mandated): “启动对账顺序：读取安全策略和迁移状态 → 扫描未完成安装日志 → 检查当前会话是否仍有真实活进程/受控 Binder → 对账 READY/active_release → 恢复任务与待处理系统结果 → 发布 UI 快照。不能一边显示 ready、一边异步发现 active 文件不存在。只做必要元数据检查，完整资源哈希在安装或明确修复时流式执行。”
+- [docs/engineering/decisions/0005-client-guardrails-and-cache.md:11](https://github.com/wikigsroom/NsA-core/blob/cdedc7179ec1842592243a052525e021d8cf70f1/docs/engineering/decisions/0005-client-guardrails-and-cache.md#L11) (current-ADR): “The main-process Application owns the session coordinator. Activity/ViewModel recreation reattaches a weak Activity reference without restarting initialization or creating a second runtime connection.”
+- [docs/engineering/contracts/state-machines.json:260](https://github.com/wikigsroom/NsA-core/blob/cdedc7179ec1842592243a052525e021d8cf70f1/docs/engineering/contracts/state-machines.json#L260) (contract): “"session": {”
+- [docs/product/data/defaults.json:12](https://github.com/wikigsroom/NsA-core/blob/cdedc7179ec1842592243a052525e021d8cf70f1/docs/product/data/defaults.json#L12) (normative-default): “"runtime_process": ":game"”
+
+**Attempts to refute.**
+
+- APP-08.03 仅要求不能错误宣称 running；全部标记 crashed 已满足。 → **refuted**。同一条明确规定失联转恢复；03:L66/L74 进一步要求核对仍活 :game。安全地不标 running 与安全地释放资源是两件事，后者仍需确认。
+- ADR0005 的 Application coordinator 已覆盖所有重建。 → **refuted**。其文字只覆盖 Activity/ViewModel 重建并复用同一 Application；主进程被回收会创建新 Application，未出现取消进程对账条款。
+- 现有 source 已有 PREPARE/native-start 防重，因此 finding 失效。 → **scope-limited**。原 finding 已排除同时运行两份 native 的结论。防重并不能证明旧会话 pin、下载阻断或同游戏资源/存档操作仍安全保留。
+- 必须新增名为 recovering 的 SessionState 才合规。 → **refuted**。机器契约 session 枚举为 checking/launching/running/suspended/exiting/ended/failed；没有 recovering。产品“恢复状态”可用既有状态加恢复事实/隔离呈现，不强制新增对外枚举。
+- 系统回收一定同时结束所有进程。 → **unverified-by-design**。本次不做 Android 运行验证；规范自己明确覆盖主进程回收而真实 :game 待对账的输入。是否构造可达由代码/后续统一验证确认，不能用同进程 Activity 测试推翻。
+
+**Retained scope.** 仅主进程重建而游戏进程可能仍活的条件。高严重度保留于错误释放 pin/资源与存档保护，非“双 native 并行”断言。实际 OS 进程组合未现场验证。
+
+**Excluded claims.**
+
+- 不声称已有两个 native 游戏同时运行。
+- 不强制自动恢复游玩或保留完整 native 内存快照。
+- 不强制新增 recovering 外部枚举。
+- 不因大厅重建直接全 App 终止。
+
+**Safe correction boundary.** 以 session/generation/process identity 和有效握手探测现有进程；对账前保留安全 pin/保护。有效则重新附着，否则显示受控恢复并确认结束及资源关闭后释放；旧事件不能复活新会话。
+
+**Consolidated validation needs; not executed.**
+
+- 整批实现后覆盖 main-only 回收 + surviving :game，检查 pin/保护仍在，能重新握手或明确受控结束。
+- 对照真实 dead runtime、旧 generation/迟到事件；不得启动第二份或提前开放资源/存档修改。
+
+**Code/runtime confidence limit.** 本报告不独立确认可触发调度或丢锁路径；由代码反证及之后统一验证完成。
+
+## APP-08-F04 — survives
+
+**Demand.** 启动恢复不能把仍由活 worker 持有的 staging/journal 当孤立数据清理；ready 必须与最终实际资源完整性一致。恢复与当前写入须有共同所有权/协调边界。
+
+**Exact specification evidence.**
+
+- [docs/product/产品需求细则.md:146](https://github.com/wikigsroom/NsA-core/blob/cdedc7179ec1842592243a052525e021d8cf70f1/docs/product/%E4%BA%A7%E5%93%81%E9%9C%80%E6%B1%82%E7%BB%86%E5%88%99.md#L146) (mandated): “任务和安装状态来自持久记录及文件对账，不能仅恢复上一次屏幕上的百分比。”
+- [docs/engineering/03-runtime-integration.md:66](https://github.com/wikigsroom/NsA-core/blob/cdedc7179ec1842592243a052525e021d8cf70f1/docs/engineering/03-runtime-integration.md#L66) (mandated): “锁顺序为协调租约→游戏操作锁→保存锁→短DB事务；不能持DB事务等待网络、fsync或Binder。”
+- [docs/engineering/05-data-state.md:36](https://github.com/wikigsroom/NsA-core/blob/cdedc7179ec1842592243a052525e021d8cf70f1/docs/engineering/05-data-state.md#L36) (mandated): “READY 文件、清单、索引、模块及 DB 事实匹配才 ready”
+- [docs/engineering/05-data-state.md:103](https://github.com/wikigsroom/NsA-core/blob/cdedc7179ec1842592243a052525e021d8cf70f1/docs/engineering/05-data-state.md#L103) (mandated): “可清理数据须经持有者、活会话和引用计数复查”
+- [docs/engineering/05-data-state.md:101](https://github.com/wikigsroom/NsA-core/blob/cdedc7179ec1842592243a052525e021d8cf70f1/docs/engineering/05-data-state.md#L101) (mandated): “启动对账顺序：读取安全策略和迁移状态 → 扫描未完成安装日志 → 检查当前会话是否仍有真实活进程/受控 Binder → 对账 READY/active_release → 恢复任务与待处理系统结果 → 发布 UI 快照。不能一边显示 ready、一边异步发现 active 文件不存在。只做必要元数据检查，完整资源哈希在安装或明确修复时流式执行。”
+- [docs/engineering/contracts/README.md:31](https://github.com/wikigsroom/NsA-core/blob/cdedc7179ec1842592243a052525e021d8cf70f1/docs/engineering/contracts/README.md#L31) (mandated): “file_count 与数组长度、各文件长度之和与 unpacked_bytes 一致；不得有额外文件、重复文件或缺文件。”
+- [docs/engineering/decisions/0005-client-guardrails-and-cache.md:11](https://github.com/wikigsroom/NsA-core/blob/cdedc7179ec1842592243a052525e021d8cf70f1/docs/engineering/decisions/0005-client-guardrails-and-cache.md#L11) (current-ADR): “Session creation, save export/import, installation and pre-update backups share one non-reentrant repository mutex; helpers for existing lock owners are explicitly named.”
+
+**Attempts to refute.**
+
+- 恢复时 CREATED 一定是前一次进程遗留，删除合法。 → **refuted**。持久 phase 不证明当前 owner 已停止；05:L103 要求清理前复查持有者。原 finding 的活 worker/初次 UI 同进程交错如果代码可达，不能用 phase 取代所有权。
+- ADR0005 声明安装有公共 mutex，所以不必检查恢复是否加入。 → **refuted**。ADR 描述预期架构不等于每条实际入口已接入。其互斥选择与 finding 的协调目标一致；不能据文字推翻漏接入口的代码证据。
+- APP-08 只管 UI，后台误删 staging 属于额外稳健性。 → **refuted**。APP-08.02 明确要求真实任务/安装恢复，工程05进一步固定文件对账和清理规则。可使安装 READY 缺文件的交错直接违反既有完整性，不是新扩展。
+- 必须唯一采用一个 singleton initialization barrier，且首页等整次大包安装完成。 → **refuted**。共享屏障/锁只是可选最小方案，规范要求的是不误清活 owner 且 READY 事实真实；允许等价的串行协调/owner 检查。不能为此持 DB 事务等待网络/fsync/Binder。
+
+**Retained scope.** 仅原报告所述 WorkManager 先启动、第一次 UI initialize 与活安装 extraction 交错。高严重度依赖代码反证确认既验文件丢失后仍可能发布 READY；若仅安全失败需下调后果表述。
+
+**Excluded claims.**
+
+- 不要求任意 startup 都等待下载/完整大包安装结束。
+- 不把某一种锁或屏障类型当唯一规范。
+- 不新增崩溃调度或不同清理场景的独立 finding。
+
+**Safe correction boundary.** 恢复扫描/清理与 worker 安装入口共享初始化/操作所有权边界，或采用等价 owner 校验；活 writer staging 不当孤立数据删。发布 READY 前维持资源事实一致，短 DB 事务遵循统一锁顺序。
+
+**Consolidated validation needs; not executed.**
+
+- 统一验证阶段用两文件屏障复现：A 校验后暂停 worker，插入首次 initialize/recover，再继续 B；确保 A 未被删或不能发布缺 A 的 READY。
+- 真实遗留 CREATED 恢复仍能安全清理/重试，活 owner 与过期 owner 可区分。
+
+**Code/runtime confidence limit.** 调度可达性和不完整 READY 后果由代码反证确认，本报告只确认规范义务。
+
+## Deferred and extra scope
+
+- CAT-10 查询历史/收藏/个性化是 P1；APP-08.01 当前 committed query 恢复是 P0。
+- 永久固定原结果 IDs、启动全资源哈希、自动恢复 native 内存快照、新增 recovering 枚举不是这些 finding 的强制修正。
+- APP-08.04 防重复本身不新增 finding；F03 已明确不声称同时两个 native 游戏。
+- 仅列统一测试需求，未执行任何测试、构建或设备操作。
+
+## Work constraints
+
+- 无产品文件改动
+- 无测试或构建
+- 无设备读写/输入
+- 无浏览器/虚拟化/其他聊天访问
+- 未启动代理
+- 仅写本任务指定的忽略报告

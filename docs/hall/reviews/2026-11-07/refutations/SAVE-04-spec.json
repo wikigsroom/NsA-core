@@ -1,0 +1,856 @@
+{
+  "requirement_id": "SAVE-04",
+  "review_type": "independent_spec_refutation",
+  "baseline_commit": "cdedc7179ec1842592243a052525e021d8cf70f1",
+  "original_report": "requirements/SAVE-04.md",
+  "original_json": "requirements/SAVE-04.json",
+  "independent_of_original_author": true,
+  "scope": [
+    "F1",
+    "F2",
+    "F3",
+    "F4",
+    "F5",
+    "F6",
+    "F7",
+    "F8",
+    "legacy_native_menu",
+    "dual_mount"
+  ],
+  "mode": "Source and authoritative specification review only",
+  "restrictions_observed": {
+    "source_edits": false,
+    "tests": false,
+    "builds": false,
+    "device_queries_or_input": false,
+    "browser": false,
+    "virtualization": false,
+    "subagents": false,
+    "only_ignored_report_outputs": true
+  },
+  "authority": [
+    {
+      "file": "docs/engineering/README.md",
+      "line_start": 25,
+      "line_end": 25,
+      "quote": "产品/页面定义行为，机器契约固定线上/本地格式和状态，技术章固定实现约束，设计源固定视觉。冲突需同步修订，不选一个旧稿绕过另一规范。"
+    },
+    {
+      "file": "docs/product/产品需求细则.md",
+      "line_start": 960,
+      "line_end": 960,
+      "quote": "导出只读取已提交快照，经系统选择器写到玩家选定位置；取消无副作用。"
+    },
+    {
+      "file": "docs/product/产品需求细则.md",
+      "line_start": 961,
+      "line_end": 961,
+      "quote": "导入校验格式、游戏、兼容组、大小、清单与每文件摘要，拒绝越界和非法链接。"
+    },
+    {
+      "file": "docs/product/产品需求细则.md",
+      "line_start": 962,
+      "line_end": 962,
+      "quote": "导入前自动保留当前有效档，离线事务替换后更新索引，失败恢复原档。"
+    },
+    {
+      "file": "docs/product/产品需求细则.md",
+      "line_start": 963,
+      "line_end": 963,
+      "quote": "游戏运行中不开放覆盖，明确先结束游戏；导入完成不直接启动或旋转。"
+    }
+  ],
+  "adr_review": [
+    {
+      "file": "docs/engineering/decisions/0001-integrated-development-round.md",
+      "lines": [
+        5,
+        7
+      ],
+      "effect": "Complete source batch before consolidated verification; does not waive save/reload or G0."
+    },
+    {
+      "file": "docs/engineering/decisions/0002-implementation-api-additions.md",
+      "effect": "Additive HTTP operations, no save exception."
+    },
+    {
+      "file": "docs/engineering/decisions/0003-windows-build-and-device-capabilities.md",
+      "effect": "Build/device capability decisions, no save exception."
+    },
+    {
+      "file": "docs/engineering/decisions/0004-large-content-and-public-demo.md",
+      "lines": [
+        3,
+        5
+      ],
+      "effect": "Original 2048 default; BotW profile explicit opt-in. No save exception."
+    },
+    {
+      "file": "docs/engineering/decisions/0005-client-guardrails-and-cache.md",
+      "lines": [
+        11,
+        21
+      ],
+      "effect": "Affirms shared mutex and group recheck; no schema/ABI change or recovery exception."
+    },
+    {
+      "file": "docs/engineering/decisions/0006-durable-credential-renewal.md",
+      "lines": [
+        5,
+        13
+      ],
+      "effect": "Credentials, no save contract exception."
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "F1",
+      "outcome": "survives",
+      "confidence": "high",
+      "scope": "Reported failure must preserve/restore original; restart may choose complete old or verified new, never fabricated empty committed.",
+      "attempted_refutation": "An old ZIP remains, launch calls recovery, and rename is atomic.",
+      "normative_evidence": [
+        {
+          "file": "docs/product/产品需求细则.md",
+          "line_start": 962,
+          "line_end": 962,
+          "quote": "失败恢复原档。"
+        },
+        {
+          "file": "docs/product/页面与交互验收规格.md",
+          "line_start": 247,
+          "line_end": 247,
+          "quote": "导入先备份后交换；任意失败回原档；取消不修改目录"
+        },
+        {
+          "file": "docs/engineering/04-transfer-install-save.md",
+          "line_start": 80,
+          "line_end": 80,
+          "quote": "交换阶段保存old/new路径归属与commit；每边界中断重启都能取回原档或已验证新档。恢复前不清唯一旧副本。"
+        },
+        {
+          "file": "docs/engineering/05-data-state.md",
+          "line_start": 105,
+          "line_end": 105,
+          "quote": "重启在旧/新完整提交间恢复，不留下半个目录。"
+        }
+      ],
+      "source_evidence": [
+        {
+          "file": "android/app/src/main/java/org/nsa/hall/transfer/SaveManager.kt",
+          "lines": [
+            120,
+            125
+          ],
+          "fact": "Exchange has cleanup-only finally and no compensating rollback."
+        },
+        {
+          "file": "android/app/src/main/java/org/nsa/hall/transfer/SaveManager.kt",
+          "lines": [
+            127,
+            135
+          ],
+          "fact": "Existing committed directory causes before-import cleanup without commit identity validation."
+        },
+        {
+          "file": "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt",
+          "lines": [
+            42,
+            60
+          ],
+          "fact": "saveRoot mkdir side effect; initialize has no save recovery."
+        },
+        {
+          "file": "android/app/src/main/java/org/nsa/hall/runtime/SessionController.kt",
+          "lines": [
+            83,
+            83
+          ],
+          "fact": "Save recovery is on later native launch."
+        }
+      ],
+      "refutation_result": "Retained ZIP disproves total loss of all copies, not missing active-state rollback/recovery; mkdir before launch can mask missing active tree.",
+      "excluded_overreach": [
+        "Every crash must always restore old rather than verified new.",
+        "Every exception destroys all old copies."
+      ],
+      "minimum_fix": "Recover owned journals before active-root creation/access; record old/new commit identities; compensate reported failure and reconcile selected tree/index before rollback cleanup.",
+      "later_verification": "Fault exchange/journal/index boundaries; interpose export/backup/import/launch; recover twice.",
+      "runtime_verification": "not run"
+    },
+    {
+      "finding_id": "F2",
+      "outcome": "survives",
+      "confidence": "high for specification; conditional runtime trigger",
+      "scope": "Main process ends while independent :game survives.",
+      "attempted_refutation": "Shared mutex and idle check in ADR 0005 already protect import; clearing stale rows could be allowed.",
+      "normative_evidence": [
+        {
+          "file": "docs/product/产品需求细则.md",
+          "line_start": 963,
+          "line_end": 963,
+          "quote": "游戏运行中不开放覆盖，明确先结束游戏"
+        },
+        {
+          "file": "docs/engineering/03-runtime-integration.md",
+          "line_start": 64,
+          "line_end": 64,
+          "quote": "保存导入使用独占save锁。"
+        },
+        {
+          "file": "docs/engineering/03-runtime-integration.md",
+          "line_start": 66,
+          "line_end": 66,
+          "quote": "持久租约的超时只触发对账，不足以证明native已释放资源；结合进程generation、活连接与文件锁验证。重建主进程发现仍活:game时重新握手或受控恢复，不启动第二份。"
+        },
+        {
+          "file": "docs/engineering/03-runtime-integration.md",
+          "line_start": 74,
+          "line_end": 74,
+          "quote": "主进程也可能被系统回收，恢复时对账session与真实:game"
+        }
+      ],
+      "source_evidence": [
+        {
+          "file": "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt",
+          "lines": [
+            58,
+            58
+          ],
+          "fact": "Unconditionally marks unfinished rows crashed on initialize."
+        },
+        {
+          "file": "android/app/src/main/java/org/nsa/hall/transfer/SaveManager.kt",
+          "lines": [
+            20,
+            20
+          ],
+          "fact": "Idle derives solely from unfinished rows."
+        },
+        {
+          "file": "android/app/src/main/java/org/nsa/hall/transfer/SaveManager.kt",
+          "lines": [
+            86,
+            87
+          ],
+          "fact": "Import rechecks idle under main-process lock."
+        }
+      ],
+      "refutation_result": "Actual game ownership must be reconciled, so fresh main or a timeout is insufficient proof of idle. Ordinary lock-based exclusion remains real.",
+      "excluded_overreach": [
+        "Same-process Activity recreation alone triggers it.",
+        "Package force-stop tests surviving game.",
+        "Visible Import button proves ordinary running overwrite succeeds."
+      ],
+      "minimum_fix": "Maintain unresolved session/save pin until authenticated generation-bound reconciliation or controlled termination; block replacement and explain recovery/exit.",
+      "later_verification": "Recreate main while game survives; verify import/export blocked; retain ordinary mutex success case.",
+      "runtime_verification": "not run"
+    },
+    {
+      "finding_id": "F3",
+      "outcome": "survives",
+      "confidence": "high",
+      "scope": "Confirmation after recreation or retry after failed entered import.",
+      "attempted_refutation": "Registered launchers and saveable selected/dialog already preserve enough; player can manually reselect.",
+      "normative_evidence": [
+        {
+          "file": "docs/product/页面与交互验收规格.md",
+          "line_start": 233,
+          "line_end": 233,
+          "quote": "失败保留原档及草稿；长任务展示进度/恢复"
+        },
+        {
+          "file": "docs/design/obsidian-portrait/03-screen-specs.md",
+          "line_start": 583,
+          "line_end": 583,
+          "quote": "整个流程可恢复且不删除唯一副本。"
+        },
+        {
+          "file": "docs/design/obsidian-portrait/03-screen-specs.md",
+          "line_start": 589,
+          "line_end": 589,
+          "quote": "校验失败/空间不足/写入中断保留现有存档与恢复入口。"
+        },
+        {
+          "file": "docs/engineering/05-data-state.md",
+          "line_start": 44,
+          "line_end": 44,
+          "quote": "系统文件选择器、权限和更新安装结果可恢复；不在导航参数塞大文件"
+        }
+      ],
+      "source_evidence": [
+        {
+          "file": "android/app/src/main/java/org/nsa/hall/ui/HallApp.kt",
+          "lines": [
+            96,
+            100
+          ],
+          "fact": "Dialog saveable, archive/metadata Pair remember-only."
+        },
+        {
+          "file": "android/app/src/main/java/org/nsa/hall/ui/HallApp.kt",
+          "lines": [
+            340,
+            340
+          ],
+          "fact": "Null Pair makes Confirm silently return; failure does not replace stale draft."
+        },
+        {
+          "file": "android/app/src/main/java/org/nsa/hall/transfer/SaveManager.kt",
+          "lines": [
+            125,
+            125
+          ],
+          "fact": "Entered import finally deletes retry input on failure."
+        }
+      ],
+      "refutation_result": "A restored inert Confirm or deleted retry input violates required usable recovery, although the external source normally remains.",
+      "excluded_overreach": [
+        "Must persist this exact Kotlin Pair.",
+        "Every picker result is lost before delivery.",
+        "External backup is destroyed."
+      ],
+      "minimum_fix": "Persist/reconstruct small owned request context and usable input, or show explicit recoverable reselect; retain retry source until success/deliberate cancel.",
+      "later_verification": "Recreate after result delivery/confirmation; fail extraction/backup and retry with game/source binding intact.",
+      "runtime_verification": "not run"
+    },
+    {
+      "finding_id": "F4",
+      "outcome": "survives",
+      "confidence": "high",
+      "scope": "Accepted visible Cancel before protected publication, including old-save backup interval.",
+      "attempted_refutation": "Only SAF/export cancellation is specified, or cancelling a rename transaction would be unsafe.",
+      "normative_evidence": [
+        {
+          "file": "docs/product/页面与交互验收规格.md",
+          "line_start": 245,
+          "line_end": 245,
+          "quote": "confirmBackupThenImport；cancel"
+        },
+        {
+          "file": "docs/product/页面与交互验收规格.md",
+          "line_start": 247,
+          "line_end": 247,
+          "quote": "取消不修改目录"
+        },
+        {
+          "file": "docs/product/页面与交互验收规格.md",
+          "line_start": 469,
+          "line_end": 469,
+          "quote": "文件选择、解析、预检、备份、交换、成功、失败分别有状态"
+        },
+        {
+          "file": "docs/engineering/04-transfer-install-save.md",
+          "line_start": 64,
+          "line_end": 64,
+          "quote": "提交最短临界区不任意取消。"
+        }
+      ],
+      "source_evidence": [
+        {
+          "file": "android/app/src/main/java/org/nsa/hall/ui/HallApp.kt",
+          "lines": [
+            340,
+            340
+          ],
+          "fact": "Enabled dismiss/Cancel only deletes archive/context and hides UI; no operation cancellation."
+        },
+        {
+          "file": "android/app/src/main/java/org/nsa/hall/transfer/SaveManager.kt",
+          "lines": [
+            117,
+            124
+          ],
+          "fact": "After extraction archive is already closed; old-save backup and exchange continue independently."
+        }
+      ],
+      "refutation_result": "S16 explicitly defines cancel behavior. Closing the dialog cannot count as cancellation when later publication still happens.",
+      "excluded_overreach": [
+        "Must interrupt old/new rename halfway.",
+        "Null SAF callback already invokes import.",
+        "Installation-section L64 is independently an import API clause."
+      ],
+      "minimum_fix": "Own/deduplicate operation, honor pre-publication cancel; disable/replace cancel/dismiss with truthful finishing state during brief protected exchange.",
+      "later_verification": "Cancel extraction/backup prevents publication; protected exchange exposes coherent noncancellable phase and durable outcome.",
+      "runtime_verification": "not run"
+    },
+    {
+      "finding_id": "F5",
+      "outcome": "survives",
+      "confidence": "high",
+      "scope": "Compressed archive with underclaimed total and an oversized declared entry or cross-file actual total.",
+      "attempted_refutation": "Compressed input and per-file declared sizes are bounded; eventual aggregate rejection is enough.",
+      "normative_evidence": [
+        {
+          "file": "docs/engineering/04-transfer-install-save.md",
+          "line_start": 78,
+          "line_end": 78,
+          "quote": "上限默认2GiB归档，逐文件累计及展开总量同时受限；不得因压缩率突破上限。"
+        },
+        {
+          "file": "docs/engineering/contracts/README.md",
+          "line_start": 35,
+          "line_end": 35,
+          "quote": "保存包归档及展开各≤2 GiB、文件≤10000，全部文件摘要/总量匹配"
+        },
+        {
+          "file": "docs/product/开发计划与验收矩阵.md",
+          "line_start": 249,
+          "line_end": 249,
+          "quote": "穿越/绝对/UNC/盘符/控制字/链接/重复/归一化冲突与超展开拒绝，只清专属 staging，源有效数据保持"
+        }
+      ],
+      "source_evidence": [
+        {
+          "file": "android/app/src/main/java/org/nsa/hall/transfer/SaveManager.kt",
+          "lines": [
+            82,
+            82
+          ],
+          "fact": "Only claimed total gets early cap."
+        },
+        {
+          "file": "android/app/src/main/java/org/nsa/hall/transfer/SaveManager.kt",
+          "lines": [
+            104,
+            113
+          ],
+          "fact": "Per-file writes bounded by declared entry size; cumulative cap checked only after entire file write/fsync/hash."
+        }
+      ],
+      "refutation_result": "Actual staging output is constrained by 2 GiB too; malicious metadata is part of the required trust boundary.",
+      "excluded_overreach": [
+        "Oversized archive necessarily becomes active.",
+        "Original save is moved before extraction validation."
+      ],
+      "minimum_fix": "Checked declared sum preflight plus remaining actual aggregate budget before each write and storage-plan checks.",
+      "later_verification": "Bounded/fault-injected single/multi-file cap crossings without filling disk.",
+      "runtime_verification": "not run"
+    },
+    {
+      "finding_id": "F6",
+      "outcome": "survives",
+      "confidence": "high",
+      "scope": "Missing/wrong v1 metadata fields and control-character indexed ZIP paths.",
+      "attempted_refutation": "Unused unsigned metadata and extensible API responses can be ignored; containment alone is sufficient.",
+      "normative_evidence": [
+        {
+          "file": "docs/engineering/contracts/save-backup.schema.json",
+          "line_start": 59,
+          "line_end": 70,
+          "summary": "Required: save_schema, game_id, local_player_id, source_release_id, compatibility_group, commit_seq, created_at, total_bytes, files; additionalProperties=false."
+        },
+        {
+          "file": "docs/engineering/contracts/save-backup.schema.json",
+          "line_start": 15,
+          "line_end": 26,
+          "summary": "source_release_id references Id; commit_seq is integer minimum 0; created_at references UtcTime."
+        },
+        {
+          "file": "docs/engineering/contracts/save-backup.schema.json",
+          "line_start": 48,
+          "line_end": 56,
+          "summary": "Each entry requires path/bytes/sha256, additionalProperties=false, files count 1..10000."
+        },
+        {
+          "file": "docs/engineering/contracts/README.md",
+          "line_start": 30,
+          "line_end": 30,
+          "quote": "拒绝绝对/盘符/UNC/空/点/上级/反斜线/控制字符、链接与归一化冲突"
+        },
+        {
+          "file": "docs/product/页面与交互验收规格.md",
+          "line_start": 246,
+          "line_end": 246,
+          "quote": "备份包无可信平台签名也须做结构/大小/摘要与归属校验"
+        }
+      ],
+      "source_evidence": [
+        {
+          "file": "android/app/src/main/java/org/nsa/hall/transfer/SaveManager.kt",
+          "lines": [
+            78,
+            82
+          ],
+          "fact": "Inspect omits required origin/time/seq and full schema."
+        },
+        {
+          "file": "android/app/src/main/java/org/nsa/hall/transfer/SaveManager.kt",
+          "lines": [
+            90,
+            116
+          ],
+          "fact": "Commit path never enforces missing metadata schema."
+        },
+        {
+          "file": "android/app/src/main/java/org/nsa/hall/security/Trust.kt",
+          "lines": [
+            37,
+            44
+          ],
+          "fact": "Control characters not forbidden by safeChild; U+000A is a concrete permitted filename character."
+        }
+      ],
+      "refutation_result": "Specific save schema and extra hard path checks are mandatory regardless of platform signature.",
+      "excluded_overreach": [
+        "Require platform signature on user backups.",
+        "Reject older compatible source release solely for not matching active.",
+        "Accept unknown fields merely because other API responses are extensible."
+      ],
+      "minimum_fix": "Validate full supported v1 schema and common hard path rule before confirmation/staging; retain validated provenance.",
+      "later_verification": "Missing fields, types, sequence/time/IDs, property policy, controls/NUL/DEL and valid unsigned backup.",
+      "runtime_verification": "not run"
+    },
+    {
+      "finding_id": "F7",
+      "outcome": "narrowed",
+      "confidence": "high",
+      "scope": "Durable verified import index and factual provenance; not exact source sequence/timestamp copying.",
+      "attempted_refutation": "Local revisions should not regress; new export can have new created_at; no native save event occurs on import.",
+      "normative_evidence": [
+        {
+          "file": "docs/product/产品需求细则.md",
+          "line_start": 962,
+          "line_end": 962,
+          "quote": "离线事务替换后更新索引"
+        },
+        {
+          "file": "docs/product/产品需求细则.md",
+          "line_start": 912,
+          "line_end": 912,
+          "quote": "发行版本为来源元数据。"
+        },
+        {
+          "file": "docs/engineering/04-transfer-install-save.md",
+          "line_start": 74,
+          "line_end": 74,
+          "quote": "commit_seq、来源release、摘要、大小与提交时间有记录。"
+        },
+        {
+          "file": "docs/engineering/05-data-state.md",
+          "line_start": 105,
+          "line_end": 105,
+          "quote": "存档权威来自原生提交与经过验证的备份"
+        },
+        {
+          "file": "docs/engineering/contracts/local-records.schema.json",
+          "line_start": 256,
+          "line_end": 302,
+          "summary": "SaveCommit requires game/player/source release/group/commit sequence/bytes/tree digest/committed_at."
+        }
+      ],
+      "source_evidence": [
+        {
+          "file": "android/app/src/main/java/org/nsa/hall/transfer/SaveManager.kt",
+          "lines": [
+            86,
+            135
+          ],
+          "fact": "Files and journal only; no durable imported save/index registration."
+        },
+        {
+          "file": "android/app/src/main/java/org/nsa/hall/transfer/SaveManager.kt",
+          "lines": [
+            37,
+            37
+          ],
+          "fact": "Export takes old fact/current active source/fresh archive timestamp."
+        },
+        {
+          "file": "android/app/src/main/java/org/nsa/hall/runtime/SessionController.kt",
+          "lines": [
+            151,
+            156
+          ],
+          "fact": "A later native event is the only shown save-seq write."
+        }
+      ],
+      "refutation_result": "Missing index/provenance survives. Sequence 12 after importing archive 3 is not alone proof of wrong revision. No exact old created_at/sequence preservation or fake native event is required.",
+      "refuted_overreach": [
+        "Imported sequence must replace current local sequence even when smaller.",
+        "New archive created_at must equal original backup's created_at.",
+        "Verified import must wait for game launch/native event before becoming committed."
+      ],
+      "wording_tension": "05-data-state table L40 says native commits only, while explicit SAVE-04.03 and same chapter L105 authorize verified backup imports; interpret imported registration separately, never fabricate native events.",
+      "minimum_fix": "Register verified import/tree/index/provenance with journal atomically/recoverably; define local monotonic revision separate from origin; export factual record with defined archive time.",
+      "later_verification": "Import older compatible backup, re-export before launch, recover twice; tree/index/provenance consistent without revision regression/fake event.",
+      "runtime_verification": "not run"
+    },
+    {
+      "finding_id": "F8",
+      "outcome": "survives",
+      "confidence": "high",
+      "scope": "Current original 2048 owned state.new staging file; not generic suffix filtering.",
+      "attempted_refutation": "Demo not subject to current rules, or under-save-root implies committed.",
+      "normative_evidence": [
+        {
+          "file": "docs/product/产品需求细则.md",
+          "line_start": 960,
+          "line_end": 960,
+          "quote": "导出只读取已提交快照"
+        },
+        {
+          "file": "docs/engineering/04-transfer-install-save.md",
+          "line_start": 74,
+          "line_end": 76,
+          "summary": "Commit truth comes from native transaction/disk marker; export must not read save.work."
+        },
+        {
+          "file": "docs/engineering/05-data-state.md",
+          "line_start": 40,
+          "line_end": 40,
+          "quote": "目录存在不等于已提交"
+        },
+        {
+          "file": "docs/engineering/decisions/0004-large-content-and-public-demo.md",
+          "line_start": 3,
+          "line_end": 5,
+          "summary": "Original MIT 2048 is default; BotW explicitly selects existing local two-game profile."
+        },
+        {
+          "file": "docs/hall/device-validation.md",
+          "line_start": 44,
+          "line_end": 44,
+          "summary": "A = original native 2048, B = prepared BotW; two Switch titles would require another distinct Switch title."
+        }
+      ],
+      "source_evidence": [
+        {
+          "file": "android/native-games/2048/game.c",
+          "lines": [
+            48,
+            57
+          ],
+          "fact": "state.new is written before rename/commit event and left on failure."
+        },
+        {
+          "file": "android/native-games/2048/game.c",
+          "lines": [
+            155,
+            157
+          ],
+          "fact": "Startup reads state.dat, not owned leftover staging."
+        },
+        {
+          "file": "android/app/src/main/java/org/nsa/hall/transfer/SaveManager.kt",
+          "lines": [
+            27,
+            41
+          ],
+          "fact": "Exporter walks every file under committed root."
+        }
+      ],
+      "refutation_result": "Current demo saves are covered; only actual committed state may be included.",
+      "excluded_overreach": [
+        "Every archive contains temporary file.",
+        "Every game's .new file is staging.",
+        "Switch sibling work paths prove demo temporary files are excluded."
+      ],
+      "minimum_fix": "Stage demo outside committed or use authoritative committed-file index; clean only owned staging and preserve prior commit.",
+      "later_verification": "Fail/intercept write/fsync/rename, then idle export; no state.new and no fake backup absent any commit.",
+      "runtime_verification": "not run"
+    }
+  ],
+  "scope_questions": [
+    {
+      "id": "legacy_native_menu",
+      "outcome": "narrowed",
+      "decision": "Player-visible alternate import/export compiled into unified hall is governed by SAVE-04/APP-04.03; standalone legacy app and clearly internal private snapshot helpers are separate scope.",
+      "normative_evidence": [
+        {
+          "file": "docs/product/产品需求细则.md",
+          "line_start": 83,
+          "line_end": 83,
+          "quote": "导入/导出调用系统文件选择器；取消或权限撤回不删除原档。"
+        },
+        {
+          "file": "docs/product/产品需求细则.md",
+          "line_start": 960,
+          "line_end": 963,
+          "summary": "Committed SAF export; validated transactional indexed import; no running overwrite/autolaunch."
+        },
+        {
+          "file": "docs/engineering/01-architecture.md",
+          "line_start": 14,
+          "line_end": 14,
+          "summary": "存档提交与交换可复用；扩展按游戏身份隔离，接入提交事件与安全导入"
+        },
+        {
+          "file": "docs/product/产品需求细则.md",
+          "line_start": 1025,
+          "line_end": 1027,
+          "summary": "Private backups differ from uninstall protection; old single-game app uses own export and new platform import."
+        }
+      ],
+      "source_evidence": [
+        {
+          "file": "nxnative/dm/android/build.py",
+          "lines": [
+            71,
+            83
+          ],
+          "fact": "Includes Android source and defines hall binding."
+        },
+        {
+          "file": "nxnative/dm/android/hall_adapter.c",
+          "lines": [
+            108,
+            122
+          ],
+          "fact": "Passes hall root/save and calls legacy frontend."
+        },
+        {
+          "file": "nxnative/dm/android/overlay_layout.h",
+          "lines": [
+            110,
+            117
+          ],
+          "fact": "Game menu lists export/import."
+        },
+        {
+          "file": "nxnative/dm/android/front_android.c",
+          "lines": [
+            433,
+            434
+          ],
+          "fact": "Menu dispatches user actions."
+        },
+        {
+          "file": "nxnative/dm/android/front_android.c",
+          "lines": [
+            483,
+            501
+          ],
+          "fact": "Player export runs raw snapshot helper; comment defers import until next start."
+        },
+        {
+          "file": "nxnative/dm/android/front_android.c",
+          "lines": [
+            580,
+            586
+          ],
+          "fact": "Player-visible Import this save/Import and close confirmation."
+        },
+        {
+          "file": "nxnative/dm/android/front_android.c",
+          "lines": [
+            1136,
+            1137
+          ],
+          "fact": "Consumes legacy request before mounts."
+        },
+        {
+          "file": "nxnative/dm/android/saves_android.c",
+          "lines": [
+            101,
+            196
+          ],
+          "fact": "Private raw snapshot/deferred import lacks hall schema/SAF/index pipeline."
+        }
+      ],
+      "surviving_gap": "Exposed unified alternate operations bypass the current user save format/validation/SAF/index transaction contract; no ADR exemption.",
+      "refuted_overreach": [
+        "All raw internal snapshot helpers are inherently forbidden.",
+        "Standalone old frontend must be rewritten.",
+        "Selecting deferred import during gameplay proves live directory overwrite.",
+        "Any untrusted remote injection was demonstrated."
+      ],
+      "minimum_fix": "Disable/delegate hall-bound player import/export and raw deferred request consumption; preserve standalone/internal snapshots if named truthfully and ownership-safe.",
+      "runtime_verification": "source reachability only; not executed"
+    },
+    {
+      "id": "dual_mount",
+      "outcome": "unverified",
+      "decision": "Conditional future-runtime contract gap; no current two-slot save loss established.",
+      "normative_evidence": [
+        {
+          "file": "docs/engineering/decisions/0004-large-content-and-public-demo.md",
+          "line_start": 3,
+          "line_end": 5,
+          "summary": "Default 2048, explicit local two-game profile."
+        },
+        {
+          "file": "docs/hall/device-validation.md",
+          "line_start": 44,
+          "line_end": 53,
+          "summary": "Current A original 2048 and B prepared BotW; not a claim of two Switch titles."
+        },
+        {
+          "file": "docs/product/产品需求细则.md",
+          "line_start": 960,
+          "line_end": 962,
+          "summary": "Full committed snapshot and transactional/indexed import still apply to future enabled slot."
+        }
+      ],
+      "source_evidence": [
+        {
+          "file": "nxnative/dm/host/hle_fs.c",
+          "lines": [
+            501,
+            512
+          ],
+          "fact": "Separate _device tree only when account/device imports both exist; comments name Mario Kart 8 Deluxe both-mount example."
+        },
+        {
+          "file": "android/app/src/main/java/org/nsa/hall/transfer/SaveManager.kt",
+          "lines": [
+            27,
+            41
+          ],
+          "fact": "Hall export enumerates committed only."
+        },
+        {
+          "file": "nxnative/dm/android/saves_android.c",
+          "lines": [
+            104,
+            120
+          ],
+          "fact": "Legacy helper also includes device sibling."
+        },
+        {
+          "file": "android/app/src/main/assets/runtime-registry.json",
+          "lines": [
+            1,
+            1
+          ],
+          "fact": "Ignored generated local registry lists 2048/BotW; not committed binary acceptance evidence."
+        }
+      ],
+      "missing_evidence": "No actual current slot shown creating a committed_device tree; no device/save data examined.",
+      "minimum_fix": "Before enabling a dual-mount slot, declare all save roots and coherent whole-snapshot/transaction/index semantics and acceptance; do not label conditional branch current data loss."
+    }
+  ],
+  "searches": [
+    "SAVE-04 plus SAVE-01/02/03/05/08 and exact four subrules",
+    "S15/S16/INT-03 recovery, cancellation, draft, original-save and phase clauses",
+    "AC-S03/CON-03 acceptance linkage",
+    "Engineering authority/runtime/save/data chapters and contract README/save-backup/local-records/domain schemas",
+    "ADRs 0001–0006 save/schema exception search",
+    "DM_HALL_BINDING/build/frontend/overlay/request native reachability",
+    "双挂载|dual.mount|committed_device|_device and current 2048/BotW slots",
+    "Bounded source checks for saveRoot/initialize/recover/import/export/schema/path/index/native staging",
+    "PowerShell invalid wildcard paths corrected to directory rg; guessed missing StorageBoundary.kt, porter/profiles and ADR basename corrected; no finding based on failed search"
+  ],
+  "validation": {
+    "baseline_head_verified": true,
+    "tracked_status_clean_before_report": true,
+    "outputs_ignored_by": ".gitignore:44 /output/hall/",
+    "json_parse": "verified with ConvertFrom-Json after writing",
+    "final_parent_documentation_handoff_present": true,
+    "parent_handoff_note": "Final status includes parent README/docs/hall handoff edits and new docs/hall/source-review.md; this reviewer wrote ignored reports only. Product source and HEAD remain cdedc71.",
+    "tests_or_acceptance_claimed": false
+  },
+  "deferred_verification": "Parent to consolidate after complete planned source correction batch, per ADR 0001.",
+  "_publication": {
+    "original_record_sha256": "acc29855d79cc0a0737cdb0afc6ce21b24717ae2b79d2126cbfcf1e92cf877cf",
+    "review_stage": "independent_specification_refutation",
+    "reviewed_source_revision": "cdedc7179ec1842592243a052525e021d8cf70f1",
+    "normalizations": [
+      "checkout path made relative",
+      "record paths made collection-relative",
+      "Markdown source file/line links pinned to the reviewed Git revision",
+      "Markdown trailing whitespace normalized"
+    ],
+    "final_adjudication": "docs/hall/verification/2026-11-07-source-review.json"
+  }
+}

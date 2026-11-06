@@ -1,0 +1,431 @@
+{
+  "schema_version": 1,
+  "requirement_id": "APP-08",
+  "review_kind": "independent_code_refutation",
+  "commit": "cdedc7179ec1842592243a052525e021d8cf70f1",
+  "author_of_original": false,
+  "outcome": "four findings survive within stated limits",
+  "findings": [
+    {
+      "id": "APP-08-F01",
+      "outcome": "survives",
+      "confidence": "high",
+      "severity": "medium",
+      "retained_claim": "Fresh process restores search text but initial blank-context refresh populates unfiltered shared results; committed and draft queries are not distinct.",
+      "counterarguments": [
+        {
+          "claim": "Saved state/ViewModel retention preserve search",
+          "result": "Protects same-process Activity recreation, not new Application/ViewModel. Query text survives but response/context is not restored.",
+          "evidence": [
+            "HallApplication.kt:L12-L15",
+            "MainActivity.kt:L38,L66-L71",
+            "HallApp.kt:L85-L92"
+          ]
+        },
+        {
+          "claim": "Restore effect or visible filter fixes the query",
+          "result": "Effect only loads detail; visible filter is compatibility/installed only; SearchField does not submit on restored text.",
+          "evidence": [
+            "HallApp.kt:L105-L124",
+            "HallApp.kt:L191-L198,L360"
+          ]
+        },
+        {
+          "claim": "catalogueRevision rejects wrong response",
+          "result": "New empty-context startup refresh is the current request, so revision check accepts it.",
+          "evidence": [
+            "HallRepository.kt:L64,L68,L76-L80"
+          ]
+        }
+      ],
+      "evidence": [
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/MainActivity.kt",
+          "lines": [
+            38,
+            40
+          ]
+        },
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt",
+          "lines": [
+            63,
+            81
+          ]
+        },
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/ui/HallApp.kt",
+          "lines": [
+            85,
+            124
+          ]
+        },
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/ui/HallApp.kt",
+          "lines": [
+            191,
+            198
+          ]
+        }
+      ],
+      "safe_minimum_fix": "Persist committed query/filter context separately from draft and bind restored result snapshot/initial refresh to that context.",
+      "verification_only": "Process restoration with committed query Q and unsent draft D; verify actual request params and displayed IDs."
+    },
+    {
+      "id": "APP-08-F02",
+      "outcome": "survives",
+      "confidence": "high",
+      "severity": "medium",
+      "retained_claim": "Given missing/truncated task files or absent active install markers after journal cleanup, initial UI can render historical bytes/installed state without file reconciliation.",
+      "counterarguments": [
+        {
+          "claim": "Worker hashes resumed chunks and fsyncs before persisted progress",
+          "result": "Valid protection for actual resumed online/run work; paused/failed/offline paths cannot reach it, so it does not reconcile initial snapshots.",
+          "evidence": [
+            "TransferWorker.kt:L33,L55-L70,L98,L114-L138",
+            "HallRepository.kt:L126-L128"
+          ]
+        },
+        {
+          "claim": "Install transaction and journal recovery guarantee readiness",
+          "result": "Transaction protects paired DB state; recover enumerates journals only; completed installs remove journals.",
+          "evidence": [
+            "Installation.kt:L95-L106,L117-L122"
+          ]
+        },
+        {
+          "claim": "Absent READY cannot launch",
+          "result": "Correct. Missing READY is denied in preflight; do not turn this UI/recovery finding into an inevitable invalid-native-launch claim.",
+          "evidence": [
+            "HallRepository.kt:L165"
+          ]
+        },
+        {
+          "claim": "Explicit repair covers file mismatch",
+          "result": "User-triggered and does not gate startup snapshot or set health/state.",
+          "evidence": [
+            "Installation.kt:L128-L133",
+            "HallApp.kt:L316"
+          ]
+        }
+      ],
+      "evidence": [
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/MainActivity.kt",
+          "lines": [
+            32,
+            38
+          ]
+        },
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/MainActivity.kt",
+          "lines": [
+            69,
+            69
+          ]
+        },
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt",
+          "lines": [
+            48,
+            60
+          ]
+        },
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/ui/HallApp.kt",
+          "lines": [
+            145,
+            148
+          ]
+        },
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/ui/HallApp.kt",
+          "lines": [
+            402,
+            405
+          ]
+        }
+      ],
+      "safe_minimum_fix": "Bounded startup checks for task durable length/checkpoint and active READY/index/identity/critical metadata; preserve pause and publish validated content only after recovery.",
+      "verification_only": "First snapshots for offline/paused/failed missing/truncated partial files and no-journal active installs with missing marker/critical files.",
+      "limitations": [
+        "No claim normal fsync necessarily loses bytes.",
+        "No requirement inferred for full hashing of every resource at startup.",
+        "Absent READY already blocks launch."
+      ]
+    },
+    {
+      "id": "APP-08-F03",
+      "outcome": "survives",
+      "confidence": "high",
+      "severity": "high",
+      "precondition": "Only main/host process dies while ordinary :game Activity/native process survives.",
+      "retained_claim": "initialize blindly terminalizes unfinished rows and releases DB-based resource/save restrictions without probing surviving runtime; new host cannot reattach.",
+      "counterarguments": [
+        {
+          "claim": "Application ownership and Binder death handling cover process reconstruction",
+          "result": "Ownership lasts only one process; host linkToDeath observes game, not new-host recovery; attach only swaps Activity.",
+          "evidence": [
+            "HallApplication.kt:L12-L15",
+            "SessionController.kt:L24-L36,L104-L107,L122-L128"
+          ]
+        },
+        {
+          "claim": "Host binding loss necessarily kills game",
+          "result": "Service onDestroy only removes callbacks; GameProcess.send ignores dead host; no game-side host-death policy. Activity destruction kills self only if destruction occurs.",
+          "evidence": [
+            "GameProcessService.kt:L15-L16,L41",
+            "GameActivity.kt:L116-L124"
+          ]
+        },
+        {
+          "claim": "Native monitor stops on host death",
+          "result": "host cancellation callback reads local atomic flag, not parent host liveness.",
+          "evidence": [
+            "hall_adapter.c:L87-L94",
+            "bootstrap.c:L63,L86,L90,L93"
+          ]
+        },
+        {
+          "claim": "Retry creates a second native game",
+          "result": "Disproved: existing context/consumed/native atomic start guards block that stronger claim; retained issue is lost pin/recovery.",
+          "evidence": [
+            "GameProcessService.kt:L25",
+            "GameActivity.kt:L43-L48",
+            "hall_adapter.c:L105"
+          ]
+        }
+      ],
+      "evidence": [
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt",
+          "lines": [
+            58,
+            59
+          ]
+        },
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/data/Database.kt",
+          "lines": [
+            35,
+            36
+          ]
+        },
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/transfer/TransferWorker.kt",
+          "lines": [
+            67,
+            67
+          ]
+        },
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt",
+          "lines": [
+            169,
+            205
+          ]
+        },
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/transfer/SaveManager.kt",
+          "lines": [
+            20,
+            20
+          ]
+        },
+        {
+          "path": "android/app/src/main/AndroidManifest.xml",
+          "lines": [
+            12,
+            20
+          ]
+        }
+      ],
+      "safe_minimum_fix": "Keep recovering/pinned persistent sessions; authenticate original session/generation/process via a probe that does not start runtime; reattach or explicitly terminate, releasing restrictions only after confirmed death.",
+      "verification_only": "Main-process-only interruption with :game independently verified alive, then dead-runtime and stale-IPC cases; do not substitute package force-stop.",
+      "limitations": [
+        "No assertion every process kill leaves :game alive.",
+        "No source claim of two simultaneous native starts.",
+        "Real OS survival/timing remains unexecuted."
+      ]
+    },
+    {
+      "id": "APP-08-F04",
+      "outcome": "survives",
+      "confidence": "high",
+      "severity": "high",
+      "retained_claim": "Unserialized first initialize/recover can delete active extraction staging; verified A can be lost and absent from a subsequently activated ready install.",
+      "counterarguments": [
+        {
+          "claim": "Unique worker or shared repository prevents race",
+          "result": "Recovery is not a second worker; repository has different initializationLock and operationLock, and worker does not await initializer.",
+          "evidence": [
+            "HallRepository.kt:L39,L49,L57,L128",
+            "TransferWorker.kt:L29-L37,L146-L149"
+          ]
+        },
+        {
+          "claim": "Room transaction or atomic journal prevents deletion",
+          "result": "They protect DB/write atomicity, not active staging ownership; recover CREATED deletes without operationLock.",
+          "evidence": [
+            "Installation.kt:L15-L22,L98-L103,L107-L125"
+          ]
+        },
+        {
+          "claim": "Per-file hashes/seen/total prevent incomplete READY",
+          "result": "A can be deleted after its own hash; seen/total are memory values, B mkdirs recreates root, no final A existence check before marker/activation.",
+          "evidence": [
+            "Installation.kt:L52-L69,L90-L103"
+          ]
+        },
+        {
+          "claim": "An unfinished runtime blocks worker",
+          "result": "Correct protection; retained trigger has no unfinished runtime record.",
+          "evidence": [
+            "TransferWorker.kt:L67"
+          ]
+        }
+      ],
+      "interleaving": [
+        {
+          "step": 1,
+          "action": "Worker starts first in new main process with run transfer/no unfinished game, owns operationLock, writes CREATED/staging.",
+          "evidence": "TransferWorker.kt:L31-L37,L146-L149; Installation.kt:L31-L35"
+        },
+        {
+          "step": 2,
+          "action": "A closed/fsynced/hashed and counted; journal still CREATED.",
+          "evidence": "Installation.kt:L54-L65"
+        },
+        {
+          "step": 3,
+          "action": "First MainActivity calls initialize with different lock; recover deletes staging containing A and journal.",
+          "evidence": "MainActivity.kt:L38; HallRepository.kt:L49,L57; Installation.kt:L107-L125"
+        },
+        {
+          "step": 4,
+          "action": "B checkpoint succeeds, parent mkdirs recreates staging, B verifies; seen/total still count A.",
+          "evidence": "Installation.kt:L47-L64"
+        },
+        {
+          "step": 5,
+          "action": "Journal/index/READY recreated; new target rename and activation never recheck A.",
+          "evidence": "Installation.kt:L65-L103"
+        }
+      ],
+      "evidence": [
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt",
+          "lines": [
+            48,
+            60
+          ]
+        },
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/transfer/TransferWorker.kt",
+          "lines": [
+            146,
+            149
+          ]
+        },
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/transfer/Installation.kt",
+          "lines": [
+            31,
+            103
+          ]
+        },
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/transfer/Installation.kt",
+          "lines": [
+            105,
+            126
+          ]
+        }
+      ],
+      "safe_minimum_fix": "Shared initialization barrier for UI/worker plus same operation ownership mutex for recover/install. Await initialization before owning the non-reentrant operation lock; never classify active journals as abandoned.",
+      "verification_only": "Deterministic two-entry barrier after A hash, race first recovery, resume B; assert no deleted active staging or incomplete ready activation.",
+      "limitations": [
+        "Other timings can cause ordinary failure instead; stronger incomplete outcome requires the specified interleaving.",
+        "A final existence pass alone cannot replace mutual exclusion."
+      ]
+    }
+  ],
+  "counts": {
+    "survives": 4,
+    "refuted": 0,
+    "narrowed": 0,
+    "unverified": 0
+  },
+  "executed": {
+    "source_edits": false,
+    "tests": false,
+    "builds": false,
+    "device": false,
+    "browser": false,
+    "virtualization": false
+  },
+  "searched": [
+    {
+      "patterns": [
+        "initialize(",
+        ".recover("
+      ],
+      "scope": "Android main",
+      "result": "Only generic initialize call in MainActivity; worker does not initialize; per-game save recovery separate."
+    },
+    {
+      "patterns": [
+        "committedQuery",
+        "submittedQuery",
+        "SavedStateHandle",
+        "catalogue_snapshot"
+      ],
+      "scope": "Android main",
+      "result": "No submitted-query store; actual query variable/effects/refresh callers read."
+    },
+    {
+      "patterns": [
+        "archive.zip.partial",
+        ".ready.json",
+        "allTransfers(",
+        "repair("
+      ],
+      "scope": "Android main",
+      "result": "Producer, later worker checks, journal-only recover, explicit repair and UI traced; no all-active startup sweep."
+    },
+    {
+      "patterns": [
+        "PDEATHSIG",
+        "getppid",
+        "linkToDeath",
+        "binderDied",
+        "onBindingDied",
+        "isBinderAlive",
+        "pingBinder",
+        "runningAppProcesses",
+        "onTaskRemoved",
+        "stopWithTask"
+      ],
+      "scope": "Android main and reviewed native runtime",
+      "result": "Only host-to-game linkToDeath in SessionController L104; no game-side host death/reattach fallback."
+    }
+  ],
+  "unverified_runtime": [
+    "Actual Android process survival on a particular physical device",
+    "Runtime scheduler/fault injection interleavings",
+    "UI restored-screen behavior executed on device"
+  ],
+  "next_step": "Independent specification review and consolidated verification after the entire implementation batch.",
+  "_publication": {
+    "original_record_sha256": "a21fbb2d8e61ee015ecd39677d0eca742479fb0478ec4da5f247fc553bbb535e",
+    "review_stage": "independent_code_refutation",
+    "reviewed_source_revision": "cdedc7179ec1842592243a052525e021d8cf70f1",
+    "normalizations": [
+      "checkout path made relative",
+      "record paths made collection-relative",
+      "Markdown source file/line links pinned to the reviewed Git revision",
+      "Markdown trailing whitespace normalized"
+    ],
+    "final_adjudication": "docs/hall/verification/2026-11-07-source-review.json"
+  }
+}

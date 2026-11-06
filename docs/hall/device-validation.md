@@ -6,6 +6,10 @@ This procedure is for the **next** device run, not a pass report. The merged-mai
 
 本文件规定下一轮操作，不代表已经验收通过。上次 main 运行至《旷野之息》标题和导入存档的神庙场景，随后被另一项 USB 测试结束。按用户要求保留该测试，先完成文档，待手机可用后继续。
 
+The [targeted source review](source-review.md) adds open policy, reconstruction and save-exchange corrections to the next complete source batch. Finish that batch before its consolidated checks; record the new candidate's identity and repeat affected cases. Historical screenshots and passes do not transfer to a changed APK.
+
+[定向源码核对](source-review.md)已补充下一整批的修正与故障验证要求。完成整批后集中验证，记录新候选身份并重跑受影响案例；旧截图及通过结果不能转算到新 APK。
+
 ## Preparation / 准备
 
 1. Finish intended source changes, then run consolidated checks. Use native Windows tools and one authorized USB physical Android device. No emulator or virtualization environment.

@@ -4,6 +4,8 @@
 
 [Actual verification](implementation-status.md) · [Next device run](device-validation.md) · [Execution summary](verification/2026-11-07-main.json) · [Screenshots and recordings](../media/README.md) · [Storage](storage.md)
 
+Read the [targeted source review and open corrections](source-review.md) before relying on offline readiness, process reconstruction or interrupted save exchange. The current internal build has source-confirmed gaps in those boundaries. The review preserves requirement identities and records the next full implementation/testing batch; it does not claim fixes or new device passes.
+
 ## What runs where
 
 The main-process Application retains one runtime coordinator across Activity recreation. A prepared launch waits for a resumed hall Activity. Session creation, installation and save exchanges share a mutex, and import rechecks the currently active save compatibility group at commit. After verifying an App-update APK, the client backs up existing saves for installed games before handing it to the system installer; backup failure prevents that hand-off. Cancellation drains the pending checkpoint, and delayed process callbacks remain bound to their original session.
@@ -140,7 +142,7 @@ To add a game: implement and compile its native slot; identify modules, profile,
 
 ## Saves, updates and repairs
 
-- Exports use Android's file picker. The ZIP contains a versioned manifest and per-file hashes. Imports check game, local player, compatibility group, paths, counts and sizes, then back up the current state before replacement. Recovery records protect interrupted swaps. Save content is never sent with ordinary feedback.
+- Exports use Android's file picker. The ZIP contains a versioned manifest and per-file hashes. Imports check game, local player, compatibility group, paths, counts and sizes, then back up the current state before replacement. A swap journal exists, but interrupted recovery, validation and confirmation handling have [open defects](source-review.md); preserve important backups outside the app. Save content is never sent with ordinary feedback.
 - Deleting resources preserves saves by default. Clearing the app or uninstalling it deletes its private files: export important saves first. Backup sharing grants access only to the selected file.
 - Game updates retain the previous installation and check save compatibility. Automatic rollback is allowed only to a version recorded as healthy; a first frame alone never marks it healthy.
 - Repair checks actual file hashes against the installed index. App updates are separate from game content and must match the installed application's package and signing certificate.

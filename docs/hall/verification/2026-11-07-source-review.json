@@ -1,0 +1,653 @@
+{
+  "review_schema": 1,
+  "date": "2026-11-07",
+  "timezone": "Asia/Taipei",
+  "kind": "targeted_source_and_specification_review",
+  "source_revision": "cdedc7179ec1842592243a052525e021d8cf70f1",
+  "documentation_only_round": true,
+  "formal_acceptance": "not_accepted",
+  "application_source_modified": false,
+  "new_apk_built": false,
+  "application_tests_executed": false,
+  "phone_read_or_input": false,
+  "other_project_test_preserved": true,
+  "reviewed_requirement_ids": [
+    "APP-05",
+    "APP-08",
+    "SAVE-04"
+  ],
+  "reviewed_detailed_rules": [
+    {
+      "id": "APP-05.01",
+      "source_verdict": "partial",
+      "runtime_acceptance": "not_accepted"
+    },
+    {
+      "id": "APP-05.02",
+      "source_verdict": "partial",
+      "runtime_acceptance": "not_accepted"
+    },
+    {
+      "id": "APP-05.03",
+      "source_verdict": "implemented",
+      "runtime_acceptance": "not_accepted"
+    },
+    {
+      "id": "APP-05.04",
+      "source_verdict": "partial",
+      "runtime_acceptance": "not_accepted"
+    },
+    {
+      "id": "APP-08.01",
+      "source_verdict": "partial",
+      "runtime_acceptance": "not_accepted"
+    },
+    {
+      "id": "APP-08.02",
+      "source_verdict": "partial",
+      "runtime_acceptance": "not_accepted"
+    },
+    {
+      "id": "APP-08.03",
+      "source_verdict": "partial",
+      "runtime_acceptance": "not_accepted"
+    },
+    {
+      "id": "APP-08.04",
+      "source_verdict": "implemented",
+      "runtime_acceptance": "not_accepted"
+    },
+    {
+      "id": "SAVE-04.01",
+      "source_verdict": "partial",
+      "runtime_acceptance": "not_accepted"
+    },
+    {
+      "id": "SAVE-04.02",
+      "source_verdict": "partial",
+      "runtime_acceptance": "not_accepted"
+    },
+    {
+      "id": "SAVE-04.03",
+      "source_verdict": "partial",
+      "runtime_acceptance": "not_accepted"
+    },
+    {
+      "id": "SAVE-04.04",
+      "source_verdict": "partial",
+      "runtime_acceptance": "not_accepted"
+    }
+  ],
+  "not_checked_requirement_ids": [
+    "APP-01",
+    "APP-02",
+    "APP-03",
+    "APP-04",
+    "APP-06",
+    "APP-07",
+    "CAT-01",
+    "CAT-02",
+    "CAT-03",
+    "CAT-04",
+    "CAT-05",
+    "CAT-06",
+    "CAT-07",
+    "CAT-08",
+    "CAT-09",
+    "CAT-10",
+    "DL-01",
+    "DL-02",
+    "DL-03",
+    "DL-04",
+    "DL-05",
+    "DL-06",
+    "DL-07",
+    "DL-08",
+    "DL-09",
+    "DL-10",
+    "DL-11",
+    "DL-12",
+    "DL-13",
+    "DL-14",
+    "DL-15",
+    "PKG-01",
+    "PKG-02",
+    "PKG-03",
+    "PKG-04",
+    "PKG-05",
+    "PKG-06",
+    "PKG-07",
+    "PKG-08",
+    "PKG-09",
+    "RUN-01",
+    "RUN-02",
+    "RUN-03",
+    "RUN-04",
+    "RUN-05",
+    "RUN-06",
+    "RUN-07",
+    "RUN-08",
+    "RUN-09",
+    "RUN-10",
+    "RUN-11",
+    "RUN-12",
+    "SAVE-01",
+    "SAVE-02",
+    "SAVE-03",
+    "SAVE-05",
+    "SAVE-06",
+    "SAVE-07",
+    "SAVE-08",
+    "UPD-01",
+    "UPD-02",
+    "UPD-03",
+    "UPD-04",
+    "UPD-05",
+    "UPD-06",
+    "UPD-07",
+    "UPD-08",
+    "OPS-01",
+    "OPS-02",
+    "OPS-03",
+    "OPS-04",
+    "OPS-05",
+    "OPS-06",
+    "OPS-07",
+    "OPS-08",
+    "OPS-09",
+    "OPS-10",
+    "NFR-01",
+    "NFR-02",
+    "NFR-03",
+    "NFR-04",
+    "NFR-05",
+    "NFR-06",
+    "NFR-07",
+    "NFR-08",
+    "NFR-09",
+    "NFR-10"
+  ],
+  "counts": {
+    "baseline_requirements": 90,
+    "baseline_detailed_rules": 360,
+    "reviewed_requirements": 3,
+    "reviewed_detailed_rules": 12,
+    "original_candidate_records": 17,
+    "confirmed_core_records": 16,
+    "confirmed_unique_defect_cores": 15,
+    "unverified_candidates": 1,
+    "supplemental_scope_conclusions": 1,
+    "published_evidence_records": 9,
+    "published_evidence_artifacts": 18
+  },
+  "findings": [
+    {
+      "id": "APP-05-D01",
+      "requirement_id": "APP-05",
+      "title": "相同 epoch 的不同签名策略可覆盖已知阻断",
+      "original_severity": "P1",
+      "code_refutation": "survives",
+      "specification_refutation": "survives",
+      "final_status": "open",
+      "confirmed_defect_core": true,
+      "conditional_branch": false,
+      "duplicate_of": null,
+      "resolution": "not_implemented",
+      "evidence": [
+        "docs/hall/reviews/2026-11-07/requirements/APP-05.json",
+        "docs/hall/reviews/2026-11-07/refutations/APP-05-code.json",
+        "docs/hall/reviews/2026-11-07/refutations/APP-05-spec.json"
+      ]
+    },
+    {
+      "id": "APP-05-D02",
+      "requirement_id": "APP-05",
+      "title": "撤销签名 key 一律停用其既有安装",
+      "original_severity": "P2",
+      "code_refutation": "narrowed",
+      "specification_refutation": "survives",
+      "final_status": "open",
+      "confirmed_defect_core": true,
+      "conditional_branch": true,
+      "duplicate_of": null,
+      "resolution": "not_implemented",
+      "evidence": [
+        "docs/hall/reviews/2026-11-07/requirements/APP-05.json",
+        "docs/hall/reviews/2026-11-07/refutations/APP-05-code.json",
+        "docs/hall/reviews/2026-11-07/refutations/APP-05-spec.json"
+      ]
+    },
+    {
+      "id": "APP-05-D03",
+      "requirement_id": "APP-05",
+      "title": "初始策略缺失给有效离线安装增加隐式联网门",
+      "original_severity": "P2",
+      "code_refutation": "unverified",
+      "specification_refutation": "narrowed",
+      "final_status": "unverified_clarification",
+      "confirmed_defect_core": false,
+      "conditional_branch": false,
+      "duplicate_of": null,
+      "resolution": "do_not_remove_initial_policy_gate",
+      "evidence": [
+        "docs/hall/reviews/2026-11-07/requirements/APP-05.json",
+        "docs/hall/reviews/2026-11-07/refutations/APP-05-code.json",
+        "docs/hall/reviews/2026-11-07/refutations/APP-05-spec.json"
+      ]
+    },
+    {
+      "id": "APP-05-D04",
+      "requirement_id": "APP-05",
+      "title": "在线专用启动最后同步 blocked 后没有重查",
+      "original_severity": "P1",
+      "code_refutation": "survives",
+      "specification_refutation": "survives",
+      "final_status": "open",
+      "confirmed_defect_core": true,
+      "conditional_branch": false,
+      "duplicate_of": null,
+      "resolution": "not_implemented",
+      "evidence": [
+        "docs/hall/reviews/2026-11-07/requirements/APP-05.json",
+        "docs/hall/reviews/2026-11-07/refutations/APP-05-code.json",
+        "docs/hall/reviews/2026-11-07/refutations/APP-05-spec.json"
+      ]
+    },
+    {
+      "id": "APP-05-D05",
+      "requirement_id": "APP-05",
+      "title": "首次无缓存错误仍声称展示缓存",
+      "original_severity": "P3",
+      "code_refutation": "narrowed",
+      "specification_refutation": "survives",
+      "final_status": "open",
+      "confirmed_defect_core": true,
+      "conditional_branch": false,
+      "duplicate_of": null,
+      "resolution": "not_implemented",
+      "evidence": [
+        "docs/hall/reviews/2026-11-07/requirements/APP-05.json",
+        "docs/hall/reviews/2026-11-07/refutations/APP-05-code.json",
+        "docs/hall/reviews/2026-11-07/refutations/APP-05-spec.json"
+      ]
+    },
+    {
+      "id": "APP-08-F01",
+      "requirement_id": "APP-08",
+      "title": "A restored search replays an unfiltered catalogue request",
+      "original_severity": "P2",
+      "code_refutation": "survives",
+      "specification_refutation": "narrowed",
+      "final_status": "open",
+      "confirmed_defect_core": true,
+      "conditional_branch": false,
+      "duplicate_of": null,
+      "resolution": "not_implemented",
+      "evidence": [
+        "docs/hall/reviews/2026-11-07/requirements/APP-08.json",
+        "docs/hall/reviews/2026-11-07/refutations/APP-08-code.json",
+        "docs/hall/reviews/2026-11-07/refutations/APP-08-spec.json"
+      ]
+    },
+    {
+      "id": "APP-08-F02",
+      "requirement_id": "APP-08",
+      "title": "Restored bytes and installed state can bypass file reconciliation",
+      "original_severity": "P2",
+      "code_refutation": "survives",
+      "specification_refutation": "survives",
+      "final_status": "open",
+      "confirmed_defect_core": true,
+      "conditional_branch": false,
+      "duplicate_of": null,
+      "resolution": "not_implemented",
+      "evidence": [
+        "docs/hall/reviews/2026-11-07/requirements/APP-08.json",
+        "docs/hall/reviews/2026-11-07/refutations/APP-08-code.json",
+        "docs/hall/reviews/2026-11-07/refutations/APP-08-spec.json"
+      ]
+    },
+    {
+      "id": "APP-08-F03",
+      "requirement_id": "APP-08",
+      "title": "Hall reconstruction releases a possibly live game's session",
+      "original_severity": "P1",
+      "code_refutation": "survives",
+      "specification_refutation": "survives",
+      "final_status": "open",
+      "confirmed_defect_core": true,
+      "conditional_branch": false,
+      "duplicate_of": null,
+      "resolution": "not_implemented",
+      "evidence": [
+        "docs/hall/reviews/2026-11-07/requirements/APP-08.json",
+        "docs/hall/reviews/2026-11-07/refutations/APP-08-code.json",
+        "docs/hall/reviews/2026-11-07/refutations/APP-08-spec.json"
+      ]
+    },
+    {
+      "id": "APP-08-F04",
+      "requirement_id": "APP-08",
+      "title": "Opening the hall can delete an installation still being extracted by its worker",
+      "original_severity": "P1",
+      "code_refutation": "survives",
+      "specification_refutation": "survives",
+      "final_status": "open",
+      "confirmed_defect_core": true,
+      "conditional_branch": false,
+      "duplicate_of": null,
+      "resolution": "not_implemented",
+      "evidence": [
+        "docs/hall/reviews/2026-11-07/requirements/APP-08.json",
+        "docs/hall/reviews/2026-11-07/refutations/APP-08-code.json",
+        "docs/hall/reviews/2026-11-07/refutations/APP-08-spec.json"
+      ]
+    },
+    {
+      "id": "SAVE-04-F1",
+      "requirement_id": "SAVE-04",
+      "title": "Exchange failures are not compensated; an intervening saveRoot mkdir can destroy automatic rollback recovery",
+      "original_severity": "P1",
+      "code_refutation": "survives",
+      "specification_refutation": "survives",
+      "final_status": "open",
+      "confirmed_defect_core": true,
+      "conditional_branch": false,
+      "duplicate_of": null,
+      "resolution": "not_implemented",
+      "evidence": [
+        "docs/hall/reviews/2026-11-07/requirements/SAVE-04.json",
+        "docs/hall/reviews/2026-11-07/refutations/SAVE-04-code.json",
+        "docs/hall/reviews/2026-11-07/refutations/SAVE-04-spec.json"
+      ]
+    },
+    {
+      "id": "SAVE-04-F2",
+      "requirement_id": "SAVE-04",
+      "title": "Main-process recreation can turn a live native session into an accepted idle record",
+      "original_severity": "P1",
+      "code_refutation": "survives",
+      "specification_refutation": "survives",
+      "final_status": "open",
+      "confirmed_defect_core": true,
+      "conditional_branch": false,
+      "duplicate_of": "APP-08-F03",
+      "resolution": "not_implemented",
+      "evidence": [
+        "docs/hall/reviews/2026-11-07/requirements/SAVE-04.json",
+        "docs/hall/reviews/2026-11-07/refutations/SAVE-04-code.json",
+        "docs/hall/reviews/2026-11-07/refutations/SAVE-04-spec.json"
+      ]
+    },
+    {
+      "id": "SAVE-04-F3",
+      "requirement_id": "SAVE-04",
+      "title": "Import confirmation and retry do not retain the inspected archive state",
+      "original_severity": "P2",
+      "code_refutation": "survives",
+      "specification_refutation": "survives",
+      "final_status": "open",
+      "confirmed_defect_core": true,
+      "conditional_branch": false,
+      "duplicate_of": null,
+      "resolution": "not_implemented",
+      "evidence": [
+        "docs/hall/reviews/2026-11-07/requirements/SAVE-04.json",
+        "docs/hall/reviews/2026-11-07/refutations/SAVE-04-code.json",
+        "docs/hall/reviews/2026-11-07/refutations/SAVE-04-spec.json"
+      ]
+    },
+    {
+      "id": "SAVE-04-F4",
+      "requirement_id": "SAVE-04",
+      "title": "Visible Cancel dismisses the dialog while the background import continues",
+      "original_severity": "P1",
+      "code_refutation": "survives",
+      "specification_refutation": "survives",
+      "final_status": "open",
+      "confirmed_defect_core": true,
+      "conditional_branch": false,
+      "duplicate_of": null,
+      "resolution": "not_implemented",
+      "evidence": [
+        "docs/hall/reviews/2026-11-07/requirements/SAVE-04.json",
+        "docs/hall/reviews/2026-11-07/refutations/SAVE-04-code.json",
+        "docs/hall/reviews/2026-11-07/refutations/SAVE-04-spec.json"
+      ]
+    },
+    {
+      "id": "SAVE-04-F5",
+      "requirement_id": "SAVE-04",
+      "title": "Expanded-byte cap is enforced after writing and hashing an oversized file",
+      "original_severity": "P2",
+      "code_refutation": "survives",
+      "specification_refutation": "survives",
+      "final_status": "open",
+      "confirmed_defect_core": true,
+      "conditional_branch": false,
+      "duplicate_of": null,
+      "resolution": "not_implemented",
+      "evidence": [
+        "docs/hall/reviews/2026-11-07/requirements/SAVE-04.json",
+        "docs/hall/reviews/2026-11-07/refutations/SAVE-04-code.json",
+        "docs/hall/reviews/2026-11-07/refutations/SAVE-04-spec.json"
+      ]
+    },
+    {
+      "id": "SAVE-04-F6",
+      "requirement_id": "SAVE-04",
+      "title": "Required metadata fields and control-character path rules are not fully enforced",
+      "original_severity": "P2",
+      "code_refutation": "survives",
+      "specification_refutation": "survives",
+      "final_status": "open",
+      "confirmed_defect_core": true,
+      "conditional_branch": false,
+      "duplicate_of": null,
+      "resolution": "not_implemented",
+      "evidence": [
+        "docs/hall/reviews/2026-11-07/requirements/SAVE-04.json",
+        "docs/hall/reviews/2026-11-07/refutations/SAVE-04-code.json",
+        "docs/hall/reviews/2026-11-07/refutations/SAVE-04-spec.json"
+      ]
+    },
+    {
+      "id": "SAVE-04-F7",
+      "requirement_id": "SAVE-04",
+      "title": "Successful import does not update or register a durable save index",
+      "original_severity": "P2",
+      "code_refutation": "survives",
+      "specification_refutation": "narrowed",
+      "final_status": "open",
+      "confirmed_defect_core": true,
+      "conditional_branch": false,
+      "duplicate_of": null,
+      "resolution": "not_implemented",
+      "evidence": [
+        "docs/hall/reviews/2026-11-07/requirements/SAVE-04.json",
+        "docs/hall/reviews/2026-11-07/refutations/SAVE-04-code.json",
+        "docs/hall/reviews/2026-11-07/refutations/SAVE-04-spec.json"
+      ]
+    },
+    {
+      "id": "SAVE-04-F8",
+      "requirement_id": "SAVE-04",
+      "title": "2048 staging file is inside the committed tree and included in exports after interrupted saves",
+      "original_severity": "P2",
+      "code_refutation": "survives",
+      "specification_refutation": "survives",
+      "final_status": "open",
+      "confirmed_defect_core": true,
+      "conditional_branch": false,
+      "duplicate_of": null,
+      "resolution": "not_implemented",
+      "evidence": [
+        "docs/hall/reviews/2026-11-07/requirements/SAVE-04.json",
+        "docs/hall/reviews/2026-11-07/refutations/SAVE-04-code.json",
+        "docs/hall/reviews/2026-11-07/refutations/SAVE-04-spec.json"
+      ]
+    }
+  ],
+  "supplemental_scope_conclusions": [
+    {
+      "id": "unified_native_player_save_menu",
+      "status": "open_integration_gap",
+      "scope": "User-facing import/export and deferred raw import in a unified hall build are subject to SAVE-04/APP-04.03.",
+      "excluded_claims": [
+        "standalone legacy app must be rewritten",
+        "deferred import overwrites the still-running game"
+      ],
+      "required_action": "Delegate to the hall validated exchange owner or disable those unified-player actions.",
+      "evidence": [
+        "docs/hall/reviews/2026-11-07/refutations/SAVE-04-code.json",
+        "docs/hall/reviews/2026-11-07/refutations/SAVE-04-spec.json"
+      ]
+    }
+  ],
+  "unverified_runtime": [
+    "fault injection and actual recovery",
+    "main-process-only loss with a surviving game",
+    "same-APK G0",
+    "audible output",
+    "new BotW progress save and fresh-process reload",
+    "five switching rounds",
+    "sustained gameplay/performance",
+    "future dual-mount title"
+  ],
+  "evidence_artifacts": [
+    {
+      "path": "docs/hall/reviews/2026-11-07/requirements/APP-05.md",
+      "sha256": "c53fd61e0966e899702a45ae25c8dc31907ff3d05f4fa4f4966c2f107b6ae6fa",
+      "original_record_sha256": "e4baab03945147087e6bf22daa33ac2ba329cca5ae97c4472c7a4ce977e85b54",
+      "stage": "original_candidate_review"
+    },
+    {
+      "path": "docs/hall/reviews/2026-11-07/requirements/APP-05.json",
+      "sha256": "4ddbcb3a96a7aea517510d380c29e47752184cbc9c96e4da7088cacc48a4dabb",
+      "original_record_sha256": "4c2af0f490c602b4618723244d6dfd8b9dd3f31e3cfd44ad5230a704b94b64f8",
+      "stage": "original_candidate_review"
+    },
+    {
+      "path": "docs/hall/reviews/2026-11-07/refutations/APP-05-code.md",
+      "sha256": "ffb931f8a7d131ac2423028aa0dbcdc1993e0310ce8658fcf6e0091c217edd33",
+      "original_record_sha256": "6a66d3c98b844170f6ae9d1277005cb81cbfb450aacc58d62d9257b397631c4a",
+      "stage": "independent_code_refutation"
+    },
+    {
+      "path": "docs/hall/reviews/2026-11-07/refutations/APP-05-code.json",
+      "sha256": "9eda2ff00dcdd5e4d2c26e6475125449c4554f46055706d5785a35789ffb6cce",
+      "original_record_sha256": "e6b6673d470e16147db36aaf085bd54f35e468c555a6d73c5695c00233496df1",
+      "stage": "independent_code_refutation"
+    },
+    {
+      "path": "docs/hall/reviews/2026-11-07/refutations/APP-05-spec.md",
+      "sha256": "562eebcbdc7a599a32db4ef2690df73c2870d36ca729843dd5cec393b41dadef",
+      "original_record_sha256": "cef0f7ba44da7047f16567d72633d2ee275b5dd5adefb18af52ad2ba209a0f2d",
+      "stage": "independent_specification_refutation"
+    },
+    {
+      "path": "docs/hall/reviews/2026-11-07/refutations/APP-05-spec.json",
+      "sha256": "d122bde420990e2dc4d578fd7e05308f59b84dc758467ffeb2419aa84b6c71ad",
+      "original_record_sha256": "577d95781103cb1b3de550d0bd7636ec19ec9443f98377cebd7907e353872f84",
+      "stage": "independent_specification_refutation"
+    },
+    {
+      "path": "docs/hall/reviews/2026-11-07/requirements/APP-08.md",
+      "sha256": "fccdeef3dbf0a97674c6db9a3673de920bd256aa045ed3869aea78177b340c7a",
+      "original_record_sha256": "97f1ae5bc66070a6db7d034b29f32e2466048b8dea15b64b014d77bf01ca7b41",
+      "stage": "original_candidate_review"
+    },
+    {
+      "path": "docs/hall/reviews/2026-11-07/requirements/APP-08.json",
+      "sha256": "43afe74b218ed611b898d40c25c184ab37ffbfc422150500408da2dadea1b50f",
+      "original_record_sha256": "27d646ab19cbe8d62dae80ae8c1fcfb7b7fd5d66ad20544ed567d8a6d052a043",
+      "stage": "original_candidate_review"
+    },
+    {
+      "path": "docs/hall/reviews/2026-11-07/refutations/APP-08-code.md",
+      "sha256": "ece5cd9f49da8d389fa3d8027f846eaee7e0df3a0b682ef36e1c26d64383a103",
+      "original_record_sha256": "45721313c3fc1e002897b8bc85862ef3d7bb8ef4369348f9886cd0334d7f324d",
+      "stage": "independent_code_refutation"
+    },
+    {
+      "path": "docs/hall/reviews/2026-11-07/refutations/APP-08-code.json",
+      "sha256": "5c28446155916ba1d7684a3ed627d1cc02b80f20702f91c54eb1c3ae03fd5d51",
+      "original_record_sha256": "a21fbb2d8e61ee015ecd39677d0eca742479fb0478ec4da5f247fc553bbb535e",
+      "stage": "independent_code_refutation"
+    },
+    {
+      "path": "docs/hall/reviews/2026-11-07/refutations/APP-08-spec.md",
+      "sha256": "b88ab55ab3efb2a044206fbf4d3f8bd8925218a389b597081936e4f090c711a9",
+      "original_record_sha256": "fdb96f3222ce921a377ca92270c5c12ba04cee241ebeb8982da08c00afaa80df",
+      "stage": "independent_specification_refutation"
+    },
+    {
+      "path": "docs/hall/reviews/2026-11-07/refutations/APP-08-spec.json",
+      "sha256": "6c624126504b9fb3183b1411b078663ae43cd88bc57b97f7a9511f72fb5f601c",
+      "original_record_sha256": "cc365dad396e9a1c85db75c9aaba58efeffd17e13cc41fa876037e6b88e4f7da",
+      "stage": "independent_specification_refutation"
+    },
+    {
+      "path": "docs/hall/reviews/2026-11-07/requirements/SAVE-04.md",
+      "sha256": "6cbaace91ffcc92a6e5a424f0edf202755f99d84ba755d37fc962d9a5d07e537",
+      "original_record_sha256": "62bebedc67598f87a901ea034b2c283f0cb0b92379aa5d7344653b8d2e453a89",
+      "stage": "original_candidate_review"
+    },
+    {
+      "path": "docs/hall/reviews/2026-11-07/requirements/SAVE-04.json",
+      "sha256": "15126f77659e4d1faeef0a4ce6e75cba57b363da55c372ad72421ec1a059bdf3",
+      "original_record_sha256": "00751c060aa5aec7466f56658a9f6bf2e6bfb719bfe71938db23a9fe9bb9c27c",
+      "stage": "original_candidate_review"
+    },
+    {
+      "path": "docs/hall/reviews/2026-11-07/refutations/SAVE-04-code.md",
+      "sha256": "6ba3e85f3d3926ad98195e10552444db4887143923ea0240b7331bc0877ae57f",
+      "original_record_sha256": "8cd028c1832e332d2c013a74db89cf4c2ee51b61a30dddfec0f967db28cb26de",
+      "stage": "independent_code_refutation"
+    },
+    {
+      "path": "docs/hall/reviews/2026-11-07/refutations/SAVE-04-code.json",
+      "sha256": "a782ef01a524b92d56bb023cb57f7be0210843e1c1c9a222912def16a1031414",
+      "original_record_sha256": "a8fcf7ad734299cf58bd6cc9aa0c90cc29a0c8cf760dee930a8efa6424cfc610",
+      "stage": "independent_code_refutation"
+    },
+    {
+      "path": "docs/hall/reviews/2026-11-07/refutations/SAVE-04-spec.md",
+      "sha256": "f536126f75cd243ea4cc6228528223190acd6012cf6bf021bba146b8ffbe997c",
+      "original_record_sha256": "418889a10c7ce910b083b3f2d638905d2404e78d704b624b386c615ccae4b6c6",
+      "stage": "independent_specification_refutation"
+    },
+    {
+      "path": "docs/hall/reviews/2026-11-07/refutations/SAVE-04-spec.json",
+      "sha256": "ee23a2a1204a81d20b7cfec097af6234825116ec67f3897f95761162ce836f32",
+      "original_record_sha256": "acc29855d79cc0a0737cdb0afc6ce21b24717ae2b79d2126cbfcf1e92cf877cf",
+      "stage": "independent_specification_refutation"
+    }
+  ],
+  "notes": [
+    "Original candidate records preserve their original pending/historical labels.",
+    "APP-05-D03 is superseded by the independent code clarification and is not counted as a confirmed defect.",
+    "Narrowed findings retain only the code and specification intersection.",
+    "No requirement or acceptance identity/status was upgraded by this review.",
+    "Complete the entire corrective source batch before consolidated testing."
+  ],
+  "documentation_validation": {
+    "status": "passed",
+    "markdown_documents": 22,
+    "local_links": 619,
+    "evidence_artifacts": 18,
+    "reviewed_requirements": 3,
+    "reviewed_detailed_rules": 12,
+    "unchecked_requirements": 87,
+    "confirmed_unique_defect_cores": 15,
+    "unverified_candidates": [
+      "APP-05-D03"
+    ],
+    "application_code_unchanged": true,
+    "new_apk_or_device_tests": false,
+    "baseline_groups_passed": 8,
+    "baseline_groups_total": 8,
+    "baseline_checked_at_utc": "2026-11-06T22:18:40.143880+00:00",
+    "scope": "documentation and contract checks only"
+  }
+}

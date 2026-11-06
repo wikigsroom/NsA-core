@@ -1,0 +1,785 @@
+{
+  "requirementId": "APP-08",
+  "requirementText": "前后台切换、来电和系统重建后恢复最近页面与实际任务状态；不因重开页面重复创建下载或错误宣称游戏仍在运行。",
+  "force": "must",
+  "priority": "P0",
+  "verdict": "partial",
+  "confidence": "high",
+  "assessmentKind": "source audit; runtime acceptance not performed",
+  "codeRevision": "cdedc7179ec1842592243a052525e021d8cf70f1",
+  "specification": {
+    "path": "docs/product/产品需求细则.md",
+    "lines": [
+      137,
+      150
+    ]
+  },
+  "sourceRoot": ".",
+  "constraints": {
+    "productFilesModified": false,
+    "testsRun": false,
+    "buildsRun": false,
+    "phoneRead": false,
+    "phoneInput": false,
+    "browserUsed": false,
+    "virtualizationUsed": false,
+    "subagentsSpawned": false
+  },
+  "independentReview": {
+    "status": "pending",
+    "owner": "root coordinator; separate code and specification refutation required"
+  },
+  "rules": [
+    {
+      "id": "APP-08.01",
+      "text": "保存根标签、路由、游戏选择、滚动锚点和已提交查询；重建后先读取本地事实再渲染。",
+      "specLine": 145,
+      "verdict": "partial",
+      "confidence": "high",
+      "demands": "Restore navigation and the submitted query with its corresponding facts; publish restored content only after local reconciliation.",
+      "evidence": [
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/ui/HallApp.kt",
+          "lines": [
+            85,
+            101
+          ],
+          "supports": "Root tab, route, stack, selection, query and modal identifiers use rememberSaveable."
+        },
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/ui/HallApp.kt",
+          "lines": [
+            121,
+            124
+          ],
+          "supports": "The only restore effect reloads detail/game-update; it does not replay a search."
+        },
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/ui/HallApp.kt",
+          "lines": [
+            147,
+            159
+          ],
+          "supports": "Content has no initialization-complete gate; SaveableStateProvider wraps pages."
+        },
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/ui/HallApp.kt",
+          "lines": [
+            191,
+            198
+          ],
+          "supports": "Search displays the shared catalogue directly rather than filtering it by the displayed query."
+        },
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/MainActivity.kt",
+          "lines": [
+            32,
+            39
+          ],
+          "supports": "DAO streams start independently; a new ViewModel initializes then calls default unfiltered refresh."
+        },
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt",
+          "lines": [
+            63,
+            81
+          ],
+          "supports": "Only supplied query/genre go into requests; unfiltered refresh replaces catalogue."
+        },
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/ui/HallApp.kt",
+          "lines": [
+            347,
+            347
+          ],
+          "supports": "ScrollPage delegates to rememberScrollState inside the saveable page holder."
+        }
+      ],
+      "pathsWalked": [
+        {
+          "chain": "MainActivity.onCreate -> HallViewModel.init -> initialize -> refresh() -> catalog; HallApp.restore(query,route=search) -> shared catalog rendering",
+          "result": "fails to restore submitted-query results"
+        },
+        {
+          "chain": "MainActivity.onCreate -> setContent -> HallApp -> DAO/DataStore collections",
+          "result": "runs independently of initialize; no reconciled-snapshot publication gate"
+        },
+        {
+          "chain": "HallApp openGame/go/back -> rememberSaveable navigation -> SaveableStateProvider",
+          "result": "source supports same-task activity-state restoration"
+        }
+      ],
+      "searched": [
+        "S01",
+        "S02",
+        "S03",
+        "S04"
+      ],
+      "findingIds": [
+        "APP-08-F01",
+        "APP-08-F02"
+      ],
+      "openQuestions": [
+        "Native OS process-state restoration and scroll-anchor behavior with insertion/reordering are not executed; no claim that all scrolling restoration is absent."
+      ]
+    },
+    {
+      "id": "APP-08.02",
+      "text": "任务和安装状态来自持久记录及文件对账，不能仅恢复上一次屏幕上的百分比。",
+      "specLine": 146,
+      "verdict": "partial",
+      "confidence": "high",
+      "demands": "Reconcile persisted transfers and active installations against local files before exposing their phase/bytes/readiness, including paused/offline work; recovery must not race a current operation.",
+      "evidence": [
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/data/Database.kt",
+          "lines": [
+            9,
+            14
+          ],
+          "supports": "Transfer bytes/state, installation and sessions are durable Room entities."
+        },
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/transfer/TransferWorker.kt",
+          "lines": [
+            107,
+            145
+          ],
+          "supports": "Running worker verifies existing chunks and syncs new bytes before committing byte progress."
+        },
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/transfer/Installation.kt",
+          "lines": [
+            105,
+            126
+          ],
+          "supports": "Recovery scans only journal files; early phases cause staging deletion."
+        },
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt",
+          "lines": [
+            48,
+            60
+          ],
+          "supports": "initialize uses initializationLock, directly calls recovery and never reconciles every transfer/active installation."
+        },
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/transfer/TransferWorker.kt",
+          "lines": [
+            31,
+            44
+          ],
+          "supports": "Worker enters without initialize; paused, failed and completed transfers are not candidates."
+        },
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/ui/HallApp.kt",
+          "lines": [
+            399,
+            417
+          ],
+          "supports": "Restored phase and progress come directly from persisted row."
+        },
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/transfer/TransferWorker.kt",
+          "lines": [
+            146,
+            150
+          ],
+          "supports": "Worker holds operationLock for install, but recovery does not acquire it."
+        },
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/transfer/Installation.kt",
+          "lines": [
+            31,
+            69
+          ],
+          "supports": "An active extraction keeps journal CREATED until all files were processed; counts survive deletion of previously extracted files."
+        }
+      ],
+      "pathsWalked": [
+        {
+          "chain": "DAO.transfers -> HallViewModel.transfers -> HallApp.Downloads -> TransferCard",
+          "result": "durable records implemented, but paused/offline files not reconciled"
+        },
+        {
+          "chain": "initialize -> Installation.recover -> journal loop -> activate / delete staging",
+          "result": "journal crash recovery exists; no-journal active installs are not checked"
+        },
+        {
+          "chain": "TransferWorker.doWork -> perform -> operationLock -> Installation.install, concurrently with MainActivity -> initialize -> recover",
+          "result": "unlocked recovery can delete active staging"
+        }
+      ],
+      "searched": [
+        "S01",
+        "S05",
+        "S06",
+        "S07"
+      ],
+      "findingIds": [
+        "APP-08-F02",
+        "APP-08-F04"
+      ],
+      "openQuestions": [
+        "Scheduling/interleaving and physical interruption behavior require the later consolidated tests; the source race and skipped reconciliation paths are directly visible."
+      ]
+    },
+    {
+      "id": "APP-08.03",
+      "text": "运行会话只有活进程及有效会话握手才能标记运行中；失联会话转恢复状态。",
+      "specLine": 147,
+      "verdict": "partial",
+      "confidence": "high",
+      "demands": "After a hall-process restart, confirm the recorded runtime identity through the real live process/Binder; reattach it or preserve recovery restrictions until death is established.",
+      "evidence": [
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/runtime/SessionController.kt",
+          "lines": [
+            100,
+            109
+          ],
+          "supports": "Normal launch binds the runtime service and watches its Binder death."
+        },
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/runtime/SessionController.kt",
+          "lines": [
+            130,
+            160
+          ],
+          "supports": "Prepared handshake checks session/generation/nonce/PID; runtime phases accept matching, monotone identity-bound events."
+        },
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt",
+          "lines": [
+            57,
+            59
+          ],
+          "supports": "Startup unconditionally marks every unfinished session crashed without checking live runtime identity, then schedules downloads."
+        },
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/runtime/SessionController.kt",
+          "lines": [
+            24,
+            36
+          ],
+          "supports": "Controller identity, nonce, PID and connection are only in memory."
+        },
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/runtime/SessionController.kt",
+          "lines": [
+            122,
+            128
+          ],
+          "supports": "attach updates an Activity reference; it does not recover a runtime connection."
+        },
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/runtime/GameProcessService.kt",
+          "lines": [
+            15,
+            41
+          ],
+          "supports": "Send failures are swallowed, host death has no runtime handling, and existing context rejects PREPARE instead of allowing reattachment."
+        },
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/transfer/TransferWorker.kt",
+          "lines": [
+            67,
+            70
+          ],
+          "supports": "Runtime resource blocker depends on unfinished DB rows."
+        },
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt",
+          "lines": [
+            169,
+            183
+          ],
+          "supports": "Resource deletion and cache deletion rely on unfinished rows rather than actual process liveness."
+        },
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/ui/HallApp.kt",
+          "lines": [
+            325,
+            327
+          ],
+          "supports": "Recovery notice comes from in-memory controller message; persisted crashed error is not restored into it."
+        }
+      ],
+      "pathsWalked": [
+        {
+          "chain": "launch -> beginLaunch -> PREPARE -> PREPARED -> GameActivity -> bootstrap -> runtime events",
+          "result": "normal identity-bound handshake exists"
+        },
+        {
+          "chain": "runtime Binder death -> finish(crashed) -> persisted terminal state + in-memory message",
+          "result": "host-alive crash detection implemented"
+        },
+        {
+          "chain": "main process reclaimed while :game survives -> new Application/controller -> initialize -> blanket crashed -> downloads/destructive-operation guards",
+          "result": "fails to reconcile live runtime and releases its restrictions"
+        },
+        {
+          "chain": "post-restart launch -> new validating record -> existing GameProcessService.PREPARE",
+          "result": "old singleton rejects PREPARE; no fresh handshake and no automatic proof of a second native runtime"
+        }
+      ],
+      "searched": [
+        "S08",
+        "S09",
+        "S10"
+      ],
+      "findingIds": [
+        "APP-08-F03"
+      ],
+      "openQuestions": [
+        "Execute a main-process-only interruption with surviving :game in the later physical-device batch; package force-stop does not reproduce this branch.",
+        "Heartbeat expiry only changes controller message at SessionController.kt:110-116; whether that fulfills recoverable timeout UI is left for independent specification review and is not a separate finding."
+      ]
+    },
+    {
+      "id": "APP-08.04",
+      "text": "旋转、来电、锁屏及再次点击图标都不能重复建立下载或第二个游戏会话。",
+      "specLine": 148,
+      "verdict": "implemented",
+      "confidence": "medium",
+      "demands": "Lifecycle and entrypoint replay must not enqueue content or invoke native start again; user commands must pass shared coordination.",
+      "evidence": [
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/HallApplication.kt",
+          "lines": [
+            12,
+            15
+          ],
+          "supports": "One repository and controller are Application-owned."
+        },
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/MainActivity.kt",
+          "lines": [
+            38,
+            43
+          ],
+          "supports": "Initialization/refresh and click launch are distinct; actions serialized."
+        },
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/MainActivity.kt",
+          "lines": [
+            71,
+            71
+          ],
+          "supports": "onResume only reattaches."
+        },
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt",
+          "lines": [
+            104,
+            118
+          ],
+          "supports": "Shared operationLock and durable active-transfer check prevent another unfinished transfer for same game."
+        },
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt",
+          "lines": [
+            126,
+            128
+          ],
+          "supports": "Unique WorkManager content-transfer scheduling uses KEEP."
+        },
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/runtime/SessionController.kt",
+          "lines": [
+            50,
+            60
+          ],
+          "supports": "launching/finishing/current-session guards prevent duplicate launch in same host process."
+        },
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt",
+          "lines": [
+            148,
+            150
+          ],
+          "supports": "Launch preflight checks no unfinished session under shared lock before record creation."
+        },
+        {
+          "path": "android/app/src/main/AndroidManifest.xml",
+          "lines": [
+            15,
+            20
+          ],
+          "supports": ":game runtime Activity uses singleTask and handles common configuration changes."
+        },
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/runtime/GameActivity.kt",
+          "lines": [
+            41,
+            61
+          ],
+          "supports": "A consumed or unauthenticated onCreate is rejected before native loading."
+        },
+        {
+          "path": "nxnative/dm/android/hall_adapter.c",
+          "lines": [
+            102,
+            105
+          ],
+          "supports": "Native module refuses a repeated start using atomic_exchange."
+        },
+        {
+          "path": "android/app/src/main/java/org/nsa/hall/runtime/GameActivity.kt",
+          "lines": [
+            72,
+            98
+          ],
+          "supports": "Calls/lockscreen pause/resume routes use commands, not launch/enqueue."
+        }
+      ],
+      "pathsWalked": [
+        {
+          "chain": "rotation/new Activity -> same Application controller -> attach",
+          "result": "no new PREPARE or enqueue"
+        },
+        {
+          "chain": "call/lock/audio interruption -> requestCommand(PAUSE/RESUME) -> bootstrap.nativeRequest -> hall_adapter -> front_android",
+          "result": "no creation path"
+        },
+        {
+          "chain": "download confirm -> repository.enqueue -> shared mutex + durable active task check -> unique worker",
+          "result": "creation is user-action-only and guarded"
+        },
+        {
+          "chain": "startGame -> launch guards -> preflight -> PREPARE -> consumed Activity -> native atomic start",
+          "result": "one active native start guarded"
+        },
+        {
+          "chain": "main-process restart with surviving :game",
+          "result": "F03 is recovery/liveness failure; native duplicate is blocked by existing-context and native-start guards"
+        }
+      ],
+      "searched": [
+        "S01",
+        "S10",
+        "S11"
+      ],
+      "findingIds": [],
+      "openQuestions": [
+        "Physical rotation/call/lock/repeated-icon tests have not run; implemented is a source verdict, not AC-A04 acceptance.",
+        "Read-only NavigationRecoveryTest.kt:17-29 covers Activity recreation plus controller object identity, not live games, paused task recovery or OS process death."
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "id": "APP-08-F01",
+      "rules": [
+        "APP-08.01"
+      ],
+      "severity": "medium",
+      "priority": "P2",
+      "title": "A restored search replays an unfiltered catalogue request",
+      "status": "source-divergence; pending independent refutation",
+      "primaryLocation": {
+        "path": "android/app/src/main/java/org/nsa/hall/MainActivity.kt",
+        "lines": [
+          38,
+          38
+        ]
+      },
+      "specEvidence": [
+        "docs/product/产品需求细则.md:145",
+        "docs/engineering/02-android-client.md:44"
+      ],
+      "trigger": "Submit a nonempty search, let the system save the task and reclaim the hall process, then restore its search page with connectivity.",
+      "callChain": "restored HallApp query/route -> new HallViewModel.init -> initialize -> refresh() with empty default arguments -> catalog overwrite -> search page renders catalog unchanged",
+      "consequence": "The search field shows the old query while results belong to the unfiltered catalogue; an unsubmitted draft also cannot be distinguished from the committed search.",
+      "correction": "Persist submitted search context separately from draft text and restore/refresh its exact catalogue snapshot after initialization.",
+      "validationNeed": "Process recreation of route=search with nonempty query and a changed draft; assert the matching query/filter request and result IDs."
+    },
+    {
+      "id": "APP-08-F02",
+      "rules": [
+        "APP-08.01",
+        "APP-08.02"
+      ],
+      "severity": "medium",
+      "priority": "P2",
+      "title": "Restored bytes and installed state can bypass file reconciliation",
+      "status": "source-divergence; pending independent refutation",
+      "primaryLocation": {
+        "path": "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt",
+        "lines": [
+          48,
+          60
+        ]
+      },
+      "specEvidence": [
+        "docs/product/产品需求细则.md:145",
+        "docs/product/产品需求细则.md:146",
+        "docs/engineering/05-data-state.md:101"
+      ],
+      "trigger": "Restore a paused/failed/offline transfer whose partial archive is missing or truncated, or an active installation whose ready/package files are missing after its journal was cleaned.",
+      "callChain": "HallViewModel DAO streams -> HallApp content -> TransferCard/installed cards; initialize -> journal-only recover; paused work skipped by TransferWorker.doWork",
+      "consequence": "A nonexistent/truncated partial file keeps its old displayed byte progress; an installation with no files may still display installed/continue. No complete initialization gate prevents provisional facts being rendered.",
+      "correction": "Add bounded startup reconciliation for every persisted transfer and active installation, then publish a ready UI snapshot; downgrade missing files to recoverable task/repair state while preserving pause intent.",
+      "validationNeed": "Offline/paused task with absent and truncated files; no-journal active install with absent ready marker/critical files; assert truthful state before first content snapshot."
+    },
+    {
+      "id": "APP-08-F03",
+      "rules": [
+        "APP-08.03"
+      ],
+      "severity": "high",
+      "priority": "P1",
+      "title": "Hall reconstruction releases a possibly live game's session",
+      "status": "source-divergence; pending independent refutation",
+      "primaryLocation": {
+        "path": "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt",
+        "lines": [
+          58,
+          59
+        ]
+      },
+      "specEvidence": [
+        "docs/product/产品需求细则.md:147",
+        "docs/engineering/03-runtime-integration.md:66",
+        "docs/engineering/03-runtime-integration.md:74",
+        "docs/engineering/05-data-state.md:101"
+      ],
+      "trigger": "Only the hall/main process is reclaimed while the ordinary separate :game process and GameActivity remain alive, then the hall is reopened.",
+      "callChain": "new Application/controller -> initialize -> every unfinished row set crashed -> downloads scheduled and DB-only resource/save guards see idle; next launch PREPARE ignored by existing GameProcess.context",
+      "consequence": "A live runtime loses its authoritative session/pin and resource-policy blockers; downloads or same-game resource/save operations can proceed while it is alive. Reopening it cannot reattach, and a retry may remain in preparation because PREPARE is ignored.",
+      "correction": "Restore a recovering/pinned record, probe and authenticate the existing process without creating a new runtime, reattach only on valid session/generation handshake, and release restrictions only after confirmed termination.",
+      "validationNeed": "Main-process-only kill with surviving runtime; assert no loss of pin/blocker, no destructive operations, successful reattach or explicit controlled termination; separately test dead runtime and late events.",
+      "notClaimed": "The source does not establish two simultaneous native games: PREPARE and native-start guards prevent that. The finding is loss of liveness reconciliation and safe recovery."
+    },
+    {
+      "id": "APP-08-F04",
+      "rules": [
+        "APP-08.02"
+      ],
+      "severity": "high",
+      "priority": "P1",
+      "title": "Opening the hall can delete an installation still being extracted by its worker",
+      "status": "source-divergence; pending independent refutation",
+      "primaryLocation": {
+        "path": "android/app/src/main/java/org/nsa/hall/transfer/Installation.kt",
+        "lines": [
+          117,
+          125
+        ]
+      },
+      "specEvidence": [
+        "docs/product/产品需求细则.md:146",
+        "docs/engineering/03-runtime-integration.md:66",
+        "docs/engineering/05-data-state.md:101",
+        "docs/engineering/05-data-state.md:111"
+      ],
+      "trigger": "After process recovery, WorkManager starts before any Activity. During its active extraction, the user opens the hall for the first time in that process.",
+      "callChain": "TransferWorker.doWork(no initialize) -> perform -> operationLock -> install writes CREATED journal; concurrently HallViewModel.init -> initialize(initializationLock only) -> recover -> CREATED journal branch deletes staging and journal",
+      "consequence": "The active install can fail, or previously verified files can disappear while in-memory byte/seen totals remain valid, allowing an incomplete directory to be marked ready and activated.",
+      "interleaving": [
+        "Worker extracts and hashes file A; total and seen include A while journal remains CREATED.",
+        "Startup recover reads CREATED, deletes the staging tree containing A and removes the journal without operationLock.",
+        "Worker creates parent directories for file B and continues. It does not recheck A at completion; aggregate counts still include A.",
+        "Worker writes ready/index, publishes the directory and activates it with A missing."
+      ],
+      "correction": "Make recovery and worker entry share one initialization barrier and operation lock/ownership check; never treat a journal owned by an active worker as abandoned.",
+      "validationNeed": "A deterministic two-file extraction barrier: pause after A validation, enter initialize/recover, resume B, and assert no active staging deletion or ready state with missing files."
+    }
+  ],
+  "searched": [
+    {
+      "id": "S01",
+      "scope": "android/app/src/main/**/*.kt",
+      "patterns": [
+        ".initialize(",
+        ".recover(",
+        "enqueue(",
+        "SessionRecord(",
+        "putSession("
+      ],
+      "result": "One production initialize caller: HallViewModel.init. One enqueue caller: download confirmation. Session writes only create/event/finish/startup reset; all inspected."
+    },
+    {
+      "id": "S02",
+      "scope": "android/app/src/main/**/*.kt",
+      "patterns": [
+        "committedQuery",
+        "submittedQuery",
+        "lastQuery",
+        "searchQuery",
+        "catalogue_snapshot"
+      ],
+      "result": "0 hits; query variable and refresh callers inspected instead."
+    },
+    {
+      "id": "S03",
+      "scope": "android/app/src/main/**/*.kt and *.xml",
+      "patterns": [
+        "returnOrigin",
+        "return_origin",
+        "source_route",
+        "onSaveInstanceState",
+        "SavedStateHandle",
+        "pending_result"
+      ],
+      "result": "0 hits. Saved Compose navigation and activity-result callbacks inspected; no app-owned persistent restoration context found."
+    },
+    {
+      "id": "S04",
+      "scope": "android/app/src/main/**/*.kt",
+      "patterns": [
+        "rememberSaveable",
+        "SaveableStateProvider",
+        "rememberScrollState",
+        "rememberLazyListState",
+        "firstVisibleItem",
+        "scrollAnchor"
+      ],
+      "result": "Saveable declarations/provider and scroll-state calls in HallApp. Explicit lazy-list/anchor APIs: 0 hits; LazyColumn default state is not treated as evidence of absent scrolling restoration."
+    },
+    {
+      "id": "S05",
+      "scope": "android/app/src/main/**/*.kt",
+      "patterns": [
+        "allTransfers(",
+        "putTransfer(",
+        "archive.zip.partial",
+        ".ready.json",
+        "putInstall(",
+        "activeRelease"
+      ],
+      "result": "All progress/install mutations traced through worker, install, repository and UI. No paused-transfer startup file reconciliation or all-active-install READY sweep."
+    },
+    {
+      "id": "S06",
+      "scope": "android/app/src/main/**/*.kt",
+      "patterns": [
+        "install-journals",
+        ".staging",
+        "DIRECTORY_PUBLISHED",
+        "initializationLock",
+        "operationLock"
+      ],
+      "result": "install/recover use same journal and staging names. Worker install owns operationLock; recover only called by initialize, which owns a different lock."
+    },
+    {
+      "id": "S07",
+      "scope": "android/app/src/main/java/org/nsa/hall/transfer/MaintenanceWorker.kt",
+      "patterns": [
+        "doWork"
+      ],
+      "result": "Entire file read: only session log retention, no missing reconciliation elsewhere."
+    },
+    {
+      "id": "S08",
+      "scope": "android/app/src/main/**/*.kt",
+      "patterns": [
+        "linkToDeath",
+        "binderDied",
+        "onBindingDied",
+        "runningAppProcesses",
+        "isBinderAlive",
+        "pingBinder",
+        "reconnect",
+        "rehandshake",
+        "process_identity"
+      ],
+      "result": "linkToDeath: one hit, SessionController.kt:104. Other named liveness/reconnect APIs: 0 hits. Every service/controller method inspected; attach only updates Activity reference."
+    },
+    {
+      "id": "S09",
+      "scope": "android/app/src/main/**/*.kt and runtime source",
+      "patterns": [
+        "GameProcess",
+        "Protocol.PREPARE",
+        "Protocol.PREPARED",
+        "Protocol.HEARTBEAT",
+        "unfinished("
+      ],
+      "result": "GameProcessService and GameActivity read fully. PREPARE refuses existing singleton context; host send failure is swallowed; no host-death recovery or reconnect handler."
+    },
+    {
+      "id": "S10",
+      "scope": "android/app/src/main/**/*.kt; android/app/src/main/cpp/bootstrap.c; nxnative/dm/android/hall_adapter.c",
+      "patterns": [
+        "launch(",
+        "onResume",
+        "onPause",
+        "onStop",
+        "nativeRequest",
+        "nsa_runtime_start_v1"
+      ],
+      "result": "All Hall launch callers, lifecycle callbacks and native entry/command paths inspected; lifecycle paths do not create transfers or sessions."
+    },
+    {
+      "id": "S11",
+      "scope": "android/app/src/main/AndroidManifest.xml; nxnative/dm/android/front_android.c",
+      "patterns": [
+        "launchMode",
+        "configChanges",
+        "dm_front_hall_command",
+        "dm_front_hall_on_create",
+        "started"
+      ],
+      "result": "Manifest controls common configuration changes/singleTask; native command callbacks pause/resume; repeated native start guards present."
+    }
+  ],
+  "pendingOperationsReviewed": [
+    {
+      "path": "android/app/src/main/java/org/nsa/hall/ui/HallApp.kt",
+      "lines": [
+        113,
+        115
+      ],
+      "result": "System chooser/permission callbacks affect save/notification operations, not content enqueue/session launch."
+    },
+    {
+      "path": "android/app/src/main/java/org/nsa/hall/ui/HallApp.kt",
+      "lines": [
+        100,
+        100
+      ],
+      "result": "importArchive is remember-only, while dialog is rememberSaveable at line 96; import confirmation at line 340 returns early without archive. Broader save-import recovery is not promoted to an additional APP-08 finding."
+    },
+    {
+      "path": "android/app/src/main/java/org/nsa/hall/transfer/SaveManager.kt",
+      "lines": [
+        61,
+        135
+      ],
+      "result": "Inspected import inspection, locked commit and disk-journal recovery; recover is called before native launch, not from generic startup."
+    }
+  ],
+  "existingTestEvidence": [
+    {
+      "path": "android/app/src/androidTest/java/org/nsa/hall/NavigationRecoveryTest.kt",
+      "lines": [
+        17,
+        29
+      ],
+      "readOnly": true,
+      "executed": false,
+      "covers": "Activity recreation with Settings tab and identical controller object; does not cover process death, active runtime, search results or file reconciliation"
+    }
+  ],
+  "documentProblem": null,
+  "notChecked": [
+    "Runtime/device execution and hardware-specific OS scheduling outcomes; all deferred until the user's complete-batch consolidated verification."
+  ],
+  "unverified": [
+    "All four findings require independent code and specification refutation before root acceptance.",
+    "No current phone, app process, game file or live task was read or modified."
+  ],
+  "_publication": {
+    "original_record_sha256": "27d646ab19cbe8d62dae80ae8c1fcfb7b7fd5d66ad20544ed567d8a6d052a043",
+    "review_stage": "original_candidate_review",
+    "reviewed_source_revision": "cdedc7179ec1842592243a052525e021d8cf70f1",
+    "normalizations": [
+      "checkout path made relative",
+      "record paths made collection-relative",
+      "Markdown source file/line links pinned to the reviewed Git revision",
+      "Markdown trailing whitespace normalized"
+    ],
+    "final_adjudication": "docs/hall/verification/2026-11-07-source-review.json"
+  }
+}

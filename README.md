@@ -8,6 +8,8 @@ This fork builds a unified Kotlin/Compose Android hall on [nx2android](https://g
 
 **Current state: built, installed internal development version; full game acceptance remains open.** The merged `main` build passes Android checks and two physical-device instrumentation tests. A preceding build passes the complete hall/2048 input-save-reload sequence. BotW reaches an imported Shrine of Resurrection scene in the merged APK; its movement, new progress save/reload and sustained performance remain unaccepted. Track exact build identities and limits in the [implementation record](docs/hall/implementation-status.md).
 
+The [targeted source review](docs/hall/source-review.md) records open policy, reconstruction and save-exchange defects, their evidence and the next complete implementation batch. It covers three requirements; the broader source map and existing media are not full acceptance.
+
 | Layer | Concrete behavior |
 |---|---|
 | Android hall | Cached catalogue, search/filter/detail, installed library, queue, storage, saves, settings, feedback and app updates |
