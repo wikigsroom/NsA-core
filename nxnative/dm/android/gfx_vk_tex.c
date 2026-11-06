@@ -492,7 +492,7 @@ void mtl_tex_release(tex_t *t) { (void)t; }   // images belong to their storage 
 int mtl_tex_gpu_owned(uint64_t serial) { (void)serial; return 0; }
 
 // ---------------- views ----------------
-typedef struct vview { VkImageView v; VkImageViewType type; VkFormat fmt; uint32_t lv0, nlv, ly0, nly; VkComponentMapping swz; VkImageAspectFlags aspect; int attach; struct vview *next; } vview;   // attach: an attachment view (its usage differs from a sampling view's)
+typedef struct vview { VkImageView v; VkImageViewType type; VkFormat fmt; uint32_t lv0, nlv, ly0, nly, usage; VkComponentMapping swz; VkImageAspectFlags aspect; int attach; struct vview *next; } vview;   // attach: an attachment view (its usage differs from a sampling view's)
 static nvn_hmap g_views = {.klen = sizeof(vkimg_t *)};   // vkimg_t* → vview list
 static pthread_mutex_t g_view_mu = PTHREAD_MUTEX_INITIALIZER;
 extern uint64_t g_tex_gen;
@@ -531,7 +531,7 @@ static VkComponentMapping sample_swizzle(const VkComponentMapping *format, const
         apply(swz_comp(sw[2]),format,VK_COMPONENT_SWIZZLE_B),
         apply(swz_comp(sw[3]),format,VK_COMPONENT_SWIZZLE_A)};
 }
-__thread VkFormat vk_view_fmt; __thread uint32_t vk_view_layers;
+__thread VkFormat vk_view_fmt; __thread uint32_t vk_view_layers, vk_view_usage;
 VkImageView vk_tex_view(const tex_t *t, const view_t *vw, int dim, int arrayed, int as_attachment, vkimg_t **img_out) {
     vkimg_t *im = vk_tex(t); if (img_out) *img_out = im;
     if (!im) return VK_NULL_HANDLE;
@@ -567,21 +567,25 @@ VkImageView vk_tex_view(const tex_t *t, const view_t *vw, int dim, int arrayed, 
     VkComponentMapping swz = sample_swizzle(&f->swz,t,vw,as_attachment);
     VkFormat fmt = f->vk;
     const vkfmt_t *imf = vk_fmt(im->nvn_format);   // (a BC format decoded on the CPU counts as compressed: its view keeps the decoded image's format)
-    if ((im->aspect & ~VK_IMAGE_ASPECT_COLOR_BIT) || (f->compressed || f->dec) != (imf->compressed || imf->dec) || (f->dec && f->dbpp != imf->dbpp)) fmt = im->fmt;   // depth views and block-size changes keep the image's format
+    // BLOCK_TEXEL_VIEW_COMPATIBLE permits one uncompressed attachment texel per compressed block.
+    // Preserve that view when its texel size equals the block size; keeping the BC format here makes the attachment invalid.
+    int block_view = as_attachment && imf->compressed && !imf->dec && !f->compressed && !f->dec && f->bpb == imf->bpb;
+    if ((im->aspect & ~VK_IMAGE_ASPECT_COLOR_BIT) || (!block_view && (f->compressed || f->dec) != (imf->compressed || imf->dec)) || (f->dec && f->dbpp != imf->dbpp)) fmt = im->fmt;   // depth views and block-size changes keep the image's format
     if (im->fixed_fmt && fmt != im->fmt && fmt != srgb_twin(im->fmt)) { fmt = im->fmt; static int n; if (n++ < 8) VKLOG("[RED] view format %d of a format-listed image (%d, DM_VK_UBWC): the image's own used", f->vk, im->fmt); }
     pthread_mutex_lock(&g_view_mu);
     vview *head = nvn_hm_get(&g_views, &im);
     for (vview *v = head; v; v = v->next)
-        if (v->type == type && v->fmt == fmt && v->lv0 == lv0 && v->nlv == nlv && v->ly0 == ly0 && v->nly == nly && v->aspect == aspect && v->attach == (as_attachment != 0) && !memcmp(&v->swz, &swz, sizeof swz)) { pthread_mutex_unlock(&g_view_mu); vk_view_fmt = fmt; vk_view_layers = nly; return v->v; }
+        if (v->type == type && v->fmt == fmt && v->lv0 == lv0 && v->nlv == nlv && v->ly0 == ly0 && v->nly == nly && v->aspect == aspect && v->attach == (as_attachment != 0) && !memcmp(&v->swz, &swz, sizeof swz)) { pthread_mutex_unlock(&g_view_mu); vk_view_fmt = fmt; vk_view_layers = nly; vk_view_usage = v->usage; return v->v; }
     VkImageViewUsageCreateInfo uci = {VK_STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO, NULL, 0};
     VkFormatProperties fp; vkGetPhysicalDeviceFormatProperties(V.pd, fmt, &fp);
     uci.usage = VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT;
     if (as_attachment) uci.usage = (fp.optimalTilingFeatures & VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT ? VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT : 0) | (fp.optimalTilingFeatures & VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT ? VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT : 0);
     else if ((t->d.flags & NVN_TEXTURE_FLAGS_IMAGE) && (fp.optimalTilingFeatures & VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT)) uci.usage |= VK_IMAGE_USAGE_STORAGE_BIT;
+    vk_view_usage = uci.usage ? uci.usage : im->usage;
     VkImageViewCreateInfo ci = {VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO, &uci, 0, im->img, type, fmt, swz, {aspect, lv0, nlv, ly0, nly}};
     VkImageView view; VkResult r = vkCreateImageView(V.dev, &ci, NULL, &view);
     if (r) { pthread_mutex_unlock(&g_view_mu); VKRED_ONCE(15, "vkCreateImageView failed (%d): type %d format %d levels %u+%u layers %u+%u of image %ux%ux%u", r, type, fmt, lv0, nlv, ly0, nly, im->w, im->h, im->layers); return VK_NULL_HANDLE; }
-    vview *nv = calloc(1, sizeof *nv); *nv = (vview){view, type, fmt, lv0, nlv, ly0, nly, swz, aspect, as_attachment != 0, head};
+    vview *nv = calloc(1, sizeof *nv); *nv = (vview){view, type, fmt, lv0, nlv, ly0, nly, vk_view_usage, swz, aspect, as_attachment != 0, head};
     nvn_hm_put(&g_views, &im, nv);
     pthread_mutex_unlock(&g_view_mu);
     vk_view_fmt = fmt; vk_view_layers = nly;
@@ -657,7 +661,8 @@ static VkSampler make_sampler(const samp_par *p) {
     ci.mipLodBias = p->lod_bias;
     ci.anisotropyEnable = p->aniso > 1.0f; ci.maxAnisotropy = p->aniso > V.max_aniso ? V.max_aniso : p->aniso;
     ci.compareEnable = p->cmp_mode == 1; ci.compareOp = cmp_op(p->cmp_func);
-    ci.minLod = p->lod_min; ci.maxLod = p->minf <= 1 ? 0.25f : p->lod_max;   // no mipmap filter: level 0 only (GL's rule)
+    ci.minLod = p->minf <= 1 ? 0.0f : p->lod_min; ci.maxLod = p->minf <= 1 ? 0.25f : p->lod_max;   // no mipmap filter: level 0 only, regardless of the mip clamp (GL's rule)
+    if (ci.maxLod < ci.minLod) ci.maxLod = ci.minLod;
     int border = ci.addressModeU == VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER || ci.addressModeV == VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER || ci.addressModeW == VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER;
     ci.borderColor = VK_BORDER_COLOR_FLOAT_TRANSPARENT_BLACK;
     if (border) {

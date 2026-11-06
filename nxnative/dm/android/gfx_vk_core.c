@@ -23,6 +23,7 @@
 #define VK_DEF(f) PFN_##f f;
 VK_FNS(VK_DEF) VK_DEV_FNS(VK_DEF)
 static PFN_vkGetInstanceProcAddr p_vkGetInstanceProcAddr;
+static int g_has_ahb;
 vkdev_t V;
 pthread_mutex_t g_vk_queue_mu = PTHREAD_MUTEX_INITIALIZER;   // VkQueue access is externally synchronized: submissions and presents
 
@@ -191,6 +192,7 @@ void vk_init(void) {
                           "VK_GOOGLE_display_timing"};
     const char *on[64]; uint32_t non = 0;
     for (unsigned i = 0; i < sizeof want / sizeof *want; i++) if (has_ext(ex, ne, want[i])) on[non++] = want[i]; else VKLOG("device has no %s", want[i]);
+    g_has_ahb = is_on(on, non, "VK_ANDROID_external_memory_android_hardware_buffer");
     // A Vulkan 1.1 or 1.2 device (Legion Y700 2023, Adreno 730: its stock driver reports 1.1) has what the replay uses from 1.2 / 1.3 as extensions: they are enabled
     // when present, so the features chained below and the functions loaded by their KHR names are valid there. A 1.3 device needs none of them
     int v12 = V.props.apiVersion >= VK_API_VERSION_1_2, v13 = V.props.apiVersion >= VK_API_VERSION_1_3; uint32_t npromo = 0;
@@ -388,6 +390,9 @@ static void pool_cache_sync(vkpool_t *p, int invalidate, uint64_t lo, uint64_t h
 }
 // Zero copy: the pages of [mem, mem+size) become an AHardwareBuffer's, imported as a VkBuffer. 0 on success
 static int pool_zero_copy(vkpool_t *p, uint8_t *mem, uint64_t size) {
+    // A loader may return an extension entry point even when the selected driver does not support it.
+    // Refuse before replacing the guest's pages: an unsupported import has no valid allocation properties.
+    if (!g_has_ahb || !vkGetAndroidHardwareBufferPropertiesANDROID) return -6;
     AHardwareBuffer_Desc d = {(uint32_t)size, 1, 1, AHARDWAREBUFFER_FORMAT_BLOB,
         AHARDWAREBUFFER_USAGE_CPU_READ_OFTEN | AHARDWAREBUFFER_USAGE_CPU_WRITE_OFTEN | AHARDWAREBUFFER_USAGE_GPU_DATA_BUFFER, 0, 0, 0};
     if (size > 0xffffffffull) { mem_diag_zc(0, "size", size, "limit", -1); return -1; }

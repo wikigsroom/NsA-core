@@ -1,6 +1,8 @@
 """Exercise external-display attach/detach without an Android device."""
+import os
 import pathlib
 import subprocess
+import sys
 import tempfile
 import unittest
 from unittest import mock
@@ -41,7 +43,7 @@ class ExternalDisplayTest(unittest.TestCase):
         self.assertTrue(cli._parser().parse_args(['port', '/game', '--external-display']).external_display)
         with tempfile.TemporaryDirectory() as t:
             root = pathlib.Path(t); platform = root / 'platforms/android-36/android.jar'; platform.parent.mkdir(parents=True); platform.touch()
-            d8 = root / 'build-tools/36.0.0/d8'; d8.parent.mkdir(parents=True); d8.touch()
+            d8 = root / 'build-tools/36.0.0' / ('d8.bat' if os.name == 'nt' else 'd8'); d8.parent.mkdir(parents=True); d8.touch()
             port = pipeline.Port(pipeline.Options(folder=root, external_display=True)); port.aw = root / 'out'; port.logs = root / 'logs'; port.env = {}
             with mock.patch.object(pipeline.toolchain, '_sdk_roots', return_value=[root]), mock.patch.object(pipeline.shutil, 'which', return_value='/usr/bin/javac'), mock.patch.object(pipeline.nsp, 'run') as run:
                 args = port.external_activity()
@@ -68,7 +70,7 @@ class ExternalDisplayTest(unittest.TestCase):
             so.write_bytes(b'ELF fixture')
             dex.write_bytes(b'dex fixture')
             tool = ROOT / 'nxnative/dm/android/apk/mkapk.py'
-            base = ['python3', str(tool), str(so)]
+            base = [sys.executable, str(tool), str(so)]
             subprocess.run([*base, str(root / 'default.apk'), str(key)], check=True, capture_output=True)
             with zipfile.ZipFile(root / 'default.apk') as z:
                 self.assertNotIn('classes.dex', z.namelist())

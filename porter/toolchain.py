@@ -72,7 +72,7 @@ def find_dotnet(cfg=None):
 
 
 def dotnet_sdks(dotnet):   # {'10.0.402': '/usr/local/share/dotnet/sdk', ...}
-    try: r = subprocess.run([str(dotnet), '--list-sdks'], capture_output=True, text=True, timeout=60)
+    try: r = subprocess.run([str(dotnet), '--list-sdks'], capture_output=True, text=True, encoding='utf-8', errors='replace', timeout=60)
     except (OSError, subprocess.TimeoutExpired): return {}
     return dict(re.findall(r'^(\d+\.\d+\.\d+)\S* \[(.+)\]', r.stdout, re.M))
 

@@ -316,7 +316,10 @@ static vkshader_t *vk_shader_q(uint64_t key, int stage, int quiet) {
       char why[64]; uint32_t n2 = 0, *w2 = spv_one_lane(w, nw, ops, &n2, why, sizeof why);
       if (w2) { free(w); w = w2; nw = n2; VKLOG("shader %016llx (stage %d): subgroups of one invocation (the device's subgroup operations in this stage: %#x)", (unsigned long long)key, stage, ops); }
       else if (why[0]) VKLOG("[RED] shader %016llx (stage %d) uses subgroup operations the device lacks in this stage (it has %#x), and %s is not covered by the one-invocation rewrite: left as it is", (unsigned long long)key, stage, ops, why); }
-    if (stage == 0) { uint32_t n2 = 0, *w2 = spv_vs_init(w, nw, &n2); if (w2) { free(w); w = w2; nw = n2; } }
+    if (stage == 0) {
+        uint32_t spv_trim_unused_cull(uint32_t *w, uint32_t nw); nw = spv_trim_unused_cull(w, nw);
+        uint32_t n2 = 0, *w2 = spv_vs_init(w, nw, &n2); if (w2) { free(w); w = w2; nw = n2; }
+    }
     spv_io_locs(w, nw, &s->in_locs, &s->out_locs);
     VkShaderModuleCreateInfo ci = {VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO, NULL, 0, (size_t)nw * 4, w};
     VkResult vr = vkCreateShaderModule(V.dev, &ci, NULL, &s->mod); s->spv = w; s->nspv = nw;
