@@ -1,0 +1,137 @@
+{
+  "date": "2026-11-06",
+  "method": "WCAG sRGB relative luminance; actual token pairs, not a full accessibility certification",
+  "exclusions": [
+    "decorative borderSubtle",
+    "disabled controls; provide disabled semantics and readable reason",
+    "artwork and generated visual text are not measured as production controls"
+  ],
+  "pairs": [
+    {
+      "foreground": "textPrimary",
+      "background": "background",
+      "ratio": 16.84,
+      "minimum": 4.5,
+      "pass": true
+    },
+    {
+      "foreground": "textPrimary",
+      "background": "surface",
+      "ratio": 14.67,
+      "minimum": 4.5,
+      "pass": true
+    },
+    {
+      "foreground": "textPrimary",
+      "background": "surfaceRaised",
+      "ratio": 12.77,
+      "minimum": 4.5,
+      "pass": true
+    },
+    {
+      "foreground": "textSecondary",
+      "background": "background",
+      "ratio": 7.87,
+      "minimum": 4.5,
+      "pass": true
+    },
+    {
+      "foreground": "textSecondary",
+      "background": "surface",
+      "ratio": 6.85,
+      "minimum": 4.5,
+      "pass": true
+    },
+    {
+      "foreground": "textSecondary",
+      "background": "surfaceRaised",
+      "ratio": 5.97,
+      "minimum": 4.5,
+      "pass": true
+    },
+    {
+      "foreground": "textMuted",
+      "background": "background",
+      "ratio": 6.23,
+      "minimum": 4.5,
+      "pass": true
+    },
+    {
+      "foreground": "textMuted",
+      "background": "surface",
+      "ratio": 5.43,
+      "minimum": 4.5,
+      "pass": true
+    },
+    {
+      "foreground": "textMuted",
+      "background": "surfaceRaised",
+      "ratio": 4.73,
+      "minimum": 4.5,
+      "pass": true
+    },
+    {
+      "foreground": "onAccent",
+      "background": "accent",
+      "ratio": 10.03,
+      "minimum": 4.5,
+      "pass": true
+    },
+    {
+      "foreground": "onAccent",
+      "background": "accentPressed",
+      "ratio": 7.79,
+      "minimum": 4.5,
+      "pass": true
+    },
+    {
+      "foreground": "error",
+      "background": "errorSurface",
+      "ratio": 7.67,
+      "minimum": 4.5,
+      "pass": true
+    },
+    {
+      "foreground": "success",
+      "background": "surface",
+      "ratio": 9.77,
+      "minimum": 4.5,
+      "pass": true
+    },
+    {
+      "foreground": "warning",
+      "background": "surface",
+      "ratio": 9.75,
+      "minimum": 4.5,
+      "pass": true
+    },
+    {
+      "foreground": "borderControl",
+      "background": "surface",
+      "ratio": 3.54,
+      "minimum": 3,
+      "pass": true
+    },
+    {
+      "foreground": "borderControl",
+      "background": "surfaceRaised",
+      "ratio": 3.08,
+      "minimum": 3,
+      "pass": true
+    },
+    {
+      "foreground": "focus",
+      "background": "background",
+      "ratio": 11.37,
+      "minimum": 3,
+      "pass": true
+    },
+    {
+      "foreground": "focus",
+      "background": "surfaceRaised",
+      "ratio": 8.62,
+      "minimum": 3,
+      "pass": true
+    }
+  ]
+}

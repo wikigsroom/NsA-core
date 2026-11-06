@@ -1,0 +1,56 @@
+{
+  "kind": "fictional design data only",
+  "storageReference": {
+    "capacityGiB": 128.0,
+    "usedGiB": 92.0,
+    "freeGiB": 36.0,
+    "gamesGiB": 25.0,
+    "downloadsGiB": 6.4,
+    "cacheGiB": 2.0,
+    "savesGiB": 0.2,
+    "otherGiB": 58.4
+  },
+  "cleanDownloadScenario": {
+    "freeGiB": 42.4,
+    "additionalRequiredGiB": 28.0
+  },
+  "games": [
+    {
+      "id": "valley",
+      "name": "远野回声",
+      "asset": "valley.webp",
+      "genre": "冒险",
+      "installedGiB": 12.0,
+      "lastSave": "今天 18:32",
+      "saveMiB": 68,
+      "version": "1.0.0"
+    },
+    {
+      "id": "island",
+      "name": "海岛工坊",
+      "asset": "island.webp",
+      "genre": "休闲",
+      "installedGiB": 9.0,
+      "version": "1.0.0"
+    },
+    {
+      "id": "pixel",
+      "name": "像素远征",
+      "asset": "pixel.webp",
+      "genre": "冒险",
+      "installedGiB": 4.0,
+      "version": "1.0.0"
+    },
+    {
+      "id": "space",
+      "name": "星环漫游",
+      "asset": "space.webp",
+      "genre": "冒险",
+      "downloadGiB": 10.0,
+      "installedGiB": 15.0,
+      "workGiB": 1.0,
+      "reserveGiB": 2.0,
+      "version": "1.0.0"
+    }
+  ]
+}

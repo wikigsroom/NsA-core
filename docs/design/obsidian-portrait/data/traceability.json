@@ -1,0 +1,1176 @@
+[
+  {
+    "requirement": "APP-01",
+    "priority": "P0",
+    "source": "一个固定包名、一个桌面入口；大厅和游戏属于同一安装包。首次测试旧单游戏 App 的包名不直接作为正式产品身份；正式包名与签名在发布前确定。",
+    "screens": [
+      "S00",
+      "S23"
+    ],
+    "design": "一个固定包名、一个桌面入口；页面按统一状态规则表达，实现仍按原需求验收。",
+    "owner": "Android",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "APP-02",
+    "priority": "P0",
+    "source": "全新安装后可直接进入游客大厅；开放内容下载和游玩不被强制注册阻断。若某内容需要账号授权，只在该内容入口说明并验证。",
+    "screens": [
+      "S00",
+      "S01"
+    ],
+    "design": "全新安装后可直接进入游客大厅；页面按统一状态规则表达，实现仍按原需求验收。",
+    "owner": "Android",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "APP-03",
+    "priority": "P0",
+    "source": "首次启动执行轻量能力采集并保留结果；昂贵图形探测以受控任务执行。主界面可先显示，不因探测长时间白屏。",
+    "screens": [
+      "S00",
+      "S20"
+    ],
+    "design": "首次启动执行轻量能力采集并保留结果；页面按统一状态规则表达，实现仍按原需求验收。",
+    "owner": "Android",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "APP-04",
+    "priority": "P0",
+    "source": "权限按用户动作申请；下载、通知、存档导出分别处理。拒绝通知后仍能在 App 内看到任务状态，并按系统允许的机制工作。默认应用目录不要求全部文件访问权限。",
+    "screens": [
+      "S25",
+      "S04",
+      "S15"
+    ],
+    "design": "权限按用户动作申请；页面按统一状态规则表达，实现仍按原需求验收。",
+    "owner": "Android",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "APP-05",
+    "priority": "P0",
+    "source": "无网络时可打开大厅和我的游戏；已安装且允许离线的内容仍可启动。首次没有目录缓存时明确解释，不伪造在线列表。",
+    "screens": [
+      "S07",
+      "S27",
+      "S28"
+    ],
+    "design": "无网络时可打开大厅和我的游戏；页面按统一状态规则表达，实现仍按原需求验收。",
+    "owner": "Android",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "APP-06",
+    "priority": "P0",
+    "source": "简体中文、清晰文字和适配手机/平板；所有非游戏页面默认竖屏，包括游戏详情、下载和启动准备，手机四入口导航置底；关键触控目标建议不少于 48dp；下载进度与错误不能只靠颜色表达，基础流程可被读屏识别。",
+    "screens": [
+      "S01",
+      "S07",
+      "S18"
+    ],
+    "design": "竖屏非游戏流程、底部四入口、语义与字体/触控规范；系统读屏需原生验证。",
+    "owner": "Android",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "APP-07",
+    "priority": "P0",
+    "source": "面向玩家的按钮使用“下载、准备中、开始游戏、返回大厅”等可理解语言。构建 ID、图形环境变量和目录细节放在高级诊断中。",
+    "screens": [
+      "S00",
+      "S03",
+      "S05"
+    ],
+    "design": "面向玩家的按钮使用“下载、准备中、开始游戏、返回大厅”等可理解语言；页面按统一状态规则表达，实现仍按原需求验收。",
+    "owner": "Android",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "APP-08",
+    "priority": "P0",
+    "source": "前后台切换、来电和系统重建后恢复最近页面与实际任务状态；不因重开页面重复创建下载或错误宣称游戏仍在运行。",
+    "screens": [
+      "S05",
+      "S08",
+      "S12"
+    ],
+    "design": "前后台切换、来电和系统重建后恢复最近页面与实际任务状态；页面按统一状态规则表达，实现仍按原需求验收。",
+    "owner": "Android",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "CAT-01",
+    "priority": "P0",
+    "source": "服务端维护有发布状态的游戏目录；用户只获得其发行区域、内容范围和测试资格允许看到的条目。原始 profile 目录不能直接等同公开目录。",
+    "screens": [
+      "S01",
+      "S03"
+    ],
+    "design": "服务端维护有发布状态的游戏目录；页面按统一状态规则表达，实现仍按原需求验收。",
+    "owner": "Android / 目录服务",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "CAT-02",
+    "priority": "P0",
+    "source": "支持名称、英文名、中文别名的搜索，大小写和首尾空格不影响结果；结果分页且可以重试，不重复或漏掉同一页内容。",
+    "screens": [
+      "S02"
+    ],
+    "design": "支持名称、英文名、中文别名的搜索，大小写和首尾空格不影响结果；页面按统一状态规则表达，实现仍按原需求验收。",
+    "owner": "Android / 目录服务",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "CAT-03",
+    "priority": "P0",
+    "source": "首版提供“本机可玩、已安装、类型”等必要筛选及清除筛选；按最新上架排序。收藏和复杂推荐算法列为 P1。",
+    "screens": [
+      "S01",
+      "S02"
+    ],
+    "design": "首版提供“本机可玩、已安装、类型”等必要筛选及清除筛选；页面按统一状态规则表达，实现仍按原需求验收。",
+    "owner": "Android / 目录服务",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "CAT-04",
+    "priority": "P0",
+    "source": "每款游戏有独立详情，显示游戏版本、语言、操作支持、下载大小、安装后大小、安装期间所需空间和已知限制。帧率证据附机型与测试范围，不写无条件“全机型 60 帧”。",
+    "screens": [
+      "S03"
+    ],
+    "design": "每款游戏有独立详情，显示游戏版本、语言、操作支持、下载大小、安装后大小、安装期间所需空间和已知限制；页面按统一状态规则表达，实现仍按原需求验收。",
+    "owner": "Android / 目录服务",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "CAT-05",
+    "priority": "P0",
+    "source": "本机状态至少区分“已验证可玩、实验运行、未验证、不支持、需要更新 App”；必须绑定内容版本、运行模块、驱动与设备条件，而非只按手机品牌判断。",
+    "screens": [
+      "S03",
+      "S20"
+    ],
+    "design": "本机状态至少区分“已验证可玩、实验运行、未验证、不支持、需要更新 App”；页面按统一状态规则表达，实现仍按原需求验收。",
+    "owner": "Android / 目录服务",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "CAT-06",
+    "priority": "P0",
+    "source": "只有可公开分发、内容包完整且存在匹配运行模块的版本可供正式下载。缺少对应模块时显示“更新 App 后可下载”，不先下载十几 GB 再告知无法启动。",
+    "screens": [
+      "S03",
+      "S22"
+    ],
+    "design": "只有可公开分发、内容包完整且存在匹配运行模块的版本可供正式下载；页面按统一状态规则表达，实现仍按原需求验收。",
+    "owner": "Android / 目录服务",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "CAT-07",
+    "priority": "P0",
+    "source": "同一游戏条目关联同一个下载与安装记录；从列表、搜索和详情重复点击不会创建第二份资源副本。",
+    "screens": [
+      "S03",
+      "S05",
+      "S07"
+    ],
+    "design": "同一游戏条目关联同一个下载与安装记录；页面按统一状态规则表达，实现仍按原需求验收。",
+    "owner": "Android / 目录服务",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "CAT-08",
+    "priority": "P0",
+    "source": "目录、封面与最近一次兼容结果可缓存。离线或目录更新失败时展示缓存时间；旧缓存不能覆盖本地已知的包撤回或严重故障限制。",
+    "screens": [
+      "S01",
+      "S27"
+    ],
+    "design": "目录、封面与最近一次兼容结果可缓存；页面按统一状态规则表达，实现仍按原需求验收。",
+    "owner": "Android / 目录服务",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "CAT-09",
+    "priority": "P0",
+    "source": "正式区默认优先展示本机已验证内容；实验游戏仅在用户主动进入实验区后允许尝试，并显示实际限制。本机《旷野之息》目前只能进入该层级。",
+    "screens": [
+      "S01",
+      "S20"
+    ],
+    "design": "正式区默认优先展示本机已验证内容；页面按统一状态规则表达，实现仍按原需求验收。",
+    "owner": "Android / 目录服务",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "CAT-10",
+    "priority": "P1",
+    "source": "支持收藏、更多排序、最近搜索和后续个性化入口；不采集与这些功能无关的设备或其他 App 使用信息。",
+    "screens": [
+      "S01",
+      "S02"
+    ],
+    "design": "P1 收藏/个性化不新增 P0 页面；目录模型保留扩展，具体功能后续另行设计。",
+    "owner": "Android / 目录服务",
+    "status": "design mapped; not implementation verified",
+    "phase": "P1 deferred"
+  },
+  {
+    "requirement": "DL-01",
+    "priority": "P0",
+    "source": "点击下载先检查内容访问资格、本机支持、App/模块版本和可用空间；通过后建立唯一持久化任务。失败给出可执行原因，不创建注定不能启动的正式任务。",
+    "screens": [
+      "S03",
+      "S04"
+    ],
+    "design": "点击下载先检查内容访问资格、本机支持、App/模块版本和可用空间；页面按统一状态规则表达，实现仍按原需求验收。",
+    "owner": "Android / 传输调度",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "DL-02",
+    "priority": "P0",
+    "source": "下载前显示下载量、安装后大小、当前还需可用空间；默认仅 Wi-Fi / 非计费网络。首次使用移动网络或计费网络需要用户明确选择，重试不重复询问同一任务已确认的选择。",
+    "screens": [
+      "S04",
+      "S19"
+    ],
+    "design": "下载前显示下载量、安装后大小、当前还需可用空间；页面按统一状态规则表达，实现仍按原需求验收。",
+    "owner": "Android / 传输调度",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "DL-03",
+    "priority": "P0",
+    "source": "展示已下载字节、总字节、百分比、速度和剩余时间估计；未知总量时显示已下载量与当前阶段。速度和 ETA 不稳定时不展示伪精确值。",
+    "screens": [
+      "S05"
+    ],
+    "design": "展示已下载字节、总字节、百分比、速度和剩余时间估计；页面按统一状态规则表达，实现仍按原需求验收。",
+    "owner": "Android / 传输调度",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "DL-04",
+    "priority": "P0",
+    "source": "支持暂停和继续；已验证完成的分段保留。停止按钮和通知操作对应同一个任务，重复操作保持幂等。",
+    "screens": [
+      "S05"
+    ],
+    "design": "支持暂停和继续；页面按统一状态规则表达，实现仍按原需求验收。",
+    "owner": "Android / 传输调度",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "DL-05",
+    "priority": "P0",
+    "source": "进程被回收或设备重启后，任务记录和已验证分段可恢复。系统不允许后台立即继续时显示等待用户继续；不承诺所有厂商手机都能永久后台下载。",
+    "screens": [
+      "S05",
+      "S27"
+    ],
+    "design": "进程被回收或设备重启后，任务记录和已验证分段可恢复；页面按统一状态规则表达，实现仍按原需求验收。",
+    "owner": "Android / 传输调度",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "DL-06",
+    "priority": "P0",
+    "source": "采用 HTTP Range 与稳定对象标识恢复；ETag、长度或版本改变时不得拼接两份内容。链接过期可续签同一不可变对象，已校验分段继续复用。",
+    "screens": [
+      "S05"
+    ],
+    "design": "界面只表达恢复阶段和原因；Range/ETag/签名身份由传输层验证。",
+    "owner": "Android / 传输调度",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "DL-07",
+    "priority": "P0",
+    "source": "一款游戏只存在一个活动下载任务；首版同时下载 1 款，其余排队。多次点击下载、任务恢复和列表刷新不增加重复连接或副本。",
+    "screens": [
+      "S04",
+      "S05"
+    ],
+    "design": "一款游戏只存在一个活动下载任务；页面按统一状态规则表达，实现仍按原需求验收。",
+    "owner": "Android / 传输调度",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "DL-08",
+    "priority": "P0",
+    "source": "取消任务需说明将删除未完成文件；仅清理该任务拥有且未被其他任务引用的临时数据，不影响已安装版本或存档。",
+    "screens": [
+      "S05"
+    ],
+    "design": "取消任务需说明将删除未完成文件；页面按统一状态规则表达，实现仍按原需求验收。",
+    "owner": "Android / 传输调度",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "DL-09",
+    "priority": "P0",
+    "source": "断网、超时、429 和服务端短暂失败可以有限退避重试；鉴权失效、空间不足、签名错误等分别处理。达到重试上限后等待用户，不无限消耗流量。",
+    "screens": [
+      "S05",
+      "S27"
+    ],
+    "design": "断网、超时、429 和服务端短暂失败可以有限退避重试；页面按统一状态规则表达，实现仍按原需求验收。",
+    "owner": "Android / 传输调度",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "DL-10",
+    "priority": "P0",
+    "source": "下载大包按适用 Android 版本接入系统允许的用户主动传输机制与可见状态；系统暂停、用户停止、通知受限都能恢复为一致任务状态。",
+    "screens": [
+      "S05",
+      "S25"
+    ],
+    "design": "下载大包按适用 Android 版本接入系统允许的用户主动传输机制与可见状态；页面按统一状态规则表达，实现仍按原需求验收。",
+    "owner": "Android / 传输调度",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "DL-11",
+    "priority": "P0",
+    "source": "Wi-Fi 转到移动网络、网络失去互联网或计费属性改变时重新检查已授权网络策略；默认暂停，不悄悄继续消耗移动数据。",
+    "screens": [
+      "S05",
+      "S19"
+    ],
+    "design": "Wi-Fi 转到移动网络、网络失去互联网或计费属性改变时重新检查已授权网络策略；页面按统一状态规则表达，实现仍按原需求验收。",
+    "owner": "Android / 传输调度",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "DL-12",
+    "priority": "P0",
+    "source": "下载过程中持续检查剩余空间和写入错误；空间不足时保存可恢复进度，并给出清理入口，不把半包标成已完成。",
+    "screens": [
+      "S05",
+      "S14"
+    ],
+    "design": "下载过程中持续检查剩余空间和写入错误；页面按统一状态规则表达，实现仍按原需求验收。",
+    "owner": "Android / 传输调度",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "DL-13",
+    "priority": "P0",
+    "source": "校验、解包、安装准备与联网下载显示为不同阶段。文件到 100% 时只表示下载阶段结束；准备结束前不能变成“开始游戏”。",
+    "screens": [
+      "S05",
+      "S06"
+    ],
+    "design": "校验、解包、安装准备与联网下载显示为不同阶段；页面按统一状态规则表达，实现仍按原需求验收。",
+    "owner": "Android / 传输调度",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "DL-14",
+    "priority": "P0",
+    "source": "用户进入游戏时默认暂停其他资源下载与安装重任务，避免争夺 I/O、内存和温度预算；退出后按网络和用户偏好恢复，不覆盖游戏正在使用的文件。",
+    "screens": [
+      "S08",
+      "S09",
+      "S05"
+    ],
+    "design": "运行期间暂停其他资源重任务，区分系统策略与用户暂停；返回后按偏好恢复。",
+    "owner": "Android / 传输调度",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "DL-15",
+    "priority": "P1",
+    "source": "支持限速、调整任务顺序和“完成后开始”；自动开始仅在 App 前台、用户主动选择且没有其他游戏运行时执行，后台完成以通知提示。",
+    "screens": [
+      "S05",
+      "S19"
+    ],
+    "design": "P1 限速/排序/完成后开始保留范围；本轮默认单下载、手动开始，无后台自动横屏。",
+    "owner": "Android / 传输调度",
+    "status": "design mapped; not implementation verified",
+    "phase": "P1 deferred"
+  },
+  {
+    "requirement": "PKG-01",
+    "priority": "P0",
+    "source": "游戏包由发布前制作链生成，包含匹配的改写模块、资源、着色器和声明信息。普通玩家下载后不承担原始 NSP/XCI 解包、密钥配置、完整着色器转换或宿主编译。",
+    "screens": [
+      "S03",
+      "S06"
+    ],
+    "design": "玩家只下载已制作包并查看准备；解包原始游戏/编译/密钥仍在受控制作链。",
+    "owner": "制作链 / 安装层",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "PKG-02",
+    "priority": "P0",
+    "source": "客户端先验证发行清单签名，再校验对象、分段和解包文件；未经验证的文件不能交给运行入口。只有哈希而没有可信清单来源，不足以证明包可信。",
+    "screens": [
+      "S06",
+      "S31"
+    ],
+    "design": "验签与完整性由安装层执行；UI 表达校验/失败，不展示密钥配置。",
+    "owner": "制作链 / 安装层",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "PKG-03",
+    "priority": "P0",
+    "source": "内容包必须声明游戏 ID、游戏版本、模块 Build ID、运行模块 ID、内容包格式、着色器格式/转换链和最低 App 要求；任一不匹配都阻止正式安装。",
+    "screens": [
+      "S03",
+      "S06"
+    ],
+    "design": "内容包必须声明游戏 ID、游戏版本、模块 Build ID、运行模块 ID、内容包格式、着色器格式/转换链和最低 App 要求；页面按统一状态规则表达，实现仍按原需求验收。",
+    "owner": "制作链 / 安装层",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "PKG-04",
+    "priority": "P0",
+    "source": "解包采用受控临时目录，限制路径、文件数量、展开大小和链接类型；拒绝越界路径、重复冲突、非法链接和超过声明范围的内容。失败时不污染已有安装。",
+    "screens": [
+      "S06"
+    ],
+    "design": "安全解包由安装层处理，失败保持旧有效版与存档，页面提供恢复。",
+    "owner": "制作链 / 安装层",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "PKG-05",
+    "priority": "P0",
+    "source": "下载、解包和旧版并存的峰值按当前真实字节数计算；再次执行空间检查。手机 `/data` 与 `/sdcard` 可能是同一卷的视图，不能相加当作两份容量。",
+    "screens": [
+      "S04",
+      "S14"
+    ],
+    "design": "下载、解包和旧版并存的峰值按当前真实字节数计算；页面按统一状态规则表达，实现仍按原需求验收。",
+    "owner": "制作链 / 安装层",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "PKG-06",
+    "priority": "P0",
+    "source": "安装使用不可变版本目录和提交记录。文件完整落盘并完成标记后，才能切换有效版本；任意阶段断电或进程退出，都能恢复为旧版可用或新版本待恢复。",
+    "screens": [
+      "S06",
+      "S26"
+    ],
+    "design": "不可变目录/提交记录由安装层实现；准备未完成不能出现普通开始。",
+    "owner": "制作链 / 安装层",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "PKG-07",
+    "priority": "P0",
+    "source": "每个游戏的资源、改写模块、存档、设置、缓存、日志和临时文件分别命名空间隔离；目录路径由受信任的客户端规则生成，不能直接接受服务端任意绝对路径。",
+    "screens": [
+      "S13",
+      "S15",
+      "S30"
+    ],
+    "design": "每个游戏的资源、改写模块、存档、设置、缓存、日志和临时文件分别命名空间隔离；页面按统一状态规则表达，实现仍按原需求验收。",
+    "owner": "制作链 / 安装层",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "PKG-08",
+    "priority": "P0",
+    "source": "首次创建本机图形缓存可显示独立准备状态，后续复用缓存；缓存键包含对应运行模块、图形驱动、着色器与系统条件。损坏缓存可重建，不能要求用户重下完整游戏才能清缓存。",
+    "screens": [
+      "S06",
+      "S13"
+    ],
+    "design": "首次创建本机图形缓存可显示独立准备状态，后续复用缓存；页面按统一状态规则表达，实现仍按原需求验收。",
+    "owner": "制作链 / 安装层",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "PKG-09",
+    "priority": "P0",
+    "source": "安装完成写入可核对的本地记录。启动时做关键文件和元数据快速检查，完整校验提供按需修复入口；文件缺失或损坏显示“需要修复”，不保留可启动的假状态。",
+    "screens": [
+      "S08",
+      "S31"
+    ],
+    "design": "安装完成写入可核对的本地记录；页面按统一状态规则表达，实现仍按原需求验收。",
+    "owner": "制作链 / 安装层",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "RUN-01",
+    "priority": "P0",
+    "source": "开始前再次检查游戏、包版本、模块、设备、有效安装和当前会话；以一次性会话描述启动本次游戏，不依赖上一次遗留的全局路径。",
+    "screens": [
+      "S03",
+      "S08"
+    ],
+    "design": "开始前再次检查游戏、包版本、模块、设备、有效安装和当前会话；页面按统一状态规则表达，实现仍按原需求验收。",
+    "owner": "Android / 原生运行层",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "RUN-02",
+    "priority": "P0",
+    "source": "游戏在同一 App 的运行界面中呈现，使用独立普通 Android 进程；一次只允许一个游戏会话。主进程负责大厅和任务，不被原生游戏退出一并结束。",
+    "screens": [
+      "S08",
+      "S09"
+    ],
+    "design": "同 App 独立游戏进程与一次一会话；原型只展示横屏边界。",
+    "owner": "Android / 原生运行层",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "RUN-03",
+    "priority": "P0",
+    "source": "启动阶段区分检查资源、加载游戏、准备画面和进入游戏；原生层返回明确事件。大厅检查与准备页保持竖屏，仅进入游戏运行界面时切横屏；退出、取消或启动失败返回大厅恢复竖屏和原页面。超时可返回、查看帮助或重试；首帧出来不自动等于用户已能操作。",
+    "screens": [
+      "S08",
+      "S09",
+      "S12"
+    ],
+    "design": "启动阶段区分检查资源、加载游戏、准备画面和进入游戏；页面按统一状态规则表达，实现仍按原需求验收。",
+    "owner": "Android / 原生运行层",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "RUN-04",
+    "priority": "P0",
+    "source": "复用并适配触屏手柄，支持位置、尺寸、透明度与每游戏保存的布局；多点触控可同时移动和按键，安全区域不被系统导航遮挡。",
+    "screens": [
+      "S17",
+      "S09"
+    ],
+    "design": "复用并适配触屏手柄，支持位置、尺寸、透明度与每游戏保存的布局；页面按统一状态规则表达，实现仍按原需求验收。",
+    "owner": "Android / 原生运行层",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "RUN-05",
+    "priority": "P0",
+    "source": "标注并验证游戏所需的输入方式；对已声明支持的物理手柄，连接、断开和切到触屏时释放旧按键，不出现持续移动。蓝牙或 USB 手柄不成为触屏可玩的前置要求。",
+    "screens": [
+      "S17",
+      "S20"
+    ],
+    "design": "标注并验证游戏所需的输入方式；页面按统一状态规则表达，实现仍按原需求验收。",
+    "owner": "Android / 原生运行层",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "RUN-06",
+    "priority": "P0",
+    "source": "暂停菜单可返回游戏、调整已验证的画质/帧率目标、控制布局、音量和返回大厅。画质目标只表示上限或设置，不承诺所有设备达到该帧率。",
+    "screens": [
+      "S10",
+      "S17"
+    ],
+    "design": "暂停菜单可返回游戏、调整已验证的画质/帧率目标、控制布局、音量和返回大厅；页面按统一状态规则表达，实现仍按原需求验收。",
+    "owner": "Android / 原生运行层",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "RUN-07",
+    "priority": "P0",
+    "source": "返回大厅前提示未由游戏保存的进度可能丢失；运行器只保证已经提交的存档落盘，不承诺任意时刻强制自动存档。正常退出有完成通知和超时恢复。",
+    "screens": [
+      "S11"
+    ],
+    "design": "返回大厅前提示未由游戏保存的进度可能丢失；页面按统一状态规则表达，实现仍按原需求验收。",
+    "owner": "Android / 原生运行层",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "RUN-08",
+    "priority": "P0",
+    "source": "A→大厅→B→大厅→A 在新游戏进程中完成，清理旧会话的窗口、音频、输入和进程资源；禁止直接复用已初始化的原生全局状态。",
+    "screens": [
+      "S07",
+      "S09",
+      "S11"
+    ],
+    "design": "设计规定退出恢复和再次选择；真实 A→B→A 与原生资源释放仍须真机验收。",
+    "owner": "Android / 原生运行层",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "RUN-09",
+    "priority": "P0",
+    "source": "切后台时暂停或按已验证策略挂起画面、声音和输入。进程尚存时可恢复；被系统回收后重新启动游戏并读取最近已提交存档，不伪装成支持即时快照。",
+    "screens": [
+      "S09",
+      "S10",
+      "S12"
+    ],
+    "design": "切后台时暂停或按已验证策略挂起画面、声音和输入；页面按统一状态规则表达，实现仍按原需求验收。",
+    "owner": "Android / 原生运行层",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "RUN-10",
+    "priority": "P0",
+    "source": "游戏进程崩溃或退出后，大厅能恢复或重新构建，显示该会话失败原因与反馈入口；重试最多由用户主动触发，不无限循环拉起。",
+    "screens": [
+      "S12"
+    ],
+    "design": "游戏进程崩溃或退出后，大厅能恢复或重新构建，显示该会话失败原因与反馈入口；页面按统一状态规则表达，实现仍按原需求验收。",
+    "owner": "Android / 原生运行层",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "RUN-11",
+    "priority": "P0",
+    "source": "来电、耳机变化、锁屏、亮暗模式按应用/游戏支持范围处理；手机旋转不能让非游戏页面提前进入横屏，方向切换不能重复创建会话；暂停时不持续后台播放。大厅配置变更不能误触发正在运行游戏的全进程退出。",
+    "screens": [
+      "S08",
+      "S12",
+      "S17"
+    ],
+    "design": "来电、耳机变化、锁屏、亮暗模式按应用/游戏支持范围处理；页面按统一状态规则表达，实现仍按原需求验收。",
+    "owner": "Android / 原生运行层",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "RUN-12",
+    "priority": "P1",
+    "source": "陀螺仪、振动、外接屏、触控直传等按游戏能力声明逐步支持；游戏详情不能把未验证功能显示为已支持。",
+    "screens": [
+      "S17",
+      "S20"
+    ],
+    "design": "P1 陀螺仪/振动/外接屏按已验证声明扩展，本轮不添加未验证开关。",
+    "owner": "Android / 原生运行层",
+    "status": "design mapped; not implementation verified",
+    "phase": "P1 deferred"
+  },
+  {
+    "requirement": "SAVE-01",
+    "priority": "P0",
+    "source": "存档按游戏 ID、玩家本地档案和存档格式隔离；只有同一逻辑游戏可在兼容版本间共享。游戏 B 不能读取游戏 A 的存档目录。",
+    "screens": [
+      "S15"
+    ],
+    "design": "存档按游戏 ID、玩家本地档案和存档格式隔离；页面按统一状态规则表达，实现仍按原需求验收。",
+    "owner": "Android / 存档层",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "SAVE-02",
+    "priority": "P0",
+    "source": "游戏内保存后，等待已提交事务完成；正常退出、重开 App 与重新进入游戏后验证读档。本机现有《旷野之息》只验证到写入，读档仍需补测。",
+    "screens": [
+      "S11",
+      "S15"
+    ],
+    "design": "展示最近已提交事实，不把现有写档证据等同真实读档通过。",
+    "owner": "Android / 存档层",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "SAVE-03",
+    "priority": "P0",
+    "source": "删除已安装游戏资源默认保留存档、控制布局和必要设置；重新下载后可继续使用。单独“删除存档”需展示游戏名和影响，并再次确认。",
+    "screens": [
+      "S30",
+      "S13"
+    ],
+    "design": "删除已安装游戏资源默认保留存档、控制布局和必要设置；页面按统一状态规则表达，实现仍按原需求验收。",
+    "owner": "Android / 存档层",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "SAVE-04",
+    "priority": "P0",
+    "source": "提供导出已提交存档至系统选择的持久位置，以及导入相应游戏存档。导入前验证格式、大小与游戏标识，并备份旧档；不在游戏运行中直接替换存档。",
+    "screens": [
+      "S15",
+      "S16"
+    ],
+    "design": "提供导出已提交存档至系统选择的持久位置，以及导入相应游戏存档；页面按统一状态规则表达，实现仍按原需求验收。",
+    "owner": "Android / 存档层",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "SAVE-05",
+    "priority": "P0",
+    "source": "内容或 App 更新前保留可恢复的存档版本；回退内容版本前检查存档兼容。新版存档不能被未声明兼容的旧版直接覆盖或静默降级。",
+    "screens": [
+      "S16",
+      "S26",
+      "S31"
+    ],
+    "design": "内容或 App 更新前保留可恢复的存档版本；页面按统一状态规则表达，实现仍按原需求验收。",
+    "owner": "Android / 存档层",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "SAVE-06",
+    "priority": "P0",
+    "source": "清图形缓存、清下载临时文件、卸载游戏资源、重置设置、删除存档分成不同动作，并分别显示可释放空间和影响范围。不能以“修复游戏”为由清掉存档。",
+    "screens": [
+      "S13",
+      "S14",
+      "S30"
+    ],
+    "design": "清图形缓存、清下载临时文件、卸载游戏资源、重置设置、删除存档分成不同动作，并分别显示可释放空间和影响范围；页面按统一状态规则表达，实现仍按原需求验收。",
+    "owner": "Android / 存档层",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "SAVE-07",
+    "priority": "P1",
+    "source": "账号和云存档后续加入；同步需有游戏/版本/内容哈希、修改时间与冲突副本。离线可保存，联网冲突由用户选择，不默认用最后上传者覆盖本地。",
+    "screens": [
+      "S15"
+    ],
+    "design": "P1 账号/云存档与冲突处理保留原需求，本轮不增加云同步或登录入口。",
+    "owner": "Android / 存档层",
+    "status": "design mapped; not implementation verified",
+    "phase": "P1 deferred"
+  },
+  {
+    "requirement": "SAVE-08",
+    "priority": "P0",
+    "source": "说明卸载整个 App 会删除应用私有数据；App 内部导出的文件不是卸载保护备份。旧单游戏测试 App 的存档通过其导出入口迁移，统一 App 不假定能跨包名读取其私有目录。",
+    "screens": [
+      "S15",
+      "S23"
+    ],
+    "design": "说明卸载整个 App 会删除应用私有数据；页面按统一状态规则表达，实现仍按原需求验收。",
+    "owner": "Android / 存档层",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "UPD-01",
+    "priority": "P0",
+    "source": "发现更新时分别说明“App 更新”和“游戏内容更新”。运行模块或驱动随首版 APK 更新；新内容必须和该 App 实际包含的模块匹配。",
+    "screens": [
+      "S03",
+      "S22"
+    ],
+    "design": "发现更新时分别说明“App 更新”和“游戏内容更新”；页面按统一状态规则表达，实现仍按原需求验收。",
+    "owner": "Android / 发布服务",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "UPD-02",
+    "priority": "P0",
+    "source": "正在运行的内容版本保持固定；下载/准备新版可以排队，但不得覆盖旧版正在使用的文件。有效版本切换在会话结束后进行。",
+    "screens": [
+      "S26",
+      "S13"
+    ],
+    "design": "正在运行的内容版本保持固定；页面按统一状态规则表达，实现仍按原需求验收。",
+    "owner": "Android / 发布服务",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "UPD-03",
+    "priority": "P0",
+    "source": "新版准备失败仍可使用未撤回的旧版；安装和首启健康检查结束前保留已承诺的恢复条件，不因空间紧张偷偷删除唯一可运行版本。",
+    "screens": [
+      "S26",
+      "S31"
+    ],
+    "design": "新版准备失败仍可使用未撤回的旧版；页面按统一状态规则表达，实现仍按原需求验收。",
+    "owner": "Android / 发布服务",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "UPD-04",
+    "priority": "P0",
+    "source": "自动回退只适用于已声明内容与存档兼容的情况；不兼容时保留备份并提供说明，不把“回退引擎”当作任意存档格式都可读取。",
+    "screens": [
+      "S26",
+      "S16"
+    ],
+    "design": "自动回退只适用于已声明内容与存档兼容的情况；页面按统一状态规则表达，实现仍按原需求验收。",
+    "owner": "Android / 发布服务",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "UPD-05",
+    "priority": "P0",
+    "source": "官网渠道提供签名一致、versionCode 递增的 App 更新；显示版本说明和大小，由系统完成安装确认，不承诺普通 App 可静默安装或无感降级 APK。",
+    "screens": [
+      "S22"
+    ],
+    "design": "官网渠道提供签名一致、versionCode 递增的 App 更新；页面按统一状态规则表达，实现仍按原需求验收。",
+    "owner": "Android / 发布服务",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "UPD-06",
+    "priority": "P0",
+    "source": "下架和紧急阻断分开：普通下架停止新下载；确认严重故障的特定版本可在下一次同步后阻止再次启动并给恢复入口。不远程删除玩家存档；离线设备不能保证即时收到服务端撤回。",
+    "screens": [
+      "S03",
+      "S26"
+    ],
+    "design": "下架和紧急阻断分开：普通下架停止新下载；页面按统一状态规则表达，实现仍按原需求验收。",
+    "owner": "Android / 发布服务",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "UPD-07",
+    "priority": "P0",
+    "source": "更新目录或配置失败不会影响已经安装、允许离线且没有本地阻断记录的游戏启动。要求联网的特殊内容在详情中明确说明有效条件。",
+    "screens": [
+      "S03",
+      "S27"
+    ],
+    "design": "更新目录或配置失败不会影响已经安装、允许离线且没有本地阻断记录的游戏启动；页面按统一状态规则表达，实现仍按原需求验收。",
+    "owner": "Android / 发布服务",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "UPD-08",
+    "priority": "P1",
+    "source": "支持按设备组、App 版本与测试资格灰度发布，以及后续按文件/分段增量修复；首版使用完整包更新，不假装已具备节省流量的二进制差分。",
+    "screens": [
+      "S26"
+    ],
+    "design": "P1 灰度/增量保留发行扩展；当前说明完整包更新，不承诺差分节省量。",
+    "owner": "Android / 发布服务",
+    "status": "design mapped; not implementation verified",
+    "phase": "P1 deferred"
+  },
+  {
+    "requirement": "OPS-01",
+    "priority": "P0",
+    "source": "后台编辑游戏 ID、名称与别名、类型、介绍、封面截图、语言、控制方式及已知限制；玩家目录和这些信息由同一份发布数据生成。",
+    "screens": [
+      "S01",
+      "S03"
+    ],
+    "design": "运营提供真实元数据和素材；玩家页消费公开字段，管理台沿原需求实施。",
+    "owner": "运营 / 发布 / 后端",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "OPS-02",
+    "priority": "P0",
+    "source": "每个可下载版本登记内容来源、可分发范围、发行区域和必要凭据引用；未确认范围的版本不能进入公开发布状态。材料不作为玩家公开接口返回。",
+    "screens": [
+      "S01",
+      "S03"
+    ],
+    "design": "发行资格由服务端决定可见/下载范围，内部材料不出现在玩家字段。",
+    "owner": "运营 / 发布 / 后端",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "OPS-03",
+    "priority": "P0",
+    "source": "发布制作保留输入版本、模块 Build ID、核心提交、profile、补丁、着色器转换链和构建参数；复用现有 porter，但新增可追溯的统一内容包步骤。",
+    "screens": [
+      "S03",
+      "S06"
+    ],
+    "design": "制作可追溯性属制作/发布交付；玩家仅展示正常版本和必要错误。",
+    "owner": "运营 / 发布 / 后端",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "OPS-04",
+    "priority": "P0",
+    "source": "上传对象存储后完成真实下载、摘要和解包验证，生成签名发行清单。对象采用不可变版本地址，禁止原地替换一个已发布 release 的字节内容。",
+    "screens": [
+      "S04",
+      "S06"
+    ],
+    "design": "不可变对象、真实上传后下载与签名由发布链验证；玩家确认页消费可信发行信息。",
+    "owner": "运营 / 发布 / 后端",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "OPS-05",
+    "priority": "P0",
+    "source": "一条正式可玩记录必须附设备、系统、GPU、驱动摘要、App/模块/包版本、测试时长、操作/存档结果和帧时间证据；实验和未验证结果不能提升为正式可玩。",
+    "screens": [
+      "S03",
+      "S20"
+    ],
+    "design": "本机支持页展示精确证据范围；真实兼容证据由原生测试与运营提供。",
+    "owner": "运营 / 发布 / 后端",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "OPS-06",
+    "priority": "P0",
+    "source": "流程至少有草稿、制作中、待验证、内测、正式发布、下架；只有所需审核与依赖全部通过后才上架。核心候选模块未进入 APK 时不得对旧 App 开放。",
+    "screens": [
+      "S01",
+      "S03"
+    ],
+    "design": "发布/撤回状态驱动目录和详情；不在玩家设置中暴露发布按钮。",
+    "owner": "运营 / 发布 / 后端",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "OPS-07",
+    "priority": "P0",
+    "source": "支持内容范围、渠道与测试资格控制，以及单版本撤回和新下载阻断；管理员和运营权限分离，普通玩家接口不能执行发布或签名。",
+    "screens": [
+      "S01",
+      "S03"
+    ],
+    "design": "服务端资格/地区/撤回控制驱动玩家状态；运营权限与玩家身份分离。",
+    "owner": "运营 / 发布 / 后端",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "OPS-08",
+    "priority": "P0",
+    "source": "可查看目录、下载会话、失败原因、内容 CDN 可用性和发布状态；区分玩家取消、网络失败、安装失败和运行失败，避免把它们计为同一种故障。",
+    "screens": [
+      "S05",
+      "S12",
+      "S21"
+    ],
+    "design": "玩家故障分类与反馈入口统一；后台监控和工单仍属服务端交付。",
+    "owner": "运营 / 发布 / 后端",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "OPS-09",
+    "priority": "P0",
+    "source": "有内容反馈和问题工单入口；诊断由用户主动附加，包含脱敏的版本与错误码，不上传密钥、原始游戏程序、完整存档或其他应用数据。",
+    "screens": [
+      "S21",
+      "S29"
+    ],
+    "design": "表单、脱敏诊断预览/选择、真实受理后成功页；不上传原始输入。",
+    "owner": "运营 / 发布 / 后端",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "OPS-10",
+    "priority": "P0",
+    "source": "发布、下架、权限修改和紧急阻断留审计记录；签名密钥与私有内容输入不进入 Git。原项目许可与第三方组件许可资料随发行维护。",
+    "screens": [
+      "S23"
+    ],
+    "design": "许可/来源可阅读；后台审计与私钥保管不交给玩家页面。",
+    "owner": "运营 / 发布 / 后端",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "NFR-01",
+    "priority": "P0",
+    "source": "大厅在参考机有缓存时冷启动到可交互的 p95 目标不超过 3 秒；网络请求不能阻塞主线程。正式目录第一页正常网络下可见内容的 p95 目标不超过 2 秒，服务端响应与网络时间分别记录。",
+    "screens": [
+      "S00",
+      "S01"
+    ],
+    "design": "页面采用缓存、占位和渐进加载；3 秒等性能目标须原生参考机测量。",
+    "owner": "对应工程与测试负责人",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "NFR-02",
+    "priority": "P0",
+    "source": "大包下载和解包流式处理，内存不随包体大小线性增长；文件长度、进度和空间计算使用 64 位。必须覆盖超过 4 GiB、超过 10 GiB 和约四万个文件的真实规模。",
+    "screens": [
+      "S05",
+      "S06",
+      "S14"
+    ],
+    "design": "UI 按字节格式化与阶段呈现；大包流式内存和 >4/10GiB 测试由任务层执行。",
+    "owner": "对应工程与测试负责人",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "NFR-03",
+    "priority": "P0",
+    "source": "目录核心 API 月可用率建议目标 99.5%，不含已公告维护；没有监控周期前不声称已达标。服务故障时已安装的离线内容仍可使用。",
+    "screens": [
+      "S01",
+      "S27"
+    ],
+    "design": "离线/服务异常有降级设计；服务可用率须实际监控周期验证。",
+    "owner": "对应工程与测试负责人",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "NFR-04",
+    "priority": "P0",
+    "source": "大厅稳定性和原生游戏稳定性分别计量；正式候选至少完成规定故障恢复用例和参考机 30 分钟游玩测试，不以一次首帧或测试脚本通过替代。",
+    "screens": [
+      "S08",
+      "S12",
+      "S21"
+    ],
+    "design": "运行失败与诊断有页面；崩溃率和持续真游戏验收仍按原计划。",
+    "owner": "对应工程与测试负责人",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "NFR-05",
+    "priority": "P0",
+    "source": "每个正式可玩设备组合有帧率、帧时间、游戏速度和温度证据；测量方法与建议门槛见第 17 节。未通过性能门槛不能标成该机型“已验证可玩”。",
+    "screens": [
+      "S20"
+    ],
+    "design": "本机支持不伪造帧率；真实性能分级由设备/版本证据决定。",
+    "owner": "对应工程与测试负责人",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "NFR-06",
+    "priority": "P0",
+    "source": "采用 HTTPS、发行清单验签、完整性校验和后台身份验证。发布私钥、prod.keys、APK 签名材料不下发到玩家端；用户提交的诊断先脱敏，上传由用户主动选择。",
+    "screens": [
+      "S04",
+      "S06",
+      "S21",
+      "S24"
+    ],
+    "design": "资格、校验和诊断选择有清楚状态；HTTPS/验签/密钥保护由工程实施。",
+    "owner": "对应工程与测试负责人",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "NFR-07",
+    "priority": "P0",
+    "source": "用户界面、下载、安装、版本与会话数据有统一事实来源和可恢复事务记录；进程退出、设备重启与存储中断不会把半成品标成可玩。",
+    "screens": [
+      "S05",
+      "S06",
+      "S08"
+    ],
+    "design": "同一对象各入口同源；进程/文件/数据库恢复由端侧事务和状态层实现。",
+    "owner": "对应工程与测试负责人",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "NFR-08",
+    "priority": "P0",
+    "source": "兼容矩阵覆盖目标 Android 版本、GPU/驱动、内存条件、触屏/手柄、横竖屏与网络异常；基于实际能力和证据放行。现有打包器支持安装的系统版本不能直接作为覆盖承诺。",
+    "screens": [
+      "S17",
+      "S20"
+    ],
+    "design": "规定窗口/字体/输入/方向矩阵；真实系统、GPU 和游戏组合单独验证。",
+    "owner": "对应工程与测试负责人",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "NFR-09",
+    "priority": "P0",
+    "source": "工程沿用 NsA-core、明确上游来源和组件许可；所有本地新增文件位于指定路径，不用本地虚拟化。产品、原生适配和服务端变更分别有可追踪版本，测试记录不泄露私人设备标识。",
+    "screens": [
+      "S23"
+    ],
+    "design": "文档与设计资产进入指定仓库；本轮使用本机原生工具且浏览器检查后关闭。",
+    "owner": "对应工程与测试负责人",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  },
+  {
+    "requirement": "NFR-10",
+    "priority": "P0",
+    "source": "有下载、准备、启动、运行和返回大厅各阶段的日志与指标；记录错误码和精确版本组合。设备本地日志建议滚动上限 50 MB / 7 天，诊断服务建议 30 天保留期，作为待确认运营默认值。",
+    "screens": [
+      "S21",
+      "S24"
+    ],
+    "design": "阶段/原因清楚，诊断由用户选择；容量/保留与服务指标按真实工程实现。",
+    "owner": "对应工程与测试负责人",
+    "status": "design mapped; not implementation verified",
+    "phase": "P0 handoff"
+  }
+]

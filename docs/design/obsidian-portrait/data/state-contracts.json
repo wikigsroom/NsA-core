@@ -1,0 +1,586 @@
+[
+  {
+    "screen": "S00",
+    "state": "default",
+    "orientation": "portrait",
+    "visible": "正常显示本页数据与真实阶段。",
+    "primary": "进入大厅",
+    "recovery": "按本页规则返回或取消；不丢来源。"
+  },
+  {
+    "screen": "S00",
+    "state": "offline",
+    "orientation": "portrait",
+    "visible": "显示离线与缓存时间；无缓存使用明确空状态。",
+    "primary": "重试 / 我的游戏",
+    "recovery": "联网后重试，已安装离线内容不被阻断。"
+  },
+  {
+    "screen": "S01",
+    "state": "default",
+    "orientation": "portrait",
+    "visible": "正常显示本页数据与真实阶段。",
+    "primary": "搜索或打开游戏详情",
+    "recovery": "按本页规则返回或取消；不丢来源。"
+  },
+  {
+    "screen": "S01",
+    "state": "loading",
+    "orientation": "portrait",
+    "visible": "显示实际加载状态，有缓存则保留已有内容。",
+    "primary": "等待，可返回",
+    "recovery": "失败转原因与重试；不清输入和旧内容。"
+  },
+  {
+    "screen": "S01",
+    "state": "offline",
+    "orientation": "portrait",
+    "visible": "显示离线与缓存时间；无缓存使用明确空状态。",
+    "primary": "重试 / 我的游戏",
+    "recovery": "联网后重试，已安装离线内容不被阻断。"
+  },
+  {
+    "screen": "S01",
+    "state": "error",
+    "orientation": "portrait",
+    "visible": "服务暂不可用，保留已有内容。",
+    "primary": "重试 / 我的游戏",
+    "recovery": "重试耗尽等待用户，不无限循环。"
+  },
+  {
+    "screen": "S02",
+    "state": "default",
+    "orientation": "portrait",
+    "visible": "正常显示本页数据与真实阶段。",
+    "primary": "查看搜索结果",
+    "recovery": "按本页规则返回或取消；不丢来源。"
+  },
+  {
+    "screen": "S02",
+    "state": "empty",
+    "orientation": "portrait",
+    "visible": "没有与当前条件相符的内容。",
+    "primary": "清除筛选 / 发现游戏 / 返回来源",
+    "recovery": "保留查询；不伪造游戏、任务或存档。"
+  },
+  {
+    "screen": "S02",
+    "state": "loading",
+    "orientation": "portrait",
+    "visible": "显示实际加载状态，有缓存则保留已有内容。",
+    "primary": "等待，可返回",
+    "recovery": "失败转原因与重试；不清输入和旧内容。"
+  },
+  {
+    "screen": "S03",
+    "state": "default",
+    "orientation": "portrait",
+    "visible": "正常显示本页数据与真实阶段。",
+    "primary": "由真实状态决定：下载/继续下载/开始/返回游戏",
+    "recovery": "按本页规则返回或取消；不丢来源。"
+  },
+  {
+    "screen": "S03",
+    "state": "installed",
+    "orientation": "portrait",
+    "visible": "有效安装、已提交记录和版本事实。",
+    "primary": "开始游戏 / 继续游戏",
+    "recovery": "启动仍需检查依赖和会话。"
+  },
+  {
+    "screen": "S03",
+    "state": "downloading",
+    "orientation": "portrait",
+    "visible": "实际已验证字节与百分比。",
+    "primary": "查看任务 / 暂停",
+    "recovery": "不能启动未准备内容。"
+  },
+  {
+    "screen": "S03",
+    "state": "unsupported",
+    "orientation": "portrait",
+    "visible": "当前设备不支持和可执行原因。",
+    "primary": "查看本机可玩游戏",
+    "recovery": "不建立注定无法运行的大包任务。"
+  },
+  {
+    "screen": "S03",
+    "state": "update_app",
+    "orientation": "portrait",
+    "visible": "缺少对应运行模块或 App 版本。",
+    "primary": "更新 App",
+    "recovery": "更新失败保留旧客户端和仍有效的内容。"
+  },
+  {
+    "screen": "S03",
+    "state": "blocked",
+    "orientation": "portrait",
+    "visible": "当前版本已知故障阻断与恢复办法。",
+    "primary": "更新 / 查看修复",
+    "recovery": "禁止普通启动；保留存档与恢复信息。"
+  },
+  {
+    "screen": "S03",
+    "state": "experimental",
+    "orientation": "portrait",
+    "visible": "实验限制、证据范围与资格说明。",
+    "primary": "查看限制",
+    "recovery": "不提升为正式可玩，资格由服务核验。"
+  },
+  {
+    "screen": "S04",
+    "state": "default",
+    "orientation": "portrait",
+    "visible": "正常显示本页数据与真实阶段。",
+    "primary": "确认下载",
+    "recovery": "按本页规则返回或取消；不丢来源。"
+  },
+  {
+    "screen": "S04",
+    "state": "metered",
+    "orientation": "portrait",
+    "visible": "本任务传输量和移动流量确认项。",
+    "primary": "明确选择后确认下载",
+    "recovery": "未明确选择前不能传输；取消不建任务。"
+  },
+  {
+    "screen": "S04",
+    "state": "no_space",
+    "orientation": "portrait",
+    "visible": "尚需释放的真实空间缺口。",
+    "primary": "管理空间",
+    "recovery": "清理后复检，不清存档换取空间。"
+  },
+  {
+    "screen": "S05",
+    "state": "default",
+    "orientation": "portrait",
+    "visible": "正常显示本页数据与真实阶段。",
+    "primary": "暂停或继续当前任务",
+    "recovery": "按本页规则返回或取消；不丢来源。"
+  },
+  {
+    "screen": "S05",
+    "state": "paused",
+    "orientation": "portrait",
+    "visible": "用户主动暂停原因与保留进度。",
+    "primary": "继续下载",
+    "recovery": "复用相同任务和可信分段。"
+  },
+  {
+    "screen": "S05",
+    "state": "wifi",
+    "orientation": "portrait",
+    "visible": "等待非计费网络与保留进度。",
+    "primary": "等待 Wi-Fi / 更改本次选择",
+    "recovery": "网络属性改变后重新检查已授权策略。"
+  },
+  {
+    "screen": "S05",
+    "state": "failed",
+    "orientation": "portrait",
+    "visible": "本阶段具体失败和已保留的数据。",
+    "primary": "重试 / 返回 / 提交问题",
+    "recovery": "不误报成功、不自动覆盖可恢复数据。"
+  },
+  {
+    "screen": "S05",
+    "state": "empty",
+    "orientation": "portrait",
+    "visible": "没有与当前条件相符的内容。",
+    "primary": "清除筛选 / 发现游戏 / 返回来源",
+    "recovery": "保留查询；不伪造游戏、任务或存档。"
+  },
+  {
+    "screen": "S06",
+    "state": "verifying",
+    "orientation": "portrait",
+    "visible": "下载完成，文件仍在校验。",
+    "primary": "查看阶段 / 返回下载中心",
+    "recovery": "开始禁用，校验错误进入可恢复失败。"
+  },
+  {
+    "screen": "S06",
+    "state": "extracting",
+    "orientation": "portrait",
+    "visible": "正在准备游戏，未登记为有效安装。",
+    "primary": "查看阶段 / 返回下载中心",
+    "recovery": "开始禁用；提交临界点按可取消性处理。"
+  },
+  {
+    "screen": "S06",
+    "state": "ready",
+    "orientation": "portrait",
+    "visible": "有效安装已经准备完成。",
+    "primary": "开始游戏",
+    "recovery": "进入启动检查，尚不自动横屏。"
+  },
+  {
+    "screen": "S06",
+    "state": "failed",
+    "orientation": "portrait",
+    "visible": "本阶段具体失败和已保留的数据。",
+    "primary": "重试 / 返回 / 提交问题",
+    "recovery": "不误报成功、不自动覆盖可恢复数据。"
+  },
+  {
+    "screen": "S07",
+    "state": "default",
+    "orientation": "portrait",
+    "visible": "正常显示本页数据与真实阶段。",
+    "primary": "继续游戏",
+    "recovery": "按本页规则返回或取消；不丢来源。"
+  },
+  {
+    "screen": "S07",
+    "state": "update",
+    "orientation": "portrait",
+    "visible": "有效旧版和可取得新版分别显示。",
+    "primary": "继续当前版本；更新为次动作",
+    "recovery": "以实际撤回和存档兼容决定能否继续。"
+  },
+  {
+    "screen": "S07",
+    "state": "blocked",
+    "orientation": "portrait",
+    "visible": "当前版本已知故障阻断与恢复办法。",
+    "primary": "更新 / 查看修复",
+    "recovery": "禁止普通启动；保留存档与恢复信息。"
+  },
+  {
+    "screen": "S08",
+    "state": "default",
+    "orientation": "portrait",
+    "visible": "正常显示本页数据与真实阶段。",
+    "primary": "取消启动或等待进入游戏",
+    "recovery": "按本页规则返回或取消；不丢来源。"
+  },
+  {
+    "screen": "S08",
+    "state": "failed",
+    "orientation": "portrait",
+    "visible": "本阶段具体失败和已保留的数据。",
+    "primary": "重试 / 返回 / 提交问题",
+    "recovery": "不误报成功、不自动覆盖可恢复数据。"
+  },
+  {
+    "screen": "S09",
+    "state": "default",
+    "orientation": "landscape",
+    "visible": "正常显示本页数据与真实阶段。",
+    "primary": "打开暂停菜单",
+    "recovery": "按本页规则返回或取消；不丢来源。"
+  },
+  {
+    "screen": "S10",
+    "state": "default",
+    "orientation": "landscape",
+    "visible": "正常显示本页数据与真实阶段。",
+    "primary": "返回游戏",
+    "recovery": "按本页规则返回或取消；不丢来源。"
+  },
+  {
+    "screen": "S11",
+    "state": "default",
+    "orientation": "landscape",
+    "visible": "正常显示本页数据与真实阶段。",
+    "primary": "返回大厅或继续游戏",
+    "recovery": "按本页规则返回或取消；不丢来源。"
+  },
+  {
+    "screen": "S12",
+    "state": "default",
+    "orientation": "portrait",
+    "visible": "正常显示本页数据与真实阶段。",
+    "primary": "重新打开",
+    "recovery": "按本页规则返回或取消；不丢来源。"
+  },
+  {
+    "screen": "S13",
+    "state": "default",
+    "orientation": "portrait",
+    "visible": "正常显示本页数据与真实阶段。",
+    "primary": "继续游戏或返回游戏",
+    "recovery": "按本页规则返回或取消；不丢来源。"
+  },
+  {
+    "screen": "S13",
+    "state": "running",
+    "orientation": "portrait",
+    "visible": "活动会话及其资源/存档占用状态。",
+    "primary": "返回游戏；查看记录",
+    "recovery": "禁止删除活动资源或导入覆盖存档。"
+  },
+  {
+    "screen": "S14",
+    "state": "default",
+    "orientation": "portrait",
+    "visible": "正常显示本页数据与真实阶段。",
+    "primary": "管理缓存或选择游戏资源",
+    "recovery": "按本页规则返回或取消；不丢来源。"
+  },
+  {
+    "screen": "S14",
+    "state": "low_space",
+    "orientation": "portrait",
+    "visible": "空间不足和可释放类别。",
+    "primary": "管理缓存 / 选择资源",
+    "recovery": "保留存档；按实际清理结果复检。"
+  },
+  {
+    "screen": "S15",
+    "state": "default",
+    "orientation": "portrait",
+    "visible": "正常显示本页数据与真实阶段。",
+    "primary": "导出备份",
+    "recovery": "按本页规则返回或取消；不丢来源。"
+  },
+  {
+    "screen": "S15",
+    "state": "empty",
+    "orientation": "portrait",
+    "visible": "没有与当前条件相符的内容。",
+    "primary": "清除筛选 / 发现游戏 / 返回来源",
+    "recovery": "保留查询；不伪造游戏、任务或存档。"
+  },
+  {
+    "screen": "S15",
+    "state": "running",
+    "orientation": "portrait",
+    "visible": "活动会话及其资源/存档占用状态。",
+    "primary": "返回游戏；查看记录",
+    "recovery": "禁止删除活动资源或导入覆盖存档。"
+  },
+  {
+    "screen": "S16",
+    "state": "default",
+    "orientation": "portrait",
+    "visible": "正常显示本页数据与真实阶段。",
+    "primary": "备份当前存档并导入",
+    "recovery": "按本页规则返回或取消；不丢来源。"
+  },
+  {
+    "screen": "S16",
+    "state": "incompatible",
+    "orientation": "portrait",
+    "visible": "备份身份或版本不匹配的原因。",
+    "primary": "返回存档页",
+    "recovery": "禁用导入，不覆盖当前存档。"
+  },
+  {
+    "screen": "S17",
+    "state": "default",
+    "orientation": "portrait",
+    "visible": "正常显示本页数据与真实阶段。",
+    "primary": "保存每游戏设置",
+    "recovery": "按本页规则返回或取消；不丢来源。"
+  },
+  {
+    "screen": "S17",
+    "state": "controller_lost",
+    "orientation": "portrait",
+    "visible": "手柄已断开并回触屏。",
+    "primary": "保存触屏设置 / 返回",
+    "recovery": "释放旧按键状态，不要求外设才能继续。"
+  },
+  {
+    "screen": "S18",
+    "state": "default",
+    "orientation": "portrait",
+    "visible": "正常显示本页数据与真实阶段。",
+    "primary": "选择设置类别",
+    "recovery": "按本页规则返回或取消；不丢来源。"
+  },
+  {
+    "screen": "S19",
+    "state": "default",
+    "orientation": "portrait",
+    "visible": "正常显示本页数据与真实阶段。",
+    "primary": "保存网络偏好",
+    "recovery": "按本页规则返回或取消；不丢来源。"
+  },
+  {
+    "screen": "S20",
+    "state": "default",
+    "orientation": "portrait",
+    "visible": "正常显示本页数据与真实阶段。",
+    "primary": "查看本机可玩游戏",
+    "recovery": "按本页规则返回或取消；不丢来源。"
+  },
+  {
+    "screen": "S20",
+    "state": "unsupported",
+    "orientation": "portrait",
+    "visible": "当前设备不支持和可执行原因。",
+    "primary": "查看本机可玩游戏",
+    "recovery": "不建立注定无法运行的大包任务。"
+  },
+  {
+    "screen": "S21",
+    "state": "default",
+    "orientation": "portrait",
+    "visible": "正常显示本页数据与真实阶段。",
+    "primary": "提交问题",
+    "recovery": "按本页规则返回或取消；不丢来源。"
+  },
+  {
+    "screen": "S21",
+    "state": "invalid",
+    "orientation": "portrait",
+    "visible": "字段旁错误并保留完整草稿。",
+    "primary": "修改后提交",
+    "recovery": "焦点到错误字段；未受理不能显示提交成功。"
+  },
+  {
+    "screen": "S22",
+    "state": "available",
+    "orientation": "portrait",
+    "visible": "当前/可用版本、更新说明与所需空间。",
+    "primary": "更新 / 下载更新",
+    "recovery": "系统安装或内容登记完成后才确认成功。"
+  },
+  {
+    "screen": "S22",
+    "state": "latest",
+    "orientation": "portrait",
+    "visible": "当前版本已是最新。",
+    "primary": "检查更新 / 返回",
+    "recovery": "网络失败不能伪装已是最新。"
+  },
+  {
+    "screen": "S22",
+    "state": "failed",
+    "orientation": "portrait",
+    "visible": "本阶段具体失败和已保留的数据。",
+    "primary": "重试 / 返回 / 提交问题",
+    "recovery": "不误报成功、不自动覆盖可恢复数据。"
+  },
+  {
+    "screen": "S23",
+    "state": "default",
+    "orientation": "portrait",
+    "visible": "正常显示本页数据与真实阶段。",
+    "primary": "查看许可与项目来源",
+    "recovery": "按本页规则返回或取消；不丢来源。"
+  },
+  {
+    "screen": "S24",
+    "state": "default",
+    "orientation": "portrait",
+    "visible": "正常显示本页数据与真实阶段。",
+    "primary": "管理诊断与本地数据",
+    "recovery": "按本页规则返回或取消；不丢来源。"
+  },
+  {
+    "screen": "S25",
+    "state": "default",
+    "orientation": "portrait",
+    "visible": "正常显示本页数据与真实阶段。",
+    "primary": "前往系统设置或按动作申请",
+    "recovery": "按本页规则返回或取消；不丢来源。"
+  },
+  {
+    "screen": "S25",
+    "state": "denied",
+    "orientation": "portrait",
+    "visible": "系统返回的通知权限拒绝状态。",
+    "primary": "前往系统设置 / 查看任务",
+    "recovery": "拒绝不阻断 App 内进度，不循环索权。"
+  },
+  {
+    "screen": "S26",
+    "state": "available",
+    "orientation": "portrait",
+    "visible": "当前/可用版本、更新说明与所需空间。",
+    "primary": "更新 / 下载更新",
+    "recovery": "系统安装或内容登记完成后才确认成功。"
+  },
+  {
+    "screen": "S26",
+    "state": "inprogress",
+    "orientation": "portrait",
+    "visible": "新版准备任务，与当前有效版分离。",
+    "primary": "查看下载任务",
+    "recovery": "不覆盖运行中资源，失败保留旧版。"
+  },
+  {
+    "screen": "S26",
+    "state": "failed",
+    "orientation": "portrait",
+    "visible": "本阶段具体失败和已保留的数据。",
+    "primary": "重试 / 返回 / 提交问题",
+    "recovery": "不误报成功、不自动覆盖可恢复数据。"
+  },
+  {
+    "screen": "S26",
+    "state": "blocked",
+    "orientation": "portrait",
+    "visible": "当前版本已知故障阻断与恢复办法。",
+    "primary": "更新 / 查看修复",
+    "recovery": "禁止普通启动；保留存档与恢复信息。"
+  },
+  {
+    "screen": "S27",
+    "state": "offline",
+    "orientation": "portrait",
+    "visible": "显示离线与缓存时间；无缓存使用明确空状态。",
+    "primary": "重试 / 我的游戏",
+    "recovery": "联网后重试，已安装离线内容不被阻断。"
+  },
+  {
+    "screen": "S27",
+    "state": "server",
+    "orientation": "portrait",
+    "visible": "服务暂不可用且没有可用目录内容。",
+    "primary": "重试 / 我的游戏",
+    "recovery": "保留本地安装、存档和可信分段。"
+  },
+  {
+    "screen": "S28",
+    "state": "default",
+    "orientation": "portrait",
+    "visible": "正常显示本页数据与真实阶段。",
+    "primary": "发现游戏",
+    "recovery": "按本页规则返回或取消；不丢来源。"
+  },
+  {
+    "screen": "S29",
+    "state": "default",
+    "orientation": "portrait",
+    "visible": "正常显示本页数据与真实阶段。",
+    "primary": "完成",
+    "recovery": "按本页规则返回或取消；不丢来源。"
+  },
+  {
+    "screen": "S30",
+    "state": "default",
+    "orientation": "portrait",
+    "visible": "正常显示本页数据与真实阶段。",
+    "primary": "删除游戏资源",
+    "recovery": "按本页规则返回或取消；不丢来源。"
+  },
+  {
+    "screen": "S30",
+    "state": "running",
+    "orientation": "portrait",
+    "visible": "活动会话及其资源/存档占用状态。",
+    "primary": "返回游戏；查看记录",
+    "recovery": "禁止删除活动资源或导入覆盖存档。"
+  },
+  {
+    "screen": "S31",
+    "state": "default",
+    "orientation": "portrait",
+    "visible": "正常显示本页数据与真实阶段。",
+    "primary": "检查文件并修复",
+    "recovery": "按本页规则返回或取消；不丢来源。"
+  },
+  {
+    "screen": "S31",
+    "state": "failed",
+    "orientation": "portrait",
+    "visible": "本阶段具体失败和已保留的数据。",
+    "primary": "重试 / 返回 / 提交问题",
+    "recovery": "不误报成功、不自动覆盖可恢复数据。"
+  }
+]
