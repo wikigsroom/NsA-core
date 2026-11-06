@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.nsa.invalid/v1/policy.schema.json",
+  "type": "object",
+  "properties": {
+    "policy_schema": {
+      "const": 1
+    },
+    "epoch": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "issued_at": {
+      "$ref": "domain.schema.json#/$defs/UtcTime"
+    },
+    "releases": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "release_id": {
+            "$ref": "domain.schema.json#/$defs/Id"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "unlisted",
+              "blocked",
+              "published"
+            ]
+          },
+          "reason_code": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 96
+          },
+          "recovery_release_id": {
+            "$ref": "domain.schema.json#/$defs/Id"
+          }
+        },
+        "required": [
+          "release_id",
+          "state",
+          "reason_code"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 0,
+      "maxItems": 10000
+    },
+    "revoked_key_ids": {
+      "type": "array",
+      "items": {
+        "$ref": "domain.schema.json#/$defs/Id"
+      },
+      "minItems": 0,
+      "maxItems": 100
+    }
+  },
+  "required": [
+    "policy_schema",
+    "epoch",
+    "issued_at",
+    "releases",
+    "revoked_key_ids"
+  ],
+  "additionalProperties": false
+}

@@ -903,6 +903,10 @@ static void present_window(vkimg_t *im, const int crop[4], double period, uint64
     VkPresentTimesInfoGOOGLE pti = {VK_STRUCTURE_TYPE_PRESENT_TIMES_INFO_GOOGLE, NULL, 1, &ptm};
     if (V.has_dtiming) pi.pNext = &pti;
     r = vkQueuePresentKHR(V.q, &pi);
+#ifdef DM_HALL_BINDING
+    extern void dm_hall_frame_presented(void);
+    if (r == VK_SUCCESS || r == VK_SUBOPTIMAL_KHR) dm_hall_frame_presented();
+#endif
     if (V.has_dtiming && r >= 0) present_time_map(ptm.presentID, ticket);
     pthread_mutex_unlock(&g_vk_queue_mu);
     if (r == VK_ERROR_OUT_OF_DATE_KHR) swap_destroy();

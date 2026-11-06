@@ -1,0 +1,21 @@
+Create ONE polished high-fidelity DARK-THEME full-screen Android game-lobby HOME screenshot, PORTRAIT 9:16, tall smartphone aspect ratio 1080 wide by 1920 high. NEVER landscape. Single finished app page fills the entire image edge to edge. NOT a presentation board, collage, contact sheet or multiple screens. No phone frame, hardware, hands, perspective mockup, external heading, variant label, watermark or annotation.
+
+HIGHEST-PRIORITY CLIENT REVISION: DEFAULT PORTRAIT. Every non-game screen (home, discovery, game details, downloads, preparation, settings) stays portrait. Only after launching a game and entering its actual running view does the app switch to landscape; returning to the lobby restores portrait. This image shows ONLY THE PORTRAIT LOBBY. Do not illustrate rotation, landscape gameplay, a flow diagram or a second screen. Use a vertical composition designed natively for one-handed smartphone use, not a squeezed horizontal dashboard. Bottom navigation has exactly four destinations.
+
+DARK THEME: the entire UI has a convincing DARK tone. Background, navigation, header, cards and panels all use the deep colors specified below. At least 80% of UI surface area is dark. No white page, pale backgrounds, pastel panels, milky glass or broad light bands. Near-white is for readable TEXT only. Use restrained accent colors for focus and the primary button. Colorful original cover illustrations stay inside tiles; do not brighten surrounding UI. It must immediately read as a premium nighttime console menu.
+
+Product name exactly "NsA". Chinese-speaking users find games, download and play in one Android app. This is the NON-GAME lobby: cover art, menus and launch/download controls only. No gameplay, HUD, joystick overlay, engineering settings or character outside a card. Borrow the readable hierarchy, unmistakable focus and convenient navigation of Nintendo Switch 2 menus, with original NsA branding and custom icons. No Nintendo, Switch, eShop or their logos. No shopping website or SaaS dashboard.
+
+IDENTICAL FUNCTIONAL CONTENT across the five variants:
+- NsA, a small original player avatar and 玩家; restrained top-right time 19:40, Wi-Fi and battery.
+- Page title 我的游戏 and a clean 搜索游戏 entry.
+- Selected game 远野回声, 已安装, 今天 18:32. One unmistakable primary 继续游戏 button, secondary 管理游戏.
+- Other games 海岛工坊 and 像素远征 are installed. 星环漫游 is downloading with exact 下载中 64% and a visible 64% progress bar. No play action for an incomplete download.
+- Exactly four main navigation destinations: 发现游戏 / 我的游戏 / 下载 / 设置. 我的游戏 is active; 下载 has small badge 1. Follow the variant's navigation placement.
+- No ads, prices, ratings, social feed, subscription banners, analytics charts or extra features.
+
+Four ORIGINAL fictional cover illustrations: 远野回声 = tiny traveler in a blue-green valley under open sky; 海岛工坊 = sunny turquoise island with lighthouse; 像素远征 = warm-orange pixel-art adventure scenery; 星环漫游 = violet outer space, luminous planet ring and tiny spacecraft. Match selected cover to its title and continue button. No duplicate games. Art stays inside covers, never becomes a full-bleed wallpaper.
+
+Professional, shippable-looking console interface. Precise alignment, balanced whitespace, substantial touch targets, legible Simplified Chinese, accurate small status icons, clear text contrast and consistent component sizes. Exact critical Chinese spelling. No tiny paragraphs or gibberish. One obvious play action. The variant must change layout, typography, materials and focus, beyond a superficial recolor. No implementation notes in the UI. Output only one single complete dark HOME page.
+
+SPECIFIC ART DIRECTION:

@@ -1,0 +1,14 @@
+{
+  "index_schema": 1,
+  "release_id": "demo.echo.r1",
+  "file_count": 1,
+  "unpacked_bytes": "31",
+  "files": [
+    {
+      "path": "RomFS/demo.txt",
+      "bytes": "31",
+      "sha256": "8c7de19f3e182b7326fecda75e9f708247878c697e8a8444be728648a7644142",
+      "role": "resource"
+    }
+  ]
+}

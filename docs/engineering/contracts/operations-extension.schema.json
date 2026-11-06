@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.nsa.invalid/v1/operations-extension.schema.json",
+  "$defs": {
+    "AppUpdatePublishRequest": {
+      "type": "object", "additionalProperties": false,
+      "required": ["reason", "metadata"],
+      "properties": {
+        "reason": {"type": "string", "minLength": 10, "maxLength": 1000},
+        "metadata": {"$ref": "app-update.schema.json"}
+      }
+    }
+  }
+}

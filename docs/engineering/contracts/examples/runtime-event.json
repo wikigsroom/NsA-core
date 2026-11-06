@@ -1,0 +1,8 @@
+{
+  "event_schema": 1,
+  "session_id": "session.fixture",
+  "generation": 1,
+  "seq": 1,
+  "event_type": "interactive",
+  "monotonic_elapsed_ms": "2500"
+}

@@ -1,0 +1,7 @@
+Edit the supplied six-screen NsA design board with precise local corrections only. Preserve the overall image, exact canvas, six-panel composition, Variant A light palette, all original cover illustrations, layout, spacing, icons and typography.
+
+1. In the SMALL BOTTOM-LEFT panel with the external caption "04 发现与搜索", the internal heading above the search/filter controls currently reads "我的游戏". Replace ONLY that heading with exactly "发现游戏", in the same font, weight and position. The large upper-left HOME panel must continue to say "我的游戏".
+2. In that same small discovery panel, 海岛工坊 is already in the user's library, so its small status should read "已安装" instead of "下载"; preserve the other cards.
+3. In the BOTTOM-RIGHT 存档管理 panel, make the single small note clearly read exactly "删除游戏资源将保留存档". Keep the separate red 删除存档 action and both 导出存档 / 导入存档 buttons as they are.
+
+Change nothing else. Do not redesign, recolor, add screens, crop the board, alter other Chinese text, remove the footer, or turn it into a hardware mockup. Output the corrected complete design board.

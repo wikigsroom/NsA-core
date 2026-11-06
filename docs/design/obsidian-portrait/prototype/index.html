@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>NsA · 曜黑极简完整设计原型</title>
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="design-data.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#device">跳到页面预览</a>
+  <header class="review-header">
+    <div><span class="wordmark">Ns<span>A</span></span><span class="review-title">曜黑极简 · 完整设计原型</span></div>
+    <p>设计演示 · 虚构游戏与数据 · 不会下载、运行游戏或修改手机</p>
+    <a href="../README.md">阅读设计文档</a>
+  </header>
+  <div class="workbench">
+    <aside class="catalogue" aria-label="页面目录"><h2>全套页面</h2><nav id="screen-list"></nav></aside>
+    <main class="preview-stage" aria-label="设计预览">
+      <div class="preview-caption"><span id="current-label"></span><span id="orientation-label"></span></div>
+      <div class="device-wrap"><div id="device" class="device" tabindex="-1" aria-label="NsA 页面预览"></div></div>
+      <p class="preview-note">可点击按钮走流程；下载、准备和进入运行由右侧「推进一步」演示。</p>
+    </main>
+    <aside class="inspector" aria-label="设计检查">
+      <h2>页面与状态</h2>
+      <label for="variant-select">状态</label><select id="variant-select"></select>
+      <label for="viewport-select">预览宽度</label><select id="viewport-select"><option value="393">393 · 标准手机</option><option value="360">360 · 小屏手机</option><option value="412">412 · 大屏手机</option><option value="600">600 · 平板窗口</option></select>
+      <label for="font-select">文字大小</label><select id="font-select"><option value="1">100%</option><option value="1.3">130%</option><option value="2">200%</option></select>
+      <h3>情境演示</h3>
+      <button type="button" data-review="first">重置为首次下载</button>
+      <button type="button" data-review="reference">恢复选定首页</button>
+      <button type="button" data-review="advance" class="review-primary">推进一步</button>
+      <button type="button" data-review="crash">演示运行中断</button>
+      <div id="review-status" class="review-status" role="status" aria-live="polite"></div>
+      <div id="screen-spec"></div>
+      <p class="small">这些控制只用于审阅，不属于玩家 App。横屏预览仅覆盖游戏运行、暂停与退出边界。</p>
+    </aside>
+  </div>
+</body>
+</html>

@@ -1,0 +1,2249 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.nsa.invalid/v1/domain.schema.json",
+  "$defs": {
+    "Id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]{0,95}$"
+    },
+    "Sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "ByteCount": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]{0,18})$",
+      "description": "Unsigned decimal text; semantic maximum 9223372036854775807; convert with checked 64-bit arithmetic."
+    },
+    "UtcTime": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "Z$"
+    },
+    "HttpsUrl": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://",
+      "maxLength": 4096
+    },
+    "Revision": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 2147483647
+    },
+    "ReleaseState": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "building",
+        "candidate",
+        "internal",
+        "published",
+        "unlisted",
+        "blocked"
+      ]
+    },
+    "CompatibilityStatus": {
+      "type": "string",
+      "enum": [
+        "verified",
+        "experimental",
+        "unverified",
+        "unsupported",
+        "app_update_required"
+      ]
+    },
+    "TransferState": {
+      "type": "string",
+      "enum": [
+        "queued",
+        "fetching_manifest",
+        "transferring",
+        "paused",
+        "waiting_network",
+        "waiting_space",
+        "system_paused",
+        "verifying_download",
+        "downloaded",
+        "failed",
+        "cancelled"
+      ]
+    },
+    "InstallState": {
+      "type": "string",
+      "enum": [
+        "not_installed",
+        "staging",
+        "verifying_files",
+        "prepared",
+        "ready",
+        "repair_required",
+        "failed",
+        "removed"
+      ]
+    },
+    "SessionState": {
+      "type": "string",
+      "enum": [
+        "checking",
+        "launching",
+        "running",
+        "suspended",
+        "exiting",
+        "ended",
+        "failed"
+      ]
+    },
+    "Blocker": {
+      "type": "string",
+      "enum": [
+        "user",
+        "network",
+        "metered_policy",
+        "storage",
+        "system",
+        "game_running",
+        "authorization"
+      ]
+    },
+    "ErrorCode": {
+      "type": "string",
+      "enum": [
+        "AUTH_EXPIRED",
+        "CAT_SCOPE_DENIED",
+        "CATALOGUE_UNAVAILABLE",
+        "CURSOR_EXPIRED",
+        "APP_UPDATE_REQUIRED",
+        "MODULE_MISSING",
+        "MODULE_MISMATCH",
+        "DEVICE_UNSUPPORTED",
+        "DEVICE_UNVERIFIED",
+        "RELEASE_UNAVAILABLE",
+        "RELEASE_BLOCKED",
+        "RIGHTS_REQUIRED",
+        "NETWORK_UNAVAILABLE",
+        "METERED_CONSENT_REQUIRED",
+        "SYSTEM_STOPPED",
+        "STORAGE_INSUFFICIENT",
+        "IO_WRITE_FAILED",
+        "OBJECT_EXPIRED",
+        "OBJECT_CHANGED",
+        "HTTP_RANGE_MISMATCH",
+        "NETWORK_RETRY_EXHAUSTED",
+        "MANIFEST_SIGNATURE_INVALID",
+        "MANIFEST_INVALID",
+        "INDEX_INVALID",
+        "CHUNK_HASH_MISMATCH",
+        "PACKAGE_HASH_MISMATCH",
+        "ARCHIVE_UNSAFE",
+        "FILE_HASH_MISMATCH",
+        "DEPENDENCY_MISMATCH",
+        "INSTALL_COMMIT_FAILED",
+        "INSTALL_REPAIR_REQUIRED",
+        "SESSION_BUSY",
+        "SESSION_STALE",
+        "LAUNCH_TIMEOUT",
+        "RUNTIME_CRASHED",
+        "RUNTIME_EXIT_TIMEOUT",
+        "SAVE_BUSY",
+        "SAVE_INCOMPATIBLE",
+        "SAVE_INVALID",
+        "SAVE_IMPORT_FAILED",
+        "SAVE_EXPORT_FAILED",
+        "APP_INSTALL_CANCELLED",
+        "APP_SIGNATURE_MISMATCH",
+        "FEEDBACK_INVALID",
+        "RATE_LIMITED",
+        "REVISION_CONFLICT",
+        "INTERNAL_ERROR",
+        "REQUEST_INVALID",
+        "NOT_FOUND",
+        "PERMISSION_DENIED"
+      ]
+    },
+    "Action": {
+      "type": "string",
+      "enum": [
+        "download",
+        "view_task",
+        "resume_download",
+        "launch",
+        "continue_game",
+        "resume_game",
+        "repair",
+        "update_app",
+        "view_support",
+        "manage_space",
+        "retry",
+        "unavailable"
+      ]
+    },
+    "Error": {
+      "type": "object",
+      "properties": {
+        "request_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "code": {
+          "$ref": "#/$defs/ErrorCode"
+        },
+        "message": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "retry_after_seconds": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 3600
+        },
+        "details": {
+          "type": "object",
+          "properties": {
+            "reason_code": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 96
+            },
+            "required_app_version_code": {
+              "$ref": "#/$defs/Revision"
+            },
+            "missing_bytes": {
+              "$ref": "#/$defs/ByteCount"
+            },
+            "current_revision": {
+              "$ref": "#/$defs/Revision"
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "request_id",
+        "code",
+        "message"
+      ],
+      "additionalProperties": false
+    },
+    "Artifact": {
+      "type": "object",
+      "properties": {
+        "object_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "bytes": {
+          "$ref": "#/$defs/ByteCount"
+        },
+        "sha256": {
+          "$ref": "#/$defs/Sha256"
+        }
+      },
+      "required": [
+        "object_id",
+        "bytes",
+        "sha256"
+      ],
+      "additionalProperties": false
+    },
+    "Compatibility": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "$ref": "#/$defs/CompatibilityStatus"
+        },
+        "reason_code": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 96
+        },
+        "evidence_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "evaluated_at": {
+          "$ref": "#/$defs/UtcTime"
+        },
+        "required_app_version_code": {
+          "$ref": "#/$defs/Revision"
+        },
+        "known_limitations": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512
+          },
+          "minItems": 0,
+          "maxItems": 20
+        }
+      },
+      "required": [
+        "status",
+        "reason_code",
+        "evaluated_at",
+        "known_limitations"
+      ],
+      "additionalProperties": true
+    },
+    "GameSummary": {
+      "type": "object",
+      "properties": {
+        "game_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "minItems": 0,
+          "maxItems": 20
+        },
+        "genre": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40
+        },
+        "cover_url": {
+          "$ref": "#/$defs/HttpsUrl"
+        },
+        "release_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "published_at": {
+          "$ref": "#/$defs/UtcTime"
+        },
+        "compatibility": {
+          "$ref": "#/$defs/Compatibility"
+        },
+        "download_bytes": {
+          "$ref": "#/$defs/ByteCount"
+        }
+      },
+      "required": [
+        "game_id",
+        "name",
+        "genre",
+        "release_id",
+        "published_at",
+        "compatibility",
+        "download_bytes"
+      ],
+      "additionalProperties": true
+    },
+    "ReleaseDetail": {
+      "type": "object",
+      "properties": {
+        "game": {
+          "$ref": "#/$defs/GameSummary"
+        },
+        "game_version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40
+        },
+        "manifest_sha256": {
+          "$ref": "#/$defs/Sha256"
+        },
+        "languages": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 16
+          },
+          "minItems": 1,
+          "maxItems": 50
+        },
+        "input_modes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "touch",
+              "controller",
+              "gyro",
+              "external_display"
+            ]
+          },
+          "minItems": 1,
+          "maxItems": 8
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 8000
+        },
+        "download_bytes": {
+          "$ref": "#/$defs/ByteCount"
+        },
+        "unpacked_bytes": {
+          "$ref": "#/$defs/ByteCount"
+        },
+        "working_bytes": {
+          "$ref": "#/$defs/ByteCount"
+        },
+        "runtime_slot_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "offline_permitted": {
+          "type": "boolean"
+        },
+        "release_state": {
+          "$ref": "#/$defs/ReleaseState"
+        }
+      },
+      "required": [
+        "game",
+        "game_version",
+        "manifest_sha256",
+        "languages",
+        "input_modes",
+        "description",
+        "download_bytes",
+        "unpacked_bytes",
+        "working_bytes",
+        "runtime_slot_id",
+        "offline_permitted",
+        "release_state"
+      ],
+      "additionalProperties": true
+    },
+    "Capability": {
+      "type": "object",
+      "properties": {
+        "api_level": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "abi": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40
+        },
+        "page_size_bytes": {
+          "type": "integer",
+          "enum": [
+            4096,
+            16384
+          ]
+        },
+        "ram_bytes": {
+          "$ref": "#/$defs/ByteCount"
+        },
+        "gpu_family": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "gpu_driver_digest": {
+          "$ref": "#/$defs/Sha256"
+        },
+        "vulkan_api": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40
+        },
+        "features": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "minItems": 0,
+          "maxItems": 100
+        }
+      },
+      "required": [
+        "api_level",
+        "abi"
+      ],
+      "additionalProperties": false
+    },
+    "BootstrapRequest": {
+      "type": "object",
+      "properties": {
+        "app_version_code": {
+          "$ref": "#/$defs/Revision"
+        },
+        "installation_nonce": {
+          "$ref": "#/$defs/Id"
+        },
+        "locale": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 16
+        },
+        "channel": {
+          "type": "string",
+          "enum": [
+            "internal",
+            "official"
+          ]
+        },
+        "access_grant": {
+          "type": "string",
+          "minLength": 32,
+          "maxLength": 4096,
+          "description": "Optional one-time invitation; requested channel alone grants no internal entitlement."
+        }
+      },
+      "required": [
+        "app_version_code",
+        "installation_nonce",
+        "locale",
+        "channel"
+      ],
+      "additionalProperties": false
+    },
+    "Credentials": {
+      "type": "object",
+      "properties": {
+        "installation_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "access_token": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "expires_at": {
+          "$ref": "#/$defs/UtcTime"
+        },
+        "refresh_token": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "installation_id",
+        "access_token",
+        "expires_at",
+        "refresh_token"
+      ],
+      "additionalProperties": true
+    },
+    "CataloguePage": {
+      "type": "object",
+      "properties": {
+        "snapshot_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/GameSummary"
+          },
+          "minItems": 0,
+          "maxItems": 50
+        },
+        "next_cursor": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 2048
+        },
+        "updated_at": {
+          "$ref": "#/$defs/UtcTime"
+        }
+      },
+      "required": [
+        "snapshot_id",
+        "items",
+        "next_cursor",
+        "updated_at"
+      ],
+      "additionalProperties": true
+    },
+    "CompatibilityRequest": {
+      "type": "object",
+      "properties": {
+        "app_version_code": {
+          "$ref": "#/$defs/Revision"
+        },
+        "runtime_registry_sha256": {
+          "$ref": "#/$defs/Sha256"
+        },
+        "capability": {
+          "$ref": "#/$defs/Capability"
+        },
+        "release_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "minItems": 1,
+          "maxItems": 50
+        }
+      },
+      "required": [
+        "app_version_code",
+        "runtime_registry_sha256",
+        "capability",
+        "release_ids"
+      ],
+      "additionalProperties": false
+    },
+    "CompatibilityResponse": {
+      "type": "object",
+      "properties": {
+        "evaluations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "release_id": {
+                "$ref": "#/$defs/Id"
+              },
+              "compatibility": {
+                "$ref": "#/$defs/Compatibility"
+              }
+            },
+            "required": [
+              "release_id",
+              "compatibility"
+            ],
+            "additionalProperties": true
+          },
+          "minItems": 1,
+          "maxItems": 50
+        },
+        "capability_context_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "expires_at": {
+          "$ref": "#/$defs/UtcTime"
+        }
+      },
+      "required": [
+        "evaluations",
+        "capability_context_id",
+        "expires_at"
+      ],
+      "additionalProperties": true
+    },
+    "DownloadRequest": {
+      "type": "object",
+      "properties": {
+        "release_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "manifest_sha256": {
+          "$ref": "#/$defs/Sha256"
+        },
+        "object_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "app_version_code": {
+          "$ref": "#/$defs/Revision"
+        },
+        "runtime_registry_sha256": {
+          "$ref": "#/$defs/Sha256"
+        },
+        "capability_context_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "experimental_acknowledged": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "required": [
+        "release_id",
+        "manifest_sha256",
+        "object_id",
+        "app_version_code",
+        "runtime_registry_sha256",
+        "capability_context_id"
+      ],
+      "additionalProperties": false
+    },
+    "DownloadGrant": {
+      "type": "object",
+      "properties": {
+        "download_session_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "release_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "manifest_sha256": {
+          "$ref": "#/$defs/Sha256"
+        },
+        "object_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "bytes": {
+          "$ref": "#/$defs/ByteCount"
+        },
+        "sha256": {
+          "$ref": "#/$defs/Sha256"
+        },
+        "etag": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 256,
+          "pattern": "^\"[!#-~\\u0080-\\u00ff]{1,254}\"$",
+          "description": "Strong quoted entity-tag; W/ is forbidden for resumable immutable objects."
+        },
+        "url": {
+          "$ref": "#/$defs/HttpsUrl"
+        },
+        "expires_at": {
+          "$ref": "#/$defs/UtcTime"
+        }
+      },
+      "required": [
+        "download_session_id",
+        "release_id",
+        "manifest_sha256",
+        "object_id",
+        "bytes",
+        "sha256",
+        "etag",
+        "url",
+        "expires_at"
+      ],
+      "additionalProperties": true
+    },
+    "RenewRequest": {
+      "type": "object",
+      "properties": {
+        "object_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "manifest_sha256": {
+          "$ref": "#/$defs/Sha256"
+        }
+      },
+      "required": [
+        "object_id",
+        "manifest_sha256"
+      ],
+      "additionalProperties": false
+    },
+    "FeedbackRequest": {
+      "type": "object",
+      "properties": {
+        "category": {
+          "type": "string",
+          "enum": [
+            "game_runtime",
+            "download",
+            "save",
+            "app",
+            "other"
+          ]
+        },
+        "description": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 2000
+        },
+        "contact": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 254
+        },
+        "diagnostic_upload_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "game_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "release_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "error_code": {
+          "$ref": "#/$defs/ErrorCode"
+        }
+      },
+      "required": [
+        "category",
+        "description"
+      ],
+      "additionalProperties": false
+    },
+    "FeedbackReceipt": {
+      "type": "object",
+      "properties": {
+        "ticket_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "received_at": {
+          "$ref": "#/$defs/UtcTime"
+        },
+        "diagnostic_attached": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "ticket_id",
+        "received_at",
+        "diagnostic_attached"
+      ],
+      "additionalProperties": true
+    },
+    "DiagnosticRequest": {
+      "type": "object",
+      "properties": {
+        "bytes": {
+          "$ref": "#/$defs/ByteCount"
+        },
+        "sha256": {
+          "$ref": "#/$defs/Sha256"
+        },
+        "content_type": {
+          "const": "application/gzip"
+        },
+        "consent_version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40
+        },
+        "consented_at": {
+          "$ref": "#/$defs/UtcTime"
+        }
+      },
+      "required": [
+        "bytes",
+        "sha256",
+        "content_type",
+        "consent_version",
+        "consented_at"
+      ],
+      "additionalProperties": false
+    },
+    "DiagnosticGrant": {
+      "type": "object",
+      "properties": {
+        "upload_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "upload_url": {
+          "$ref": "#/$defs/HttpsUrl"
+        },
+        "expires_at": {
+          "$ref": "#/$defs/UtcTime"
+        },
+        "maximum_bytes": {
+          "$ref": "#/$defs/ByteCount"
+        }
+      },
+      "required": [
+        "upload_id",
+        "upload_url",
+        "expires_at",
+        "maximum_bytes"
+      ],
+      "additionalProperties": true
+    },
+    "DiagnosticReceipt": {
+      "type": "object",
+      "properties": {
+        "upload_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "verified": {
+          "type": "boolean"
+        },
+        "retention_until": {
+          "$ref": "#/$defs/UtcTime"
+        }
+      },
+      "required": [
+        "upload_id",
+        "verified",
+        "retention_until"
+      ],
+      "additionalProperties": true
+    },
+    "AdminGame": {
+      "type": "object",
+      "properties": {
+        "game_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "minItems": 0,
+          "maxItems": 20
+        },
+        "genre": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 8000
+        },
+        "languages": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 16
+          },
+          "minItems": 1,
+          "maxItems": 50
+        },
+        "input_modes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40
+          },
+          "minItems": 1,
+          "maxItems": 8
+        },
+        "asset_object_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "minItems": 0,
+          "maxItems": 20
+        }
+      },
+      "required": [
+        "game_id",
+        "name",
+        "genre",
+        "description",
+        "languages",
+        "input_modes"
+      ],
+      "additionalProperties": false
+    },
+    "AdminRelease": {
+      "type": "object",
+      "properties": {
+        "release_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "game_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "game_version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40
+        },
+        "build_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "rights_record_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "channel": {
+          "type": "string",
+          "enum": [
+            "internal",
+            "official"
+          ]
+        }
+      },
+      "required": [
+        "release_id",
+        "game_id",
+        "game_version",
+        "build_id",
+        "rights_record_id",
+        "channel"
+      ],
+      "additionalProperties": false
+    },
+    "BuildRecord": {
+      "type": "object",
+      "properties": {
+        "build_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "source_revision": {
+          "$ref": "#/$defs/GitRevision"
+        },
+        "core_revision": {
+          "$ref": "#/$defs/GitRevision"
+        },
+        "profile_digest": {
+          "$ref": "#/$defs/Sha256"
+        },
+        "input_inventory_digest": {
+          "$ref": "#/$defs/Sha256"
+        },
+        "runtime_slot_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "artifact_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "minItems": 1,
+          "maxItems": 20
+        }
+      },
+      "required": [
+        "build_id",
+        "source_revision",
+        "core_revision",
+        "profile_digest",
+        "input_inventory_digest",
+        "runtime_slot_id",
+        "artifact_ids"
+      ],
+      "additionalProperties": false
+    },
+    "AdminAction": {
+      "type": "object",
+      "properties": {
+        "expected_revision": {
+          "$ref": "#/$defs/Revision"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 1000
+        },
+        "evidence_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "scope": {
+          "type": "object",
+          "properties": {
+            "channels": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "internal",
+                  "official"
+                ]
+              },
+              "minItems": 1,
+              "maxItems": 2
+            },
+            "regions": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 2,
+                "maxLength": 16
+              },
+              "minItems": 0,
+              "maxItems": 200
+            },
+            "app_version_min": {
+              "$ref": "#/$defs/Revision"
+            },
+            "app_version_max": {
+              "$ref": "#/$defs/Revision"
+            }
+          },
+          "required": [
+            "channels",
+            "regions"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "expected_revision",
+        "reason"
+      ],
+      "additionalProperties": false
+    },
+    "AdminResult": {
+      "type": "object",
+      "properties": {
+        "operation_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "target_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "$ref": "#/$defs/Revision"
+        },
+        "state": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "request_id": {
+          "$ref": "#/$defs/Id"
+        }
+      },
+      "required": [
+        "operation_id",
+        "target_id",
+        "revision",
+        "state",
+        "request_id"
+      ],
+      "additionalProperties": true
+    },
+    "EvidenceRecord": {
+      "type": "object",
+      "properties": {
+        "evidence_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "release_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "app_build_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "runtime_slot_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "driver_digest": {
+          "$ref": "#/$defs/Sha256"
+        },
+        "capability": {
+          "$ref": "#/$defs/Capability"
+        },
+        "duration_seconds": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "result": {
+          "type": "string",
+          "enum": [
+            "verified",
+            "experimental",
+            "failed"
+          ]
+        },
+        "evidence_object_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "minItems": 1,
+          "maxItems": 50
+        },
+        "save_reload_passed": {
+          "type": "boolean"
+        },
+        "input_passed": {
+          "type": "boolean"
+        },
+        "average_fps": {
+          "type": "number",
+          "minimum": 0
+        },
+        "frame_p95_ms": {
+          "type": "number",
+          "minimum": 0
+        },
+        "low1_fps": {
+          "type": "number",
+          "minimum": 0
+        },
+        "game_speed_ratio": {
+          "type": "number",
+          "minimum": 0
+        },
+        "target_fps": {
+          "enum": [
+            30,
+            60
+          ]
+        },
+        "scene_plan_id": {
+          "$ref": "#/$defs/Id"
+        }
+      },
+      "required": [
+        "evidence_id",
+        "release_id",
+        "app_build_id",
+        "runtime_slot_id",
+        "driver_digest",
+        "capability",
+        "duration_seconds",
+        "result",
+        "evidence_object_ids",
+        "save_reload_passed",
+        "input_passed"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "result": {
+                "const": "verified"
+              }
+            },
+            "required": [
+              "result"
+            ]
+          },
+          "then": {
+            "required": [
+              "average_fps",
+              "frame_p95_ms",
+              "low1_fps",
+              "game_speed_ratio",
+              "target_fps",
+              "scene_plan_id"
+            ],
+            "properties": {
+              "duration_seconds": {
+                "minimum": 1800
+              },
+              "save_reload_passed": {
+                "const": true
+              },
+              "input_passed": {
+                "const": true
+              }
+            }
+          }
+        }
+      ]
+    },
+    "RoleChange": {
+      "type": "object",
+      "properties": {
+        "expected_revision": {
+          "$ref": "#/$defs/Revision"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 1000
+        },
+        "roles": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "editor",
+              "builder",
+              "qa",
+              "reviewer",
+              "publisher",
+              "oncall",
+              "admin"
+            ]
+          },
+          "minItems": 0,
+          "maxItems": 7
+        }
+      },
+      "required": [
+        "expected_revision",
+        "reason",
+        "roles"
+      ],
+      "additionalProperties": false
+    },
+    "AuditPage": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "audit_id": {
+                "$ref": "#/$defs/Id"
+              },
+              "actor_id": {
+                "$ref": "#/$defs/Id"
+              },
+              "action": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 80
+              },
+              "target_id": {
+                "$ref": "#/$defs/Id"
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 1000
+              },
+              "created_at": {
+                "$ref": "#/$defs/UtcTime"
+              },
+              "request_id": {
+                "$ref": "#/$defs/Id"
+              }
+            },
+            "required": [
+              "audit_id",
+              "actor_id",
+              "action",
+              "target_id",
+              "reason",
+              "created_at",
+              "request_id"
+            ],
+            "additionalProperties": true
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "next_cursor": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 2048
+        }
+      },
+      "required": [
+        "items",
+        "next_cursor"
+      ],
+      "additionalProperties": true
+    },
+    "HealthSummary": {
+      "type": "object",
+      "properties": {
+        "observed_at": {
+          "$ref": "#/$defs/UtcTime"
+        },
+        "window_seconds": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "catalogue_error_rate": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "failed_jobs": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "signer_available": {
+          "type": "boolean"
+        },
+        "object_store_available": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "observed_at",
+        "window_seconds",
+        "catalogue_error_rate",
+        "failed_jobs",
+        "signer_available",
+        "object_store_available"
+      ],
+      "additionalProperties": true
+    },
+    "GitRevision": {
+      "type": "string",
+      "pattern": "^(?:[a-f0-9]{40}|[a-f0-9]{64})$"
+    },
+    "RefreshRequest": {
+      "type": "object",
+      "properties": {
+        "refresh_token": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "refresh_token"
+      ],
+      "additionalProperties": false
+    },
+    "AdminGameUpdate": {
+      "type": "object",
+      "properties": {
+        "expected_revision": {
+          "$ref": "#/$defs/Revision"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 1000
+        },
+        "changes": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 80
+            },
+            "aliases": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 80
+              },
+              "minItems": 0,
+              "maxItems": 20
+            },
+            "genre": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 40
+            },
+            "description": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 8000
+            },
+            "languages": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 2,
+                "maxLength": 16
+              },
+              "minItems": 1,
+              "maxItems": 50
+            },
+            "input_modes": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 40
+              },
+              "minItems": 1,
+              "maxItems": 8
+            },
+            "asset_object_ids": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/Id"
+              },
+              "minItems": 0,
+              "maxItems": 20
+            }
+          },
+          "required": [],
+          "additionalProperties": false,
+          "minProperties": 1
+        }
+      },
+      "required": [
+        "expected_revision",
+        "reason",
+        "changes"
+      ],
+      "additionalProperties": false
+    },
+    "RightsRecord": {
+      "type": "object",
+      "properties": {
+        "rights_record_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "game_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "kind": {
+          "enum": [
+            "open_license",
+            "supplier_agreement",
+            "internal_test",
+            "public_domain"
+          ]
+        },
+        "regions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 16
+          },
+          "minItems": 0,
+          "maxItems": 200
+        },
+        "valid_from": {
+          "$ref": "#/$defs/UtcTime"
+        },
+        "valid_until": {
+          "$ref": "#/$defs/UtcTime"
+        },
+        "material_object_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "minItems": 1,
+          "maxItems": 30
+        }
+      },
+      "required": [
+        "rights_record_id",
+        "game_id",
+        "kind",
+        "regions",
+        "valid_from",
+        "material_object_ids"
+      ],
+      "additionalProperties": false
+    },
+    "ReviewAction": {
+      "type": "object",
+      "properties": {
+        "expected_revision": {
+          "$ref": "#/$defs/Revision"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 1000
+        },
+        "evidence_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "scope": {
+          "type": "object",
+          "properties": {
+            "channels": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "internal",
+                  "official"
+                ]
+              },
+              "minItems": 1,
+              "maxItems": 2
+            },
+            "regions": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 2,
+                "maxLength": 16
+              },
+              "minItems": 0,
+              "maxItems": 200
+            },
+            "app_version_min": {
+              "$ref": "#/$defs/Revision"
+            },
+            "app_version_max": {
+              "$ref": "#/$defs/Revision"
+            }
+          },
+          "required": [
+            "channels",
+            "regions"
+          ],
+          "additionalProperties": false
+        },
+        "verdict": {
+          "enum": [
+            "approve",
+            "reject"
+          ]
+        }
+      },
+      "required": [
+        "expected_revision",
+        "reason",
+        "verdict",
+        "evidence_ids"
+      ],
+      "additionalProperties": false
+    },
+    "ArtifactUploadRequest": {
+      "type": "object",
+      "properties": {
+        "bytes": {
+          "$ref": "#/$defs/ByteCount"
+        },
+        "sha256": {
+          "$ref": "#/$defs/Sha256"
+        },
+        "kind": {
+          "enum": [
+            "content_archive",
+            "file_index",
+            "chunk_index",
+            "app_apk",
+            "runtime_module",
+            "cover",
+            "evidence",
+            "rights_document",
+            "sbom"
+          ]
+        },
+        "content_type": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        }
+      },
+      "required": [
+        "bytes",
+        "sha256",
+        "kind",
+        "content_type"
+      ],
+      "additionalProperties": false
+    },
+    "ArtifactUploadGrant": {
+      "type": "object",
+      "properties": {
+        "object_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "$ref": "#/$defs/Revision"
+        },
+        "mode": {
+          "enum": [
+            "single",
+            "multipart"
+          ]
+        },
+        "upload_session_expires_at": {
+          "$ref": "#/$defs/UtcTime"
+        },
+        "upload_url": {
+          "$ref": "#/$defs/HttpsUrl"
+        },
+        "expires_at": {
+          "$ref": "#/$defs/UtcTime"
+        },
+        "part_bytes": {
+          "$ref": "#/$defs/ByteCount"
+        },
+        "part_count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10000
+        }
+      },
+      "required": [
+        "object_id",
+        "revision",
+        "mode",
+        "upload_session_expires_at"
+      ],
+      "additionalProperties": true,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "mode": {
+                "const": "single"
+              }
+            },
+            "required": [
+              "mode"
+            ]
+          },
+          "then": {
+            "required": [
+              "upload_url",
+              "expires_at"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "mode": {
+                "const": "multipart"
+              }
+            },
+            "required": [
+              "mode"
+            ]
+          },
+          "then": {
+            "required": [
+              "part_bytes",
+              "part_count"
+            ]
+          }
+        }
+      ]
+    },
+    "DiagnosticComplete": {
+      "type": "object",
+      "properties": {
+        "sha256": {
+          "$ref": "#/$defs/Sha256"
+        }
+      },
+      "required": [
+        "sha256"
+      ],
+      "additionalProperties": false
+    },
+    "AdminReleaseView": {
+      "type": "object",
+      "properties": {
+        "release_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "game_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "revision": {
+          "$ref": "#/$defs/Revision"
+        },
+        "state": {
+          "$ref": "#/$defs/ReleaseState"
+        },
+        "rights_record_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "build_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "verification_operation_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "evidence_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        }
+      },
+      "required": [
+        "release_id",
+        "game_id",
+        "revision",
+        "state",
+        "rights_record_id",
+        "build_id",
+        "evidence_ids"
+      ],
+      "additionalProperties": true
+    },
+    "AdminReleasePage": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/AdminReleaseView"
+          },
+          "minItems": 0,
+          "maxItems": 50
+        },
+        "next_cursor": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "items",
+        "next_cursor"
+      ],
+      "additionalProperties": true
+    },
+    "FeedbackAdminView": {
+      "type": "object",
+      "properties": {
+        "ticket_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "received_at": {
+          "$ref": "#/$defs/UtcTime"
+        },
+        "category": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40
+        },
+        "description": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 2000
+        },
+        "contact": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 254
+        },
+        "diagnostic_upload_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "status": {
+          "enum": [
+            "new",
+            "triaged",
+            "resolved",
+            "closed"
+          ]
+        },
+        "revision": {
+          "$ref": "#/$defs/Revision"
+        }
+      },
+      "required": [
+        "ticket_id",
+        "received_at",
+        "category",
+        "description",
+        "status",
+        "revision"
+      ],
+      "additionalProperties": true
+    },
+    "FeedbackAdminPage": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/FeedbackAdminView"
+          },
+          "minItems": 0,
+          "maxItems": 50
+        },
+        "next_cursor": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "items",
+        "next_cursor"
+      ],
+      "additionalProperties": true
+    },
+    "FeedbackTriage": {
+      "type": "object",
+      "properties": {
+        "expected_revision": {
+          "$ref": "#/$defs/Revision"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 1000
+        },
+        "status": {
+          "enum": [
+            "triaged",
+            "resolved",
+            "closed"
+          ]
+        }
+      },
+      "required": [
+        "expected_revision",
+        "reason",
+        "status"
+      ],
+      "additionalProperties": false
+    },
+    "AdminGameView": {
+      "type": "object",
+      "properties": {
+        "game_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "minItems": 0,
+          "maxItems": 20
+        },
+        "genre": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 8000
+        },
+        "languages": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 16
+          },
+          "minItems": 1,
+          "maxItems": 50
+        },
+        "input_modes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40
+          },
+          "minItems": 1,
+          "maxItems": 8
+        },
+        "asset_object_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "minItems": 0,
+          "maxItems": 20
+        },
+        "revision": {
+          "$ref": "#/$defs/Revision"
+        },
+        "state": {
+          "enum": [
+            "draft",
+            "active",
+            "retired"
+          ]
+        }
+      },
+      "required": [
+        "game_id",
+        "name",
+        "revision",
+        "state"
+      ],
+      "additionalProperties": true
+    },
+    "AdminGamePage": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/AdminGameView"
+          },
+          "maxItems": 50
+        },
+        "next_cursor": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 2048
+        }
+      },
+      "required": [
+        "items",
+        "next_cursor"
+      ],
+      "additionalProperties": true
+    },
+    "RightsView": {
+      "type": "object",
+      "properties": {
+        "rights_record_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "game_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "kind": {
+          "enum": [
+            "open_license",
+            "supplier_agreement",
+            "internal_test",
+            "public_domain"
+          ]
+        },
+        "regions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 16
+          },
+          "minItems": 0,
+          "maxItems": 200
+        },
+        "valid_from": {
+          "$ref": "#/$defs/UtcTime"
+        },
+        "valid_until": {
+          "$ref": "#/$defs/UtcTime"
+        },
+        "material_object_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "minItems": 1,
+          "maxItems": 30
+        },
+        "revision": {
+          "$ref": "#/$defs/Revision"
+        },
+        "state": {
+          "enum": [
+            "draft",
+            "approved",
+            "rejected",
+            "retired"
+          ]
+        },
+        "reviewer_id": {
+          "$ref": "#/$defs/Id"
+        }
+      },
+      "required": [
+        "rights_record_id",
+        "game_id",
+        "kind",
+        "regions",
+        "valid_from",
+        "material_object_ids",
+        "revision",
+        "state"
+      ],
+      "additionalProperties": true
+    },
+    "BuildView": {
+      "type": "object",
+      "properties": {
+        "build_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "source_revision": {
+          "$ref": "#/$defs/GitRevision"
+        },
+        "core_revision": {
+          "$ref": "#/$defs/GitRevision"
+        },
+        "profile_digest": {
+          "$ref": "#/$defs/Sha256"
+        },
+        "input_inventory_digest": {
+          "$ref": "#/$defs/Sha256"
+        },
+        "runtime_slot_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "artifact_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Id"
+          },
+          "minItems": 1,
+          "maxItems": 20
+        },
+        "revision": {
+          "$ref": "#/$defs/Revision"
+        },
+        "state": {
+          "enum": [
+            "registered",
+            "verified",
+            "rejected"
+          ]
+        }
+      },
+      "required": [
+        "build_id",
+        "source_revision",
+        "core_revision",
+        "profile_digest",
+        "input_inventory_digest",
+        "runtime_slot_id",
+        "artifact_ids",
+        "revision",
+        "state"
+      ],
+      "additionalProperties": true
+    },
+    "ArtifactAccess": {
+      "type": "object",
+      "properties": {
+        "object_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "bytes": {
+          "$ref": "#/$defs/ByteCount"
+        },
+        "sha256": {
+          "$ref": "#/$defs/Sha256"
+        },
+        "download_url": {
+          "$ref": "#/$defs/HttpsUrl"
+        },
+        "expires_at": {
+          "$ref": "#/$defs/UtcTime"
+        }
+      },
+      "required": [
+        "object_id",
+        "bytes",
+        "sha256",
+        "download_url",
+        "expires_at"
+      ],
+      "additionalProperties": true
+    },
+    "UploadPartsRequest": {
+      "type": "object",
+      "properties": {
+        "expected_revision": {
+          "$ref": "#/$defs/Revision"
+        },
+        "part_numbers": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10000
+          },
+          "uniqueItems": true,
+          "minItems": 1,
+          "maxItems": 100
+        }
+      },
+      "required": [
+        "expected_revision",
+        "part_numbers"
+      ],
+      "additionalProperties": false
+    },
+    "UploadPartsGrant": {
+      "type": "object",
+      "properties": {
+        "object_id": {
+          "$ref": "#/$defs/Id"
+        },
+        "parts": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 100,
+          "items": {
+            "type": "object",
+            "properties": {
+              "part_number": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 10000
+              },
+              "upload_url": {
+                "$ref": "#/$defs/HttpsUrl"
+              },
+              "expires_at": {
+                "$ref": "#/$defs/UtcTime"
+              }
+            },
+            "required": [
+              "part_number",
+              "upload_url",
+              "expires_at"
+            ],
+            "additionalProperties": true
+          }
+        }
+      },
+      "required": [
+        "object_id",
+        "parts"
+      ],
+      "additionalProperties": true
+    },
+    "ArtifactUploadComplete": {
+      "type": "object",
+      "properties": {
+        "expected_revision": {
+          "$ref": "#/$defs/Revision"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 1000
+        },
+        "parts": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 10000,
+          "items": {
+            "type": "object",
+            "properties": {
+              "part_number": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 10000
+              },
+              "etag": {
+                "type": "string",
+                "minLength": 3,
+                "maxLength": 256,
+                "pattern": "^\"[!#-~\\u0080-\\u00ff]{1,254}\"$",
+                "description": "Strong quoted entity-tag; W/ is forbidden for resumable immutable objects."
+              }
+            },
+            "required": [
+              "part_number",
+              "etag"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "expected_revision",
+        "reason"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

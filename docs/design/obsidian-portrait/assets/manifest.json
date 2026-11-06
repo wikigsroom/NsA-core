@@ -1,0 +1,87 @@
+{
+  "source": "../../hall-options/single-home-round-2/images/D-obsidian-portrait.png",
+  "sourceType": "previously generated selected design reference",
+  "transform": "Pillow crop, WebP quality 90; no generative repaint",
+  "assets": [
+    {
+      "file": "valley.webp",
+      "sourceCropXYXY": [
+        33,
+        413,
+        908,
+        735
+      ],
+      "actualSize": [
+        875,
+        322
+      ],
+      "bytes": 86944,
+      "sha256": "44fd2e62ba94f749dd34d0431292a471bb3cb6cedc19e17e3cd38e6f816010e3",
+      "purpose": "fictional design fixture; not production game key art"
+    },
+    {
+      "file": "island.webp",
+      "sourceCropXYXY": [
+        18,
+        1056,
+        311,
+        1315
+      ],
+      "actualSize": [
+        293,
+        259
+      ],
+      "bytes": 26620,
+      "sha256": "181a1de58b0df21b19240c7770057ccba6478ee37da0f75574ae7c38e9216503",
+      "purpose": "fictional design fixture; not production game key art"
+    },
+    {
+      "file": "pixel.webp",
+      "sourceCropXYXY": [
+        335,
+        1056,
+        609,
+        1315
+      ],
+      "actualSize": [
+        274,
+        259
+      ],
+      "bytes": 20716,
+      "sha256": "4c85be0291cd02efb8efa384d9ebd75743810a9511cc4dfb7495d5fedf0369b8",
+      "purpose": "fictional design fixture; not production game key art"
+    },
+    {
+      "file": "space.webp",
+      "sourceCropXYXY": [
+        632,
+        1056,
+        923,
+        1315
+      ],
+      "actualSize": [
+        291,
+        259
+      ],
+      "bytes": 17610,
+      "sha256": "1d2c4c9b37a546120ff91689e01bb536d2b1c70e5d6145abbdf4db6fc4315560",
+      "purpose": "fictional design fixture; not production game key art"
+    },
+    {
+      "file": "avatar.webp",
+      "sourceCropXYXY": [
+        250,
+        82,
+        327,
+        158
+      ],
+      "actualSize": [
+        77,
+        76
+      ],
+      "bytes": 2628,
+      "sha256": "8f8a98d799d2ace6e6281b477bae6d20c0bc5d318a840ce7215b6b546659f5f5",
+      "purpose": "fictional design fixture; not production game key art"
+    }
+  ]
+}

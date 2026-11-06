@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.nsa.invalid/v1/save-backup.schema.json",
+  "type": "object",
+  "properties": {
+    "save_schema": {
+      "const": 1
+    },
+    "game_id": {
+      "$ref": "domain.schema.json#/$defs/Id"
+    },
+    "local_player_id": {
+      "$ref": "domain.schema.json#/$defs/Id"
+    },
+    "source_release_id": {
+      "$ref": "domain.schema.json#/$defs/Id"
+    },
+    "compatibility_group": {
+      "$ref": "domain.schema.json#/$defs/Id"
+    },
+    "commit_seq": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "created_at": {
+      "$ref": "domain.schema.json#/$defs/UtcTime"
+    },
+    "total_bytes": {
+      "$ref": "domain.schema.json#/$defs/ByteCount"
+    },
+    "files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024
+          },
+          "bytes": {
+            "$ref": "domain.schema.json#/$defs/ByteCount"
+          },
+          "sha256": {
+            "$ref": "domain.schema.json#/$defs/Sha256"
+          }
+        },
+        "required": [
+          "path",
+          "bytes",
+          "sha256"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 1,
+      "maxItems": 10000
+    }
+  },
+  "required": [
+    "save_schema",
+    "game_id",
+    "local_player_id",
+    "source_release_id",
+    "compatibility_group",
+    "commit_seq",
+    "created_at",
+    "total_bytes",
+    "files"
+  ],
+  "additionalProperties": false
+}

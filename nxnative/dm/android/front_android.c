@@ -141,7 +141,18 @@ static void act_finish(ANativeActivity *a) {
     if (!m || (*E)->ExceptionCheck(E)) { (*E)->ExceptionClear(E); LOG("[RED] Activity.finish() failed: the app ends itself"); _exit(0); }
 }
 static void on_resume(ANativeActivity *a) { if (g_quit) { act_finish(a); return; } go_foreground(); }
-static void on_destroy(ANativeActivity *a) { (void)a; _exit(0); }   // one game per process
+static void on_destroy(ANativeActivity *a) { (void)a;
+#ifdef DM_HALL_BINDING
+    extern void dm_hall_front_destroy(void); dm_hall_front_destroy();
+#endif
+    _exit(0); }   // one game per process
+#ifdef DM_HALL_BINDING
+void dm_front_hall_command(int command) {
+    if (command == 1) go_background();
+    else if (command == 2) go_foreground();
+    else if (command == 3 || command == 4) { go_background(); act_finish(g_act); }
+}
+#endif
 
 // ---- input ----
 static AInputQueue *g_queue; static ALooper *g_ilooper;
@@ -1023,7 +1034,7 @@ static void on_queue_destroyed(ANativeActivity *a, AInputQueue *q) { (void)a; AI
 int main(int argc, char **argv);   // dm/host/main.c
 static void *host_thread(void *a) {
     (void)a;
-    char mods[600]; snprintf(mods, sizeof mods, "%s/mods", g_root);
+    char mods[600]; snprintf(mods, sizeof mods, "%s/mods", getenv("DM_ROOT") ? getenv("DM_ROOT") : g_root);
     char *argv[] = {"dmhost", mods, NULL};
     atomic_store(&g_running, 1);
     int rc = main(2, argv);
@@ -1086,7 +1097,11 @@ static int romfs_readable(ANativeActivity *act, int sdk) {   // 0: the game cann
     LOG("RomFS: %s, outside the app's files folder (%s granted)", r, what);
     return 1;
 }
+#ifdef DM_HALL_BINDING
+__attribute__((visibility("hidden"))) void dm_front_hall_on_create(ANativeActivity *act, void *saved, size_t saved_size) {
+#else
 __attribute__((visibility("default"))) void ANativeActivity_onCreate(ANativeActivity *act, void *saved, size_t saved_size) {
+#endif
     (void)saved; (void)saved_size;
     g_act = act;
     int sdk; { AConfiguration *cfg = AConfiguration_new(); AConfiguration_fromAssetManager(cfg, act->assetManager); g_dpi = AConfiguration_getDensity(cfg); sdk = AConfiguration_getSdkVersion(cfg); AConfiguration_delete(cfg); }
@@ -1095,12 +1110,21 @@ __attribute__((visibility("default"))) void ANativeActivity_onCreate(ANativeActi
     act->callbacks->onPause = on_pause; act->callbacks->onResume = on_resume; act->callbacks->onWindowFocusChanged = on_window_focus; act->callbacks->onDestroy = on_destroy;
     ANativeActivity_setWindowFlags(act, AWINDOW_FLAG_KEEP_SCREEN_ON | AWINDOW_FLAG_FULLSCREEN, 0);
     static int started; if (started++) return;   // a second onCreate (configuration change) keeps the running game
-    snprintf(g_root, sizeof g_root, "%s", act->externalDataPath ? act->externalDataPath : act->internalDataPath);
+    snprintf(g_root, sizeof g_root, "%s", getenv("DM_HALL_ROOT") ? getenv("DM_HALL_ROOT") : (act->externalDataPath ? act->externalDataPath : act->internalDataPath));
     char p[700];
-    snprintf(p, sizeof p, "%s/log.txt", g_root); char prev[720]; snprintf(prev, sizeof prev, "%s/log.prev.txt", g_root); rename(p, prev);
+    const char *log_root = getenv("DM_HALL_LOG_ROOT") ? getenv("DM_HALL_LOG_ROOT") : g_root;
+#ifdef DM_HALL_BINDING
+    extern int dm_hall_log_open(const char *);
+    if (dm_hall_log_open(log_root)) {
+        __android_log_print(ANDROID_LOG_ERROR, "dmhost", "bounded session log unavailable");
+        (void)freopen("/dev/null", "w", stderr);
+    }
+#else
+    snprintf(p, sizeof p, "%s/log.txt", log_root); char prev[720]; snprintf(prev, sizeof prev, "%s/log.prev.txt", log_root); rename(p, prev);
     if (!freopen(p, "w", stderr)) __android_log_print(ANDROID_LOG_ERROR, "dmhost", "cannot write %s", p);
+#endif
     setvbuf(stderr, NULL, _IOLBF, 0);
-    setenv("DM_ROOT", g_root, 1);
+    setenv("DM_ROOT", g_root, getenv("DM_HALL_ROOT") ? 0 : 1);
     snprintf(p, sizeof p, "%s/RomFS", g_root); setenv("DM_ROMFS", p, 0);
     snprintf(p, sizeof p, "%s/save", act->internalDataPath); mkdir(p, 0700); setenv("DM_SAVE", p, 0);
     snprintf(p, sizeof p, "%s/temp", act->internalDataPath); mkdir(p, 0700); setenv("DM_TEMP", p, 0);

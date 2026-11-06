@@ -1,0 +1,52 @@
+{
+  "created_at": "2026-11-06T19:06:21+08:00",
+  "skill": "sub2-image-gen",
+  "provider_route": "configured Sub2API gateway, original installed script",
+  "requested_model": "gpt-image-2.5-flare",
+  "model_change_authorized_by_user": true,
+  "original_model_error": "gpt-image-2.5: Complexity 'medium' is not supported for this image model",
+  "requested_initial_size": "3072x2048",
+  "received_size": "1536x1024",
+  "upscaled": false,
+  "quality_requested": "high",
+  "common_prompt": "prompt-common.txt",
+  "variant_prompts": [
+    "prompt-A.txt",
+    "prompt-B.txt",
+    "prompt-C.txt"
+  ],
+  "A_refinement": "Same-model image edit with prompt-A-refine.txt, followed by a local typesetting correction of the discovery-page title to 发现游戏",
+  "design_status": "concepts awaiting selection; fictional games and illustrative data",
+  "outputs": [
+    {
+      "variant": "A",
+      "title": "轻白主机",
+      "file": "images/A-light.png",
+      "raw_source": "output/imagegen/hall-design-20261106/a-light-final.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 1555775,
+      "sha256": "4227b44a34150f74b52a3b0bb063e063b9d9b1d4e84f5a39a04b30eeb5d2fc68"
+    },
+    {
+      "variant": "B",
+      "title": "曜黑主机",
+      "file": "images/B-dark.png",
+      "raw_source": "output/imagegen/hall-design-20261106/b-dark.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 1790265,
+      "sha256": "7dcc4a7e9785307401bd85c4f143290a554af3cfde1cfdf6191b88e90451c232"
+    },
+    {
+      "variant": "C",
+      "title": "双栏效率",
+      "file": "images/C-split.png",
+      "raw_source": "output/imagegen/hall-design-20261106/c-split.png",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 1957982,
+      "sha256": "a544304a5ef4cf3f63c9d01cde1db93896a86e46af294afeb14ccfe5e223b7bd"
+    }
+  ]
+}

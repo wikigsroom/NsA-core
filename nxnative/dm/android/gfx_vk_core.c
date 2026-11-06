@@ -23,6 +23,7 @@
 #define VK_DEF(f) PFN_##f f;
 VK_FNS(VK_DEF) VK_DEV_FNS(VK_DEF)
 static PFN_vkGetInstanceProcAddr p_vkGetInstanceProcAddr;
+static int g_has_ahb;
 vkdev_t V;
 pthread_mutex_t g_vk_queue_mu = PTHREAD_MUTEX_INITIALIZER;   // VkQueue access is externally synchronized: submissions and presents
 
@@ -191,6 +192,7 @@ void vk_init(void) {
                           "VK_GOOGLE_display_timing"};
     const char *on[64]; uint32_t non = 0;
     for (unsigned i = 0; i < sizeof want / sizeof *want; i++) if (has_ext(ex, ne, want[i])) on[non++] = want[i]; else VKLOG("device has no %s", want[i]);
+    g_has_ahb = is_on(on, non, "VK_ANDROID_external_memory_android_hardware_buffer");
     // A Vulkan 1.1 or 1.2 device (Legion Y700 2023, Adreno 730: its stock driver reports 1.1) has what the replay uses from 1.2 / 1.3 as extensions: they are enabled
     // when present, so the features chained below and the functions loaded by their KHR names are valid there. A 1.3 device needs none of them
     int v12 = V.props.apiVersion >= VK_API_VERSION_1_2, v13 = V.props.apiVersion >= VK_API_VERSION_1_3; uint32_t npromo = 0;
@@ -305,7 +307,7 @@ void vk_init(void) {
     { void vk_dq_init(void); vk_dq_init(); }   // DM_VK_MT_REPLAY: the vkCmd* calls through the recorder thread (gfx_vk_dq.c)
     vkGetDeviceQueue(V.dev, V.qf, 0, &V.q);
     VkPipelineCacheCreateInfo pci = {VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO};
-    char path[1024]; const char *root = getenv("DM_ROOT"); void *data = NULL; size_t dn = 0;
+    char path[1024]; const char *root = getenv("DM_HALL_CACHE_ROOT"); if (!root) root = getenv("DM_ROOT"); void *data = NULL; size_t dn = 0;
     if (root && !getenv("DM_VK_NOPCACHE")) { snprintf(path, sizeof path, "%s/vk_pipeline_cache.bin", root); FILE *f = fopen(path, "rb");   // DM_VK_NOPCACHE=1: start empty
         if (f) { fseek(f, 0, SEEK_END); dn = (size_t)ftell(f); fseek(f, 0, SEEK_SET); data = malloc(dn); if (fread(data, 1, dn, f) != dn) dn = 0; fclose(f); } }
     pci.initialDataSize = dn; pci.pInitialData = data;
@@ -328,7 +330,7 @@ const void *vk_sg_pin(VkShaderStageFlagBits stage, const uint32_t *local) {
 }
 void vk_pipeline_cache_save(void) {
     static pthread_mutex_t mu = PTHREAD_MUTEX_INITIALIZER; static size_t last;
-    const char *root = getenv("DM_ROOT"); if (!root || !V.pcache) return;
+    const char *root = getenv("DM_HALL_CACHE_ROOT"); if (!root) root = getenv("DM_ROOT"); if (!root || !V.pcache) return;
     pthread_mutex_lock(&mu);
     size_t n = 0; if (vkGetPipelineCacheData(V.dev, V.pcache, &n, NULL) || !n || n == last) { pthread_mutex_unlock(&mu); return; }   // unchanged since the last save
     last = n; pthread_mutex_unlock(&mu);
@@ -407,6 +409,9 @@ static void pool_cache_sync(vkpool_t *p, int invalidate, uint64_t lo, uint64_t h
 }
 // Zero copy: the pages of [mem, mem+size) become an AHardwareBuffer's, imported as a VkBuffer. 0 on success
 static int pool_zero_copy(vkpool_t *p, uint8_t *mem, uint64_t size) {
+    // A loader may return an extension entry point even when the selected driver does not support it.
+    // Refuse before replacing the guest's pages: an unsupported import has no valid allocation properties.
+    if (!g_has_ahb || !vkGetAndroidHardwareBufferPropertiesANDROID) return -6;
     AHardwareBuffer_Desc d = {(uint32_t)size, 1, 1, AHARDWAREBUFFER_FORMAT_BLOB,
         AHARDWAREBUFFER_USAGE_CPU_READ_OFTEN | AHARDWAREBUFFER_USAGE_CPU_WRITE_OFTEN | AHARDWAREBUFFER_USAGE_GPU_DATA_BUFFER, 0, 0, 0};
     if (size > 0xffffffffull) { mem_diag_zc(0, "size", size, "limit", -1); return -1; }

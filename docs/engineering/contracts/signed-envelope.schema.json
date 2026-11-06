@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.nsa.invalid/v1/signed-envelope.schema.json",
+  "type": "object",
+  "properties": {
+    "envelope_schema": {
+      "const": 1
+    },
+    "purpose": {
+      "type": "string",
+      "enum": [
+        "release",
+        "policy",
+        "app_update"
+      ]
+    },
+    "key_id": {
+      "$ref": "domain.schema.json#/$defs/Id"
+    },
+    "algorithm": {
+      "const": "Ed25519"
+    },
+    "payload_sha256": {
+      "$ref": "domain.schema.json#/$defs/Sha256"
+    },
+    "payload_base64": {
+      "type": "string",
+      "contentEncoding": "base64",
+      "maxLength": 2796204
+    },
+    "signature_base64": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9+/]{86}==$"
+    }
+  },
+  "required": [
+    "envelope_schema",
+    "purpose",
+    "key_id",
+    "algorithm",
+    "payload_sha256",
+    "payload_base64",
+    "signature_base64"
+  ],
+  "additionalProperties": false
+}

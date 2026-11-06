@@ -1,0 +1,156 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.nsa.invalid/v1/release-manifest.schema.json",
+  "type": "object",
+  "properties": {
+    "manifest_schema": {
+      "const": 1
+    },
+    "game_id": {
+      "$ref": "domain.schema.json#/$defs/Id"
+    },
+    "release_id": {
+      "$ref": "domain.schema.json#/$defs/Id"
+    },
+    "game_version": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 40
+    },
+    "channel": {
+      "type": "string",
+      "enum": [
+        "internal",
+        "official"
+      ]
+    },
+    "required_app_version_code": {
+      "$ref": "domain.schema.json#/$defs/Revision"
+    },
+    "created_at": {
+      "$ref": "domain.schema.json#/$defs/UtcTime"
+    },
+    "runtime": {
+      "type": "object",
+      "properties": {
+        "runtime_api_version": {
+          "const": 1
+        },
+        "runtime_slot_id": {
+          "$ref": "domain.schema.json#/$defs/Id"
+        },
+        "profile_digest": {
+          "$ref": "domain.schema.json#/$defs/Sha256"
+        },
+        "module_build_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "domain.schema.json#/$defs/Sha256"
+          },
+          "minItems": 1,
+          "maxItems": 100
+        },
+        "shader_chain_id": {
+          "$ref": "domain.schema.json#/$defs/Id"
+        },
+        "shader_bundle_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "approved_driver_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "domain.schema.json#/$defs/Id"
+          },
+          "minItems": 1,
+          "maxItems": 50
+        }
+      },
+      "required": [
+        "runtime_api_version",
+        "runtime_slot_id",
+        "profile_digest",
+        "module_build_ids",
+        "shader_chain_id",
+        "shader_bundle_version",
+        "approved_driver_ids"
+      ],
+      "additionalProperties": false
+    },
+    "archive": {
+      "$ref": "domain.schema.json#/$defs/Artifact"
+    },
+    "file_index": {
+      "$ref": "domain.schema.json#/$defs/Artifact"
+    },
+    "chunk_index": {
+      "$ref": "domain.schema.json#/$defs/Artifact"
+    },
+    "unpacked_bytes": {
+      "$ref": "domain.schema.json#/$defs/ByteCount"
+    },
+    "working_bytes": {
+      "$ref": "domain.schema.json#/$defs/ByteCount"
+    },
+    "chunk_size_bytes": {
+      "const": "8388608"
+    },
+    "file_count": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 250000
+    },
+    "save": {
+      "type": "object",
+      "properties": {
+        "compatibility_group": {
+          "$ref": "domain.schema.json#/$defs/Id"
+        },
+        "compatible_previous_releases": {
+          "type": "array",
+          "items": {
+            "$ref": "domain.schema.json#/$defs/Id"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "backup_before_upgrade": {
+          "const": true
+        }
+      },
+      "required": [
+        "compatibility_group",
+        "compatible_previous_releases",
+        "backup_before_upgrade"
+      ],
+      "additionalProperties": false
+    },
+    "offline_permitted": {
+      "type": "boolean"
+    },
+    "minimum_capability": {
+      "$ref": "domain.schema.json#/$defs/Capability"
+    }
+  },
+  "required": [
+    "manifest_schema",
+    "game_id",
+    "release_id",
+    "game_version",
+    "channel",
+    "required_app_version_code",
+    "created_at",
+    "runtime",
+    "archive",
+    "file_index",
+    "chunk_index",
+    "unpacked_bytes",
+    "working_bytes",
+    "chunk_size_bytes",
+    "file_count",
+    "save",
+    "offline_permitted",
+    "minimum_capability"
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,13 @@
+{
+  "record_schema": 1,
+  "record_kind": "ready",
+  "game_id": "demo.echo",
+  "release_id": "demo.echo.r1",
+  "manifest_sha256": "2f9554032a6d7e666f00cfc1c0103225b9f52c4ecfc6db69ec6512fa92a49bca",
+  "file_index_sha256": "b0ebc52506b6f346d99f6d20422a7c765d4ae83f9dc3f4037eb3e8c32b9a1f72",
+  "runtime_slot_id": "demo.echo.core1",
+  "profile_digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+  "verified_at": "2026-11-06T00:00:00Z",
+  "file_count": 1,
+  "unpacked_bytes": "31"
+}

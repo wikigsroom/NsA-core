@@ -1,0 +1,2747 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "NsA unified game platform API",
+    "version": "1.0.0",
+    "description": "Normative contract for baseline 2.0; not a deployed service. Byte counts are decimal strings. All examples are fictional."
+  },
+  "servers": [
+    {
+      "url": "https://api.example.invalid",
+      "description": "Documentation placeholder; replace with approved deployment domain."
+    }
+  ],
+  "security": [
+    {
+      "installationBearer": []
+    }
+  ],
+  "paths": {
+    "/v1/bootstrap": {
+      "post": {
+        "operationId": "bootstrapInstallation",
+        "summary": "Create new anonymous installation credentials with bounded idempotent replay",
+        "tags": [
+          "player"
+        ],
+        "x-requirements": [
+          "APP-02",
+          "NFR-06"
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/Credentials"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Structured error; HTTP status matches errors.json when applicable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "domain.schema.json#/$defs/BootstrapRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/credentials/refresh": {
+      "post": {
+        "operationId": "refreshInstallationCredential",
+        "summary": "Rotate anonymous installation credential",
+        "tags": [
+          "player"
+        ],
+        "x-requirements": [
+          "APP-02",
+          "NFR-06"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/Credentials"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Structured error; HTTP status matches errors.json when applicable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "domain.schema.json#/$defs/RefreshRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/catalogue": {
+      "get": {
+        "operationId": "listCatalogue",
+        "summary": "Search/filter a stable catalogue snapshot",
+        "tags": [
+          "player"
+        ],
+        "x-requirements": [
+          "CAT-01",
+          "CAT-02",
+          "CAT-03",
+          "CAT-08"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/CataloguePage"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Structured error; HTTP status matches errors.json when applicable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/Error"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "Matching representation; no body. Scope and policy are rechecked."
+          }
+        },
+        "security": [
+          {
+            "installationBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "page_size",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50,
+              "default": 24
+            }
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 64
+            }
+          },
+          {
+            "name": "genre",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 40
+            }
+          },
+          {
+            "name": "compatibility",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "$ref": "domain.schema.json#/$defs/CompatibilityStatus"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/Cursor"
+          },
+          {
+            "name": "app_version_code",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "$ref": "domain.schema.json#/$defs/Revision"
+            }
+          },
+          {
+            "name": "runtime_registry_sha256",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "$ref": "domain.schema.json#/$defs/Sha256"
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            }
+          },
+          {
+            "name": "capability_context_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "$ref": "domain.schema.json#/$defs/Id"
+            }
+          }
+        ]
+      }
+    },
+    "/v1/games/{game_id}": {
+      "get": {
+        "operationId": "getGameDetail",
+        "summary": "Read visible target release and detail",
+        "tags": [
+          "player"
+        ],
+        "x-requirements": [
+          "CAT-04",
+          "CAT-05",
+          "CAT-06"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/ReleaseDetail"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Structured error; HTTP status matches errors.json when applicable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/Error"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "Matching representation; no body. Scope and policy are rechecked."
+          }
+        },
+        "security": [
+          {
+            "installationBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "game_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "domain.schema.json#/$defs/Id"
+            }
+          },
+          {
+            "name": "release_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "app_version_code",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            }
+          },
+          {
+            "name": "capability_context_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "$ref": "domain.schema.json#/$defs/Id"
+            }
+          }
+        ]
+      }
+    },
+    "/v1/compatibility/evaluate": {
+      "post": {
+        "operationId": "evaluateCompatibility",
+        "summary": "Evaluate explicit release and device combinations",
+        "tags": [
+          "player"
+        ],
+        "x-requirements": [
+          "APP-03",
+          "CAT-05",
+          "OPS-05"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/CompatibilityResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Structured error; HTTP status matches errors.json when applicable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "installationBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "domain.schema.json#/$defs/CompatibilityRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/releases/{release_id}/manifest": {
+      "get": {
+        "operationId": "getReleaseManifest",
+        "summary": "Read signed release envelope",
+        "tags": [
+          "player"
+        ],
+        "x-requirements": [
+          "PKG-02",
+          "PKG-03"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "signed-envelope.schema.json"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Structured error; HTTP status matches errors.json when applicable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/Error"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "Matching representation; no body. Scope and policy are rechecked."
+          }
+        },
+        "security": [
+          {
+            "installationBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "release_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "domain.schema.json#/$defs/Id"
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            }
+          }
+        ]
+      }
+    },
+    "/v1/download-sessions": {
+      "post": {
+        "operationId": "createDownloadSession",
+        "summary": "Authorize one immutable object",
+        "tags": [
+          "player"
+        ],
+        "x-requirements": [
+          "DL-01",
+          "DL-06",
+          "CAT-06"
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/DownloadGrant"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Structured error; HTTP status matches errors.json when applicable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "installationBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "domain.schema.json#/$defs/DownloadRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/download-sessions/{download_session_id}/renew": {
+      "post": {
+        "operationId": "renewDownloadSession",
+        "summary": "Renew URL for exactly the same object",
+        "tags": [
+          "player"
+        ],
+        "x-requirements": [
+          "DL-06",
+          "DL-09"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/DownloadGrant"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Structured error; HTTP status matches errors.json when applicable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "installationBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "download_session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "domain.schema.json#/$defs/Id"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "domain.schema.json#/$defs/RenewRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/policies": {
+      "get": {
+        "operationId": "getReleasePolicies",
+        "summary": "Read latest signed monotonic policy snapshot",
+        "tags": [
+          "player"
+        ],
+        "x-requirements": [
+          "UPD-06",
+          "UPD-07"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "signed-envelope.schema.json"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Structured error; HTTP status matches errors.json when applicable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/Error"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "Matching representation; no body. Scope and policy are rechecked."
+          }
+        },
+        "security": [
+          {
+            "installationBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "after_epoch",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            }
+          }
+        ]
+      }
+    },
+    "/v1/app-update": {
+      "get": {
+        "operationId": "getAppUpdate",
+        "summary": "Read signed update metadata or latest state",
+        "tags": [
+          "player"
+        ],
+        "x-requirements": [
+          "UPD-01",
+          "UPD-05"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "signed-envelope.schema.json"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Structured error; HTTP status matches errors.json when applicable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/Error"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No newer compatible App version; no response body"
+          }
+        },
+        "security": [
+          {
+            "installationBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "app_version_code",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "channel",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "abi",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/v1/diagnostic-uploads": {
+      "post": {
+        "operationId": "createDiagnosticUpload",
+        "summary": "Allocate explicitly consented diagnostic upload",
+        "tags": [
+          "player"
+        ],
+        "x-requirements": [
+          "OPS-09",
+          "NFR-06",
+          "NFR-10"
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/DiagnosticGrant"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Structured error; HTTP status matches errors.json when applicable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "installationBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "domain.schema.json#/$defs/DiagnosticRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/diagnostic-uploads/{upload_id}/complete": {
+      "post": {
+        "operationId": "completeDiagnosticUpload",
+        "summary": "Verify upload ownership and actual object",
+        "tags": [
+          "player"
+        ],
+        "x-requirements": [
+          "OPS-09",
+          "NFR-10"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/DiagnosticReceipt"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Structured error; HTTP status matches errors.json when applicable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "installationBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "upload_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "domain.schema.json#/$defs/Id"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "domain.schema.json#/$defs/DiagnosticComplete"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/feedback": {
+      "post": {
+        "operationId": "submitFeedback",
+        "summary": "Submit feedback once, with optional verified attachment",
+        "tags": [
+          "player"
+        ],
+        "x-requirements": [
+          "OPS-09"
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/FeedbackReceipt"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Structured error; HTTP status matches errors.json when applicable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "installationBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "domain.schema.json#/$defs/FeedbackRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/v1/games": {
+      "post": {
+        "operationId": "createGame",
+        "summary": "Create metadata draft",
+        "tags": [
+          "admin"
+        ],
+        "x-requirements": [
+          "OPS-01"
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/AdminResult"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Structured error; HTTP status matches errors.json when applicable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "adminBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "domain.schema.json#/$defs/AdminGame"
+              }
+            }
+          }
+        },
+        "x-allowed-roles": [
+          "editor",
+          "admin"
+        ]
+      },
+      "get": {
+        "operationId": "listAdminGames",
+        "summary": "List metadata work queue",
+        "tags": [
+          "admin"
+        ],
+        "security": [
+          {
+            "adminBearer": []
+          }
+        ],
+        "x-allowed-roles": [
+          "builder",
+          "editor",
+          "qa",
+          "reviewer",
+          "publisher",
+          "oncall",
+          "admin"
+        ],
+        "x-requirements": [
+          "OPS-01"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Cursor"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success; private material URLs use Cache-Control: no-store",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/AdminGamePage"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Structured error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/v1/games/{game_id}": {
+      "patch": {
+        "operationId": "updateGame",
+        "summary": "Change editable metadata with expected revision",
+        "tags": [
+          "admin"
+        ],
+        "x-requirements": [
+          "OPS-01",
+          "OPS-10"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/AdminResult"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Structured error; HTTP status matches errors.json when applicable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "adminBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "game_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "domain.schema.json#/$defs/Id"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "domain.schema.json#/$defs/AdminGameUpdate"
+              }
+            }
+          }
+        },
+        "x-allowed-roles": [
+          "editor",
+          "admin"
+        ]
+      },
+      "get": {
+        "operationId": "getAdminGame",
+        "summary": "Read editable metadata and current revision",
+        "tags": [
+          "admin"
+        ],
+        "security": [
+          {
+            "adminBearer": []
+          }
+        ],
+        "x-allowed-roles": [
+          "builder",
+          "editor",
+          "qa",
+          "reviewer",
+          "publisher",
+          "oncall",
+          "admin"
+        ],
+        "x-requirements": [
+          "OPS-01"
+        ],
+        "parameters": [
+          {
+            "name": "game_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "domain.schema.json#/$defs/Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success; private material URLs use Cache-Control: no-store",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/AdminGameView"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Structured error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/v1/rights-records": {
+      "post": {
+        "operationId": "createRightsRecord",
+        "summary": "Register private content scope evidence",
+        "tags": [
+          "admin"
+        ],
+        "x-requirements": [
+          "OPS-02"
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/AdminResult"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Structured error; HTTP status matches errors.json when applicable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "adminBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "domain.schema.json#/$defs/RightsRecord"
+              }
+            }
+          }
+        },
+        "x-allowed-roles": [
+          "editor",
+          "admin"
+        ]
+      }
+    },
+    "/admin/v1/rights-records/{rights_record_id}/reviews": {
+      "post": {
+        "operationId": "reviewRightsRecord",
+        "summary": "Review scope materials",
+        "tags": [
+          "admin"
+        ],
+        "x-requirements": [
+          "OPS-02",
+          "OPS-07"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/AdminResult"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Structured error; HTTP status matches errors.json when applicable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "adminBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "rights_record_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "domain.schema.json#/$defs/Id"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "domain.schema.json#/$defs/ReviewAction"
+              }
+            }
+          }
+        },
+        "x-allowed-roles": [
+          "reviewer",
+          "admin"
+        ]
+      }
+    },
+    "/admin/v1/releases": {
+      "post": {
+        "operationId": "createRelease",
+        "summary": "Create unpublished release",
+        "tags": [
+          "admin"
+        ],
+        "x-requirements": [
+          "OPS-03",
+          "OPS-06"
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/AdminResult"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Structured error; HTTP status matches errors.json when applicable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "adminBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "domain.schema.json#/$defs/AdminRelease"
+              }
+            }
+          }
+        },
+        "x-allowed-roles": [
+          "builder",
+          "editor",
+          "admin"
+        ]
+      },
+      "get": {
+        "operationId": "listAdminReleases",
+        "summary": "List review and publishing work queue",
+        "tags": [
+          "admin"
+        ],
+        "x-requirements": [
+          "OPS-06"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/AdminReleasePage"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Structured error; HTTP status matches errors.json when applicable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "adminBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "state",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/Cursor"
+          }
+        ],
+        "x-allowed-roles": [
+          "builder",
+          "qa",
+          "reviewer",
+          "publisher",
+          "oncall",
+          "admin",
+          "editor"
+        ]
+      }
+    },
+    "/admin/v1/builds": {
+      "post": {
+        "operationId": "registerBuild",
+        "summary": "Register completed build provenance; does not compile game input",
+        "tags": [
+          "admin"
+        ],
+        "x-requirements": [
+          "OPS-03"
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/AdminResult"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Structured error; HTTP status matches errors.json when applicable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "adminBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "domain.schema.json#/$defs/BuildRecord"
+              }
+            }
+          }
+        },
+        "x-allowed-roles": [
+          "builder",
+          "admin"
+        ]
+      }
+    },
+    "/admin/v1/artifact-uploads": {
+      "post": {
+        "operationId": "createArtifactUpload",
+        "summary": "Create immutable controlled artifact destination",
+        "tags": [
+          "admin"
+        ],
+        "x-requirements": [
+          "OPS-01",
+          "OPS-04",
+          "OPS-05"
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/ArtifactUploadGrant"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Structured error; HTTP status matches errors.json when applicable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "adminBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "domain.schema.json#/$defs/ArtifactUploadRequest"
+              }
+            }
+          }
+        },
+        "x-allowed-roles": [
+          "builder",
+          "editor",
+          "qa",
+          "admin"
+        ]
+      }
+    },
+    "/admin/v1/artifact-uploads/{object_id}/complete": {
+      "post": {
+        "operationId": "completeArtifactUpload",
+        "summary": "Queue real object verification",
+        "tags": [
+          "admin"
+        ],
+        "x-requirements": [
+          "OPS-04"
+        ],
+        "responses": {
+          "202": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/AdminResult"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Structured error; HTTP status matches errors.json when applicable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "adminBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "object_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "domain.schema.json#/$defs/Id"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "domain.schema.json#/$defs/ArtifactUploadComplete"
+              }
+            }
+          }
+        },
+        "x-allowed-roles": [
+          "builder",
+          "editor",
+          "qa",
+          "admin"
+        ]
+      }
+    },
+    "/admin/v1/releases/{release_id}/verify": {
+      "post": {
+        "operationId": "verifyReleaseArtifacts",
+        "summary": "Queue archive/index verification",
+        "tags": [
+          "admin"
+        ],
+        "x-requirements": [
+          "OPS-04",
+          "PKG-04"
+        ],
+        "responses": {
+          "202": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/AdminResult"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Structured error; HTTP status matches errors.json when applicable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "adminBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "release_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "domain.schema.json#/$defs/Id"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "domain.schema.json#/$defs/AdminAction"
+              }
+            }
+          }
+        },
+        "x-allowed-roles": [
+          "builder",
+          "qa",
+          "admin"
+        ]
+      }
+    },
+    "/admin/v1/compatibility-evidence": {
+      "post": {
+        "operationId": "createCompatibilityEvidence",
+        "summary": "Record exact device and release evidence",
+        "tags": [
+          "admin"
+        ],
+        "x-requirements": [
+          "OPS-05",
+          "NFR-05"
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/AdminResult"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Structured error; HTTP status matches errors.json when applicable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "adminBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "domain.schema.json#/$defs/EvidenceRecord"
+              }
+            }
+          }
+        },
+        "x-allowed-roles": [
+          "qa",
+          "admin"
+        ]
+      }
+    },
+    "/admin/v1/releases/{release_id}/reviews": {
+      "post": {
+        "operationId": "reviewRelease",
+        "summary": "Approve or reject candidate; distinct actor from editor",
+        "tags": [
+          "admin"
+        ],
+        "x-requirements": [
+          "OPS-06",
+          "OPS-07"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/AdminResult"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Structured error; HTTP status matches errors.json when applicable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "adminBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "release_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "domain.schema.json#/$defs/Id"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "domain.schema.json#/$defs/ReviewAction"
+              }
+            }
+          }
+        },
+        "x-allowed-roles": [
+          "reviewer",
+          "admin"
+        ]
+      }
+    },
+    "/admin/v1/releases/{release_id}/publish": {
+      "post": {
+        "operationId": "publishRelease",
+        "summary": "publish exact release with audit and current revision",
+        "tags": [
+          "admin"
+        ],
+        "x-requirements": [
+          "OPS-06",
+          "OPS-07",
+          "OPS-10"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/AdminResult"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Structured error; HTTP status matches errors.json when applicable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "adminBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "release_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "domain.schema.json#/$defs/Id"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "domain.schema.json#/$defs/AdminAction"
+              }
+            }
+          }
+        },
+        "x-allowed-roles": [
+          "publisher",
+          "admin"
+        ]
+      }
+    },
+    "/admin/v1/releases/{release_id}/unlist": {
+      "post": {
+        "operationId": "unlistRelease",
+        "summary": "unlist exact release with audit and current revision",
+        "tags": [
+          "admin"
+        ],
+        "x-requirements": [
+          "UPD-06",
+          "OPS-10"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/AdminResult"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Structured error; HTTP status matches errors.json when applicable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "adminBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "release_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "domain.schema.json#/$defs/Id"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "domain.schema.json#/$defs/AdminAction"
+              }
+            }
+          }
+        },
+        "x-allowed-roles": [
+          "publisher",
+          "oncall",
+          "admin"
+        ]
+      }
+    },
+    "/admin/v1/releases/{release_id}/block": {
+      "post": {
+        "operationId": "blockRelease",
+        "summary": "block exact release with audit and current revision",
+        "tags": [
+          "admin"
+        ],
+        "x-requirements": [
+          "UPD-06",
+          "OPS-07",
+          "OPS-10"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/AdminResult"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Structured error; HTTP status matches errors.json when applicable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "adminBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "release_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "domain.schema.json#/$defs/Id"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "domain.schema.json#/$defs/AdminAction"
+              }
+            }
+          }
+        },
+        "x-allowed-roles": [
+          "oncall",
+          "admin"
+        ]
+      }
+    },
+    "/admin/v1/releases/{release_id}/unblock": {
+      "post": {
+        "operationId": "unblockRelease",
+        "summary": "unblock exact release with audit and current revision",
+        "tags": [
+          "admin"
+        ],
+        "x-requirements": [
+          "UPD-06",
+          "OPS-10"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/AdminResult"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Structured error; HTTP status matches errors.json when applicable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "adminBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "release_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "domain.schema.json#/$defs/Id"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "domain.schema.json#/$defs/AdminAction"
+              }
+            }
+          }
+        },
+        "x-allowed-roles": [
+          "publisher",
+          "admin"
+        ]
+      }
+    },
+    "/admin/v1/principals/{principal_id}/roles": {
+      "put": {
+        "operationId": "setPrincipalRoles",
+        "summary": "Change roles with audit; no self escalation",
+        "tags": [
+          "admin"
+        ],
+        "x-requirements": [
+          "OPS-07",
+          "OPS-10"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/AdminResult"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Structured error; HTTP status matches errors.json when applicable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "adminBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "principal_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "domain.schema.json#/$defs/Id"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "domain.schema.json#/$defs/RoleChange"
+              }
+            }
+          }
+        },
+        "x-allowed-roles": [
+          "admin"
+        ]
+      }
+    },
+    "/admin/v1/audit": {
+      "get": {
+        "operationId": "listAuditLog",
+        "summary": "Read restricted append-only audit records",
+        "tags": [
+          "admin"
+        ],
+        "x-requirements": [
+          "OPS-10"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/AuditPage"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Structured error; HTTP status matches errors.json when applicable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "adminBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Cursor"
+          },
+          {
+            "name": "target_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "x-allowed-roles": [
+          "reviewer",
+          "oncall",
+          "admin"
+        ]
+      }
+    },
+    "/admin/v1/health-summary": {
+      "get": {
+        "operationId": "readHealthSummary",
+        "summary": "Read aggregate API/object/signing/job state",
+        "tags": [
+          "admin"
+        ],
+        "x-requirements": [
+          "OPS-08",
+          "NFR-03"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/HealthSummary"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Structured error; HTTP status matches errors.json when applicable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "adminBearer": []
+          }
+        ],
+        "x-allowed-roles": [
+          "oncall",
+          "admin"
+        ]
+      }
+    },
+    "/admin/v1/operations/{operation_id}": {
+      "get": {
+        "operationId": "getAdminOperation",
+        "summary": "Read background operation status",
+        "tags": [
+          "admin"
+        ],
+        "x-requirements": [
+          "OPS-04",
+          "OPS-08"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/AdminResult"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Structured error; HTTP status matches errors.json when applicable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "adminBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "operation_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "domain.schema.json#/$defs/Id"
+            }
+          }
+        ],
+        "x-allowed-roles": [
+          "builder",
+          "qa",
+          "reviewer",
+          "publisher",
+          "oncall",
+          "admin"
+        ]
+      }
+    },
+    "/admin/v1/releases/{release_id}": {
+      "get": {
+        "operationId": "getAdminRelease",
+        "summary": "Read one release and evidence references",
+        "tags": [
+          "admin"
+        ],
+        "x-requirements": [
+          "OPS-06"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/AdminReleaseView"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Structured error; HTTP status matches errors.json when applicable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "adminBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "release_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "domain.schema.json#/$defs/Id"
+            }
+          }
+        ],
+        "x-allowed-roles": [
+          "builder",
+          "qa",
+          "reviewer",
+          "publisher",
+          "oncall",
+          "admin",
+          "editor"
+        ]
+      }
+    },
+    "/admin/v1/feedback": {
+      "get": {
+        "operationId": "listFeedbackTickets",
+        "summary": "Read restricted feedback queue",
+        "tags": [
+          "admin"
+        ],
+        "x-requirements": [
+          "OPS-09"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/FeedbackAdminPage"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Structured error; HTTP status matches errors.json when applicable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "adminBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Cursor"
+          }
+        ],
+        "x-allowed-roles": [
+          "oncall",
+          "admin"
+        ]
+      }
+    },
+    "/admin/v1/feedback/{ticket_id}": {
+      "patch": {
+        "operationId": "triageFeedbackTicket",
+        "summary": "Change ticket status with reason and revision",
+        "tags": [
+          "admin"
+        ],
+        "x-requirements": [
+          "OPS-09",
+          "OPS-10"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/AdminResult"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Structured error; HTTP status matches errors.json when applicable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "adminBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "ticket_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "domain.schema.json#/$defs/Id"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "domain.schema.json#/$defs/FeedbackTriage"
+              }
+            }
+          }
+        },
+        "x-allowed-roles": [
+          "oncall",
+          "admin"
+        ]
+      }
+    },
+    "/admin/v1/rights-records/{rights_record_id}": {
+      "get": {
+        "operationId": "getRightsRecord",
+        "summary": "Read restricted content scope review record",
+        "tags": [
+          "admin"
+        ],
+        "security": [
+          {
+            "adminBearer": []
+          }
+        ],
+        "x-allowed-roles": [
+          "editor",
+          "reviewer",
+          "publisher",
+          "admin"
+        ],
+        "x-requirements": [
+          "OPS-02",
+          "OPS-06"
+        ],
+        "parameters": [
+          {
+            "name": "rights_record_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "domain.schema.json#/$defs/Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success; private material URLs use Cache-Control: no-store",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/RightsView"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Structured error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/v1/builds/{build_id}": {
+      "get": {
+        "operationId": "getBuildRecord",
+        "summary": "Read immutable build provenance",
+        "tags": [
+          "admin"
+        ],
+        "security": [
+          {
+            "adminBearer": []
+          }
+        ],
+        "x-allowed-roles": [
+          "builder",
+          "qa",
+          "reviewer",
+          "publisher",
+          "admin"
+        ],
+        "x-requirements": [
+          "OPS-03"
+        ],
+        "parameters": [
+          {
+            "name": "build_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "domain.schema.json#/$defs/Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success; private material URLs use Cache-Control: no-store",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/BuildView"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Structured error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/v1/artifacts/{object_id}/access": {
+      "get": {
+        "operationId": "getArtifactAccess",
+        "summary": "Grant short lived private review access; kind and scope checked separately",
+        "tags": [
+          "admin"
+        ],
+        "security": [
+          {
+            "adminBearer": []
+          }
+        ],
+        "x-allowed-roles": [
+          "builder",
+          "editor",
+          "qa",
+          "reviewer",
+          "publisher",
+          "oncall",
+          "admin"
+        ],
+        "x-requirements": [
+          "OPS-04",
+          "OPS-06"
+        ],
+        "parameters": [
+          {
+            "name": "object_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "domain.schema.json#/$defs/Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success; private material URLs use Cache-Control: no-store",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/ArtifactAccess"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Structured error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/v1/artifact-uploads/{object_id}/parts": {
+      "post": {
+        "operationId": "authorizeUploadParts",
+        "summary": "Authorize bounded multipart PUT parts for same immutable object",
+        "tags": [
+          "admin"
+        ],
+        "x-requirements": [
+          "OPS-04"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/UploadPartsGrant"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Structured error; HTTP status matches errors.json when applicable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "adminBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "object_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "domain.schema.json#/$defs/Id"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "domain.schema.json#/$defs/UploadPartsRequest"
+              }
+            }
+          }
+        },
+        "x-allowed-roles": [
+          "builder",
+          "editor",
+          "qa",
+          "admin"
+        ]
+      }
+    },
+    "/admin/v1/artifact-uploads/{object_id}/abort": {
+      "post": {
+        "operationId": "abortArtifactUpload",
+        "summary": "Abort incomplete upload and release staged multipart objects",
+        "tags": [
+          "admin"
+        ],
+        "x-requirements": [
+          "OPS-04"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/AdminResult"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Structured error; HTTP status matches errors.json when applicable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "domain.schema.json#/$defs/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "adminBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "object_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "domain.schema.json#/$defs/Id"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "domain.schema.json#/$defs/AdminAction"
+              }
+            }
+          }
+        },
+        "x-allowed-roles": [
+          "builder",
+          "editor",
+          "qa",
+          "admin"
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "installationBearer": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "Anonymous installation access token; not a registered player account."
+      },
+      "adminBearer": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "OIDC issuer/audience validated; operation role checked by service."
+      }
+    },
+    "parameters": {
+      "IdempotencyKey": {
+        "name": "Idempotency-Key",
+        "in": "header",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "minLength": 16,
+          "maxLength": 128
+        },
+        "description": "Same actor+route+key+body digest repeats original result; different body is conflict."
+      },
+      "Cursor": {
+        "name": "cursor",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2048
+        }
+      }
+    }
+  }
+}

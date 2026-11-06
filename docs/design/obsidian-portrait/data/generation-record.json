@@ -1,0 +1,140 @@
+{
+  "date": "2026-11-06",
+  "timezone": "Asia/Taipei",
+  "skill": "sub2-image-gen",
+  "script": "installed sub2-image-gen/scripts/sub2_image_gen.py (unmodified)",
+  "requestedModel": "gpt-image-2.5-flare",
+  "authorization": "User authorized this model in the existing conversation; same configured Sub2 gateway.",
+  "quality": "high",
+  "outputFormat": "png",
+  "modelVerification": "Request model recorded; backend model identity not independently measured.",
+  "reference": "../hall-options/single-home-round-2/images/D-obsidian-portrait.png",
+  "designAuthority": "tokens + screen specifications + offline prototype; generated images are art-direction examples",
+  "images": [
+    {
+      "screen": "S01",
+      "file": "visuals/S01-discover.png",
+      "prompt": "prompts/S01-discover-v2.txt",
+      "requestedSize": "1080x1920",
+      "actualSize": [
+        916,
+        1717
+      ],
+      "bytes": 1694586,
+      "sha256": "51d25e81785718fed71f0f45ae01b621f6297bbfd93b57ca650cb50f24921e6a",
+      "review": "visually reviewed; approved for art-direction reference",
+      "postprocessing": "none; original generated PNG"
+    },
+    {
+      "screen": "S03",
+      "file": "visuals/S03-detail.png",
+      "prompt": "prompts/S03-detail.txt",
+      "requestedSize": "1080x1920",
+      "actualSize": [
+        916,
+        1717
+      ],
+      "bytes": 1710286,
+      "sha256": "9cbfe2ec87f890d148e9f027b53d60a31911e771fa094c2a1977a46673bde0f6",
+      "review": "visually reviewed; approved for art-direction reference",
+      "postprocessing": "none; original generated PNG"
+    },
+    {
+      "screen": "S05",
+      "file": "visuals/S05-downloads.png",
+      "prompt": "prompts/S05-downloads.txt",
+      "requestedSize": "1080x1920",
+      "actualSize": [
+        916,
+        1717
+      ],
+      "bytes": 1374425,
+      "sha256": "eedf931a8366ed1e0c74bb672fa114d3062696d72d2804eb6844c2f5e5f8f9bd",
+      "review": "visually reviewed; approved for art-direction reference",
+      "postprocessing": "none; original generated PNG"
+    },
+    {
+      "screen": "S13",
+      "file": "visuals/S13-manage.png",
+      "prompt": "prompts/S13-manage.txt",
+      "requestedSize": "1080x1920",
+      "actualSize": [
+        916,
+        1717
+      ],
+      "bytes": 1396510,
+      "sha256": "895970d86d9f0ee879188dae79a32fc8d404436ee77cbf1974a5b94a4ccbc6d2",
+      "review": "visually reviewed; approved for art-direction reference",
+      "postprocessing": "none; original generated PNG"
+    },
+    {
+      "screen": "S14",
+      "file": "visuals/S14-storage.png",
+      "prompt": "prompts/S14-storage.txt",
+      "requestedSize": "1080x1920",
+      "actualSize": [
+        916,
+        1717
+      ],
+      "bytes": 1373950,
+      "sha256": "7af5899d549d2fbfbc4d38211795a92a1465fc4963fdd239605777ff52a0a25b",
+      "review": "visually reviewed; approved for art-direction reference",
+      "postprocessing": "none; original generated PNG"
+    },
+    {
+      "screen": "S15",
+      "file": "visuals/S15-saves.png",
+      "prompt": "prompts/S15-saves.txt",
+      "requestedSize": "1080x1920",
+      "actualSize": [
+        916,
+        1717
+      ],
+      "bytes": 1386449,
+      "sha256": "56f8c705cfeaba883064470cf29f4317bfe8bede3810937a1bccf2eab719dd3e",
+      "review": "visually reviewed; approved for art-direction reference",
+      "postprocessing": "none; original generated PNG"
+    },
+    {
+      "screen": "S18",
+      "file": "visuals/S18-settings.png",
+      "prompt": "prompts/S18-settings.txt",
+      "requestedSize": "1080x1920",
+      "actualSize": [
+        916,
+        1717
+      ],
+      "bytes": 1297190,
+      "sha256": "a8b928f743825abd1936522379ba9d9b07f4556a2b91555155cc73d5a0f5ed81",
+      "review": "visually reviewed; approved for art-direction reference",
+      "postprocessing": "none; original generated PNG"
+    },
+    {
+      "screen": "S12",
+      "file": "visuals/S12-run-error.png",
+      "prompt": "prompts/S12-run-error.txt",
+      "requestedSize": "1080x1920",
+      "actualSize": [
+        916,
+        1717
+      ],
+      "bytes": 1343181,
+      "sha256": "beb891e27ba1f0b0e79516cc14095aa8874a0b52d991fa43d840525419895e52",
+      "review": "visually reviewed; approved for art-direction reference",
+      "postprocessing": "none; original generated PNG"
+    }
+  ],
+  "discarded": [
+    {
+      "source": "S01-discover.png",
+      "reason": "Generated paired capsule symbol was inconsistent with the text-only working brand. Replaced with S01-discover-v2.png."
+    }
+  ],
+  "retries": [
+    {
+      "source": "S01-discover-v2.png",
+      "reason": "First revised request timed out at gateway; identical revised prompt retried successfully."
+    }
+  ],
+  "pathBase": "design suite root: docs/design/obsidian-portrait"
+}

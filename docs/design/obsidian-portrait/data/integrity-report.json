@@ -1,0 +1,20 @@
+{
+  "date": "2026-11-06",
+  "checks": [
+    "32 unique screens; 73 exact state contracts; 26 unique components; 90 unique requirement mappings",
+    "offline data wrapper matches canonical JSON",
+    "only S09/S10/S11 declare landscape",
+    "all 8 generated image bytes and SHA-256 match the generation record",
+    "all pre-existing runtime changes match the initial hashes",
+    "original 90 requirement IDs and 58 acceptance IDs preserved"
+  ],
+  "screenPNGs": 32,
+  "generatedVisuals": 8,
+  "requirements": 90,
+  "existingAcceptanceIDs": 58,
+  "preservedRuntimeChanges": true,
+  "totalDesignBytesExcludingThisReport": 13752225,
+  "localLinksChecked": 624,
+  "documentFilesChecked": 19,
+  "linkOrFormatFailures": []
+}

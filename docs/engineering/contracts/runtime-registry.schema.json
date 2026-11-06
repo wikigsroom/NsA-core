@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.nsa.invalid/v1/runtime-registry.schema.json",
+  "type": "object",
+  "properties": {
+    "registry_schema": {
+      "const": 1
+    },
+    "app_version_code": {
+      "$ref": "domain.schema.json#/$defs/Revision"
+    },
+    "bootstrap_api_version": {
+      "const": 1
+    },
+    "slots": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "runtime_slot_id": {
+            "$ref": "domain.schema.json#/$defs/Id"
+          },
+          "library_name": {
+            "type": "string",
+            "pattern": "^libnsa_[a-z0-9_]+\\.so$"
+          },
+          "library_sha256": {
+            "$ref": "domain.schema.json#/$defs/Sha256"
+          },
+          "runtime_api_version": {
+            "const": 1
+          },
+          "core_revision": {
+            "$ref": "domain.schema.json#/$defs/GitRevision"
+          },
+          "profile_digest": {
+            "$ref": "domain.schema.json#/$defs/Sha256"
+          },
+          "supported_module_build_ids": {
+            "type": "array",
+            "items": {
+              "$ref": "domain.schema.json#/$defs/Sha256"
+            },
+            "minItems": 1,
+            "maxItems": 100
+          },
+          "shader_chain_id": {
+            "$ref": "domain.schema.json#/$defs/Id"
+          },
+          "shader_bundle_versions": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "minItems": 1,
+            "maxItems": 20
+          },
+          "approved_driver_ids": {
+            "type": "array",
+            "items": {
+              "$ref": "domain.schema.json#/$defs/Id"
+            },
+            "minItems": 1,
+            "maxItems": 50
+          },
+          "settings_schema_version": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "required": [
+          "runtime_slot_id",
+          "library_name",
+          "library_sha256",
+          "runtime_api_version",
+          "core_revision",
+          "profile_digest",
+          "supported_module_build_ids",
+          "shader_chain_id",
+          "shader_bundle_versions",
+          "approved_driver_ids",
+          "settings_schema_version"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 1,
+      "maxItems": 100
+    }
+  },
+  "required": [
+    "registry_schema",
+    "app_version_code",
+    "bootstrap_api_version",
+    "slots"
+  ],
+  "additionalProperties": false
+}

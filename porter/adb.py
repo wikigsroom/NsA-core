@@ -2,7 +2,7 @@
 # devices (a 6 GB RomFS), so small files go in batches (tar archives of up to 64 MB when there are many) and big files in 64 MB pieces that the device joins; a rerun resumes (files already at their size are skipped,
 # pieces already in place are kept). The port's own outputs are also compared by MD5: a rewriter cut changes a module without changing its size, and Unpacking's sdk cuts never
 # reached the device until they were. Pushes use -Z: compressing them took adbd down.
-import contextlib, hashlib, os, re, shlex, shutil, subprocess, tarfile, tempfile, time
+import contextlib, hashlib, io, os, re, shlex, shutil, socket, struct, subprocess, tarfile, tempfile, time
 from pathlib import Path
 
 
@@ -65,6 +65,58 @@ class Adb:
         raise AdbError(f'adb {a[0]}: {err}')
 
     def shell(self, script, **kw): return self.run('shell', script, **kw)
+
+    def shell_binary_input(self, script, body, timeout):
+        """Binary stdin over the existing adb server's shell-v2 protocol.
+        Wait for the remote exit packet after closing stdin. This avoids Windows
+        console text modes and exec-in's early close without encoding the archive.
+        See AOSP's SERVICES.TXT and shell_protocol.h (stdin=0, exit=3, close=4).
+        """
+        serial = self.serial or self.pick()
+        endpoint = self.env.get('ADB_SERVER_SOCKET', 'tcp:localhost:' + self.env.get('ANDROID_ADB_SERVER_PORT', '5037'))
+        if not endpoint.startswith('tcp:'):
+            raise AdbError('memory archives need a TCP adb server socket')
+        address = endpoint[4:]
+        host, port = address.rsplit(':', 1) if ':' in address else ('localhost', address)
+        try:
+            with socket.create_connection((host.strip('[]'), int(port)), timeout=10) as conn:
+                conn.settimeout(timeout)
+                conn.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
+                def take(n):
+                    out = bytearray()
+                    while len(out) < n:
+                        data = conn.recv(n - len(out))
+                        if not data: raise AdbError('binary shell closed before confirming completion')
+                        out.extend(data)
+                    return bytes(out)
+                def request(service):
+                    data = service.encode('utf-8')
+                    if len(data) > 65535: raise AdbError('binary shell service request is too long')
+                    conn.sendall(f'{len(data):04x}'.encode() + data)
+                    status = take(4)
+                    if status == b'FAIL':
+                        raise AdbError(take(int(take(4), 16)).decode('utf-8', 'replace'))
+                    if status != b'OKAY': raise AdbError('invalid binary shell service response')
+                request('host:transport:' + serial)
+                request('shell,v2,raw:' + script)
+                view = memoryview(body)
+                for at in range(0, len(view), 64 << 10):
+                    part = view[at:at + (64 << 10)]
+                    conn.sendall(struct.pack('<BI', 0, len(part)))
+                    conn.sendall(part)
+                conn.sendall(struct.pack('<BI', 4, 0))
+                err = b''
+                while True:
+                    kind, size = struct.unpack('<BI', take(5))
+                    if size > 16 << 20: raise AdbError('invalid binary shell packet size')
+                    data = take(size)
+                    if kind == 2: err = (err + data)[-4096:]
+                    if kind == 3:
+                        if len(data) != 1: raise AdbError('invalid binary shell exit packet')
+                        if data[0]: raise AdbError(f'binary shell exited {data[0]}: {err.decode("utf-8", "replace")[-300:]}')
+                        return
+        except (OSError, ValueError) as e:
+            raise AdbError(f'binary shell transfer failed: {e}') from e
 
     # ---- devices ----
     def devices(self):
@@ -273,6 +325,8 @@ class Adb:
         """small [(relative path, local path, size)] → remote, as tar archives of at most TAR_BYTES / TAR_FILES built beside local, pushed in one transfer each and
         unpacked by the device's tar. 32 files per adb push cost ~2 s a push, ~1 MB/s for Tears of the Kingdom's 304,000 files of ~57 kB (hours); an archive goes at the
         link's speed. An archive cut short by a dropped link is not unpacked; a rerun pushes what is missing. progress(done_bytes, note) after each archive. Returns the bytes"""
+        if os.environ.get('NX2A_TAR_MEMORY') == '1':
+            return self.push_tars_memory(remote, small, progress)
         done, q = 0, shlex.quote(remote)
         with tempfile.TemporaryDirectory(prefix='.nx2a_tar_', dir=Path(local).parent) as t:   # beside the data: same drive, deleted with it
             arc = Path(t) / 'p.tar'
@@ -292,18 +346,65 @@ class Adb:
                 if progress: progress(done, f'{len(part):,} files')
         return done
 
+    def push_tars_memory(self, remote, small, progress=None):
+        """Opt-in bounded memory archives, avoiding read/write seeks on a busy source drive.
+        Binary shell protocol confirms that the remote writer exited; size and
+        SHA-256 are checked before extraction. Completed files stay resumable.
+        """
+        done, i = 0, 0
+        arc = shlex.quote(remote.rstrip('/') + '/.dmpart.tar')
+        while i < len(small):
+            part, size = [], 0
+            while i < len(small) and len(part) < TAR_FILES and (not part or size + small[i][2] <= TAR_BYTES):
+                part.append(small[i]); size += small[i][2]; i += 1
+            with io.BytesIO() as buf:
+                with tarfile.open(fileobj=buf, mode='w', format=tarfile.GNU_FORMAT) as tar:
+                    for rel, p, s in part:
+                        ti = tarfile.TarInfo(rel); ti.size, ti.mode, ti.mtime = s, 0o644, int(time.time())
+                        with open(long_path(p), 'rb') as f: tar.addfile(ti, f)
+                payload = buf.getvalue()
+            try:
+                self.shell_binary_input(f'cat > {arc}', payload, timeout=max(self.timeout, 600))
+                got = self.shell(f'stat -c %s {arc}').strip()
+                if got != str(len(payload)):
+                    raise AdbError(f'the memory archive has {got} bytes on the device, expected {len(payload)}')
+                digest = self.shell(f'sha256sum {arc}').split()[0]
+                if digest != hashlib.sha256(payload).hexdigest():
+                    raise AdbError('the memory archive failed SHA-256 verification on the device')
+                out = self.shell(f'cd {shlex.quote(remote)} && tar -xf .dmpart.tar 2>&1; rc=$?; echo "rc=$rc"', timeout=max(self.timeout, 600))
+                if not out.rstrip().endswith('rc=0'):
+                    raise AdbError(f'unpacking a memory archive of {len(part)} files failed: {out.strip()[-300:]}')
+            except subprocess.TimeoutExpired as e:
+                raise AdbError('the memory archive transfer timed out') from e
+            finally:
+                self.shell(f'rm -f {arc}', check=False)
+            del payload
+            done += size
+            if progress: progress(done, f'{len(part):,} files (memory archive)')
+        return done
+
     def push_file(self, local, dst, chunk=64 << 20, progress=None):
         """One file in pieces of chunk bytes, joined on the device; pieces already there are kept, so an interrupted push resumes. progress(done, size, note)"""
         local = Path(local); size = local.stat().st_size; n = max(1, (size + chunk - 1) // chunk)
         pdir = f'{os.path.dirname(dst)}/.dmpart-{hashlib.sha1(dst.encode()).hexdigest()[:12]}'   # one piece folder per file: a resumed push finds its own pieces
         self.shell(f'mkdir -p {shlex.quote(pdir)}'); pieces = self.remote_sizes(pdir)
-        with tempfile.TemporaryDirectory(prefix='nx2a_push_') as t, open(local, 'rb') as f:
+        memory = os.environ.get('NX2A_TAR_MEMORY') == '1'
+        with (contextlib.nullcontext() if memory else tempfile.TemporaryDirectory(prefix='nx2a_push_')) as t, open(long_path(local), 'rb') as f:
             for k in range(n):
                 want, name = min(chunk, size - k * chunk), f'{k:05d}'
                 if pieces.get(name) != want:
-                    tmp = Path(t) / 'piece.bin'
-                    f.seek(k * chunk); tmp.write_bytes(f.read(want))
-                    self.run('push', '-Z', tmp, f'{pdir}/{name}', timeout=max(self.timeout, 600))
+                    f.seek(k * chunk); body = f.read(want)
+                    if len(body) != want: raise AdbError(f'{local.name}: the source changed during transfer')
+                    if memory:
+                        qpiece = shlex.quote(f'{pdir}/{name}')
+                        self.shell_binary_input(f'cat > {qpiece}', body, timeout=max(self.timeout, 600))
+                        if self.shell(f'stat -c %s {qpiece}').strip() != str(want):
+                            raise AdbError(f'{local.name}: incomplete piece {k + 1}/{n}')
+                        if self.shell(f'sha256sum {qpiece}').split()[0] != hashlib.sha256(body).hexdigest():
+                            raise AdbError(f'{local.name}: piece {k + 1}/{n} failed SHA-256 verification')
+                    else:
+                        tmp = Path(t) / 'piece.bin'; tmp.write_bytes(body)
+                        self.run('push', '-Z', tmp, f'{pdir}/{name}', timeout=max(self.timeout, 600))
                 if progress: progress(k * chunk + want, size, f'{local.name} piece {k + 1}/{n}')
         q, qp = shlex.quote(dst), shlex.quote(pdir)   # join the pieces in order, then check the size
         self.shell(f'rm -f {q} && for x in $(ls {qp} | sort); do cat {qp}/$x >> {q} || exit 1; done && rm -rf {qp}', timeout=1200)

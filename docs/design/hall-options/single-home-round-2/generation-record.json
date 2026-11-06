@@ -1,0 +1,83 @@
+{
+  "date": "2026-11-06",
+  "timezone": "Asia/Taipei",
+  "status": "visual concept only; Android UI and orientation changes are not implemented",
+  "revision": "five dark portrait homes replace preceding light and landscape drafts",
+  "skill": "sub2-image-gen",
+  "execution": "original installed sub2_image_gen.py; same configured gateway; credentials excluded",
+  "requested_model": "gpt-image-2.5-flare",
+  "model_authorization": "explicit user fallback authorization retained from earlier turn",
+  "server_model_independently_verified": false,
+  "requested_size": "1080x1920",
+  "quality_requested": "high",
+  "count_per_request": 1,
+  "format": "png",
+  "upscaled": false,
+  "postprocessing": "none; final PNG files copied byte-for-byte from raw generations",
+  "composition": "one full-screen portrait home per image; no boards or collage",
+  "orientation_rule": {
+    "non_game_pages": "portrait: home, discovery, search, details, downloads, installation/preparation, management, settings and failure recovery",
+    "game_running": "landscape after explicit launch and transition into running view",
+    "game_exit": "restore portrait lobby and original page state"
+  },
+  "data": "fictional game covers and example statuses",
+  "common_prompt": "prompt-common.txt",
+  "visual_review": "All five outputs inspected: dark UI, tall single-page composition, four main destinations, current installed game and a separate 64% download. Implementation typography, accessibility and runtime orientation still require real UI/device validation.",
+  "outputs": [
+    {
+      "variant": "D",
+      "title": "曜黑极简",
+      "file": "images/D-obsidian-portrait.png",
+      "source_local": "output/imagegen/hall-home-dark-portrait-20261106/raw/d-obsidian-portrait.png",
+      "width": 941,
+      "height": 1672,
+      "bytes": 1861478,
+      "sha256": "821a8774f7cebe6ce0cae7217d3e122a24e3661954e5db2e779167b3f9c9d94e",
+      "variant_prompt": "prompt-D.txt"
+    },
+    {
+      "variant": "E",
+      "title": "赤影机能",
+      "file": "images/E-carbon-red-portrait.png",
+      "source_local": "output/imagegen/hall-home-dark-portrait-20261106/raw/e-carbon-red-portrait.png",
+      "width": 916,
+      "height": 1717,
+      "bytes": 1636145,
+      "sha256": "c548be0d010cd8bb74bb02cf94b8d6ad1c29bb79314d0569b86c13d818f93541",
+      "variant_prompt": "prompt-E.txt"
+    },
+    {
+      "variant": "F",
+      "title": "墨绿雅集",
+      "file": "images/F-jade-night-portrait.png",
+      "source_local": "output/imagegen/hall-home-dark-portrait-20261106/raw/f-jade-night-portrait.png",
+      "width": 916,
+      "height": 1717,
+      "bytes": 1867992,
+      "sha256": "bf6815b60776581ac8cf25c44c72a0c1e4010d47c36509d9859be44c952db251",
+      "variant_prompt": "prompt-F.txt"
+    },
+    {
+      "variant": "G",
+      "title": "午夜像素",
+      "file": "images/G-pixel-night-portrait.png",
+      "source_local": "output/imagegen/hall-home-dark-portrait-20261106/raw/g-pixel-night-portrait.png",
+      "width": 941,
+      "height": 1672,
+      "bytes": 1670061,
+      "sha256": "3d906a22e035ee5bdff839f4e10530980bbff695ca7d2137157ae8de2d9549e3",
+      "variant_prompt": "prompt-G.txt"
+    },
+    {
+      "variant": "H",
+      "title": "深空玻璃",
+      "file": "images/H-glass-night-portrait.png",
+      "source_local": "output/imagegen/hall-home-dark-portrait-20261106/raw/h-glass-night-portrait.png",
+      "width": 916,
+      "height": 1717,
+      "bytes": 1867822,
+      "sha256": "61368d3025220a43e7257b8a25f48c9a1bbfcf8b74b5448de1e7b2f1ba0eb35b",
+      "variant_prompt": "prompt-H.txt"
+    }
+  ]
+}

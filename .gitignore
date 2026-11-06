@@ -3,6 +3,8 @@
 # Scratch work and probe outputs (some are made from game files)
 /work/
 /build/
+# Raw design generations, reference downloads and local image-generation diagnostics
+/output/imagegen/
 
 # Android build outputs
 /nxnative/dm/android/out/
@@ -26,3 +28,21 @@ title.keys
 
 # The player bundle (python packaging/build_bundle.py)
 /dist/
+
+# Unified hall: local credentials, generated runtimes and build caches
+/android/.gradle/
+/android/.kotlin/
+/android/**/build/
+/android/local.properties
+/android/app/src/main/jniLibs/
+/android/app/src/debug/assets/local-ca.pem
+/android/app/src/debug/assets/internal-grant.txt
+/android/app/src/main/assets/runtime-registry.json
+/android/app/src/main/assets/trusted-keys.json
+/services/.venv/
+/services/local/
+/output/hall/
+/output/hall-*.log
+.pytest_cache/
+*.pyc
+.env

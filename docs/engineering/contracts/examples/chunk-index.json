@@ -1,0 +1,14 @@
+{
+  "index_schema": 1,
+  "object_id": "demo.echo.archive",
+  "bytes": "1024",
+  "chunk_size_bytes": "8388608",
+  "chunks": [
+    {
+      "index": 0,
+      "offset_bytes": "0",
+      "length_bytes": "1024",
+      "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    }
+  ]
+}
