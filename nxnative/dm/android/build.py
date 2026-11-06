@@ -22,6 +22,7 @@ ap.add_argument('-O', default='2')
 ap.add_argument('--gfx', default='vk', choices=('vk', 'null'), help='graphics backend: Vulkan or the null device')
 ap.add_argument('--release', action='store_true', help='a build to keep installed: no debug information, stripped, no DM_CTL')
 ap.add_argument('--adrenotools', action='store_true', help='also libadrenotools.so and its hooks (third_party/libadrenotools), which the APK carries with a custom Vulkan driver')
+ap.add_argument('--hall-identity', help='local JSON with slot/core/profile/module/shader identity; builds a unified-hall slot')
 a = ap.parse_args()
 if not (a.exe or a.lib): a.exe = a.lib = True
 
@@ -32,6 +33,22 @@ TARGET = f'--target=aarch64-linux-android{a.api}'
 out = Path(a.out) if a.out else DM / 'android/out' / (a.game + ('-release' if a.release else ''))
 DBG = [] if a.release else ['-g']
 obj = out / 'obj'; gen = out / 'gen'; obj.mkdir(parents=True, exist_ok=True); (gen / a.game).mkdir(parents=True, exist_ok=True)
+hall_name = 'libdmhost.so'
+if a.hall_identity:
+    import json
+    identity = json.loads(Path(a.hall_identity).read_text(encoding='utf-8'))
+    hall_name = identity['library_name']
+    if not re.fullmatch(r'libnsa_[a-z0-9_]+\.so', hall_name):
+        raise ValueError('Invalid compiled runtime SONAME')
+    fields = {'NSA_SLOT_ID': identity['runtime_slot_id'], 'NSA_CORE_REVISION': identity['core_revision'],
+              'NSA_PROFILE_SHA256': identity['profile_digest'], 'NSA_MODULE_IDS': json.dumps(identity['supported_module_build_ids'], separators=(',', ':')),
+              'NSA_SHADER_CHAIN': identity['shader_chain_id']}
+    environment = identity.get('runtime_env', {})
+    if any(not re.fullmatch(r'DM_[A-Z0-9_]+', key) or '\0' in value or len(value) > 1024 for key, value in environment.items()):
+        raise ValueError('Invalid compiled profile environment')
+    env_header = '\nstatic const char *NSA_ENV_KEYS[] = {' + ','.join(json.dumps(key) for key in environment) + '};\n'
+    env_header += 'static const char *NSA_ENV_VALUES[] = {' + ','.join(json.dumps(value) for value in environment.values()) + '};\n#define NSA_ENV_COUNT ' + str(len(environment)) + '\n'
+    (gen / a.game / 'hall_identity.h').write_text('\n'.join('#define ' + key + ' ' + json.dumps(value) for key, value in fields.items()) + env_header, encoding='utf-8')
 
 # the game profile header, as the Makefile makes it
 subprocess.run([sys.executable, str(DM / 'games/game.py'), 'header', a.game, str(gen / a.game / 'game_profile.h')], check=True)
@@ -63,6 +80,7 @@ INC = ['-include', str(DM / 'android/compat/include/darwin_compat.h'), f'-I{DM /
 CFLAGS = [TARGET, f'-O{a.O}'] + DBG + ['-fPIC', '-fno-omit-frame-pointer', '-ffixed-x18', '-Wall', '-Wno-unused-function', '-Wno-unused-variable', '-Wno-unused-but-set-variable',
           '-Wno-format', '-Wno-deprecated-declarations', '-Wno-gnu-folding-constant', '-Werror=implicit-function-declaration', '-Werror=return-type',
           '-Werror=incompatible-pointer-types', '-Werror=int-conversion', '-D_GNU_SOURCE', '-DDM_ANDROID=1', '-fno-strict-aliasing', '-fvisibility=hidden'] + (['-DDM_RELEASE=1'] if a.release else [])
+if a.hall_identity: CFLAGS += ['-DDM_HALL_BINDING=1']
 VPX_FLAGS = [TARGET, '-O2'] + DBG + ['-fPIC', f'-I{DM / "third_party/libvpx"}', f'-I{DM / "third_party/libvpx/config"}', '-w']
 ZSTD_FLAGS = [TARGET, '-O2'] + DBG + ['-fPIC', '-fvisibility=hidden', '-DZSTDLIB_VISIBLE=', '-DZSTDERRORLIB_VISIBLE=', '-w']   # its API stays inside libdmhost.so
 
@@ -117,12 +135,12 @@ if a.exe:
     print(r.stderr.strip() if r.returncode else f'linked {out / "dmhost"}', file=sys.stderr if r.returncode else sys.stdout)
     if r.returncode: sys.exit(1)
 if a.lib:
-    r = subprocess.run([CC] + LDFLAGS + ['-shared', '-Wl,-soname,libdmhost.so', '-o', str(out / 'libdmhost.so')] + [str(o) for o in objs + vobjs] + LIBS, capture_output=True, text=True, errors='replace')
-    print(r.stderr.strip() if r.returncode else f'linked {out / "libdmhost.so"}', file=sys.stderr if r.returncode else sys.stdout)
+    r = subprocess.run([CC] + LDFLAGS + ['-shared', f'-Wl,-soname,{hall_name}', '-o', str(out / hall_name)] + [str(o) for o in objs + vobjs] + LIBS, capture_output=True, text=True, errors='replace')
+    print(r.stderr.strip() if r.returncode else f'linked {out / hall_name}', file=sys.stderr if r.returncode else sys.stdout)
     if r.returncode: sys.exit(1)
     if a.release:   # the static symbol table goes too (the dynamic one stays: ANativeActivity_onCreate)
-        subprocess.run([str(bin_ / ('llvm-strip.exe' if os.name == 'nt' else 'llvm-strip')), '--strip-unneeded', str(out / 'libdmhost.so')], check=True)
-        print(f'stripped {out / "libdmhost.so"}: {(out / "libdmhost.so").stat().st_size // 1024} KB')
+        subprocess.run([str(bin_ / ('llvm-strip.exe' if os.name == 'nt' else 'llvm-strip')), '--strip-unneeded', str(out / hall_name)], check=True)
+        print(f'stripped {out / hall_name}: {(out / hall_name).stat().st_size // 1024} KB')
 
 # --adrenotools: libadrenotools.so (gfx_vk_core.c vk_init loads a custom Vulkan driver through it, DM_VK_DRIVER) and the hooks it loads from the APK's library folder,
 # as its CMake files build them: linkernsbypass inside libadrenotools and libhook_impl, the three small hooks over libhook_impl with -z global

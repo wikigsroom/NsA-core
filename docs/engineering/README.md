@@ -2,6 +2,8 @@
 
 2026-11-06 · 对应已选 **D · 曜黑极简**、默认竖屏大厅。本文档包固定下一步开发的行为、契约、架构和验收；它不表示统一 Android App、在线服务或多游戏运行已经完成。
 
+基线描述保留制定时点；后续实现与测试以[实施手册](../hall/README.zh-CN.md)、[验证记录](../hall/implementation-status.md)、[代码对照](../hall/requirement-coverage.md)和[实施决策](decisions/0005-client-guardrails-and-cache.md)为准。基线未验收状态不会由新增代码自动提升。
+
 先读 [产品主需求](../product/游戏大厅二次开发需求说明书.md)、[90 项需求的 360 条实施规则](../product/产品需求细则.md) 和 [32 页交互规格](../product/页面与交互验收规格.md)，再按本目录约束实现。视觉依据 [设计定稿](../design/obsidian-portrait/README.md)，工作拆分与真实验收依据 [开发计划](../product/开发计划与验收矩阵.md)。离线通读可打开 [完整手册](../product/产品与技术开发基线.html)。
 
 | 章节 | 解决的问题 |

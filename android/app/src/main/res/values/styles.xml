@@ -1,0 +1,10 @@
+<resources>
+    <style name="HallTheme" parent="android:style/Theme.Material.NoActionBar">
+        <item name="android:fontFamily">sans</item><item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar">false</item><item name="android:windowActionModeOverlay">true</item>
+        <item name="android:windowBackground">#101317</item><item name="android:statusBarColor">#101317</item><item name="android:navigationBarColor">#101317</item>
+        <item name="android:colorAccent">#81D8DF</item>
+    </style>
+    <style name="GameTheme" parent="android:style/Theme.Material.NoActionBar"><item name="android:windowFullscreen">true</item><item name="android:windowBackground">#101317</item><item name="android:windowActionModeOverlay">true</item><item name="android:windowLightStatusBar">false</item><item name="android:alertDialogTheme">@style/GameDialogTheme</item></style>
+    <style name="GameDialogTheme" parent="android:style/Theme.Material.Dialog.Alert"><item name="android:windowBackground">@drawable/game_dialog_background</item><item name="android:colorBackgroundFloating">#1B2128</item><item name="android:textColorPrimary">#F0F4F7</item><item name="android:textColorSecondary">#9EAAB5</item><item name="android:colorAccent">#81D8DF</item></style>
+</resources>

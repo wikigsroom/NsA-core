@@ -1,0 +1,9 @@
+-r requirements.txt
+# Upstream non-GUI checks and port tooling. The Android hall does not need Qt.
+lz4==4.4.5
+capstone==5.0.9
+pillow==13.0.0
+fonttools==4.68.0
+pyyaml==6.0.3
+backports.zstd==1.8.0; python_version < "3.14"
+pycryptodome==4.3.0

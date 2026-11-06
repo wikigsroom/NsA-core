@@ -1,0 +1,12 @@
+{
+  "openapi": "3.1.1",
+  "info": {"title": "NsA implementation additions", "version": "1.1.0"},
+  "paths": {
+    "/v1/app-update/download": {"get": {"operationId": "getAppUpdateArtifact", "responses": {"200": {"description": "Private verified APK grant", "content": {"application/json": {"schema": {"$ref": "domain.schema.json#/$defs/ArtifactAccess"}}}}, "204": {"description": "No published update"}}}},
+    "/admin/v1/app-updates": {"post": {"operationId": "publishAppUpdate", "requestBody": {"required": true, "content": {"application/json": {"schema": {"$ref": "operations-extension.schema.json#/$defs/AppUpdatePublishRequest"}}}}, "responses": {"201": {"description": "Signed update publication recorded"}}}},
+    "/admin/v1/roles/{subject_id}": {
+      "get": {"operationId": "getSubjectRoles", "responses": {"200": {"description": "Current role revision"}}},
+      "patch": {"operationId": "changeSubjectRoles", "requestBody": {"required": true, "content": {"application/json": {"schema": {"$ref": "domain.schema.json#/$defs/RoleChange"}}}}, "responses": {"200": {"description": "Role change recorded and audited"}}}
+    }
+  }
+}

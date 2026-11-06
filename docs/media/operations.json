@@ -1,0 +1,28 @@
+{
+  "source": "actual local HTTPS operations application on desktop",
+  "synthetic": false,
+  "browser_closed": true,
+  "artifacts": [
+    {
+      "name": "operations-releases.png",
+      "sha256": "64944821fe98cded7aa2c943440b114e37289ae6f3bca6b62d5bdae6ed91b571",
+      "source": "actual local HTTPS operations application",
+      "synthetic": false,
+      "captured_at": "2026-11-06T19:33:54.725Z"
+    },
+    {
+      "name": "operations-games.png",
+      "sha256": "2ed80c67207305e6dbd2f6a7abfad7c5a293a241a6df3737fb12c85c9639c43b",
+      "source": "actual local HTTPS operations application",
+      "synthetic": false,
+      "captured_at": "2026-11-06T19:33:55.714Z"
+    },
+    {
+      "name": "operations-health.png",
+      "sha256": "b7e2767989cd6f97326b78dbd81184379babfe8aa551bce8108cd031a8b2cab8",
+      "source": "actual local HTTPS operations application",
+      "synthetic": false,
+      "captured_at": "2026-11-06T19:33:56.387Z"
+    }
+  ]
+}

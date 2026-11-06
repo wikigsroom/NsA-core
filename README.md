@@ -1,3 +1,62 @@
+# NsA · Unified Android game hall
+
+[简体中文](README.zh-CN.md) · [Detailed setup and usage](docs/hall/README.md) · [Implementation status](docs/hall/implementation-status.md) · [Product requirements](docs/product/README.md) · [Engineering baseline](docs/engineering/README.md)
+
+**One installed app: discover → download → verify and install → play in landscape → save and return to the portrait hall.**
+
+This fork builds a unified Kotlin/Compose Android hall on [nx2android](https://github.com/shirai91/nx2android) and [nxnative](https://github.com/seedds/nxnative). The finalized D Obsidian design uses a dark portrait interface with Discovery, Library, Downloads and Settings. A separate operations site handles content rights, builds, uploads, independent review, publication, compatibility evidence and audit.
+
+**Current state: integrated development build, not accepted as a complete playable release.** New source is not device acceptance evidence. Existing standalone game results below belong to the upstream/per-game workflow; they do not establish unified-hall compatibility. Track actual builds, tests, limitations and media in the [implementation record](docs/hall/implementation-status.md).
+
+| Layer | Concrete behavior |
+|---|---|
+| Android hall | Cached catalogue, search/filter/detail, installed library, queue, storage, saves, settings, feedback and app updates |
+| Transfer/install | One active transfer, 8 MiB checked ranges, bounded streaming, safe ZIP64 extraction, durable installation journal |
+| Runtime | Explicit compiled slots, unique SONAMEs, ABI identity binding, one fresh `:game` process per session, actual save events |
+| Services | FastAPI, verification worker, PostgreSQL/private S3 production providers, explicit SQLite/private-directory development providers |
+| Operations | OIDC/PKCE, server roles, idempotency, revision checks, independent reviewers and audit |
+| Tooling | Native Windows setup/build/publication, USB-only install/capture, bilingual documentation |
+
+Actual Android captures (the app interface currently uses Simplified Chinese):
+
+<table>
+<tr><td>Library</td><td>Settings</td><td>Saves and backups</td></tr>
+<tr><td><img src="docs/media/library.png" width="230" alt="Actual portrait game library"></td><td><img src="docs/media/settings.png" width="230" alt="Actual settings page"></td><td><img src="docs/media/saves.png" width="230" alt="Actual save management page"></td></tr>
+</table>
+
+<details>
+<summary>Actual download walkthrough, native game input, recordings and provenance</summary>
+
+![Actual download and preparation flow](docs/media/hall-walkthrough.gif)
+
+![Real directional input in the original native 2048 game](docs/media/native-2048.gif)
+
+[Hall MP4](docs/media/hall-walkthrough.mp4) · [2048 MP4](docs/media/native-2048.mp4) · [All screenshots and provenance](docs/media/README.md). These are silent physical-device captures, not design renders. They demonstrate the shown sequence; game acceptance remains in the [verification record](docs/hall/implementation-status.md).
+
+</details>
+
+```powershell
+./devtools/hall_bootstrap.ps1
+./devtools/hall.ps1 native
+./devtools/hall.ps1 build
+```
+
+The default bootstrap prepares the original open-source 2048 slot without private game inputs. Git, Python 3.13, Java 21, SDK 36 and NDK r27c are prerequisites. See the [full guide](docs/hall/README.md) for service startup, TLS, content publication, device installation, recovery, production configuration and checks. Existing local BotW inputs are an explicit `-WithBotw` profile. No game files, keys, private APKs or saves are included; 2048 is not Switch compatibility evidence.
+
+New tools, caches, credentials, outputs and game material remain under `游戏移植/`. No Docker, WSL, virtual machine or Android emulator is used. Capture screenshots/video from the physical device; review provenance and private content before publishing README media. Design-prototype screenshots are not app runtime evidence.
+
+The update destination is [wikigsroom/NsA-core, main branch](https://github.com/wikigsroom/NsA-core/tree/main). Subsequent code, documentation and reviewed media are synchronized to `main`, preserving existing remote changes. Upstream attribution and the original standalone port instructions are retained below.
+
+For the complete solution, follow the [architecture and usage guide](docs/hall/README.md), [Chinese guide](docs/hall/README.zh-CN.md), [requirements](docs/product/README.md), [90-item source and acceptance map](docs/hall/requirement-coverage.md), [engineering constraints](docs/engineering/README.md), [design baseline](docs/design/obsidian-portrait/README.md) and [implementation decisions](docs/engineering/decisions/0005-client-guardrails-and-cache.md). Production service deployment, distribution signing and accepted game/device combinations are separate release gates.
+
+---
+
+## Retained upstream standalone porter documentation
+
+The game list and porting instructions in this section describe the original
+per-game APK workflow. The unified hall has its own published catalogue and
+[device verification record](docs/hall/implementation-status.md).
+
 <h1 align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="docs/images/logo-dark.svg">
