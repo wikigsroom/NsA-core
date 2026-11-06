@@ -1,6 +1,6 @@
 # NsA 游戏大厅二次开发文档
 
-版本：需求基线草案 v1.0；日期：2026-11-06（UTC+08:00）。
+版本：需求基线草案 v1.1；日期：2026-11-06（UTC+08:00）。
 
 用户目标是：**安装一个 App，在游戏列表找到目标，点击下载，在这个 App 内加载并游玩。**
 
@@ -14,9 +14,11 @@
 
 阅读顺序：先确认需求说明书中的产品边界，再看技术方案，最后按验收矩阵拆任务。功能编号用于跨文档追踪，不表示功能已经开发完成。
 
-非游戏大厅的视觉探索另见 [三套大厅设计选型](../design/hall-options/README.md)，包含参考 NS2 菜单思路的页面规划、A/B/C 方向和出图提示词。视觉方向在用户选定前不作为已冻结的实现规格。
+最新视觉探索见 [五套暗色竖屏大厅选型 D–H](../design/hall-options/single-home-round-2/README.md)。暗色调和默认竖屏已由用户确认，具体风格待选；原 A/B/C 横屏方案仅保留为历史视觉参考。
 
 已确定的基础：
+
+- 大厅、详情、下载、准备、设置和管理默认竖屏；仅启动具体游戏并进入运行界面后横屏，返回大厅恢复竖屏和原状态。大厅采用暗色调。
 
 - 开发仓库：[wikigsroom/NsA-core](https://github.com/wikigsroom/NsA-core)，SSH 地址 `git@github.com:wikigsroom/NsA-core.git`。
 - 上游参考：[shirai91/nx2android](https://github.com/shirai91/nx2android)；本次阅读的本地源码基线为 `a8adac18b947cc8a0969bd15e039f8cde754293a`，另有本地真机适配修改。
