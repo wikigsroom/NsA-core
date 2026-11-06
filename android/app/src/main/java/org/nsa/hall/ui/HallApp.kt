@@ -117,8 +117,6 @@ private val Palette = darkColorScheme(primary = Accent, onPrimary = Color(0xFF10
             else -> state == "verified"
         }
     }
-    val export = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/zip")) { uri -> model.saveResult("export", uri) }
-    val import = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri -> model.saveResult("import", uri) }
     val notifications = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { enabled -> model.perform { repository.preferences.boolean("notifications", enabled) } }
     fun go(next: String) { if (next != route) { backStack = ArrayList(if (route == "root") listOf("root") else (backStack + route).takeLast(16)); route = next } }
     fun back() { route = backStack.lastOrNull() ?: "root"; backStack = ArrayList(backStack.dropLast(1)) }
@@ -131,12 +129,17 @@ private val Palette = darkColorScheme(primary = Accent, onPrimary = Color(0xFF10
     LaunchedEffect(ready) {
         if (ready && !restoredCatalogueContext) { query = repository.catalogueContext.value.optString("query"); genre = repository.catalogueContext.value.optString("genre"); restoredCatalogueContext = true }
     }
-    LaunchedEffect(ready, pendingSave?.optString("id"), pendingSave?.optString("stage")) {
-        val pending = pendingSave
-        if (ready && pending?.optString("stage") == "picker") model.openSavePicker(pending.getString("id")) { kind ->
-            if (kind == "export") export.launch("${pending.getString("game_id")}-${System.currentTimeMillis()}.nsa-save.zip") else import.launch(arrayOf("application/zip", "application/octet-stream"))
+    pendingSave?.let { pending -> key(pending.getString("id")) {
+        val id = pending.getString("id")
+        val export = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/zip")) { uri -> model.saveResult("export", uri, id) }
+        val import = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri -> model.saveResult("import", uri, id) }
+        LaunchedEffect(ready, pending.optString("stage")) {
+            if (ready && route == "root" && selected.isEmpty() && pending.optString("source") == "saves") { selected = pending.getString("game_id"); tab = "library"; go("saves") }
+            if (ready && pending.optString("stage") == "picker") model.openSavePicker(id) { kind ->
+                if (kind == "export") export.launch("${pending.getString("game_id")}-${System.currentTimeMillis()}.nsa-save.zip") else import.launch(arrayOf("application/zip", "application/octet-stream"))
+            }
         }
-    }
+    } }
     LaunchedEffect(ready, route, selected, detailRequest) {
         if (ready && route in listOf("detail", "game-update") && selected.isNotEmpty() && detail == null) {
             model.perform { val restored = repository.detail(selected); withContext(Dispatchers.Main) { if (selected == restored.getJSONObject("game").getString("game_id")) detail = restored } }
@@ -268,7 +271,7 @@ private val Palette = darkColorScheme(primary = Accent, onPrimary = Color(0xFF10
                             PrimaryButton("导出游戏存档", Icons.Outlined.Upload) { model.beginSave(selected, "export", route) }
                             SecondaryButton("导入存档备份") { model.beginSave(selected, "import", route) }
                             Group("本地备份") {
-                                val backups = File(activity.filesDir, "players/local/backups/$selected").listFiles()?.sortedByDescending { it.lastModified() }.orEmpty()
+                                val backups = File(activity.filesDir, "players/local/backups/$selected").listFiles()?.filter { it.isFile && it.name.endsWith(".nsa-save.zip") }?.sortedByDescending { it.lastModified() }.orEmpty()
                                 if (backups.isEmpty()) Text("暂无自动备份", color = Secondary)
                                 backups.forEach { file -> SettingRow(file.name.substringBefore(".nsa-save"), formatBytes(file.length()), Icons.Outlined.FolderZip) {
                                     val uri = FileProvider.getUriForFile(activity, activity.packageName + ".files", file)

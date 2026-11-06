@@ -71,7 +71,7 @@ class SaveRecoveryTest {
             repository.saveExchange.begin("save-test", "import", "saves")
             val id = JSONObject(repository.dao.fact("pending-save")!!.value).getString("id")
             assertEquals("import", repository.saveExchange.claimPicker(id))
-            repository.saveExchange.result("import", Uri.fromFile(archive))
+            assertTrue(repository.saveExchange.result("import", Uri.fromFile(archive), id))
             repository.database.close(); repository = HallRepository(context)
             repository.saveExchange.recover()
             val pending = JSONObject(repository.dao.fact("pending-save")!!.value)
@@ -123,6 +123,27 @@ class SaveRecoveryTest {
             val paused = repository.dao.transfer("transfer-1")!!
             assertEquals("paused", paused.state); assertEquals(3L, paused.bytes); assertEquals(3L, File(task, "archive.zip.partial").length())
             assertEquals(9L, repository.dao.transfer("completed-1")!!.bytes)
+        } finally { repository.database.close(); root.deleteRecursively() }
+    }
+    @Test fun stalePickerResultCannotBecomeAnotherOperationsImport() = runBlocking {
+        val base = InstrumentationRegistry.getInstrumentation().targetContext
+        val root = File(base.cacheDir, "isolated-save-${UUID.randomUUID()}").apply { mkdirs() }
+        val repository = HallRepository(IsolatedContext(base, root))
+        try {
+            seed(repository)
+            val archive = SaveManager(repository).createExport("save-test")
+            // A test input outside the private exchange workspace, like SAF.
+            val chosen = File(root, "chosen.zip"); archive.copyTo(chosen)
+            repository.saveExchange.begin("save-test", "import", "saves")
+            val first = JSONObject(repository.dao.fact("pending-save")!!.value).getString("id")
+            repository.saveExchange.claimPicker(first); repository.saveExchange.cancel(first)
+            repository.saveExchange.begin("save-test", "import", "saves")
+            val second = JSONObject(repository.dao.fact("pending-save")!!.value).getString("id")
+            repository.saveExchange.claimPicker(second)
+            assertFalse(repository.saveExchange.result("import", Uri.fromFile(chosen), first))
+            assertEquals("awaiting-result", JSONObject(repository.dao.fact("pending-save")!!.value).getString("stage"))
+            assertTrue(repository.saveExchange.result("import", Uri.fromFile(chosen), second))
+            repository.saveExchange.cancel(second)
         } finally { repository.database.close(); root.deleteRecursively() }
     }
 }

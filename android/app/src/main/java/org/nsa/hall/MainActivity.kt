@@ -46,9 +46,8 @@ class HallViewModel(val repository: HallRepository, val controller: SessionContr
     }
     fun perform(action: suspend () -> Unit) { viewModelScope.launch { actionLock.withLock { working.value = true; try { withContext(Dispatchers.IO) { action() } } catch (error: CancellationException) { throw error } catch (error: Exception) { notice.value = error.message ?: "操作失败，请重试" } finally { working.value = false } } } }
     fun beginSave(game: String, kind: String, source: String) = perform { repository.saveExchange.begin(game, kind, source) }
-    fun saveResult(kind: String, uri: android.net.Uri?) = perform {
-        repository.saveExchange.result(kind, uri)
-        if (uri != null) notice.value = if (kind == "export") "存档快照已导出，请妥善保存备份文件" else "备份已准备好，请确认是否导入"
+    fun saveResult(kind: String, uri: android.net.Uri?, operationId: String) = perform {
+        if (repository.saveExchange.result(kind, uri, operationId)) notice.value = if (kind == "export") "存档快照已导出，请妥善保存备份文件" else "备份已准备好，请确认是否导入"
     }
     fun openSavePicker(id: String, launch: (String) -> Unit) = perform {
         repository.saveExchange.claimPicker(id)?.let { kind -> withContext(Dispatchers.Main) { launch(kind) } }

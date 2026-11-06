@@ -36,10 +36,11 @@ class SaveExchange(private val repository: HallRepository) {
         require(kind in listOf("import", "export")); require(pending() == null) { "请先完成或取消当前存档操作" }
         repository.requireIdle(game)
         val value = JSONObject().put("id", UUID.randomUUID().toString()).put("game_id", safeId(game)).put("kind", kind).put("source", source).put("stage", "preparing")
+        if (kind == "export") value.put("file", "export-${value.getString("id")}.nsa-save.zip")
         store(value)
         try {
             if (kind == "export") {
-                val archive = saves.createExport(game)
+                val archive = saves.createExport(game, value.getString("id"))
                 value.put("file", archive.name).put("sha256", sha256(archive)).put("bytes", archive.length().toString())
             }
             store(value.put("stage", "picker"))
@@ -50,11 +51,11 @@ class SaveExchange(private val repository: HallRepository) {
         if (value.getString("id") != id || value.getString("stage") != "picker") return@withLock null
         store(value.put("stage", "awaiting-result")); value.getString("kind")
     }
-    suspend fun result(kind: String, uri: Uri?) = lock.withLock {
-        val value = pending() ?: return@withLock
-        require(value.getString("kind") == kind)
-        if (value.getString("stage") !in listOf("awaiting-result", "failed")) return@withLock
-        if (uri == null) { clear(value); return@withLock }
+    suspend fun result(kind: String, uri: Uri?, operationId: String): Boolean = lock.withLock {
+        val value = pending() ?: return@withLock false
+        if (value.getString("kind") != kind || value.getString("id") != operationId) return@withLock false
+        if (value.getString("stage") !in listOf("awaiting-result", "failed")) return@withLock false
+        if (uri == null) { clear(value); return@withLock false }
         try {
             if (kind == "export") {
                 val archive = file(value)
@@ -68,6 +69,7 @@ class SaveExchange(private val repository: HallRepository) {
                 store(value); copyAndInspect(value)
             }
         } catch (error: Exception) { failed(value, error); throw error }
+        true
     }
     private suspend fun copyAndInspect(value: JSONObject) {
         val archive = file(value)
@@ -102,14 +104,24 @@ class SaveExchange(private val repository: HallRepository) {
                 value.getString("kind") == "import" -> store(value.put("stage", "picker"))
                 value.has("file") && file(value).isFile -> store(value.put("stage", "picker"))
                 else -> {
-                    val archive = saves.createExport(value.getString("game_id"))
+                    val archive = saves.createExport(value.getString("game_id"), value.getString("id"))
                     store(value.put("file", archive.name).put("bytes", archive.length().toString()).put("sha256", sha256(archive)).put("stage", "picker"))
                 }
             }
         } catch (error: Exception) { failed(value, error); throw error }
     }
     suspend fun recover() = lock.withLock {
-        val value = pending() ?: return@withLock
+        val value = pending()
+        // Temporary exports used by automatic backups have no pending picker.
+        // Serialize cleanup with the worker's snapshot writer as well.
+        repository.operationLock.withLock {
+            val keep = value?.optString("file")
+            saves.exchangeRoot.listFiles().orEmpty().filter { !it.isDirectory && it.name != keep }.forEach { require(it.delete()) { "中断草稿清理未完成，请重试" } }
+        }
+        if (value == null) return@withLock
+        if (value.getString("stage") == "preparing" && value.has("file")) {
+            val partial = file(value); require(!partial.exists() || partial.delete()) { "中断导出尚未清理，请重试" }
+        }
         if (value.getString("stage") == "confirm") {
             try {
                 require(file(value).isFile && file(value).length().toString() == value.getString("bytes")) { "备份草稿已丢失，请取消后重新选择" }

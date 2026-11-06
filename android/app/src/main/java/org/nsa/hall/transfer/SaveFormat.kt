@@ -31,6 +31,7 @@ class SaveExpansionBudget(total: Long, maximum: Long = SaveFormat.MAXIMUM) {
 
 object SaveFormat {
     const val MAXIMUM = 2L * 1024 * 1024 * 1024
+    const val MAX_METADATA = 8 * 1024 * 1024
     private val fields = setOf("save_schema", "game_id", "local_player_id", "source_release_id", "compatibility_group", "commit_seq", "created_at", "total_bytes", "files")
     private fun string(value: JSONObject, field: String): String = (value.get(field) as? String) ?: error("存档备份字段类型无效：$field")
     fun validate(metadata: JSONObject, maximum: Long = MAXIMUM): List<SaveFile> {

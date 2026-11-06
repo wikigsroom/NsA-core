@@ -44,8 +44,8 @@ class SaveManager(private val repository: HallRepository) {
         // private staging file, never an authoritative committed save.
         return if (manifest.getJSONObject("runtime").getString("runtime_slot_id") == "nsa-2048-v1") all.filter { it.relativeTo(root).invariantSeparatorsPath == "state.dat" } else all
     }
-    suspend fun createExport(game: String): File = repository.operationLock.withLock { createExportUnderOperationLock(game) }
-    private suspend fun createExportUnderOperationLock(game: String): File {
+    suspend fun createExport(game: String, draftId: String? = null): File = repository.operationLock.withLock { createExportUnderOperationLock(game, draftId) }
+    private suspend fun createExportUnderOperationLock(game: String, draftId: String? = null): File {
         repository.requireIdle(game); recoverUnderOperationLock(game)
         val (release, manifest) = installed(game)
         val root = repository.saveRoot(game); val sources = files(game, manifest)
@@ -73,11 +73,14 @@ class SaveManager(private val repository: HallRepository) {
             .put("commit_seq", index?.optLong("revision") ?: repository.dao.fact("save-seq:$game")?.value?.toLongOrNull() ?: 0)
             .put("created_at", Instant.now().toString()).put("total_bytes", total.toString()).put("files", entries)
         SaveFormat.validate(metadata)
-        val out = File(exchangeRoot, "export-${UUID.randomUUID()}.nsa-save.zip")
+        val rawMetadata = metadata.toString().toByteArray()
+        require(rawMetadata.size <= SaveFormat.MAX_METADATA) { "存档备份清单超过大小上限，请减少备份文件数量" }
+        val out = File(exchangeRoot, "export-${draftId?.let(::safeId) ?: UUID.randomUUID()}.nsa-save.zip")
+        require(!out.exists()) { "已有待处理的导出草稿，请先恢复或取消" }
         try {
             out.outputStream().use { stream ->
                 ZipOutputStream(stream.buffered()).use { zip ->
-                zip.putNextEntry(ZipEntry("backup.json")); zip.write(metadata.toString().toByteArray()); zip.closeEntry()
+                zip.putNextEntry(ZipEntry("backup.json")); zip.write(rawMetadata); zip.closeEntry()
                 sources.forEach { file -> zip.putNextEntry(ZipEntry("files/" + file.relativeTo(root).invariantSeparatorsPath)); file.inputStream().use { it.copyTo(zip, 65536) }; zip.closeEntry() }
                 zip.finish(); zip.flush(); stream.fd.sync()
                 }
@@ -117,8 +120,10 @@ class SaveManager(private val repository: HallRepository) {
         rejectLinksAndSpecialEntries(archive)
         val metadata = ZipFile(archive).use { zip ->
             val entry = zip.getEntry("backup.json") ?: error("缺少存档备份清单")
-            require(entry.size in 1..(8 * 1024 * 1024))
-            strictObject(zip.getInputStream(entry).use { it.readBounded(8 * 1024 * 1024 + 1) })
+            require(entry.size in 1..SaveFormat.MAX_METADATA)
+            val raw = zip.getInputStream(entry).use { it.readBounded(SaveFormat.MAX_METADATA + 1) }
+            require(raw.size <= SaveFormat.MAX_METADATA)
+            strictObject(raw)
         }
         val entries = SaveFormat.validate(metadata)
         require(metadata.getString("game_id") == game && metadata.getString("local_player_id") == "local") { "备份属于其他游戏或玩家" }
