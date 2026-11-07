@@ -24,8 +24,8 @@ fun atomicJson(file: File, json: JSONObject) {
 }
 fun syncDirectory(directory: File) {
     require(directory.isDirectory && !Files.isSymbolicLink(directory.toPath()))
-    val fd = Os.open(directory.absolutePath, OsConstants.O_RDONLY or OsConstants.O_DIRECTORY or OsConstants.O_NOFOLLOW, 0)
-    try { Os.fsync(fd) } finally { Os.close(fd) }
+    val fd = Os.open(directory.absolutePath, OsConstants.O_RDONLY or OsConstants.O_NOFOLLOW, 0)
+    try { require(OsConstants.S_ISDIR(Os.fstat(fd).st_mode)); Os.fsync(fd) } finally { Os.close(fd) }
 }
 
 /** Never traverses an external tree; the transfer lifetime owner has closed its writers. */
