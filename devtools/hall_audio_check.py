@@ -20,6 +20,28 @@ import time
 import hall_smoke
 
 
+def tone_fit(samples, frequency=440, sample_rate=48000):
+    """Fit the known game tone in the loudest 1024-sample window.
+
+    Normalize by observed energy so the user's volume curve does not decide
+    whether an actual tone is mistaken for silence. A least-squares sin/cos
+    fit accounts for the finite window and unknown phase.
+    """
+    count = 1024
+    if len(samples) < count: return 0.0
+    offset = max(range(0, len(samples)-count+1, 512), key=lambda i: sum(int(x)*int(x) for x in samples[i:i+count]))
+    window = samples[offset:offset+count]
+    energy = sum(int(x)*int(x) for x in window)
+    if not energy: return 0.0
+    cosine = [math.cos(math.tau*frequency*i/sample_rate) for i in range(count)]
+    sine = [math.sin(math.tau*frequency*i/sample_rate) for i in range(count)]
+    cc = sum(c*c for c in cosine); ss = sum(s*s for s in sine); cs = sum(c*s for c,s in zip(cosine,sine))
+    xc = sum(x*c for x,c in zip(window,cosine)); xs = sum(x*s for x,s in zip(window,sine))
+    determinant = cc*ss-cs*cs
+    a = (xc*ss-xs*cs)/determinant; b = (xs*cc-xc*cs)/determinant
+    return max(0.0, min(1.0, (a*xc+b*xs)/energy))
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--label', required=True, help='Unique private evidence folder name')
@@ -63,11 +85,12 @@ def main():
         subprocess.run(['ffmpeg', '-hide_banner', '-loglevel', 'error', '-y', '-i', str(target), '-ac', '1', '-ar', '48000', '-f', 's16le', str(pcm)], check=True)
         samples = array.array('h', pcm.read_bytes())
         if not samples: raise RuntimeError('No decoded samples')
-        observations.append({'round': round_number, 'seconds':len(samples)/48000, 'nonzero_samples':sum(n != 0 for n in samples), 'peak':max(abs(n) for n in samples), 'rms':math.sqrt(sum(int(n)*int(n) for n in samples)/len(samples)), 'sha256':hashlib.sha256(target.read_bytes()).hexdigest(), 'events':events})
+        peak = max(abs(n) for n in samples)
+        observations.append({'round': round_number, 'seconds':len(samples)/48000, 'nonzero_samples':sum(n != 0 for n in samples), 'peak':peak, 'peak_dbfs':20*math.log10(peak/32768) if peak else None, 'tone_440_fit':tone_fit(samples), 'rms':math.sqrt(sum(int(n)*int(n) for n in samples)/len(samples)), 'sha256':hashlib.sha256(target.read_bytes()).hexdigest(), 'events':events})
         time.sleep(1)
     logs = phone.adb('logcat', '-d', '--pid=' + game_pid)
     (destination / 'game-logcat.txt').write_text(logs, encoding='utf-8')
-    record = {'at':datetime.now(timezone.utc).isoformat(), 'installed_apk_sha256':phone.apk_sha256, 'game_pid':game_pid, 'source':'official scrcpy Android output, no video/control/playback', 'captures':observations, 'reopen_log_count':logs.count('2048 audio disconnected; reopening'), 'output_start_log_count':logs.count('2048 audio output started'), 'signal_check_passed':all(r['nonzero_samples'] > 1000 and r['peak'] > 100 and sum(e['save_changed'] for e in r['events']) >= 2 for r in observations), 'subjective_listening_accepted':False, 'full_playability_accepted':False}
+    record = {'at':datetime.now(timezone.utc).isoformat(), 'installed_apk_sha256':phone.apk_sha256, 'game_pid':game_pid, 'source':'official scrcpy Android output, no video/control/playback', 'captures':observations, 'reopen_log_count':logs.count('2048 audio disconnected; reopening'), 'output_start_log_count':logs.count('2048 audio output started'), 'signal_check_passed':all(r['nonzero_samples'] > 1000 and r['peak'] >= 8 and r['tone_440_fit'] >= .8 and sum(e['save_changed'] for e in r['events']) >= 2 for r in observations), 'subjective_listening_accepted':False, 'full_playability_accepted':False}
     (destination / 'observation.json').write_text(json.dumps(record, indent=2)+'\n', encoding='utf-8')
     print(json.dumps(record, indent=2))
     if not record['signal_check_passed']: raise RuntimeError('Audio output signal regression; raw evidence retained')

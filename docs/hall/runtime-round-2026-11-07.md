@@ -31,3 +31,5 @@ No game data, private recordings, keys or APKs are published. No other applicati
 ## Execution status
 
 Source batch and verification tool prepared; **not yet built or tested**. The preceding candidate's results do not transfer to the next APK.
+
+The first capture-tool run on the new APK retained nonzero output but failed its fixed `peak > 100` criterion (observed peak 75 at the unchanged device volume). Independent frequency analysis identifies the expected 440 Hz game tone, with negligible 220/660/1000 Hz components. Before repeating capture, the tool now requires an above-quantization signal, at least 1000 nonzero samples, two actual saved moves and at least 80% energy explained by a phase-independent 440 Hz fit in its loudest 1024-sample window. It also records dBFS. The original failed run is retained; this signal criterion does not accept loudness, subjective sound quality or BotW audio. Only the capture tool changes; the APK/native inputs remain those of `f1c68f7`.
