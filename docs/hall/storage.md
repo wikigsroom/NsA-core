@@ -6,12 +6,15 @@ Observed on 2026-11-07. All paths below are relative to this checkout under `游
 
 | Directory | Logical size | Retained purpose / 保留原因 |
 |---|---:|---|
-| `.gamedump/Hall/` | 14.35 GiB | Private packaged resources, native build and raw USB evidence / 私有资源归档、原生构建和真机原始证据 |
+| `.gamedump/Hall/` | 14.36 GiB | Private packaged resources, native build and raw USB evidence / 私有资源归档、原生构建和真机原始证据 |
 | `.gamedump/BOTW/` | 39.42 GiB | Existing extracted inputs, standalone build, original saves and diagnostics / 已有解包输入、单游戏构建、原始存档与诊断 |
 | `services/local/` | 14.31 GiB | Private service object copy, database and development credentials / 目录服务使用的私有对象副本、数据库和开发凭据 |
 | `tools/hall/` | 2.07 GiB | SDK, Gradle and reproducible local build caches / SDK、Gradle 及本地构建缓存 |
 | `tools/player/toolchains/` | 2.95 GiB | Existing native Android toolchain / 原生 Android 工具链 |
 | `android/` | 0.29 GiB | Source plus generated app/test packages and build output / 源码、应用及测试包与构建输出 |
+| `output/` | 0.36 GiB | Reviewed design/validation outputs and private prior/current APKs, bindings, database backup and build logs / 设计验证输出、本轮新旧安装包、绑定、数据库备份与日志 |
+
+The recovery-round measurement found **496,564,584,448 free bytes** on the development drive (about 462.46 GiB). This is an observation at measurement time, not reserved capacity or the minimum installation requirement. The five retained directories above 1 GiB have their purposes listed above; no original game inputs, progress or published service objects were removed. / 本轮测得开发盘剩余约 462.46 GiB；五个超过 1 GiB 的目录按表中用途保留，未删除原游戏输入、进度或服务已发布对象。
 
 The private BotW archive is **15,354,465,247 bytes** (14.300 GiB), with **41,086 files** and **15,346,165,157 unpacked bytes** (14.292 GiB). The initial phone preparation estimate is **32,848,114,052 additional bytes** (30.592 GiB), including the 2 GiB safety reserve. It excludes the already installed APK, existing saves and a retained previous release during an update. Completed installation removes the reproducible download archive from the phone. Directory allocation and generated metadata add overhead; the installed resource directory was observed at approximately 14.39 GiB.
 

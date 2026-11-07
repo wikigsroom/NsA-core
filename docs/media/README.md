@@ -2,6 +2,8 @@
 
 Only reviewed captures from the USB physical Android device belong here. Each exported PNG/GIF/MP4 has a neighboring provenance JSON recording the application ID, source hash and conversion. Screens captured from the design prototype stay in `docs/design` and must not be represented as runtime evidence.
 
+The [recovery candidate](../hall/recovery-round-2026-11-07.md) has no new device captures yet. All images and clips below keep their original APK identities; they are not screenshots of the new recovery behavior. / 恢复修正候选尚未采集新真机素材；下方截图与视频继续对应各自旧 APK，不能代表新恢复界面或行为已验证。
+
 Capture with `devtools/hall_device.py`, review private information and game content, then export using `devtools/hall_media.py`. An app UI recording demonstrates the visible behavior captured; it does not prove 30-minute game stability, save compatibility or the complete G0 matrix.
 
 Actual captures date: 2026-11-07, Asia/Taipei. Device: Motorola edge plus, Android 12 / API 31, arm64-v8a, Adreno 650. The installed APK digest is recorded beside every USB image/clip. Source recordings, raw diagnostics and personal game saves remain private. The app interface currently uses Simplified Chinese; the project guides are bilingual.

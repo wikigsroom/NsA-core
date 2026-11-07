@@ -6,9 +6,9 @@ This procedure is for the **next** device run, not a pass report. The merged-mai
 
 本文件规定下一轮操作，不代表已经验收通过。上次 main 运行至《旷野之息》标题和导入存档的神庙场景，随后被另一项 USB 测试结束。按用户要求保留该测试，先完成文档，待手机可用后继续。
 
-The [targeted source review](source-review.md) adds open policy, reconstruction and save-exchange corrections to the next complete source batch. Finish that batch before its consolidated checks; record the new candidate's identity and repeat affected cases. Historical screenshots and passes do not transfer to a changed APK.
+The [historical targeted source review](source-review.md) led to the [completed source correction batch](recovery-round-2026-11-07.md). Its computer-side checks and candidate identity are recorded separately. Install only after content/service rollout is ready, then repeat the affected device cases. Historical screenshots and passes do not transfer to a changed APK.
 
-[定向源码核对](source-review.md)已补充下一整批的修正与故障验证要求。完成整批后集中验证，记录新候选身份并重跑受影响案例；旧截图及通过结果不能转算到新 APK。
+[历史定向源码核对](source-review.md)对应的[整批源码修正](recovery-round-2026-11-07.md)已有独立电脑端检查与候选身份。真机安装须先完成资源和服务更新准备，再重跑受影响案例；旧截图及通过结果不能转算到新 APK。
 
 ## Preparation / 准备
 
@@ -16,7 +16,7 @@ The [targeted source review](source-review.md) adds open policy, reconstruction 
 2. Ensure no second automation, instrumentation or manual user controls the same phone. If focus moves to another app, stop input/recording and retain the interrupted evidence. Obtain permission before stopping another project's work; do not repeatedly take over its app.
 3. Export important progress through the App save page/system picker. Do not clear data, uninstall, reset the phone or modify the standalone game installation. Overlay installation can stop a game: exit normally and confirm no live `:game` process before installation.
 4. Start the HTTPS API and worker; check USB authorization, `adb reverse tcp:8443 tcp:8443`, matching CA and invitation. Keep keys/tokens and raw diagnostics private.
-5. Record source commit, tree state, APK SHA/version/signer, registry/library digests, releases, profile/module/driver identities, OS/GPU/RAM/page size, graphics settings and timestamps. A production candidate needs identities generated from clean committed source.
+5. Record source commit, tree state, APK SHA/version/signer, registry/library digests, releases, profile/module/driver identities, OS/GPU/RAM/page size, graphics settings and timestamps. A production candidate needs identities generated from clean committed source. For the recovery candidate, use its recorded native revision and new 2048 resource release; never relabel the published v1 fixture or reuse its incompatible profile.
 
 先完成整批代码，再统一构建验证。确保手机没有其他控制任务；重要进度先通过 App 导出。安装前正常结束游戏，不清数据、不卸载、不重置。记录当前构建、内容、运行组件、驱动、设备与设置，凭据不写入公开记录。
 
@@ -27,6 +27,27 @@ services/.venv/Scripts/python.exe devtools/hall_smoke.py all
 ```
 
 `all` removes/re-downloads only the original 2048 resources and checks that saved bytes survive. It does not execute the BotW/G0 steps below. Run installation only after the preparation above.
+
+## Recovery-candidate cases / 恢复候选专测
+
+The candidate includes **seven compiled instrumentation cases, zero executed in the correction round**. Run the complete `DeviceContractTest`, `NavigationRecoveryTest` and five-case `SaveRecoveryTest` suite on the one authorized phone after preserving its progress. `SaveRecoveryTest` uses separate Room/files roots beneath its own test cache; it never targets the player's installed games or saves. Compilation alone does not establish its filesystem assertions.
+
+新候选的 7 项仪器测试均已编译、本轮均未执行；其中 5 项新增用例覆盖真实存档导入/再导出与幂等、原游戏确认恢复、2048 暂存排除、安装/分块对账、旧选择器回调归属。待手机可用时整套执行，保留测试报告和失败；测试私有目录与玩家资料隔离。
+
+| Case / 场景 | Required observation / 必须观察 |
+|---|---|
+| Scoped policy / 范围策略 | Repeated unchanged responses retain signed identity; narrowed/older scope cannot erase a known release block; installed fixed-digest content tolerates key revocation alone while exact release blocking still wins. Use separate local fault fixtures; restore policy after the scenario. |
+| Offline readiness / 离线准备 | First trusted preparation has a visible retry path; a valid empty cache differs from no cache. Prepared offline-permitted content starts without a second online dependency. |
+| Catalogue recovery / 目录恢复 | Commit a search/type filter, recreate the main process and restore matching results, query, endpoint and update time; stale earlier requests cannot overwrite the latest query. |
+| Live game with main-process loss / 大厅进程死亡 | Preserve the running `:game` process while ending only this app's main process. The rebuilt hall keeps the kernel guard, authenticates reconnect to the original session/generation, receives replay and starts no second native instance. Unknown ownership remains guarded. Package-wide force-stop is a different case. |
+| Pending chooser / 文件选择器 | Open import/export, recreate Activity/main process, return the result and retain original game/operation ownership. Cancel, start a different same-kind operation, and ensure a delayed old result cannot affect it or report success. |
+| Confirmation/cancellation / 确认与取消 | Before confirmation, cancel removes only the draft. Throughout confirmed import, repeated confirm/back/outside dismissal cannot cancel publication; progress remains visible. Retry retains the verified private archive. |
+| Publication faults / 交换故障 | With expendable isolated test saves, interrupt around journal/old rename/new rename/index/cleanup and directory-sync/space faults; recover the complete indexed new snapshot or the original old snapshot, never an empty replacement. Repeat recovery without advancing the import revision again. |
+| Export/native boundary / 导出与原生入口 | Export the same authoritative snapshot represented by its local revision; no demo staging file. Hall native menus cannot bypass the exchange coordinator; standalone behavior remains separately tested. |
+
+Use isolated generated saves and a local test service for destructive/fault cases. Preserve the player's originals and the candidate's exact SHA. These scenarios are additional to the portrait walkthrough, actual game progress, audio, repeated switching and sustained-play gates below.
+
+故障注入使用可丢弃的隔离测试档和本地服务，保留原始进度及候选摘要。以上专测不能替代下方的真实游戏操作、新进度保存重读、声音、五轮切换与连续游玩验收。
 
 ## Portrait hall / 竖屏大厅
 

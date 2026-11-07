@@ -1,14 +1,14 @@
 # Implementation and verification record
 
-New source batch / 新源码批次：[恢复与存档修正轮次](recovery-round-2026-11-07.md)单独记录 APP-05、APP-08、SAVE-04 的修正与集中检查。本页此前的 APK、手机操作与素材证据保留原构建身份，不自动适用于新源码。
+New source batch / 新源码批次：[恢复与存档修正轮次](recovery-round-2026-11-07.md)单独记录 APP-05、APP-08、SAVE-04 的修正与集中检查。新候选尚未安装到手机；本页下方表格和 APK、手机操作及素材结果都是各自旧构建的历史记录，不自动适用于新源码。正式游戏、设备与生产发布门槛继续开放。
 
-Updated 2026-11-07, Asia/Taipei. Internal development version; full game/device and production acceptance remain open. Merged source `3c096c8` has been pushed to `origin/main`, retaining remote main `4d1348c` and feature `8709245`. The physical device is a Motorola edge plus, Android 12 / API 31, arm64-v8a, Adreno 650, with 4096-byte pages.
+Historical installed build, recorded 2026-11-07, Asia/Taipei: merged source `3c096c8`, retaining remote main `4d1348c` and feature `8709245`. This is the retained phone build, not the latest repository revision. The physical device is a Motorola edge plus, Android 12 / API 31, arm64-v8a, Adreno 650, with 4096-byte pages.
 
 The implementation includes the portrait Compose hall, persisted downloads, signed ZIP64 installation, save exchange and backups, isolated native runtime slots, catalogue/worker/operations services, native Windows tooling and bilingual documentation. See the [90-item source map](requirement-coverage.md), [operating guide](README.md), [中文手册](README.zh-CN.md), [reviewed media](../media/README.md), [measured storage](storage.md), [next device procedure](device-validation.md), [machine-readable execution summary](verification/2026-11-07-main.json) and [targeted source review](source-review.md). Source mapping is not acceptance of every rule.
 
-The subsequent documentation-only review inspects source `cdedc71`: APP-05, APP-08 and SAVE-04, all twelve detailed rules. Separate code/specification refutation retains 16 original defect cores (15 after deduplicating the surviving-process issue); APP-05-D03 remains unverified, and a supplementary review resolves unified native player import/export as in scope. These open defects are not fixed by the documentation. No new APK, application tests or phone operations were performed in that round. The other 87 requirements were not individually audited. Read the [detailed findings and next complete batch](source-review.md), [evidence records](reviews/2026-11-07/README.md) and [structured review](verification/2026-11-07-source-review.json).
+The historical documentation-only review inspects source `cdedc71`: APP-05, APP-08 and SAVE-04, all twelve detailed rules. Separate code/specification refutation retains 16 original defect cores (15 after deduplicating the surviving-process issue); APP-05-D03 remains unverified, and a supplementary review resolves unified native player import/export as in scope. No new APK, application tests or phone operations were performed in that review round. The later [correction batch](recovery-round-2026-11-07.md) implements the changes with separate build/test evidence and pending device cases. The other 87 requirements were not individually audited. Read the [historical findings](source-review.md), [evidence records](reviews/2026-11-07/README.md) and [structured review](verification/2026-11-07-source-review.json).
 
-后续文档轮次只做源码核对与交付说明：三个需求、十二条细则，独立复核后保留十六条有证据支持的缺陷核心，重复根因合并后十五项；初始离线策略问题未获确认，另补充统一原生菜单的适用范围。问题仍待修正，本轮没有新构建、程序测试或手机操作；其余 87 项没有逐条审查。以下历史执行结果继续对应各自原 APK。
+历史文档轮次只做源码核对与交付说明：三个需求、十二条细则，独立复核后保留十六条有证据支持的缺陷核心，重复根因合并后十五项；初始离线策略问题未获确认，另补充统一原生菜单的适用范围。该历史轮次没有新构建、程序测试或手机操作；随后修正批次已有独立实现和电脑端验证记录，真机仍待执行。其余 87 项没有逐条审查。以下历史执行结果继续对应各自原 APK。
 
 | Gate | Actual evidence | Status |
 |---|---|---|

@@ -10,6 +10,8 @@ The optional signed `visibility_scope` field (`official` or `internal`) extends 
 
 Android scopes policy facts by endpoint, installation identity and signed visibility. A Room transaction under the policy mutex compares the previous epoch and signed payload digest. Equal-epoch different payloads and lower epochs in that scope are rejected. The endpoint's known release decisions are merged by sequence, so an older or narrower scope cannot erase a known block. Known signing-key revocations are retained per endpoint. This implementation does not provide key unrevocation; adding it requires a separate explicit policy contract.
 
+The policy response is bound to the endpoint actually used for its request, captured before network I/O. Changing the configured endpoint while a request is in flight cannot relabel that reply as policy from the new service.
+
 Installed release manifests remain bound to their stored signed digest and cryptographic signature. A revoked signing key alone does not invalidate these previously installed bytes; precise release blocking still applies. New downloads and other signed objects continue to reject revoked keys. Launch performs one final policy refresh, then checks the effective block again under the same policy mutex that owns the durable session claim. First use still requires a trusted policy. An installation's READY marker alone is not an offline-preparation certificate.
 
 ## Ownership and initialization
@@ -41,6 +43,8 @@ Complete the source batch before consolidated tests, as required by ADR 0001. Re
 ## 中文执行约束
 
 本决策落实三个 P0 需求的定向修正，不改变验收编号与正式发布门槛。策略采用稳定签名快照和数据库单调序列；新增可选签名字段区分公开/内测可见范围，旧服务响应进入独立兼容桶。已知阻断跨范围保留，首次可信准备仍然必需。正式服务先迁移数据库；闭合旧 schema 的验证器须同步升级。
+
+策略响应绑定发起请求时实际使用的服务地址；等待响应期间修改地址，不得把旧服务的结果登记为新服务策略。
 
 初始化、安装恢复与写入共用操作锁；先核对真实文件再显示可操作大厅。游戏进程持有内核租约，大厅重建后按原会话和随机身份重连，确认结束前继续保护资源与存档。不能只把持久会话行改成“崩溃”就释放保护。
 

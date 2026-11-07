@@ -1,0 +1,345 @@
+{
+  "record_version": 1,
+  "date_local": "2026-11-07",
+  "timezone": "Asia/Taipei",
+  "recorded_at_utc": "2026-11-07T00:19:17.757896+00:00",
+  "scope": "Targeted source corrections, consolidated computer checks and localhost rollout; not physical-device or production acceptance",
+  "formal_acceptance": "not_accepted",
+  "source": {
+    "repository": "https://github.com/wikigsroom/NsA-core",
+    "branch": "main",
+    "application_revision": "a1e0f18aec24c7832d326f25c16b553d88b07ae5",
+    "native_clean_revision": "e6ee168bd9f733023f3338949df9f283555120fb",
+    "service_test_revision": "c686201ce3f2952734bad769bbbd55a90f490bf5",
+    "publisher_revision": "2f25acaa4aac2167aac0cd42b3cdb6f9f4caede7",
+    "application_inputs_unchanged_since_build": true,
+    "native_inputs_unchanged_since_build": true,
+    "native_abi_unchanged": true,
+    "room_schema": 1,
+    "destructive_migration": false
+  },
+  "review_scope": {
+    "requirements": [
+      "APP-05",
+      "APP-08",
+      "SAVE-04"
+    ],
+    "detailed_rules": 12,
+    "other_requirements_not_individually_audited": 87,
+    "findings": [
+      {
+        "id": "APP-05-D01",
+        "source_correction": "implemented",
+        "device_acceptance": "pending",
+        "duplicate_of": null
+      },
+      {
+        "id": "APP-05-D02",
+        "source_correction": "implemented",
+        "device_acceptance": "pending",
+        "duplicate_of": null
+      },
+      {
+        "id": "APP-05-D04",
+        "source_correction": "implemented",
+        "device_acceptance": "pending",
+        "duplicate_of": null
+      },
+      {
+        "id": "APP-05-D05",
+        "source_correction": "implemented",
+        "device_acceptance": "pending",
+        "duplicate_of": null
+      },
+      {
+        "id": "APP-08-F01",
+        "source_correction": "implemented",
+        "device_acceptance": "pending",
+        "duplicate_of": null
+      },
+      {
+        "id": "APP-08-F02",
+        "source_correction": "implemented",
+        "device_acceptance": "pending",
+        "duplicate_of": null
+      },
+      {
+        "id": "APP-08-F03",
+        "source_correction": "implemented",
+        "device_acceptance": "pending",
+        "duplicate_of": null
+      },
+      {
+        "id": "APP-08-F04",
+        "source_correction": "implemented",
+        "device_acceptance": "pending",
+        "duplicate_of": null
+      },
+      {
+        "id": "SAVE-04-F1",
+        "source_correction": "implemented",
+        "device_acceptance": "pending",
+        "duplicate_of": null
+      },
+      {
+        "id": "SAVE-04-F2",
+        "source_correction": "implemented",
+        "device_acceptance": "pending",
+        "duplicate_of": "APP-08-F03"
+      },
+      {
+        "id": "SAVE-04-F3",
+        "source_correction": "implemented",
+        "device_acceptance": "pending",
+        "duplicate_of": null
+      },
+      {
+        "id": "SAVE-04-F4",
+        "source_correction": "implemented",
+        "device_acceptance": "pending",
+        "duplicate_of": null
+      },
+      {
+        "id": "SAVE-04-F5",
+        "source_correction": "implemented",
+        "device_acceptance": "pending",
+        "duplicate_of": null
+      },
+      {
+        "id": "SAVE-04-F6",
+        "source_correction": "implemented",
+        "device_acceptance": "pending",
+        "duplicate_of": null
+      },
+      {
+        "id": "SAVE-04-F7",
+        "source_correction": "implemented",
+        "device_acceptance": "pending",
+        "duplicate_of": null
+      },
+      {
+        "id": "SAVE-04-F8",
+        "source_correction": "implemented",
+        "device_acceptance": "pending",
+        "duplicate_of": null
+      }
+    ],
+    "not_confirmed_as_defect": [
+      "APP-05-D03"
+    ],
+    "unique_confirmed_defect_cores": 15
+  },
+  "candidate_apk": {
+    "application_id": "org.nsa.hall.debug",
+    "version_code": 1,
+    "version_name": "0.1.0-dev",
+    "abi": "arm64-v8a",
+    "path": "android/app/build/outputs/apk/debug/app-debug.apk",
+    "bytes": 82194533,
+    "sha256": "e0e4cc749012ef4ff2ad6a3f71ccdb93b31d6f4c16ab95ef9a2b6f240c0ca8b5",
+    "installed_on_phone": false,
+    "publicly_distributed": false
+  },
+  "instrumentation_apk": {
+    "path": "android/app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk",
+    "bytes": 2393074,
+    "sha256": "88f6842f78619f6db3d53c92f0d20655991b5adfee2e06f2a9bfbb0628468cdb",
+    "compiled_cases": {
+      "DeviceContractTest": 1,
+      "NavigationRecoveryTest": 1,
+      "SaveRecoveryTest": 5
+    },
+    "executed_cases_on_candidate": 0
+  },
+  "runtime_registry": {
+    "path": "android/app/src/main/assets/runtime-registry.json",
+    "bytes": 1317,
+    "sha256": "a4078a2ff820681b407391d16b71c177dea57f0c6a66b1206132e5663fa3b69f",
+    "slots": [
+      {
+        "runtime_slot_id": "nsa-2048-v1",
+        "core_revision": "e6ee168bd9f733023f3338949df9f283555120fb",
+        "profile_digest": "b18fc38452dedd8781b5c4b1d6b6efbaa8aa2f433e68eca540a27fd64a0840a7",
+        "library_name": "libnsa_2048.so",
+        "library_sha256": "2d68fc1087265f02123d8fedf9c2247ee6cf0ba480bb9d29badd02ff6884ea3c"
+      },
+      {
+        "runtime_slot_id": "botw-190-arm64-v1",
+        "core_revision": "e6ee168bd9f733023f3338949df9f283555120fb",
+        "profile_digest": "c329645b44fa82a9d72dfb21a7c422d74c9cbf40cd6fca4a33e3d043045f17fa",
+        "library_name": "libnsa_botw.so",
+        "library_sha256": "6c64326ad27346d2d7f6a21e1153c79ceb813f42797a1f4adf48901dec9e435a"
+      }
+    ]
+  },
+  "checks": {
+    "native": {
+      "compiled_host_sources": 145,
+      "failed": 0,
+      "bootstrap_and_slots_prepared": 2
+    },
+    "android": {
+      "assemble_app": "passed",
+      "assemble_instrumentation": "passed",
+      "unit_suites": [
+        {
+          "name": "org.nsa.hall.CapabilityTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "org.nsa.hall.RecoveryBoundaryTest",
+          "tests": 10,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "org.nsa.hall.SignatureVerifierTest",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "name": "org.nsa.hall.StorageBoundaryTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      ],
+      "lint_errors": 0,
+      "lint_warnings": 16,
+      "packaged_slots_and_digests": "passed"
+    },
+    "services": {
+      "passed": 35,
+      "failed": 0,
+      "dependency_deprecation_warnings": 1,
+      "initial_run": "34 passed, 1 new test used /v1/policies/releases; test URL corrected to contract /v1/policies before complete rerun"
+    },
+    "core": {
+      "run": 131,
+      "passed": 92,
+      "skipped": 39,
+      "failed": 0
+    },
+    "contracts": {
+      "groups_passed": 8,
+      "formal_acceptance": false
+    },
+    "documentation": {
+      "status": "passed",
+      "markdown_documents": 27,
+      "local_links": 716,
+      "historical_review_source": "cdedc7179ec1842592243a052525e021d8cf70f1",
+      "historical_evidence_artifacts": 18,
+      "git_head_at_check": "2f25acaa4aac2167aac0cd42b3cdb6f9f4caede7",
+      "markdown_inputs_sha256": "ede1c2fc5109680f21f13801140745212596bce948707e87bfc5bf0f9f522a06",
+      "input_normalization": "UTF-8 text with LF line endings; sorted relative path and file SHA-256 pairs; compact JSON",
+      "input_revision_note": "The digest binds the checked Markdown content independently of Windows line endings; the Git head identifies the source checkpoint before the documentation commit.",
+      "scope": "documentation links, structure and unchanged historical audit artifacts only",
+      "browser_used": false,
+      "device_tests_executed": false
+    }
+  },
+  "local_development_rollout": {
+    "status": "passed",
+    "scope": "local HTTPS service and internal publication, not phone acceptance",
+    "release_id": "nsa-2048-local-v2",
+    "release_state": "published",
+    "release_revision": 5,
+    "content_archive_bytes": 191,
+    "content_expanded_bytes": 41,
+    "content_files": 1,
+    "runtime_profile_matches_candidate": true,
+    "complete_original_license": true,
+    "license_comparison": "full UTF-8 text, normalized platform line endings",
+    "existing_content_records_unchanged": 18,
+    "policy_http": {
+      "official": {
+        "epoch": 1794010167210,
+        "payload_sha256": "48a398a4cc50dafb0078cae59751512d9d73da6de56741227a54d60ac5b734f1",
+        "release_ids": [],
+        "repeat_identical": true,
+        "signature_verified": true
+      },
+      "internal": {
+        "epoch": 1794010167637,
+        "payload_sha256": "765e46f81cacd5a5905b7c42a378299c3b4759bcba97db11061c31058bdc2591",
+        "release_ids": [
+          "botw-local-v1",
+          "nsa-2048-local-v1",
+          "nsa-2048-local-v2"
+        ],
+        "repeat_identical": true,
+        "signature_verified": true
+      }
+    },
+    "probe_credentials_retired": true,
+    "phone_accessed": false,
+    "production_deployed": false,
+    "migration": "completed after private SQLite backup",
+    "only_own_api_and_worker_restarted": true,
+    "license_correction_validation": "real publisher CLI and worker read-back; complete text compared after line-ending normalization"
+  },
+  "retained_phone_build": {
+    "source_revision": "3c096c8f7f1892b2391f9ab254557507393abbf9",
+    "apk_sha256": "cd2b565141e81b1f7c73a1757eaa32b775495d96f0fcbd19b912b6475ed9a027",
+    "evidence_does_not_transfer_to_candidate": true
+  },
+  "execution_constraints": {
+    "phone_read_or_input": false,
+    "new_captures": false,
+    "other_project_test_preserved": true,
+    "browser_used": false,
+    "docker_wsl_vm_emulator_used": false
+  },
+  "still_required": [
+    "Execute all seven instrumentation cases on the candidate",
+    "Actual main-process loss, authenticated reconnect and retained live-process guards",
+    "SAF picker/recreation/late callbacks, cancellation and retry UI",
+    "Android filesystem power-loss, directory synchronization and ENOSPC faults",
+    "Policy race/key-revocation and offline-preparation device cases",
+    "BotW real movement, new gameplay save, normal exit and fresh-process reload",
+    "Five same-APK A-to-B-to-A rounds, actual audio and representative 30-minute gameplay",
+    "New candidate screenshots/recordings/GIFs with original provenance",
+    "Full requirement/device matrix and production deployment/signing"
+  ],
+  "private_log_artifacts": [
+    {
+      "path": "output/hall/recovery-round/native-build.log",
+      "bytes": 192,
+      "sha256": "a8743a3816c3c7a225e15bd9a9f2edfb190c7ada689628159244d1632443bd2b"
+    },
+    {
+      "path": "output/hall/recovery-round/android.log",
+      "bytes": 7038,
+      "sha256": "b24878f5c92d0544f25210ee4770367e477f600daeb5c82d859b91fc5043f592"
+    },
+    {
+      "path": "output/hall/recovery-round/services.log",
+      "bytes": 644,
+      "sha256": "029b5d638ca82d272a83a13fabaecf0ee196298fbcb00486e6ef5e56158535b3"
+    },
+    {
+      "path": "output/hall/recovery-round/core.log",
+      "bytes": 29816,
+      "sha256": "41d97b13b6f5ade05d5b55f41d7ecaa4e8c9613db5fdd0200cc5038ec0cd7233"
+    },
+    {
+      "path": "output/hall/recovery-round/publish-2048-v2.log",
+      "bytes": 186,
+      "sha256": "ee2b2acbe9d34de75a025a291352df558caa49339dfad6a6effc69a3c2dc8cc1"
+    },
+    {
+      "path": "output/hall/recovery-round/local-rollout.json",
+      "bytes": 1208,
+      "sha256": "867c6549c6a4f41b97cd88415abd7dd7e9480874ec877c9033a43e70ef8955a9"
+    }
+  ],
+  "private_logs_and_binaries_not_distributed": true
+}

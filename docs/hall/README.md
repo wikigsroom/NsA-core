@@ -6,7 +6,7 @@ The [new recovery correction round](recovery-round-2026-11-07.md) and [ADR 0007]
 
 [Actual verification](implementation-status.md) · [Next device run](device-validation.md) · [Execution summary](verification/2026-11-07-main.json) · [Screenshots and recordings](../media/README.md) · [Storage](storage.md)
 
-Read the [targeted source review and open corrections](source-review.md) before relying on offline readiness, process reconstruction or interrupted save exchange. The current internal build has source-confirmed gaps in those boundaries. The review preserves requirement identities and records the next full implementation/testing batch; it does not claim fixes or new device passes.
+Read the [historical targeted source review](source-review.md) alongside the [subsequent correction round](recovery-round-2026-11-07.md) before relying on offline readiness, process reconstruction or interrupted save exchange. The phone's retained build has the reviewed gaps. The new candidate implements their source corrections and has its own checks; it has not been installed or accepted on the physical device.
 
 ## What runs where
 
