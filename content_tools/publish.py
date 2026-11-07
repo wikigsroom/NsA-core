@@ -143,7 +143,7 @@ def main():
                 'description': '本机已有游戏数据的内部实验适配。当前仍需在统一大厅中重新验证操作、声音、存档与重新读取，不能视为已验证可玩。' if is_botw else '滑动方块，合并相同的数字，挑战 2048。支持方向键与手柄；右侧 1 为撤回一步、0 为新的一局。每次有效移动后保存，退出后可继续。',
                 'languages': ['en-US'] if is_botw else ['zh-CN', 'en-US'], 'input_modes': ['touch', 'controller'], 'rights_kind': 'internal_test' if is_botw else 'open_license'}
     material = ROOT / '.gamedump/Hall/content' / args.game / 'rights.txt'
-    material.write_text('Internal local testing only. Existing user-provided game files; no public distribution permission is asserted.' if is_botw else (ROOT / 'LICENSE').read_text(encoding='utf-8') if (ROOT / 'LICENSE').exists() else 'NsA 2048 original source: MIT license, copyright 2026 NsA contributors.', encoding='utf-8')
+    material.write_text('Internal local testing only. Existing user-provided game files; no public distribution permission is asserted.' if is_botw else (ROOT / 'android/native-games/2048/LICENSE').read_text(encoding='utf-8'), encoding='utf-8')
     profile = json.loads((ROOT / 'services/local' / ('botw-identity.json' if is_botw else '2048-identity.json')).read_text(encoding='utf-8'))
     try: print(json.dumps(publisher.publish(material.parent, metadata, profile, material), ensure_ascii=False))
     finally: publisher.client.close()
