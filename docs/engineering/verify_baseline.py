@@ -311,7 +311,7 @@ def main():
     examples = CONTRACTS / "examples"
 
     def examples_check():
-        mapping = {"release-manifest": "release-manifest", "release-envelope": "signed-envelope", "file-index": "file-index", "chunk-index": "chunk-index", "runtime-registry": "runtime-registry", "save-backup": "save-backup", "ready-marker": "local-records", "install-journal": "local-records", "runtime-event": "runtime-event", "policy": "policy", "app-update": "app-update", "transfer-record": "local-records", "save-commit": "local-records"}
+        mapping = {"release-manifest": "release-manifest", "release-envelope": "signed-envelope", "file-index": "file-index", "chunk-index": "chunk-index", "runtime-registry": "runtime-registry", "compiled-slot-identity": "compiled-slot-identity", "save-backup": "save-backup", "ready-marker": "local-records", "install-journal": "local-records", "runtime-event": "runtime-event", "policy": "policy", "app-update": "app-update", "transfer-record": "local-records", "save-commit": "local-records"}
         for name, schema in mapping.items():
             validate(schema + ".schema.json", read(examples / (name + ".json")))
         api_examples = read(examples / "api-examples.json")
@@ -332,6 +332,8 @@ def main():
         require(release["release_id"] == files["release_id"] and release["unpacked_bytes"] == files["unpacked_bytes"] and release["file_count"] == files["file_count"], "manifest/file binding")
         require(release["archive"]["object_id"] == chunks["object_id"] and release["archive"]["bytes"] == chunks["bytes"], "manifest/chunk binding")
         slots = read(examples / "runtime-registry.json")["slots"]
+        compiled_identity = read(examples / "compiled-slot-identity.json")
+        require(compiled_identity == {"identity_schema": 1, **{key: value for key, value in slots[0].items() if key != "library_sha256"}}, "compiled identity/registry binding")
         require(len({s["runtime_slot_id"] for s in slots}) == len(slots) == len({s["library_name"] for s in slots}), "slot/library uniqueness")
         slot = next(s for s in slots if s["runtime_slot_id"] == release["runtime"]["runtime_slot_id"])
         require(slot["profile_digest"] == release["runtime"]["profile_digest"], "profile binding")

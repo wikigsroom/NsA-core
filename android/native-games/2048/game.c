@@ -19,6 +19,8 @@
 #include "../../../docs/engineering/contracts/runtime-api-v1.h"
 #include "hall_identity.h"
 
+NSA_RUNTIME_EXPORT const char nsa_runtime_identity_json_v1[] __attribute__((section(".nsa_identity"))) = NSA_RUNTIME_IDENTITY_JSON;
+
 typedef struct { uint32_t magic, version, cells[16], previous[16], score, previous_score, best, moves, random, checksum; } State;
 static State state;
 static NsaRuntimeContextV1 context;

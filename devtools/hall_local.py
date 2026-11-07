@@ -22,6 +22,7 @@ from catalog.config import Settings
 from catalog.crypto import canonical, digest, token_hash
 from catalog.db import Record, create
 from content_tools.package import package, hash_file, write_json
+from nxnative.dm.android.slot_identity import write_identity_header
 
 def initialize():
     platform = Platform(Settings.load())
@@ -78,9 +79,7 @@ def prepare_slots(with_botw=False):
             'shader_bundle_versions': [1], 'approved_driver_ids': ['system'], 'settings_schema_version': 1}
     write_json(local / '2048-identity.json', mini)
     generated = ROOT / '.gamedump/Hall/build/2048'; generated.mkdir(parents=True, exist_ok=True)
-    fields = {'NSA_SLOT_ID': mini['runtime_slot_id'], 'NSA_CORE_REVISION': revision, 'NSA_PROFILE_SHA256': mini['profile_digest'],
-              'NSA_MODULE_IDS': json.dumps(mini['supported_module_build_ids'], separators=(',', ':')), 'NSA_SHADER_CHAIN': mini['shader_chain_id']}
-    (generated / 'hall_identity.h').write_text('\n'.join('#define ' + key + ' ' + json.dumps(value) for key, value in fields.items()), encoding='utf-8')
+    write_identity_header(generated / 'hall_identity.h', mini)
     if not with_botw:
         write_json(local / 'slots.json', {'slots': [{'library_path': str(generated / 'libnsa_2048.so'), 'registry': mini}]})
         print('Open-source 2048 demo slot prepared; no private game inputs were read.')

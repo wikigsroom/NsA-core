@@ -4,9 +4,12 @@ import argparse
 import hashlib
 import json
 from pathlib import Path
+import sys
 import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / 'nxnative/dm/android'))
+from slot_identity import verify_compiled_identity
 REQUIRED_CLASSES = (
     b'Lorg/nsa/hall/MainActivity;',
     b'Lorg/nsa/hall/data/DeviceCapabilities;',
@@ -32,6 +35,7 @@ def verify(path: Path):
             library = apk.read('lib/arm64-v8a/' + slot['library_name'])
             if hashlib.sha256(library).hexdigest() != slot['library_sha256']:
                 raise ValueError('APK runtime library does not match its registered digest')
+            verify_compiled_identity(library, slot)
         if 'lib/arm64-v8a/libnsa_bootstrap.so' not in apk.namelist():
             raise ValueError('APK is missing the native activity bootstrap')
     with path.open('rb') as incoming:

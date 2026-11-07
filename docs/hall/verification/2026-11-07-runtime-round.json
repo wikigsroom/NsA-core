@@ -1,9 +1,9 @@
 {
   "record_version": 1,
-  "recorded_at_utc": "2026-11-07T02:14:56.440486+00:00",
+  "recorded_at_utc": "2026-11-07T03:15:25.233726+00:00",
   "date_local": "2026-11-07",
   "timezone": "Asia/Taipei",
-  "scope": "Consolidated runtime correction, immutable 2048 v3 publication, overlay and bounded physical-device execution; resumed BotW and G0 pending other authorized phone test",
+  "scope": "Completed runtime-candidate checks, resumed audio pass and rejected BotW launch; subsequent build correction is separate",
   "formal_acceptance": "not_accepted",
   "source_revision": "f1c68f72e0b0e4d3820fd3b0a1466756cadc8605",
   "capture_tool_revision": "b872778",
@@ -93,7 +93,9 @@
       "provenance_records": 29,
       "full_clip_decode": true,
       "current_apk_identity_matches": true
-    }
+    },
+    "native_count_scope": "Old reported 145 counted checked/cached sources; it did not prove 145 fresh compilations",
+    "apk_identity_guard_scope": "Historical guard checked bytes/classes, not compiled identity; BotW runtime rejected stale core"
   },
   "physical_device": {
     "model": "Motorola edge plus",
@@ -108,7 +110,7 @@
     "preexisting_player_files_preserved_after_overlay_and_tests": 20,
     "after_instrumentation_recovery_facts": [],
     "after_instrumentation_transfer_allocation_kib": 4,
-    "final_after_games_snapshot": "pending normal game exit after peer test finishes"
+    "final_after_games_snapshot": "completed after normal audio exit and after rejected BotW launch; BotW player files unchanged"
   },
   "2048": {
     "release_id": "nsa-2048-local-v3",
@@ -166,7 +168,15 @@
     "observed_at": "2026-11-07T02:01:55.770582+00:00",
     "scope": "Actual input, first safe return, fresh process and matching reloaded save/board; final cleanup is a separate step",
     "direct_android_back_pause_confirm_exit_and_portrait": true,
-    "scope_note": "Saved board/hash describe this completed sequence; subsequent audio moves changed the latest 2048 progress"
+    "scope_note": "Saved board/hash describe this completed sequence; subsequent audio moves changed the latest 2048 progress",
+    "post_audio_exit": {
+      "apk_sha256": "d8c51a63f1c6134ec53237209cfc9253ffa543bc0206bfc6dfb029a1784c79af",
+      "exited_game_pid": "25771",
+      "hall_pid": "23955",
+      "normal_exit": true,
+      "portrait": true,
+      "saved_sha256": "7b252020363d9fa986fa1171a9798e34f26a7952126b8509ff29e3f6bb4a9560"
+    }
   },
   "audio": {
     "original_capture_result": {
@@ -279,14 +289,100 @@
       "signal_evidence_confirmed": true,
       "subjective_listening_accepted": false
     },
-    "assessment": "Expected 440 Hz game signal and stream reopen observed; original fixed peak threshold failed and is preserved",
+    "assessment": "Corrected two-capture actual rerun passed; original fixed-peak failure and offline analysis preserved separately",
     "corrected_capture_criteria": {
       "nonzero_samples_min": 1000,
       "peak_min": 8,
       "tone_440_fit_min": 0.8,
       "changed_moves_min": 2
     },
-    "corrected_capture_rerun": "stopped by foreground guard before input when other application became active; pending authorized availability",
+    "corrected_capture_rerun": {
+      "at": "2026-11-07T02:51:40.731040+00:00",
+      "installed_apk_sha256": "d8c51a63f1c6134ec53237209cfc9253ffa543bc0206bfc6dfb029a1784c79af",
+      "game_pid": "25771",
+      "source": "official scrcpy Android output, no video/control/playback",
+      "captures": [
+        {
+          "round": 1,
+          "seconds": 16.1535,
+          "nonzero_samples": 17396,
+          "peak": 80,
+          "peak_dbfs": -52.24719895935549,
+          "tone_440_fit": 0.9998657317010821,
+          "rms": 6.935772848555385,
+          "sha256": "5e785f714f95d33e762ea5e92f00708d5b49a49e44682bfc1566ea9765bdbe2d",
+          "events": [
+            {
+              "at_seconds": 2.634744099999807,
+              "key": 21,
+              "save_changed": true
+            },
+            {
+              "at_seconds": 5.4690398999991885,
+              "key": 19,
+              "save_changed": true
+            },
+            {
+              "at_seconds": 8.291588000000047,
+              "key": 22,
+              "save_changed": true
+            },
+            {
+              "at_seconds": 11.129428899999766,
+              "key": 20,
+              "save_changed": true
+            },
+            {
+              "at_seconds": 13.874429999999847,
+              "key": 21,
+              "save_changed": true
+            }
+          ]
+        },
+        {
+          "round": 2,
+          "seconds": 16.0290625,
+          "nonzero_samples": 17569,
+          "peak": 77,
+          "peak_dbfs": -52.57918419574472,
+          "tone_440_fit": 0.9998052811543713,
+          "rms": 6.972143321672087,
+          "sha256": "046d8832678d22bfcb2f72b14fa4e920b9eac3544be7ceb7fddf7660e0489236",
+          "events": [
+            {
+              "at_seconds": 2.583913599999505,
+              "key": 21,
+              "save_changed": true
+            },
+            {
+              "at_seconds": 5.336897899996984,
+              "key": 19,
+              "save_changed": true
+            },
+            {
+              "at_seconds": 8.012267499998416,
+              "key": 22,
+              "save_changed": true
+            },
+            {
+              "at_seconds": 10.749345799998991,
+              "key": 20,
+              "save_changed": true
+            },
+            {
+              "at_seconds": 13.520236099997419,
+              "key": 21,
+              "save_changed": true
+            }
+          ]
+        }
+      ],
+      "reopen_log_count": 4,
+      "output_start_log_count": 4,
+      "signal_check_passed": true,
+      "subjective_listening_accepted": false,
+      "full_playability_accepted": false
+    },
     "subjective_listening_accepted": false,
     "botw_audio_accepted": false
   },
@@ -294,14 +390,21 @@
     "release_id": "botw-local-v1",
     "content_reused_without_redownload": true,
     "current_apk_gameplay_executed": false,
-    "current_apk_direct_back": "pending",
+    "current_apk_direct_back": "not reached; prelaunch MODULE_MISMATCH",
     "preceding_apk_observation": "verification/2026-11-07-transfer-round.json",
     "preceding_result_not_inherited": true,
-    "full_playability_accepted": false
+    "full_playability_accepted": false,
+    "current_apk_launch_attempted": true,
+    "launch_error": "MODULE_MISMATCH",
+    "defect_id": "USB-BUILD-01",
+    "expected_core": "f1c68f72e0b0e4d3820fd3b0a1466756cadc8605",
+    "actual_compiled_core": "e6ee168bd9f733023f3338949df9f283555120fb",
+    "unchanged_content_does_not_prove_host_compatibility": true,
+    "player_files_unchanged_after_rejection": true
   },
   "cross_game_five_rounds": {
     "status": "not_run",
-    "reason": "Preserve other authorized phone test until it finishes"
+    "reason": "Blocked by confirmed stale compiled BotW core USB-BUILD-01; peer device testing finished"
   },
   "public_media": [
     "runtime-library.png",
@@ -317,10 +420,11 @@
     "other_project_test_preserved": true,
     "docker_wsl_vm_emulator_used": false,
     "browser_tabs_opened": false,
-    "commercial_game_frames_keys_saves_and_binaries_published": false
+    "commercial_game_frames_keys_saves_and_binaries_published": false,
+    "peer_device_test_finished_before_resuming": true
   },
   "still_required": [
-    "Resume after peer test finishes; repeat corrected audio capture without changing device-wide volume",
+    "Complete native-input correction batch, rebuild both slots with compiled identity guards, and repeat exact-candidate checks",
     "BotW current-APK actual movement, new save, direct Back exit and fresh-process reload",
     "Five same-APK A-to-B-to-A rounds, independent progress and resource samples",
     "Subjective audio and representative continuous 30-minute performance/gameplay",
@@ -392,6 +496,36 @@
       "path": "output/hall/runtime-round-20261107/storage-observation.json",
       "bytes": 934,
       "sha256": "a7fb13034e5e3cac62d2c63c8489c8c62c673b35b7ccd6f0a90e3ae3fcbb19bd"
+    },
+    {
+      "path": "output/hall/native-build-round-20261107/preceding-build-diagnosis.json",
+      "bytes": 3548,
+      "sha256": "0a46897f44aa50ac61e27278a77a02604234099d9249e20100cc44845bd99c5f"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/runtime-audio-frequency-resumed-20261107/observation.json",
+      "bytes": 2337,
+      "sha256": "09daf1d9627efdbcf52abed07a37b4f6a308b3850823fcbe7b2493c2f099bef7"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-runtime/after-resumed-audio-exit.json",
+      "bytes": 275,
+      "sha256": "8785419b0bf5e9354f3bfb7fb50413ed65d813ec68fae1a1e0f249f1712caa72"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-runtime/after-resumed-audio/snapshot.json",
+      "bytes": 6704,
+      "sha256": "a1a6f6d1227701f6f55615061431c18766cf4b08ba914e5dcd110442ec011868"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-runtime/after-botw-rejection/snapshot.json",
+      "bytes": 6734,
+      "sha256": "c54a0aba7047b74dfb827436e494ec476f0c4b7074ec4fb7a668b3940225a096"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-runtime/botw-main-launch-rejected.png",
+      "bytes": 201991,
+      "sha256": "f7cb0c06fd7b522682b633cdf1be64d990a692039726d1e2ec0f17b7e0dcb68b"
     }
   ]
 }

@@ -1,20 +1,22 @@
 # Implementation and verification record
 
-[真机运行修正轮次](runtime-round-2026-11-07.md)已覆盖安装到手机：源码 `f1c68f7`、APK `d8c51a…79af`，13 项 Android 测试重新执行并通过。2048 v3 升级保留原进度，完成真实下载、操作、直接返回退出和新进程存档重读。两份录音检出 440 Hz 音效及声音流重开证据，主观音量与音质仍未验收。《旷野之息》新版检查及五轮跨游戏切换，按用户选择等待另一项手机测试结束后继续；完整 G0、长期性能及正式发行仍开放。
+[真机运行修正轮次](runtime-round-2026-11-07.md)的 13 项 Android 测试、2048 v3 下载、操作、正常返回、新进程重读及修正后的两次音频采集通过。源码 `f1c68f7`、APK `d8c51a…79af` 的《旷野之息》实际启动被旧编译标识拒绝，尚未进入游戏。另一项目测试已结束；当前通过[整批构建修正](native-build-round-2026-11-07.md)继续推进，五轮切换、完整 G0、长期性能及正式发行仍未验收。
 
 [Current machine record / 当前机器记录](verification/2026-11-07-runtime-round.json) · [Current runtime round / 运行轮次](runtime-round-2026-11-07.md) · [Transfer round / 下载安装轮次](transfer-round-2026-11-07.md) · [Reviewed media / 实拍素材](../media/README.md)
 
 | Current candidate / 当前候选 | Actual result / 实际结果 |
 |---|---|
-| Native + Android | 145 native sources, zero failures; two bound runtime slots; Android build passed; lint 0 errors / 16 warnings |
+| Native + Android | 145 sources checked, zero compiler failures; historical guard bound bytes but missed stale BotW core; Android build passed; lint 0 errors / 16 warnings |
 | JVM | Existing 26-case report retained, Gradle UP-TO-DATE; no claim of a fresh run for this native-only batch |
 | Documentation/contracts | 8/8 groups passed; this validates contracts, not gameplay |
 | Physical instrumentation | 13/13 actually rerun, 21.978 seconds |
 | Overlay preservation | Room v2; all 20 preexisting player files identical immediately after overlay and instrumentation; no recovery warning; transfer directory 4 KiB at that point |
 | 2048 v3 | 191-byte real download / 41-byte expanded fixture; prior save retained; changed input; direct Back pause/confirmed exit; fresh process reload with all 16 rendered tiles and committed hash matching |
-| Audio | Four stream reopen logs / five starts; two captures contain 440 Hz signal. Initial fixed-amplitude criterion failed and is retained; offline frequency confirmation is separate from the interrupted rerun and subjective listening |
-| BotW / five switching rounds | Existing immutable BotW content remains compatible; execution on this new APK pending other authorized phone test completion |
+| Audio | Corrected actual two-capture rerun passed, four reopens/four starts and 440 Hz fits above 0.9998; original fixed-threshold failure retained; no subjective listening pass |
+| BotW / five switching rounds | Content/profile unchanged, but actual launch rejected stale host core with MODULE_MISMATCH; five rounds blocked by USB-BUILD-01 |
 | Full acceptance | G0, representative 30-minute performance/audio, physical fault boundaries, remaining device/requirement coverage and production release remain open |
+
+The corrected two-capture 2048 audio rerun passed after the peer test finished. The [next complete build batch](native-build-round-2026-11-07.md) fixes Unicode dependency reuse and adds compiled ELF identity guards; it requires new candidate checks.
 
 The preceding APK `e3b259…742da` did demonstrate BotW movement, a new manual save and a fresh-process reload using a return-menu workaround. Its defects and results remain pinned in the transfer record. The current source fixes audio reconnection and native Back delegation; a source fix is not BotW device acceptance. / 旧版实际结果与新候选分开登记，不改写历史缺陷为旧版已修复。
 

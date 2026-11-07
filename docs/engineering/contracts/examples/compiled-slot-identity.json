@@ -1,0 +1,19 @@
+{
+  "identity_schema": 1,
+  "runtime_slot_id": "demo.echo.core1",
+  "library_name": "libnsa_demo_echo.so",
+  "runtime_api_version": 1,
+  "core_revision": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+  "profile_digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+  "supported_module_build_ids": [
+    "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+  ],
+  "shader_chain_id": "demo.shader.v1",
+  "shader_bundle_versions": [
+    1
+  ],
+  "approved_driver_ids": [
+    "system-validated"
+  ],
+  "settings_schema_version": 1
+}

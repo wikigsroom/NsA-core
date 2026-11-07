@@ -7,8 +7,11 @@ import re
 from pathlib import Path
 import shutil
 import subprocess
+import sys
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / 'nxnative/dm/android'))
+from slot_identity import verify_compiled_identity
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
@@ -16,6 +19,13 @@ def main():
     parser.add_argument('--ndk', type=Path, default=ROOT / 'tools/player/toolchains/android-ndk-r27c')
     args = parser.parse_args()
     entries = json.loads(args.slots.read_text(encoding='utf-8'))['slots']
+    # Check the metadata in the same compiled unit as get_info, before copying
+    # any slot. Hashing a stale library and assigning a new registry is unsafe.
+    compiled = []
+    for entry in entries:
+        image = Path(entry['library_path']).read_bytes()
+        verify_compiled_identity(image, entry['registry'])
+        compiled.append(image)
     primary_names = {entry['registry']['library_name'] for entry in entries}
     target = ROOT / 'android/app/src/main/jniLibs/arm64-v8a'; target.mkdir(parents=True, exist_ok=True)
     clang = args.ndk / 'toolchains/llvm/prebuilt/windows-x86_64/bin/clang.exe'
@@ -24,16 +34,16 @@ def main():
     registry = {'registry_schema': 1, 'app_version_code': 1, 'bootstrap_api_version': 1, 'slots': []}
     seen = set()
     expected_libraries = {'libnsa_bootstrap.so'}
-    for entry in entries:
-        item = entry['registry']
+    for entry, image in zip(entries, compiled):
+        item = dict(entry['registry'])
         if not re.fullmatch(r'libnsa_[a-z0-9_]+\.so', item['library_name']) or item['library_name'] in expected_libraries:
             raise ValueError('Invalid or duplicate primary runtime library')
         expected_libraries.add(item['library_name'])
         if item['runtime_slot_id'] in seen: raise ValueError('Duplicate runtime slot')
         seen.add(item['runtime_slot_id'])
         source = Path(entry['library_path'])
-        shutil.copy2(source, target / item['library_name'])
-        with source.open('rb') as incoming: item['library_sha256'] = hashlib.file_digest(incoming, 'sha256').hexdigest()
+        (target / item['library_name']).write_bytes(image)
+        item['library_sha256'] = hashlib.sha256(image).hexdigest()
         registry['slots'].append(item)
         for dependency in entry.get('dependencies', []):
             library = Path(dependency)

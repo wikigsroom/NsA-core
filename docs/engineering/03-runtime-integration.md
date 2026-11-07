@@ -1,5 +1,7 @@
 # 03 · 原生模块、进程、IPC 与启动协议
 
+编译及打包约束见 [ADR 0009](decisions/0009-compiled-slot-identity-and-unicode-builds.md)。Clang 依赖按严格 UTF-8 读取，缺失或无效输入不得复用对象；每个大厅运行库以同一生成头、同一编译单元提供 `.nsa_identity` 元数据。收集前和 APK 内均核对实际 ELF、完整身份与 SONAME，不能只对旧库重新计算摘要。手机仍核对实际 ABI/`get_info`，bootstrap ABI v1 不变。
+
 真机运行补充见[声音与返回键修正轮次](../hall/runtime-round-2026-11-07.md)。统一大厅原生输入不得截获系统返回键并绕开 GameActivity 的暂停、退出确认；旧系统应将未处理事件交回 Java，新系统保留平台返回回调。AAudio 断线回调只传递错误，由受控线程关闭、重开音轨；音频流不能在错误回调线程中关闭。适用模块必须用实际路由切换、输入与进程退出验证，非零音频信号与主观听感分别记录。
 
 实施补充见 [ADR 0007](decisions/0007-policy-runtime-save-recovery.md)：游戏进程全生命周期持有内核租约，主进程丢失后按持久 session/generation/nonce 重连；不能只凭数据库行判定运行中或结束。未知归属继续保护资源与存档，确认租约释放后才登记终止。新增私有 IPC 7/8 不改变 bootstrap ABI v1；实际主进程丢失恢复仍须真机验收。

@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.nsa.invalid/v1/compiled-slot-identity.schema.json",
+  "title": "Compiled slot identity embedded in ELF .nsa_identity",
+  "type": "object",
+  "properties": {
+    "identity_schema": {
+      "const": 1
+    },
+    "runtime_slot_id": {
+      "$ref": "runtime-registry.schema.json#/properties/slots/items/properties/runtime_slot_id"
+    },
+    "library_name": {
+      "$ref": "runtime-registry.schema.json#/properties/slots/items/properties/library_name"
+    },
+    "runtime_api_version": {
+      "$ref": "runtime-registry.schema.json#/properties/slots/items/properties/runtime_api_version"
+    },
+    "core_revision": {
+      "$ref": "runtime-registry.schema.json#/properties/slots/items/properties/core_revision"
+    },
+    "profile_digest": {
+      "$ref": "runtime-registry.schema.json#/properties/slots/items/properties/profile_digest"
+    },
+    "supported_module_build_ids": {
+      "$ref": "runtime-registry.schema.json#/properties/slots/items/properties/supported_module_build_ids"
+    },
+    "shader_chain_id": {
+      "$ref": "runtime-registry.schema.json#/properties/slots/items/properties/shader_chain_id"
+    },
+    "shader_bundle_versions": {
+      "$ref": "runtime-registry.schema.json#/properties/slots/items/properties/shader_bundle_versions"
+    },
+    "approved_driver_ids": {
+      "$ref": "runtime-registry.schema.json#/properties/slots/items/properties/approved_driver_ids"
+    },
+    "settings_schema_version": {
+      "const": 1
+    }
+  },
+  "required": [
+    "identity_schema",
+    "runtime_slot_id",
+    "library_name",
+    "runtime_api_version",
+    "core_revision",
+    "profile_digest",
+    "supported_module_build_ids",
+    "shader_chain_id",
+    "shader_bundle_versions",
+    "approved_driver_ids",
+    "settings_schema_version"
+  ],
+  "additionalProperties": false
+}

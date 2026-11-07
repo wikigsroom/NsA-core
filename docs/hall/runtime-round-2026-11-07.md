@@ -14,7 +14,7 @@ Follow-up to the actual [transfer-round USB observations](transfer-round-2026-11
 
 Commit the complete batch before generating native identities. Rebuild both changed native inputs and collect their real digests into the APK registry. A changed 2048 source changes its profile/module identity and needs a new immutable `nsa-2048-local-v3` content release with the same `nsa-2048-save-v1` compatibility group. Preserve published v1/v2 records and existing progress.
 
-BotW frontend/core changes require a new compiled core identity and APK, but its unmodified game profile, module IDs, shader chain and data remain compatible with the existing immutable `botw-local-v1` manifest. The manifest does not pin the host core revision; the local registry and runtime ABI bind the new compiled core. Verify those fields rather than redownloading or mutating the 14.30 GiB archive.
+BotW frontend/core changes require a new compiled core identity and APK. Its unmodified game profile, module IDs, shader chain and data match the existing immutable `botw-local-v1` manifest, which does not pin the host core revision. This content match does not establish compiled-host compatibility: the subsequent actual launch rejected a stale core. See [the next build correction](native-build-round-2026-11-07.md). Reuse the 14.30 GiB archive while rebuilding the host; preserve the immutable content.
 
 ## Consolidated execution plan
 
@@ -34,15 +34,15 @@ Source `f1c68f72e0b0e4d3820fd3b0a1466756cadc8605`, clean before identity generat
 
 | Boundary / 边界 | Actual result / 实际结果 | Limit / 限制 |
 |---|---|---|
-| Native and APK build | 145 native sources, zero failures; bootstrap and two slots rebuilt/collected; Android build succeeded; two packaged identities/digests verified | Native Windows; no virtualized environment |
+| Native and APK build | 145 native sources checked, zero compiler failures; two slots collected; Android build and historical byte/class guard passed | Old count included cached objects; that guard did not verify compiled core identity |
 | JVM and lint | Existing 26-case JVM result UP-TO-DATE; lint 0 errors / 16 warnings | JVM cases were not freshly rerun for this native-only batch |
 | Baseline | 8/8 documentation/contract groups passed | Contract conformance is not game acceptance |
 | Immutable publication | New signed `nsa-2048-local-v3`; 26 preceding immutable records unchanged; BotW profile/modules/shader binding unchanged | Existing 14.30 GiB BotW archive is reused, not relabeled or downloaded again |
 | Overlay and device tests | 13/13 actually rerun in 21.978 seconds; Room v2 retained; all 20 preceding player files identical afterward | Snapshot taken before subsequent actual game input |
-| Recovery/temporary data | No install-recovery warning; transfer directory 4 KiB after instrumentation | Final post-game snapshot pending normal exit when phone becomes available |
+| Recovery/temporary data | No install-recovery warning; transfer directory 4 KiB after instrumentation, resumed audio exit and BotW rejection | Only actual A progress/pre-upgrade backup changed; BotW player files unchanged |
 | 2048 upgrade and play | Real 191-byte download / 41-byte expanded fixture, prior save preserved; eight directional inputs; direct Back pause, confirmed exit and portrait return; fresh game process reload | Short original open-source fixture; not Switch compatibility or sustained performance |
-| Audio recovery | Four stream-reopen logs, five starts; two actual recordings contain the expected game tone | Original measurement threshold failed; frequency confirmation is separate; no subjective listening pass |
-| BotW on this APK | Not yet launched for the new candidate | Wait for the other authorized phone test to finish; preceding APK results do not count here |
+| Audio recovery | Original captures retain their fixed-threshold failure; later corrected two-capture actual rerun passed with four reopens/four starts | Frequency/route evidence, no subjective listening pass |
+| BotW on this APK | Actual launch rejected before gameplay: `MODULE_MISMATCH`, compiled core `e6ee168` instead of expected `f1c68f7` | `USB-BUILD-01`; new host build required; five cross-game rounds blocked |
 
 本轮已构建并覆盖安装，13 项真机自动检查实际重跑通过。2048 升级保留原进度，完成真实下载、输入、直接返回退出及新进程重读。旧版 BotW 新写档和加载结果仍留在下载轮次；新版 BotW、五轮切换和完整性能尚未验收。
 
@@ -65,13 +65,15 @@ The first capture-tool run retained nonzero output but failed its fixed `peak > 
 
 The expected 440 Hz tone is confirmed by independent offline fitting of the retained PCM, including off-frequency, silence and seeded-noise controls. This is a separate analytical result, not a rewritten pass for the failed criterion. Reopen/start logs also show the new runtime recovering route changes. Recordings include startup/route time and variable cadence; actual decoded durations above replace the nominal 16-second request.
 
-The corrected tool requires an above-quantization signal (peak at least 8), over 1,000 nonzero samples, at least two actual saved moves and at least 80% energy explained by a phase-independent 440 Hz fit in its loudest 1024-sample window. It records dBFS. Its attempted new capture stopped at the foreground guard **before sending input** because another project's app was active. The new criterion has offline controls; a new actual capture run is still pending.
+The corrected tool requires an above-quantization signal (peak at least 8), over 1,000 nonzero samples, at least two actual saved moves and at least 80% energy explained by a phase-independent 440 Hz fit in its loudest 1024-sample window. It records dBFS. Its first attempted rerun stopped at the foreground guard **before sending input** because another project's app was active. After that test finished, a new actual run passed: 16.1535/16.0290625 seconds, 17,396/17,569 nonzero samples, peaks 80/77 and 440 Hz fits 0.9998657/0.9998053. Both captures included five changed/saved moves under PID `25771`; four stream reopens and four starts were observed. The original failed result remains unchanged.
 
 中文：原固定振幅阈值判失败的记录保留，不能改写为通过。已有录音的频率分析可确认 2048 的实际音效信号，日志确认声音流重开；这不等于主观音量、音质、BotW 音频或完整可玩性已验收。未改变手机的全局音量设置，也没有向其他应用发送按键。
 
-## Waiting boundary and remaining work / 等待边界与后续工作
+## Resumed execution and remaining work / 恢复测试与后续工作
 
-The user explicitly selected preserving the other project's phone test and resuming NsA after it finishes. Do not take foreground or stop that project. Documentation, media review and computer-only validation can continue while waiting. Once it finishes, confirm actual device ownership, finish the corrected audio capture, then execute BotW movement/new save/direct Back/cancel/resume/confirmed exit/fresh-process reload on this exact APK, followed by five A → B → A rounds with independent progress and resource samples.
+The other project's device test finished before NsA resumed. The corrected audio rerun and normal direct-Back exit completed, preserving checkpoint `7b252020363d9fa986fa1171a9798e34f26a7952126b8509ff29e3f6bb4a9560` through exit. The following BotW launch failed before gameplay. Inspection confirmed an older adapter object and a UTF-8 dependency path misread under Windows cp936, leaving core `e6ee168` inside a library registered as `f1c68f7`. Header/registry and actual library are preserved separately. Post-rejection snapshots show unchanged BotW saves, Room 2, no recovery warnings and 4 KiB transfer allocation.
+
+The [next complete source batch](native-build-round-2026-11-07.md) fixes dependency parsing and adds compiled ELF identity/SONAME checks before collecting and after packaging. Commit and rebuild that batch, publish immutable 2048 v4, then repeat exact-candidate verification. BotW movement/new save/direct Back/cancel/resume/confirmed exit/fresh-process reload and five A → B → A rounds are still required. No runtime check is relaxed to accept the old library.
 
 Representative continuous 30-minute gameplay/performance, subjective audio, physical power-loss/ENOSPC boundaries, remaining device/requirement coverage and production gates remain open. An older short BotW observation around 7–13 FPS is not a current accepted performance measurement.
 

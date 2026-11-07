@@ -1,10 +1,10 @@
 # Physical-device validation / 真机验收操作
 
-[真机运行修正轮次](runtime-round-2026-11-07.md)已覆盖安装到手机：源码 `f1c68f7`、APK `d8c51a…79af`，13 项 Android 测试重新执行并通过。2048 v3 升级保留原进度，完成真实下载、操作、直接返回退出和新进程存档重读。两份录音检出 440 Hz 音效及声音流重开证据，主观音量与音质仍未验收。《旷野之息》新版检查及五轮跨游戏切换，按用户选择等待另一项手机测试结束后继续；完整 G0、长期性能及正式发行仍开放。
+[真机运行修正轮次](runtime-round-2026-11-07.md)已安装：源码 `f1c68f7`、APK `d8c51a…79af`，13 项 Android 测试通过。2048 v3 已完成真实下载、操作、正常返回退出、新进程重读；修正后的两次 440 Hz 音频采集也已通过。**《旷野之息》因运行库编入旧标识，在进入游戏前被 `MODULE_MISMATCH` 拒绝。** [构建修正轮次](native-build-round-2026-11-07.md)补齐中文依赖路径与编译身份检查，再统一重建。五轮跨游戏、完整 G0、长期性能及正式发行仍未验收。
 
 [Executed results / 已执行结果](implementation-status.md) · [Current machine record](verification/2026-11-07-runtime-round.json) · [English guide](README.md) · [中文手册](README.zh-CN.md) · [Normative gates / 技术门槛](../engineering/08-quality-governance.md)
 
-This is the reusable device procedure, not a pass report. The transfer correction is implemented and its 13 isolated cases have device evidence; the new runtime candidate repeats those 13 tests. Resume unfinished current-candidate gameplay only after the other authorized phone test finishes. Historical source reviews remain pinned to their original snapshots. / 本文件是可复用操作规范；下载安装修正与 13 项隔离测试已有实际结果，不能再称其“尚未实现”。手机恢复可用后继续本轮尚未执行的游戏检查。
+This is the reusable device procedure, not a pass report. The transfer correction is implemented and its 13 isolated cases have device evidence; the new runtime candidate repeats those 13 tests. The peer test has finished; rebuild the corrected candidate before resuming the blocked BotW/G0 checks. Historical source reviews remain pinned to their original snapshots. / 本文件是可复用操作规范；下载安装修正与 13 项隔离测试已有实际结果，不能再称其“尚未实现”。另一项目的测试已结束；完成构建修正后继续本轮游戏检查。
 
 ## Preparation / 准备
 

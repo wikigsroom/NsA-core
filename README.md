@@ -1,6 +1,6 @@
 # NsA · Unified Android game hall
 
-The [USB runtime correction round](docs/hall/runtime-round-2026-11-07.md) is installed on the physical phone: source `f1c68f7`, APK `d8c51a…79af`. Thirteen Android tests were rerun and passed. The new 2048 v3 release preserves progress and completes real download, input, direct Back exit and fresh-process save reload. Two recordings contain its expected 440 Hz tone and stream-reopen evidence; subjective audio remains unaccepted. BotW checks on this APK and five cross-game rounds are waiting for the other authorized phone test to finish. Full G0, sustained performance and production release remain open.
+The [USB runtime correction round](docs/hall/runtime-round-2026-11-07.md) is installed on the physical phone: source `f1c68f7`, APK `d8c51a…79af`. Thirteen Android tests passed. 2048 v3 completes real download, input, normal Back exit and fresh-process reload; the corrected two-capture 440 Hz audio test also passed. **BotW is blocked before gameplay by a stale compiled core (`MODULE_MISMATCH`).** The [native-build correction](docs/hall/native-build-round-2026-11-07.md) adds Unicode dependency and compiled-identity checks before rebuilding. Five cross-game rounds, full G0, sustained performance and production release remain open.
 
 Current USB captures; clips are silent. Historical captures retain their original identities.
 

@@ -7063,6 +7063,7 @@ porter / nxnative              现有制作与运行代码
 <p>原生验证覆盖360/393/412/600宽、100/130/200%字号、系统insets/IME、TalkBack、键盘/手柄和系统返回。已有浏览器34条断言/56组合只属于设计证据，不替代上述真实系统验收。</p>
 <h2 id="doc-eng02-7">7. 生命周期</h2>
 <p>进程重启先打开数据库、执行有限对账，再渲染真实库与任务。重建失败不能调用清库恢复默认；提供可恢复错误和诊断。声音/输入/Surface随当前会话生命周期，页面退出和大厅重建不能触发全应用终止。</p><a class="backtop" href="#top">返回目录 ↑</a></article><article id="doc-eng03"><p class="source">规范源文件 · <a href="../engineering/03-runtime-integration.md">03-runtime-integration.md</a></p><h1 id="doc-eng03-03-ipc">03 · 原生模块、进程、IPC 与启动协议</h1>
+<p>编译及打包约束见 <a href="../engineering/decisions/0009-compiled-slot-identity-and-unicode-builds.md">ADR 0009</a>。Clang 依赖按严格 UTF-8 读取，缺失或无效输入不得复用对象；每个大厅运行库以同一生成头、同一编译单元提供 <code>.nsa_identity</code> 元数据。收集前和 APK 内均核对实际 ELF、完整身份与 SONAME，不能只对旧库重新计算摘要。手机仍核对实际 ABI/<code>get_info</code>，bootstrap ABI v1 不变。</p>
 <p>真机运行补充见<a href="../hall/runtime-round-2026-11-07.md">声音与返回键修正轮次</a>。统一大厅原生输入不得截获系统返回键并绕开 GameActivity 的暂停、退出确认；旧系统应将未处理事件交回 Java，新系统保留平台返回回调。AAudio 断线回调只传递错误，由受控线程关闭、重开音轨；音频流不能在错误回调线程中关闭。适用模块必须用实际路由切换、输入与进程退出验证，非零音频信号与主观听感分别记录。</p>
 <p>实施补充见 <a href="../engineering/decisions/0007-policy-runtime-save-recovery.md">ADR 0007</a>：游戏进程全生命周期持有内核租约，主进程丢失后按持久 session/generation/nonce 重连；不能只凭数据库行判定运行中或结束。未知归属继续保护资源与存档，确认租约释放后才登记终止。新增私有 IPC 7/8 不改变 bootstrap ABI v1；实际主进程丢失恢复仍须真机验收。</p>
 <h2 id="doc-eng03-1">1. 模块注册</h2>
@@ -8372,6 +8373,7 @@ envelope = schema/purpose/key_id/algorithm/payload_sha256/payload_base64/signatu
 <p>每条结果保存：case_id、requirement_ids/subrule_ids、App commit/version/cert/build、slot/core/profile/driver/content、设备匿名测试编号/OS/能力、前置数据、网络/空间、操作步骤、expected/actual、pass/fail/blocked/not_run、时间/执行人、脱敏证据 URI、缺陷和重测关联。记录可用 JSON/Markdown，不能只写“测试通过”一句。</p>
 <p>签名/契约示例仅使用虚构内容和临时测试密钥，私钥不落库。大文件测试数据可本机生成并忽略；实际游戏/密钥/玩家存档不加入测试仓库。运行报告和日志遵守路径、隐私及浏览器清理要求。</p>
 <p>本套文档提供 <a href="../engineering/verify_baseline.py">只读基线校验器</a> 和 <a href="../engineering/data/baseline-review.json">校验记录</a>，检验规范引用、需求追踪、Schema/OpenAPI、样例与负例。后续实现需另跑与改动有关的测试和真机案例，不能引用本次文档校验代替 G0～G3。</p><a class="backtop" href="#top">返回目录 ↑</a></article><article id="doc-contracts"><p class="source">规范源文件 · <a href="../engineering/contracts/README.md">README.md</a></p><h1 id="doc-contracts-_1">可执行契约与验证说明</h1>
+<p><a href="../engineering/decisions/0009-compiled-slot-identity-and-unicode-builds.md">ADR 0009</a> 新增编译产物身份 schema 1。它是构建检查，不改变运行 ABI、注册表 schema 或存档格式；原生构建、收集和最终 APK 检查必须同时遵守。</p>
 <p>新增 <a href="../engineering/decisions/0008-transfer-ownership-and-install-recovery.md">ADR 0008</a> 明确 Room schema 2 及 Android <code>journal_schema:2</code> 的私有持久化映射。local-records 新增 AndroidInstallJournalV2 分支，原 record_schema:1 DTO 和既有示例保持兼容；这不表示全部命令 revision/receipt 规则已实现。</p>
 <p>契约 v1 · 文档基线 v2.0 · 2026-11-06。这里保存开发必须遵守的协议；契约和示例本身不是服务、安装器或运行模块的实现，也不是验收证据。后续程序与已执行结果见<a href="../hall/README.zh-CN.md">实施手册</a>和<a href="../hall/implementation-status.md">验证记录</a>，剩余下载/安装缺口见<a href="../hall/transfer-install-review-2026-11-07.md">定向核对</a>。示例均为虚构协议数据，不包含可玩的游戏、真实资源、密钥或生产信任根。</p>
 <h2 id="doc-contracts-_2">契约清单</h2>
@@ -8410,6 +8412,10 @@ envelope = schema/purpose/key_id/algorithm/payload_sha256/payload_base64/signatu
 <tr>
 <td><a href="../engineering/contracts/runtime-registry.schema.json">runtime-registry.schema.json</a></td>
 <td>APK 内可信 slot、唯一库名、精确构建与依赖版本</td>
+</tr>
+<tr>
+<td><a href="../engineering/contracts/compiled-slot-identity.schema.json">compiled-slot-identity.schema.json</a></td>
+<td>ELF 中实际编入的 slot 身份，精确对应注册表字段，不包含库自身摘要</td>
 </tr>
 <tr>
 <td><a href="../engineering/contracts/save-backup.schema.json">save-backup.schema.json</a></td>
@@ -8458,6 +8464,7 @@ envelope = schema/purpose/key_id/algorithm/payload_sha256/payload_base64/signatu
 <li>本地 durable≤total；READY 与已签发行/真实目录/DB 一致；session source_screen 实际存在；状态转换、锁、nonce、seq 不由 Schema 自动保证。</li>
 <li>verified 证据必须包含时长/实际读档/输入/帧时间/游戏速度/测试计划，满足 <a href="#doc-eng08">质量口径</a>；合法 JSON 不等于已验证可玩。</li>
 <li>请求通过 Schema 之后仍要认证、角色/范围检查、幂等、revision、双人审核与真实对象核验；不得以字段正确代替业务守卫。</li>
+<li><code>.nsa_identity</code> 必须是唯一、分配到镜像的 ELF PROGBITS 段，包含至多 16 KiB、NUL 结尾的严格 UTF-8 JSON；拒绝重复字段、非整数版本或非有限数值。核对实际 AArch64 共享库、全部身份字段与真实 <code>DT_SONAME</code>，再复制完全相同的字节；打包后重复核验，手机继续核对实际 ABI/<code>get_info</code>。新库需重新编译，不能将旧库摘要配上新构建标识。</li>
 </ol>
 <h2 id="doc-contracts-_3">示例与签名向量</h2>
 <p><a href="../engineering/contracts/examples/README.md">examples</a> 提供索引、发行/运行注册表、存档、READY/journal、运行事件和签名 envelope；只包含小型虚构数据。归档本体并不存在，示例 archive hash 只是协议占位，不能用它演示安装成功。文件索引对虚构文字字节计算真实摘要，索引对象摘要与清单互相校验。</p>

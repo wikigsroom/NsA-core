@@ -1,5 +1,7 @@
 # 可执行契约与验证说明
 
+[ADR 0009](../decisions/0009-compiled-slot-identity-and-unicode-builds.md) 新增编译产物身份 schema 1。它是构建检查，不改变运行 ABI、注册表 schema 或存档格式；原生构建、收集和最终 APK 检查必须同时遵守。
+
 新增 [ADR 0008](../decisions/0008-transfer-ownership-and-install-recovery.md) 明确 Room schema 2 及 Android `journal_schema:2` 的私有持久化映射。local-records 新增 AndroidInstallJournalV2 分支，原 record_schema:1 DTO 和既有示例保持兼容；这不表示全部命令 revision/receipt 规则已实现。
 
 契约 v1 · 文档基线 v2.0 · 2026-11-06。这里保存开发必须遵守的协议；契约和示例本身不是服务、安装器或运行模块的实现，也不是验收证据。后续程序与已执行结果见[实施手册](../../hall/README.zh-CN.md)和[验证记录](../../hall/implementation-status.md)，剩余下载/安装缺口见[定向核对](../../hall/transfer-install-review-2026-11-07.md)。示例均为虚构协议数据，不包含可玩的游戏、真实资源、密钥或生产信任根。
@@ -15,6 +17,7 @@
 | [file-index.schema.json](file-index.schema.json) | 所有声明资源的相对路径、长度、摘要和角色 |
 | [chunk-index.schema.json](chunk-index.schema.json) | 固定 8 MiB 段、偏移/长度/摘要、总对象身份 |
 | [runtime-registry.schema.json](runtime-registry.schema.json) | APK 内可信 slot、唯一库名、精确构建与依赖版本 |
+| [compiled-slot-identity.schema.json](compiled-slot-identity.schema.json) | ELF 中实际编入的 slot 身份，精确对应注册表字段，不包含库自身摘要 |
 | [save-backup.schema.json](save-backup.schema.json) | 用户备份中的游戏/档案/组/提交序号/文件清单 |
 | [policy.schema.json](policy.schema.json) | 单调 epoch、精确版本下架/阻断、已撤销签名 key |
 | [app-update.schema.json](app-update.schema.json) | App 包名/版本/证书、APK 对象和更新说明 |
@@ -38,6 +41,7 @@ Schema 使用 Draft 2020-12、离线可解析 `$id`；`schemas.nsa.invalid` 是�
 8. 本地 durable≤total；READY 与已签发行/真实目录/DB 一致；session source_screen 实际存在；状态转换、锁、nonce、seq 不由 Schema 自动保证。
 9. verified 证据必须包含时长/实际读档/输入/帧时间/游戏速度/测试计划，满足 [质量口径](../08-quality-governance.md)；合法 JSON 不等于已验证可玩。
 10. 请求通过 Schema 之后仍要认证、角色/范围检查、幂等、revision、双人审核与真实对象核验；不得以字段正确代替业务守卫。
+11. `.nsa_identity` 必须是唯一、分配到镜像的 ELF PROGBITS 段，包含至多 16 KiB、NUL 结尾的严格 UTF-8 JSON；拒绝重复字段、非整数版本或非有限数值。核对实际 AArch64 共享库、全部身份字段与真实 `DT_SONAME`，再复制完全相同的字节；打包后重复核验，手机继续核对实际 ABI/`get_info`。新库需重新编译，不能将旧库摘要配上新构建标识。
 
 ## 示例与签名向量
 

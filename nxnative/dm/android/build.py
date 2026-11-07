@@ -7,6 +7,7 @@
 # Objects are rebuilt when a source or a header it includes changed (clang -MMD dependency files).
 import argparse, concurrent.futures as cf, os, re, subprocess, sys
 from pathlib import Path
+from build_deps import dep_stale
 
 DM = Path(__file__).resolve().parent.parent          # dm/
 ap = argparse.ArgumentParser()
@@ -40,15 +41,13 @@ if a.hall_identity:
     hall_name = identity['library_name']
     if not re.fullmatch(r'libnsa_[a-z0-9_]+\.so', hall_name):
         raise ValueError('Invalid compiled runtime SONAME')
-    fields = {'NSA_SLOT_ID': identity['runtime_slot_id'], 'NSA_CORE_REVISION': identity['core_revision'],
-              'NSA_PROFILE_SHA256': identity['profile_digest'], 'NSA_MODULE_IDS': json.dumps(identity['supported_module_build_ids'], separators=(',', ':')),
-              'NSA_SHADER_CHAIN': identity['shader_chain_id']}
+    from slot_identity import write_identity_header
     environment = identity.get('runtime_env', {})
     if any(not re.fullmatch(r'DM_[A-Z0-9_]+', key) or '\0' in value or len(value) > 1024 for key, value in environment.items()):
         raise ValueError('Invalid compiled profile environment')
     env_header = '\nstatic const char *NSA_ENV_KEYS[] = {' + ','.join(json.dumps(key) for key in environment) + '};\n'
     env_header += 'static const char *NSA_ENV_VALUES[] = {' + ','.join(json.dumps(value) for value in environment.values()) + '};\n#define NSA_ENV_COUNT ' + str(len(environment)) + '\n'
-    (gen / a.game / 'hall_identity.h').write_text('\n'.join('#define ' + key + ' ' + json.dumps(value) for key, value in fields.items()) + env_header, encoding='utf-8')
+    write_identity_header(gen / a.game / 'hall_identity.h', identity, env_header)
 
 # the game profile header, as the Makefile makes it
 subprocess.run([sys.executable, str(DM / 'games/game.py'), 'header', a.game, str(gen / a.game / 'game_profile.h')], check=True)
@@ -89,16 +88,6 @@ _stamp = obj / 'flags.stamp'; _flags = hashlib.sha256(repr((CFLAGS, INC, VPX_FLA
 if not _stamp.exists() or _stamp.read_text() != _flags:   # compiler flags changed: every object is rebuilt
     shutil.rmtree(obj, ignore_errors=True); obj.mkdir(parents=True, exist_ok=True); _stamp.write_text(_flags)
 
-def dep_stale(o, d, s):
-    if not o.exists() or o.stat().st_mtime < s.stat().st_mtime: return True
-    if not d.exists(): return True
-    t = o.stat().st_mtime
-    txt = d.read_text(errors='replace').replace('\\\n', ' ')
-    for f in re.split(r'(?<!\\)\s+', txt.split(':', 1)[1] if ':' in txt else ''):
-        f = f.replace('\\ ', ' ').strip()
-        if f and Path(f).exists() and Path(f).stat().st_mtime > t: return True
-    return False
-
 def compile_one(s):
     rel = s.relative_to(DM); o = obj / (str(rel).replace(os.sep, '_').replace('/', '_') + '.o'); d = o.with_suffix('.d')
     src = s
@@ -106,25 +95,27 @@ def compile_one(s):
         src = gen / (s.stem + '.elf.S')
         if not src.exists() or src.stat().st_mtime < s.stat().st_mtime:
             subprocess.run([sys.executable, str(DM / 'android/tools/darwin2elf.py'), str(s), str(src)], check=True)
-    if not dep_stale(o, d, src): return s, o, 0, ''
+    if not dep_stale(o, d, src): return s, o, 0, '', False
     flags = VPX_FLAGS if 'third_party/libvpx' in str(rel).replace(os.sep, '/') else ZSTD_FLAGS if 'third_party/zstd' in str(rel).replace(os.sep, '/') else [TARGET] + DBG if s.suffix == '.S' else CFLAGS + INC
     r = subprocess.run([CC] + flags + ['-MMD', '-MF', str(d), '-c', str(src), '-o', str(o)], capture_output=True, text=True, errors='replace')
-    return s, o, r.returncode, r.stderr
+    return s, o, r.returncode, r.stderr, True
 
 def build(files):
-    objs, failed = [], []
+    objs, failed, rebuilt = [], [], 0
     with cf.ThreadPoolExecutor(a.jobs) as ex:
-        for s, o, rc, err in ex.map(compile_one, files):
+        for s, o, rc, err, compiled in ex.map(compile_one, files):
             objs.append(o)
+            rebuilt += int(compiled)
             if rc: failed.append(s); print(f'--- {s.relative_to(DM)}\n{err.strip()}\n', file=sys.stderr)
             elif err.strip() and '--verbose' in sys.argv: print(err, file=sys.stderr)
-    return objs, failed
+    return objs, failed, rebuilt
 
 all_files = HOST + GFX + PORT + ASM
-objs, failed = build(all_files)
-vobjs, vfailed = build(VPX + ZSTD)
+objs, failed, rebuilt = build(all_files)
+vobjs, vfailed, vrebuilt = build(VPX + ZSTD)
 failed += vfailed
-print(f'compiled {len(all_files) + len(VPX) + len(ZSTD)} sources, {len(failed)} failed' + (': ' + ', '.join(str(f.relative_to(DM)) for f in failed) if failed else ''))
+total = len(all_files) + len(VPX) + len(ZSTD)
+print(f'checked {total} sources: compiled {rebuilt + vrebuilt}, cached {total - rebuilt - vrebuilt}, failed {len(failed)}' + (': ' + ', '.join(str(f.relative_to(DM)) for f in failed) if failed else ''))
 if failed and not a.keep_going: sys.exit(1)
 if a.only_compile: sys.exit(1 if failed else 0)
 

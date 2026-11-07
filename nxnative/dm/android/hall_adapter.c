@@ -14,6 +14,8 @@
 #include "hall_identity.h"
 #include "../../../docs/engineering/contracts/runtime-api-v1.h"
 
+NSA_RUNTIME_EXPORT const char nsa_runtime_identity_json_v1[] __attribute__((section(".nsa_identity"))) = NSA_RUNTIME_IDENTITY_JSON;
+
 extern void dm_front_hall_on_create(ANativeActivity *, void *, size_t);
 extern void dm_front_hall_command(int);
 extern uint64_t dm_fs_commit_count(void);

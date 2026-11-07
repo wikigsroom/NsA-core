@@ -1,5 +1,7 @@
 # NsA · 技术开发约束基线 v2.0
 
+原生编译依赖与产物身份新增 [ADR 0009](decisions/0009-compiled-slot-identity-and-unicode-builds.md)：中文路径按 UTF-8 读取依赖，缺失依赖强制重建；收集运行库和打包后均核对实际 ELF 的编译身份与 SONAME。具体失败及整批推进见[构建修正轮次](../hall/native-build-round-2026-11-07.md)，源码完成不等于新候选已通过真机。
+
 下载、队列与安装的后续实现约束、Room 1→2 迁移及 Android 私有日志适配见 [ADR 0008](decisions/0008-transfer-ownership-and-install-recovery.md) 与[修正轮次](../hall/transfer-round-2026-11-07.md)。历史审查报告的源码身份和原始结论保持不变。
 
 2026-11-06 · 对应已选 **D · 曜黑极简**、默认竖屏大厅。本文档包固定下一步开发的行为、契约、架构和验收；它不表示统一 Android App、在线服务或多游戏运行已经完成。
