@@ -1,5 +1,7 @@
 # 可执行契约与验证说明
 
+新增 [ADR 0008](../decisions/0008-transfer-ownership-and-install-recovery.md) 明确 Room schema 2 及 Android `journal_schema:2` 的私有持久化映射。local-records 新增 AndroidInstallJournalV2 分支，原 record_schema:1 DTO 和既有示例保持兼容；这不表示全部命令 revision/receipt 规则已实现。
+
 契约 v1 · 文档基线 v2.0 · 2026-11-06。这里保存开发必须遵守的协议；契约和示例本身不是服务、安装器或运行模块的实现，也不是验收证据。后续程序与已执行结果见[实施手册](../../hall/README.zh-CN.md)和[验证记录](../../hall/implementation-status.md)，剩余下载/安装缺口见[定向核对](../../hall/transfer-install-review-2026-11-07.md)。示例均为虚构协议数据，不包含可玩的游戏、真实资源、密钥或生产信任根。
 
 ## 契约清单

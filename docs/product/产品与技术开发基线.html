@@ -7118,6 +7118,7 @@ files/nsa/sessions/&lt;session&gt;/...
 <p>回大厅只移除game_running阻断，保留手动、系统、网络/空间阻断。游戏失败页只承诺已提交进度保留，提供主动重试、返回和反馈。</p>
 <h2 id="doc-eng03-7">7. 必须证明的集成结果</h2>
 <p>双模块加载/符号、构造器和路径初始化；真实4/16KiB页面及W^X；启动取消；旋转不重复start；锁屏/来电；正常/强制/崩溃退出；大厅和游戏分别回收；A/B独立存读档与设置；活动版本不被更新或删除。对应RUN、SAVE与AC-R/AC-S，未有证据不得标已实现。</p><a class="backtop" href="#top">返回目录 ↑</a></article><article id="doc-eng04"><p class="source">规范源文件 · <a href="../engineering/04-transfer-install-save.md">04-transfer-install-save.md</a></p><h1 id="doc-eng04-04">04 · 传输、安装、空间、更新与存档事务</h1>
+<p>新增实施约束见 <a href="../engineering/decisions/0008-transfer-ownership-and-install-recovery.md">ADR 0008</a>：任务所有权持续至完成/取消清理确认；条件 SQL 隔离用户意图与进度；稳定排序和持久接续；完整候选验证、逐目录同步及保留日志的安装清理。Room schema 2 与 Android journal_schema 2 是各自独立的本地版本，保留旧版迁移/路径适配。原规范和验收编号不变；实际结果见<a href="../hall/transfer-round-2026-11-07.md">修正轮次</a>。</p>
 <p>实施补充见 <a href="../engineering/decisions/0007-policy-runtime-save-recovery.md">ADR 0007</a>：后台下载先等待初始化，安装恢复与写入同锁；存档入口访问或创建提交目录前先恢复交换记录。草稿归属持久保存，导入前校验完整元数据、合计与空间，每次写入前执行展开预算；目录交换与本地索引可幂等恢复。确认导入后全程禁取消/重复提交并显示进度。统一大厅构建关闭原生旁路交换入口，独立构建保留。原规则与验收编号不变，新增实现不代表真机验收通过。</p>
 <h2 id="doc-eng04-1">1. 执行器与持久化</h2>
 <p>TransferEngine只负责HTTP、流式写入、段校验与检查点；Android适配器负责何时可执行。API34+用户可见发起的大传输使用UIDT，API31–33采用合法前台传输，均需可见状态和持久恢复。系统停止不保证回调，不能只在onStop中保存。参见 <a href="https://developer.android.com/develop/background-work/background-tasks/uidt">UIDT</a>、<a href="https://developer.android.com/develop/background-work/services/fgs/timeout">前台服务时限</a>。</p>
@@ -7235,6 +7236,7 @@ missing = max(0, additional_peak - available_for_this)
 <p>交换阶段保存old/new路径归属与commit；每边界中断重启都能取回原档或已验证新档。恢复前不清唯一旧副本。导入成功不自动启动游戏。重置设置/删除存档需要各自确认，不由修复或资源删除隐式触发。</p>
 <h2 id="doc-eng04-8">8. 缓存与清理</h2>
 <p>cache key=release+runtime/profile+shader+driver+GPU+OS；变更只失效对应缓存。clear-cache不动save/settings/package。GC仅操作归属目录且无有效引用；删除失败记录待清理及真实残留字节。私有backup不抵抗卸载，用户持久备份走SAF；App数据不把十几GiB资源混入系统自动备份。</p><a class="backtop" href="#top">返回目录 ↑</a></article><article id="doc-eng05"><p class="source">规范源文件 · <a href="../engineering/05-data-state.md">05-data-state.md</a></p><h1 id="doc-eng05-05">05 · 数据模型、状态与一致性</h1>
+<p>新增实施约束见 <a href="../engineering/decisions/0008-transfer-ownership-and-install-recovery.md">ADR 0008</a>：任务所有权持续至完成/取消清理确认；条件 SQL 隔离用户意图与进度；稳定排序和持久接续；完整候选验证、逐目录同步及保留日志的安装清理。Room schema 2 与 Android journal_schema 2 是各自独立的本地版本，保留旧版迁移/路径适配。原规范和验收编号不变；实际结果见<a href="../hall/transfer-round-2026-11-07.md">修正轮次</a>。</p>
 <p>基线 v2.0 · 2026-11-06。关联 NFR-07、CAT-07、DL-01～14、PKG-04～09、RUN-01～11、SAVE-01～08、UPD-01～07。字段类型与线上 DTO 见 <a href="../engineering/contracts/domain.schema.json">domain.schema.json</a>，持久化记录见 <a href="../engineering/contracts/local-records.schema.json">local-records.schema.json</a>。本章是建库约束，不表示数据库已经实现。</p>
 <h2 id="doc-eng05-1">1. 身份、数值与时间</h2>
 <div class="table-scroll" tabindex="0" aria-label="可横向滚动的规范表格"><table>
@@ -8369,6 +8371,7 @@ envelope = schema/purpose/key_id/algorithm/payload_sha256/payload_base64/signatu
 <p>每条结果保存：case_id、requirement_ids/subrule_ids、App commit/version/cert/build、slot/core/profile/driver/content、设备匿名测试编号/OS/能力、前置数据、网络/空间、操作步骤、expected/actual、pass/fail/blocked/not_run、时间/执行人、脱敏证据 URI、缺陷和重测关联。记录可用 JSON/Markdown，不能只写“测试通过”一句。</p>
 <p>签名/契约示例仅使用虚构内容和临时测试密钥，私钥不落库。大文件测试数据可本机生成并忽略；实际游戏/密钥/玩家存档不加入测试仓库。运行报告和日志遵守路径、隐私及浏览器清理要求。</p>
 <p>本套文档提供 <a href="../engineering/verify_baseline.py">只读基线校验器</a> 和 <a href="../engineering/data/baseline-review.json">校验记录</a>，检验规范引用、需求追踪、Schema/OpenAPI、样例与负例。后续实现需另跑与改动有关的测试和真机案例，不能引用本次文档校验代替 G0～G3。</p><a class="backtop" href="#top">返回目录 ↑</a></article><article id="doc-contracts"><p class="source">规范源文件 · <a href="../engineering/contracts/README.md">README.md</a></p><h1 id="doc-contracts-_1">可执行契约与验证说明</h1>
+<p>新增 <a href="../engineering/decisions/0008-transfer-ownership-and-install-recovery.md">ADR 0008</a> 明确 Room schema 2 及 Android <code>journal_schema:2</code> 的私有持久化映射。local-records 新增 AndroidInstallJournalV2 分支，原 record_schema:1 DTO 和既有示例保持兼容；这不表示全部命令 revision/receipt 规则已实现。</p>
 <p>契约 v1 · 文档基线 v2.0 · 2026-11-06。这里保存开发必须遵守的协议；契约和示例本身不是服务、安装器或运行模块的实现，也不是验收证据。后续程序与已执行结果见<a href="../hall/README.zh-CN.md">实施手册</a>和<a href="../hall/implementation-status.md">验证记录</a>，剩余下载/安装缺口见<a href="../hall/transfer-install-review-2026-11-07.md">定向核对</a>。示例均为虚构协议数据，不包含可玩的游戏、真实资源、密钥或生产信任根。</p>
 <h2 id="doc-contracts-_2">契约清单</h2>
 <div class="table-scroll" tabindex="0" aria-label="可横向滚动的规范表格"><table>

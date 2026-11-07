@@ -81,6 +81,7 @@ private val Palette = darkColorScheme(primary = Accent, onPrimary = Color(0xFF10
     val hasCache by repository.hasCatalogueCache.collectAsStateWithLifecycle()
     val ready by repository.ready.collectAsStateWithLifecycle()
     val initializationError by repository.initializationError.collectAsStateWithLifecycle()
+    val recoveryWarning by repository.recoveryWarning.collectAsStateWithLifecycle()
     val loading by repository.busy.collectAsStateWithLifecycle()
     val working by model.working.collectAsStateWithLifecycle()
     val notice by model.notice.collectAsStateWithLifecycle()
@@ -166,6 +167,7 @@ private val Palette = darkColorScheme(primary = Accent, onPrimary = Color(0xFF10
                         Spacer(Modifier.weight(1f))
                         if (loading || working) CircularProgressIndicator(Modifier.size(20.dp), strokeWidth = 2.dp)
                     }
+                    if (ready && settings.welcomed && recoveryWarning.isNotBlank()) MessageCard("资源操作待处理", recoveryWarning, Icons.Outlined.Restore, "查看任务") { tab = "downloads"; route = "root" }
                     if (!ready) {
                         PageHeading("正在恢复本地数据", "核对安装、下载任务与存档，完成后显示游戏大厅。")
                         if (initializationError.isBlank()) LinearProgressIndicator(Modifier.fillMaxWidth())
@@ -283,7 +285,7 @@ private val Palette = darkColorScheme(primary = Accent, onPrimary = Color(0xFF10
                         "game-settings" -> ScrollPage {
                             PageHeading("操作与画面", "仅应用到此游戏，下次启动生效")
                             val gameSettings = selectedRecord?.settings?.let(::JSONObject) ?: JSONObject()
-                            fun save(key: String, value: Any) = model.perform { val game = repository.dao.game(selected) ?: return@perform; repository.dao.putGame(game.copy(settings = JSONObject(game.settings).put(key, value).toString())) }
+                            fun save(key: String, value: Any) = model.perform { val game = repository.dao.game(selected) ?: return@perform; repository.dao.gameSettings(selected, JSONObject(game.settings).put(key, value).toString()) }
                             Group("操作") { SwitchRow("触屏手柄", "显示屏幕上的操作按钮", gameSettings.optBoolean("touch_controls", true)) { save("touch_controls", it) }; SwitchRow("操作震动", "按系统许可提供轻量反馈", gameSettings.optBoolean("haptics", true)) { save("haptics", it) } }
                             SecondaryButton("重置此游戏的设置与布局") { dialog = "reset-settings" }
                             Group("画面与声音") { SwitchRow("显示性能信息", "实际运行时显示可用的性能数据", gameSettings.optBoolean("show_performance", false)) { save("show_performance", it) }; SwitchRow("游戏声音", "关闭后下次启动保持静音", gameSettings.optBoolean("audio", true)) { save("audio", it) } }
@@ -414,16 +416,26 @@ private fun inputLabel(value: String) = mapOf("touch" to "触屏", "gamepad" to 
 private fun detailSpace(repository: HallRepository, value: JSONObject) = repository.additionalBytes(JSONObject().put("archive", JSONObject().put("bytes", value.getString("download_bytes"))).put("unpacked_bytes", value.getString("unpacked_bytes")).put("working_bytes", value.getString("working_bytes")), 0, 0)
 @Composable private fun Compatibility(value: JSONObject?) { val status = value?.optString("status") ?: "experimental"; val label = mapOf("verified" to "已验证适配", "experimental" to "实验适配", "unsupported" to "设备暂不支持", "app_update_required" to "需要更新 App", "blocked" to "版本已暂停")[status] ?: "适配待确认"; AssistChip({}, label = { Text(label) }, leadingIcon = { Icon(Icons.Outlined.Info, null, Modifier.size(16.dp)) }); value?.optJSONArray("known_limitations")?.let { array -> repeat(array.length()) { val text = array.getString(it); Text(if (text == "Actual gameplay and save/reload are not verified for this device.") "此设备尚未完成完整试玩及存档重读验收。" else text, color = Warning, fontSize = 13.sp) } } }
 @Composable private fun Downloads(tasks: List<TransferRecord>, games: List<GameRecord>, action: (String, String) -> Unit, open: (String) -> Unit, discover: () -> Unit) {
+    val active = orderedTransfers(tasks.filter { it.state !in listOf("completed", "cancelled") })
+    val runnable = active.filter { it.intent == "run" && it.ownerGameId == it.gameId && it.state != "failed" }
+    val history = orderedTransfers(tasks.filter { it.state in listOf("completed", "cancelled") }).reversed()
     LazyColumn(verticalArrangement = Arrangement.spacedBy(16.dp), contentPadding = PaddingValues(bottom = 24.dp)) {
         item { PageHeading("下载中心", "每一步进度，都有迹可循") }
         if (tasks.isEmpty()) item { Empty("下载列表空空的", "去发现喜欢的游戏，确认下载后可在这里管理任务。", Icons.Outlined.Download, "发现游戏", discover) }
-        items(tasks.reversed(), key = { it.id }) { task ->
+        if (active.isNotEmpty()) item { Text("准备中的游戏 · 按加入顺序处理", color = Secondary, fontSize = 13.sp) }
+        items(active, key = { it.id }) { task ->
+            val name = games.firstOrNull { it.id == task.gameId }?.let { JSONObject(it.summary).optString("name") } ?: "游戏资源"
+            val rank = runnable.indexOfFirst { it.id == task.id }
+            TransferCard(task, name, { action(task.id, it) }, { open(task.gameId) }, if (rank >= 0) "处理顺序 ${rank + 1} · 暂停或条件未满足时继续下一项" else "暂停、失败与取消清理不占用下载顺序")
+        }
+        if (history.isNotEmpty()) item { Text("最近完成与取消", style = MaterialTheme.typography.titleMedium) }
+        items(history, key = { it.id }) { task ->
             val name = games.firstOrNull { it.id == task.gameId }?.let { JSONObject(it.summary).optString("name") } ?: "游戏资源"
             TransferCard(task, name, { action(task.id, it) }, { open(task.gameId) })
         }
     }
 }
-@Composable private fun TransferCard(task: TransferRecord, name: String, action: (String) -> Unit, open: () -> Unit) {
+@Composable private fun TransferCard(task: TransferRecord, name: String, action: (String) -> Unit, open: () -> Unit, order: String = "") {
     val currentBytes by rememberUpdatedState(task.bytes)
     var speed by remember(task.id, task.state) { mutableDoubleStateOf(0.0) }
     LaunchedEffect(task.id, task.state) {
@@ -443,7 +455,8 @@ private fun detailSpace(repository: HallRepository, value: JSONObject) = reposit
     Surface(shape = RoundedCornerShape(16.dp), color = Surface, border = BorderStroke(1.dp, Border)) {
         Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
             Text(name, fontWeight = FontWeight.SemiBold)
-            Text(mapOf("queued" to "排队等待", "downloading" to "正在下载", "waiting" to "等待恢复条件", "paused" to "已主动暂停", "verifying" to "正在校验文件", "installing" to "正在准备游戏", "completed" to "游戏已准备好", "failed" to "任务失败，可重试", "cancelled" to "已取消")[task.state] ?: task.state, color = if (task.state == "failed") Error else Accent)
+            Text(if (task.intent == "cancel" && task.state !in listOf("completed", "cancelled")) "正在取消 · 等待安全清理" else mapOf("queued" to "排队等待", "downloading" to "正在下载", "waiting" to "等待恢复条件", "paused" to "已主动暂停", "verifying" to "正在校验文件", "installing" to "正在准备游戏", "completed" to "游戏已准备好", "failed" to "任务失败，可重试", "cancelled" to "已取消")[task.state] ?: task.state, color = if (task.state == "failed") Error else Accent)
+            if (order.isNotEmpty()) Text(order, color = Secondary, fontSize = 12.sp)
             val progress = if (task.total <= 0L) 0f else (task.bytes.toDouble() / task.total).toFloat().coerceIn(0f, 1f)
             LinearProgressIndicator(progress = { progress }, modifier = Modifier.fillMaxWidth().height(6.dp).clip(RoundedCornerShape(3.dp)))
             Text(formatBytes(task.bytes) + if (task.total > 0L) " / " + formatBytes(task.total) + " · " + (progress * 100).toInt() + "%" else " · 总量待确认", color = Secondary, fontSize = 12.sp)
@@ -453,11 +466,12 @@ private fun detailSpace(repository: HallRepository, value: JSONObject) = reposit
             } else "正在估算速度与剩余时间…", color = Secondary, fontSize = 12.sp)
             if (task.error.isNotBlank()) Text(task.error, color = Error, fontSize = 12.sp)
             if (task.blockers.contains("game_running")) Text("游玩期间暂停资源准备，退出游戏后按网络条件恢复。", color = Secondary, fontSize = 12.sp)
-            if (task.blockers.contains("cellular_consent")) TextButton(onClick = { action("cellular") }) { Text("允许此任务使用移动网络") }
+            if (task.intent != "cancel" && task.blockers.contains("cellular_consent")) TextButton(onClick = { action("cellular") }) { Text("允许此任务使用移动网络") }
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                if (task.state in listOf("paused", "failed", "waiting")) TextButton(onClick = { action(if (task.state == "failed") "retry" else "resume") }) { Text("继续") }
+                if (task.intent != "cancel" && task.state in listOf("paused", "failed", "waiting")) TextButton(onClick = { action(if (task.state == "failed") "retry" else "resume") }) { Text("继续") }
                 else if (task.state in listOf("queued", "downloading")) TextButton(onClick = { action("pause") }) { Text("暂停") }
-                if (task.state !in listOf("completed", "cancelled")) TextButton(onClick = { action("cancel") }) { Text("取消任务") }
+                if (task.intent != "cancel" && task.state !in listOf("completed", "cancelled")) TextButton(onClick = { action("cancel") }) { Text("取消任务") }
+                if (task.state in listOf("completed", "cancelled") && task.error.isNotBlank()) TextButton(onClick = { action("cleanup") }) { Text("重试清理") }
                 if (task.state in listOf("installing", "verifying", "completed")) TextButton(onClick = open) { Text("查看准备进度") }
             }
         }

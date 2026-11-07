@@ -35,6 +35,7 @@ android {
     androidResources { noCompress += listOf("json", "pem") }
 }
 kotlin { compilerOptions { jvmTarget.set(JvmTarget.JVM_17) } }
+kapt { arguments { arg("room.schemaLocation", "$projectDir/schemas") } }
 // Source files remain UTF-8; the Gradle launcher uses the native Windows charset
 // for JDK argument files (Gradle #30304) when the workspace contains Chinese.
 tasks.withType<JavaCompile>().configureEach { options.encoding = "UTF-8" }

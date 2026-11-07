@@ -11,11 +11,11 @@ import java.nio.file.Files
 
 /** Runs once behind the same operation lock as extraction and activation. */
 class StorageReconciliation(private val repository: HallRepository) {
-    fun installationProblem(record: InstallRecord): String? = try {
+    fun installationProblem(record: InstallRecord, root: File = repository.releaseRoot(record.gameId, record.releaseId), full: Boolean = false): String? = try {
         val manifest = JSONObject(record.manifest)
-        val root = repository.releaseRoot(record.gameId, record.releaseId)
         require(root.isDirectory && !Files.isSymbolicLink(root.toPath()))
         val marker = strictObject(File(root, ".ready.json").readBytes())
+        require(!Files.isSymbolicLink(File(root, ".ready.json").toPath()))
         require(marker.getString("release_id") == record.releaseId && marker.getString("manifest_sha256") == manifest.getString("_verified_sha256"))
         val indexFile = File(root, ".file-index.json")
         val expected = manifest.getJSONObject("file_index")
@@ -31,9 +31,19 @@ class StorageReconciliation(private val repository: HallRepository) {
             val name = safeRelativePath(item.getString("path")); require(names.add(name.lowercase(java.util.Locale.ROOT)))
             val file = safeChild(root, name); val size = checkedBytes(item.getString("bytes"))
             require(file.isFile && !Files.isSymbolicLink(file.toPath()) && file.length() == size)
+            if (full) require(sha256(file) == item.getString("sha256"))
             total = Math.addExact(total, size)
         }
         require(total == checkedBytes(manifest.getString("unpacked_bytes")))
+        if (full) {
+            val expectedNames = entries.map { it.getString("path") }.toSet() + setOf(".ready.json", ".file-index.json")
+            var count = 0
+            root.walkTopDown().onEnter { require(!Files.isSymbolicLink(it.toPath())); true }.forEach { item ->
+                require(!Files.isSymbolicLink(item.toPath()))
+                if (item.isFile) { require(++count <= expectedNames.size); require(item.relativeTo(root).invariantSeparatorsPath in expectedNames) }
+            }
+            require(count == expectedNames.size)
+        }
         null
     } catch (_: Exception) { "资源目录、清单或文件记录不完整，请校验并修复" }
 
@@ -67,8 +77,7 @@ class StorageReconciliation(private val repository: HallRepository) {
                 }
                 offset.coerceAtMost(record.total)
             }.getOrDefault(0L)
-            val state = when { record.intent == "cancel" -> "cancelled"; record.intent == "pause" -> "paused"; record.state == "failed" -> "failed"; else -> "queued" }
-            repository.dao.putTransfer(record.copy(bytes = verified, state = state))
+            repository.dao.reconcileTransfer(record.id, verified)
         }
     }
 }

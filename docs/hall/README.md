@@ -1,6 +1,6 @@
 # Unified hall implementation guide
 
-Read the [download/install source review](transfer-install-review-2026-11-07.md) for current queue/cancellation, journal-recovery, directory-durability and cleanup limitations. It covers three more requirements at source `189169f`; its proposed fixes and test cases are not yet implemented or executed. This documentation-only handoff preserves the other project's phone work.
+The complete [download/install correction batch](transfer-round-2026-11-07.md) implements the reviewed queue, cancellation, HTTP identity and install-recovery/cleanup boundaries. The user has reauthorized USB testing. Source and necessary test cases are prepared before consolidated execution; new build/device results are recorded separately and do not inherit historical APK passes.
 
 The [new recovery correction round](recovery-round-2026-11-07.md) and [ADR 0007](../engineering/decisions/0007-policy-runtime-save-recovery.md) add the scoped policy sequence, initialization/file reconciliation, kernel runtime ownership, durable picker drafts and recoverable save/index publication. Their validation status is separate from the installed build and existing captures. For save exchange, export now fixes the snapshot before opening the destination picker; import restores its original game/draft and disables cancellation throughout the confirmed operation. Production API rollout requires the database migration described in the ADR.
 

@@ -1,5 +1,7 @@
 # NsA · 技术开发约束基线 v2.0
 
+下载、队列与安装的后续实现约束、Room 1→2 迁移及 Android 私有日志适配见 [ADR 0008](decisions/0008-transfer-ownership-and-install-recovery.md) 与[修正轮次](../hall/transfer-round-2026-11-07.md)。历史审查报告的源码身份和原始结论保持不变。
+
 2026-11-06 · 对应已选 **D · 曜黑极简**、默认竖屏大厅。本文档包固定下一步开发的行为、契约、架构和验收；它不表示统一 Android App、在线服务或多游戏运行已经完成。
 
 基线描述保留制定时点；后续实现与测试以[实施手册](../hall/README.zh-CN.md)、[验证记录](../hall/implementation-status.md)、[代码对照](../hall/requirement-coverage.md)和[实施决策](decisions/0005-client-guardrails-and-cache.md)为准。基线未验收状态不会由新增代码自动提升。

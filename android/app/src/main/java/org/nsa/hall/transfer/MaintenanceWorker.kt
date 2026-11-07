@@ -13,9 +13,15 @@ import org.nsa.hall.runtime.RuntimeLease
 class MaintenanceWorker(context: Context, parameters: WorkerParameters) : CoroutineWorker(context, parameters) {
     override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
         val repository = (applicationContext as HallApplication).repository
-        repository.initialize()
-        repository.operationLock.withLock {
-            if (repository.dao.unfinished().isEmpty() && !RuntimeLease.held(repository.context.filesDir)) repository.trimSessionLogs()
+        val lease = TransferLease.acquire(repository.context.filesDir) ?: return@withContext Result.retry()
+        lease.use {
+            repository.initialize()
+            repository.operationLock.withLock {
+                if (repository.dao.unfinished().isEmpty() && !RuntimeLease.held(repository.context.filesDir)) {
+                    Installation(repository).recover()
+                    repository.trimSessionLogs()
+                }
+            }
         }
         Result.success()
     }

@@ -139,7 +139,7 @@ class Api(private val context: Context, private val preferences: Preferences) {
         }
     }
     suspend fun open(url: String, range: String? = null, etag: String? = null): Response = withContext(Dispatchers.IO) {
-        val request = Request.Builder().url(url)
+        val request = Request.Builder().url(url).header("Accept-Encoding", "identity")
         if (range != null) request.header("Range", range)
         if (etag != null) request.header("If-Range", etag)
         httpFor(url).newCall(request.build()).execute()

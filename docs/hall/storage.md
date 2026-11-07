@@ -1,5 +1,7 @@
 # Local storage / 本地存储
 
+本轮源码增加恢复后整包归档清理及终态历史清理，但未执行前不预扣或宣称释放空间。实际手机清理前后空间与 APK 身份将记录到[下载与安装修正轮次](transfer-round-2026-11-07.md)；电脑保留目录用途不变。
+
 Observed on 2026-11-07. All paths below are relative to this checkout under `游戏移植/`. Values are **logical file sizes**, rounded to GiB; hard links and filesystem allocation can make physical disk use differ. They are measurements of this local development profile, not a minimum download size for every user.
 
 2026-11-07 实测。下列目录均位于指定工作根下；数值为逻辑文件大小，硬链接与实际分配会影响物理占用。它们描述本机开发材料，不是所有玩家的必需下载量。

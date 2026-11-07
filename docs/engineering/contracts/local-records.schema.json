@@ -300,6 +300,73 @@
         "committed_at"
       ],
       "additionalProperties": false
+    },
+    "AndroidInstallJournalV2": {
+      "title": "Android private installation journal, adapter version 2",
+      "description": "ADR 0008 maps this private persistence adapter to the normative InstallJournal. Not a wire DTO or a replacement for Room schema version.",
+      "type": "object",
+      "properties": {
+        "journal_schema": {
+          "const": 2
+        },
+        "game_id": {
+          "$ref": "domain.schema.json#/$defs/Id"
+        },
+        "release_id": {
+          "$ref": "domain.schema.json#/$defs/Id"
+        },
+        "transfer_id": {
+          "$ref": "domain.schema.json#/$defs/Id"
+        },
+        "manifest": {
+          "type": "object",
+          "properties": {
+            "_verified_sha256": {
+              "$ref": "domain.schema.json#/$defs/Sha256"
+            }
+          },
+          "required": [
+            "_verified_sha256"
+          ],
+          "additionalProperties": true
+        },
+        "phase": {
+          "enum": [
+            "CREATED",
+            "EXTRACTED",
+            "VERIFIED",
+            "DIRECTORY_PUBLISHED",
+            "DB_ACTIVATED",
+            "CLEANED"
+          ]
+        },
+        "previous_active_release_id": {
+          "anyOf": [
+            {
+              "$ref": "domain.schema.json#/$defs/Id"
+            },
+            {
+              "const": ""
+            }
+          ]
+        },
+        "save_backup_for": {
+          "$ref": "domain.schema.json#/$defs/Id"
+        },
+        "abandoned": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "journal_schema",
+        "game_id",
+        "release_id",
+        "transfer_id",
+        "manifest",
+        "phase",
+        "previous_active_release_id"
+      ],
+      "additionalProperties": false
     }
   },
   "oneOf": [
@@ -317,6 +384,9 @@
     },
     {
       "$ref": "#/$defs/SaveCommit"
+    },
+    {
+      "$ref": "#/$defs/AndroidInstallJournalV2"
     }
   ]
 }

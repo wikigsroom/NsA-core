@@ -1,5 +1,7 @@
 # Actual application media
 
+本轮已重新获得 USB 测试授权；[下载与安装修正](../hall/transfer-round-2026-11-07.md)的新素材必须单独记录精确 APK 与采集来源。下方旧素材身份保持不变，不因源码更新自动成为新版截图。
+
 The [download/install documentation review](../hall/transfer-install-review-2026-11-07.md) produced no new APK or captures. Existing media does not demonstrate its unimplemented queue/recovery corrections. / 下载与安装文档核对没有新 APK 或素材，现有实录不能证明后续待实施修正。
 
 Only reviewed captures from the USB physical Android device belong here. Each exported PNG/GIF/MP4 has a neighboring provenance JSON recording the application ID, source hash and conversion. Screens captured from the design prototype stay in `docs/design` and must not be represented as runtime evidence.

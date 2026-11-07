@@ -1,5 +1,7 @@
 # Physical-device validation / 真机验收操作
 
+USB 已重新获用户授权。当前执行轮次见[下载与安装修正](transfer-round-2026-11-07.md)：整批实现及必要用例完成后统一构建，再核对手机实际占用、覆盖安装并执行隔离测试和真实流程。下方“等待手机”的文字保留此前暂停背景；最新执行结论以修正轮次为准。
+
 [Executed results / 已执行结果](implementation-status.md) · [English guide](README.md) · [中文手册](README.zh-CN.md) · [Normative gates / 技术门槛](../engineering/08-quality-governance.md)
 
 This procedure is for the **next** device run, not a pass report. The merged-main run reached BotW's title and imported Shrine scene, then another USB test stopped NsA. The user requested preserving that test and finishing documentation first. Resume when the phone is available for this run.

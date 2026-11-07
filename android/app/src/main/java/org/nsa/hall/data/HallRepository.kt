@@ -37,6 +37,7 @@ class HallRepository(val context: Context) {
     val busy = MutableStateFlow(false)
     val ready = MutableStateFlow(false)
     val initializationError = MutableStateFlow("")
+    val recoveryWarning = MutableStateFlow("")
     val hasCatalogueCache = MutableStateFlow(false)
     val catalogueContext = MutableStateFlow(JSONObject().put("query", "").put("genre", ""))
     val facts = File(context.filesDir, "content").apply { mkdirs() }
@@ -132,7 +133,12 @@ class HallRepository(val context: Context) {
             if (trust.registry.getJSONArray("slots").objects().none { it.getString("runtime_slot_id") == detail.getString("runtime_slot_id") }) {
                 detail.getJSONObject("game").put("compatibility", JSONObject().put("status", "app_update_required").put("reason_code", "compiled_slot_missing"))
             }
-            dao.putGame((game ?: GameRecord(id, detail.getJSONObject("game").toString())).copy(detail = detail.toString())); detail
+            database.withTransaction {
+                // Network waits must not restore a pre-install active pointer.
+                val latest = dao.game(id) ?: GameRecord(id, detail.getJSONObject("game").toString())
+                dao.putGame(latest.copy(detail = detail.toString()))
+            }
+            detail
         }
         catch (error: Exception) { if (game?.detail?.isNotEmpty() == true) JSONObject(game.detail).put("cached", true) else throw error }
     }
@@ -143,7 +149,7 @@ class HallRepository(val context: Context) {
     }
     suspend fun enqueue(detail: JSONObject, cellular: Boolean, experimental: Boolean) = operationLock.withLock {
         val summary = detail.getJSONObject("game"); val gameId = summary.getString("game_id"); val releaseId = summary.getString("release_id")
-        require(dao.allTransfers().none { it.gameId == gameId && it.state !in listOf("completed", "cancelled", "failed") }) { "此游戏已有进行中的任务" }
+        require(dao.activeTransfer(gameId) == null) { "此游戏已有任务；请继续、重试，或等待取消清理完成" }
         val envelope = api.request("/v1/releases/$releaseId/manifest")
         val manifest = trust.verify(envelope.toString().toByteArray(), "release", detail.getString("manifest_sha256"))
         require(manifest.getString("game_id") == gameId && manifest.getString("release_id") == releaseId)
@@ -164,19 +170,23 @@ class HallRepository(val context: Context) {
         return Math.addExact(Math.addExact((archive - downloaded).coerceAtLeast(0), (expanded - installed).coerceAtLeast(0)), Math.addExact(working, reserve))
     }
     fun scheduleDownloads() {
-        val work = OneTimeWorkRequestBuilder<TransferWorker>().setConstraints(Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()).setBackoffCriteria(BackoffPolicy.EXPONENTIAL, java.time.Duration.ofSeconds(10)).build()
-        WorkManager.getInstance(context).enqueueUniqueWork("content-transfer", ExistingWorkPolicy.KEEP, work)
+        // A successor survives the last-query/worker-finish race. It is serial,
+        // not a second connection. Cleanup must also be executable while offline.
+        val work = OneTimeWorkRequestBuilder<TransferWorker>().setBackoffCriteria(BackoffPolicy.EXPONENTIAL, java.time.Duration.ofSeconds(10)).build()
+        WorkManager.getInstance(context).enqueueUniqueWork("content-transfer", ExistingWorkPolicy.APPEND_OR_REPLACE, work)
     }
     suspend fun transferAction(id: String, action: String) {
-        val row = dao.transfer(id) ?: return
         when (action) {
-            "pause" -> dao.putTransfer(row.copy(intent = "pause", state = "paused"))
-            "resume", "retry" -> { dao.putTransfer(row.copy(intent = "run", state = "queued", error = "", failures = 0)); scheduleDownloads() }
-            "cancel" -> { dao.putTransfer(row.copy(intent = "cancel", state = "cancelled")); if (row.state in listOf("paused", "failed", "waiting", "queued")) File(transferRoot, safeId(id)).deleteRecursively() }
-            "cellular" -> { dao.putTransfer(row.copy(cellularApproved = true)); scheduleDownloads() }
+            "pause" -> dao.pauseTransfer(id)
+            "resume", "retry" -> dao.resumeTransfer(id)
+            "cancel" -> dao.cancelTransfer(id)
+            "cellular" -> dao.approveCellular(id)
+            "cleanup" -> Unit
+            else -> return
         }
+        scheduleDownloads()
     }
-    suspend fun favorite(id: String) { dao.game(id)?.let { dao.putGame(it.copy(favorite = !it.favorite)) } }
+    suspend fun favorite(id: String) = database.withTransaction { dao.game(id)?.let { dao.putGame(it.copy(favorite = !it.favorite)) } }
     private suspend fun endpointKey() = sha256(api.endpoint().toByteArray())
     suspend fun currentPolicy(): JSONObject? {
         val key = endpointKey()
@@ -252,14 +262,15 @@ class HallRepository(val context: Context) {
     suspend fun deleteResources(gameId: String, keepSaves: Boolean) = operationLock.withLock {
         requireIdle(gameId)
         require(dao.fact("pending-save")?.value?.let(::JSONObject)?.optString("game_id") != gameId) { "请先完成或取消此游戏的存档操作" }
-        require(dao.allTransfers().none { it.gameId == gameId && it.state !in listOf("completed", "cancelled", "failed") }) { "请先取消下载任务" }
+        require(dao.activeTransfer(gameId) == null) { "请先取消下载任务并等待清理完成" }
+        require(!Installation(this).hasPending(gameId)) { "资源恢复或清理尚未完成，请先在下载中心重试" }
         dao.installs(gameId).forEach { record ->
             dao.putInstall(record.copy(state = "repair_required", healthy = false))
             val root = releaseRoot(gameId, record.releaseId)
             require(!root.exists() || root.deleteRecursively()) { "资源未能完全删除，已保留待修复记录，请重试" }
             dao.deleteInstall(gameId, record.releaseId)
         }
-        dao.game(gameId)?.let { dao.putGame(it.copy(activeRelease = "")) }
+        dao.gameRelease(gameId, "")
         if (!keepSaves) {
             SaveManager(this).recoverUnderOperationLock(gameId)
             require(saveRoot(gameId).parentFile!!.deleteRecursively()) { "存档未能完全删除，请重试" }
@@ -286,7 +297,7 @@ class HallRepository(val context: Context) {
     suspend fun resetSettings(gameId: String) = operationLock.withLock {
         requireIdle(gameId)
         require(settingRoot(gameId).deleteRecursively()) { "设置未能完全重置，请重试" }
-        dao.game(gameId)?.let { dao.putGame(it.copy(settings = "{}")) }
+        dao.gameSettings(gameId, "{}")
     }
     suspend fun deleteSaves(gameId: String) = operationLock.withLock {
         requireIdle(gameId)
@@ -300,13 +311,14 @@ class HallRepository(val context: Context) {
     }
     suspend fun rollback(gameId: String) = operationLock.withLock {
         requireIdle()
+        require(dao.activeTransfer(gameId) == null && !Installation(this).hasPending(gameId)) { "请先完成下载任务与资源清理" }
         val game = dao.game(gameId) ?: error("游戏不存在")
         val previous = dao.installs(gameId).firstOrNull { it.releaseId != game.activeRelease && it.healthy && it.state == "ready" && StorageReconciliation(this).installationProblem(it) == null } ?: error("没有经过验证的可回退版本")
         val current = dao.install(gameId, game.activeRelease) ?: error("当前版本不存在")
         val currentSave = JSONObject(current.manifest).getJSONObject("save")
         val previousSave = JSONObject(previous.manifest).getJSONObject("save")
         require(currentSave.getString("compatibility_group") == previousSave.getString("compatibility_group")) { "存档格式不兼容，不能直接回退" }
-        dao.putGame(game.copy(activeRelease = previous.releaseId))
+        dao.gameRelease(gameId, previous.releaseId)
     }
 }
 fun JSONArray.objects() = (0 until length()).map { getJSONObject(it) }

@@ -1,6 +1,6 @@
 # NsA · Unified Android game hall
 
-The [download/install source review](docs/hall/transfer-install-review-2026-11-07.md) adds independently checked queue, cancellation, install-recovery and cleanup gaps, with a complete next-batch plan. These are pending corrections, separate from the recovery fixes below. This documentation round changed no application code and performed no phone operations.
+The complete [download/install correction batch](docs/hall/transfer-round-2026-11-07.md) implements the reviewed queue, cancellation, HTTP identity and install-recovery/cleanup boundaries. The user has reauthorized USB testing. Source and necessary test cases are prepared before consolidated execution; new build/device results are recorded separately and do not inherit historical APK passes.
 
 The new [recovery correction round](docs/hall/recovery-round-2026-11-07.md) implements the audited policy, process ownership and save-exchange changes. Its checks and installation status are tracked separately from the historical APK/media below. The other project's phone test is preserved.
 

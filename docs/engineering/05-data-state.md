@@ -1,5 +1,7 @@
 # 05 · 数据模型、状态与一致性
 
+新增实施约束见 [ADR 0008](decisions/0008-transfer-ownership-and-install-recovery.md)：任务所有权持续至完成/取消清理确认；条件 SQL 隔离用户意图与进度；稳定排序和持久接续；完整候选验证、逐目录同步及保留日志的安装清理。Room schema 2 与 Android journal_schema 2 是各自独立的本地版本，保留旧版迁移/路径适配。原规范和验收编号不变；实际结果见[修正轮次](../hall/transfer-round-2026-11-07.md)。
+
 基线 v2.0 · 2026-11-06。关联 NFR-07、CAT-07、DL-01～14、PKG-04～09、RUN-01～11、SAVE-01～08、UPD-01～07。字段类型与线上 DTO 见 [domain.schema.json](contracts/domain.schema.json)，持久化记录见 [local-records.schema.json](contracts/local-records.schema.json)。本章是建库约束，不表示数据库已经实现。
 
 ## 1. 身份、数值与时间

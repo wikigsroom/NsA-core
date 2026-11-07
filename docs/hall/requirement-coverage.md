@@ -1,5 +1,7 @@
 # Requirement implementation map / 需求实现对照
 
+本轮后续源码修正及独立执行状态见[下载与安装修正轮次](transfer-round-2026-11-07.md)。下表保留原源码映射与各自历史审查状态；新增实现不自动通过 AC-P05、CON-06 或其余需求。
+
 Baseline v2.0: 90 requirement identities, 360 detailed rules. This is a source-navigation map, **not 90 passed requirements**. Original machine acceptance statuses remain unchanged. / 本表用于追踪代码入口，不表示 90 项已验收；原机器验收状态保持真实。
 
 Read [current execution evidence](implementation-status.md), [the 360 normative rules](../product/产品需求细则.md) and [the engineering constraints](../engineering/README.md) together. Each P0 row remains subject to its complete rules and linked acceptance cases. P1 is deferred unless separately scoped. / 每项 P0 仍须满足完整细则和关联案例；P1 未默认进入首版。

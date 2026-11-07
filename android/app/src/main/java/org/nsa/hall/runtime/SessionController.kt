@@ -206,7 +206,7 @@ class SessionController(private val repository: HallRepository, private val scop
             }
         } else session = active.copy(seq = event.getLong("seq"), state = type, error = event.optString("error_code"), updated = System.currentTimeMillis())
         repository.dao.putSession(session!!)
-        if (type == "interactive") repository.dao.game(active.gameId)?.let { repository.dao.putGame(it.copy(lastPlayed = System.currentTimeMillis())) }
+        if (type == "interactive") repository.dao.gamePlayed(active.gameId, System.currentTimeMillis())
         }
         if (event.optString("event_type") == "fatal_error") finish("failed", "游戏运行中断 · ${event.optString("error_code")}", event.optString("session_id"))
         if (event.optString("event_type") == "exit_complete") finish("ended", expectedId = event.optString("session_id"))
