@@ -1,0 +1,193 @@
+{
+  "requirement_id": "DL-06",
+  "review_type": "independent_specification_refutation",
+  "reviewer_task": "review_queue",
+  "reviewer_is_original_author": false,
+  "source_commit": "189169fded9cd6557b3cb146b56d8b2e5243d705",
+  "inputs": [
+    "../requirements/DL-06.md",
+    "../requirements/DL-06.json"
+  ],
+  "result": "D01 survives as mandatory protocol/conditional-availability gap; stronger corruption/gzip claims refuted. O01 mandatory partial handling retained; O02-O04 remain bounded observations/adjacent scope.",
+  "authority": [
+    {
+      "ref": "docs/product/data/requirements.json:L913-L947",
+      "reason": "P0 required with explicit technical_document link."
+    },
+    {
+      "ref": "docs/engineering/README.md:L29",
+      "reason": "Technical chapters fix implementation constraints."
+    },
+    {
+      "ref": "docs/engineering/04-transfer-install-save.md:L13,L15-L23",
+      "reason": "Explicit identity request and response/status handling imperatives."
+    },
+    {
+      "ref": "docs/product/技术方案与接口约定.md:L44",
+      "reason": "Independently requires identity/Range protocol."
+    }
+  ],
+  "results": [
+    {
+      "id": "DL-06-D01",
+      "decision": "survives_with_impact_limits",
+      "mandatory": true,
+      "severity": "medium",
+      "priority": "P2",
+      "classification": "conditional_availability_and_protocol_gap",
+      "specification_refs": [
+        "docs/engineering/04-transfer-install-save.md:L13,L17",
+        "docs/product/技术方案与接口约定.md:L44",
+        "docs/product/data/requirements.json:L945-L947"
+      ],
+      "source_refs": [
+        "android/app/src/main/java/org/nsa/hall/data/Api.kt:L52-L75,L141-L145",
+        "android/app/src/main/java/org/nsa/hall/transfer/TransferWorker.kt:L129-L147",
+        "android/app/build.gradle.kts:L56"
+      ],
+      "attempted_refutations": [
+        "JSON does not spell header",
+        "Hash checks equivalent to representation contract",
+        "Local origin always identity",
+        "Library auto gzip on Range",
+        "Encoded bytes become corrupt successful archive"
+      ],
+      "rejected_refutations": [
+        "Linked engineering instruction is binding and product tech independently repeats identity.",
+        "Hashes protect integrity but do not issue required header/response-policy constraint."
+      ],
+      "refuted_stronger_claims": [
+        "Archive Range requests auto-enable gzip/decompression under selected OkHttp 4.12.0.",
+        "Wrong encoded/different bytes can pass signed chunk and whole SHA merely due missing Content-Encoding check.",
+        "Current local origin or deployed CDN has demonstrated failure."
+      ],
+      "accepted_impact": "Conditional origin selection may repeatedly reject otherwise available identity representation; no operational effect executed.",
+      "remedy_scope": "Object-transfer identity request/response constraint with controlled representation checks; preserve range/length/ETag/hash gates. Metadata APIs/diagnostic uploads/unrelated UI outside finding.",
+      "reproducer_executed": false
+    },
+    {
+      "id": "DL-06-O01",
+      "decision": "mandatory_compliance_observation_no_separate_integrity_finding",
+      "mandatory": true,
+      "specification_refs": [
+        "docs/product/产品需求细则.md:L409",
+        "docs/product/data/requirements.json:L927",
+        "docs/engineering/04-transfer-install-save.md:L15,L19"
+      ],
+      "source_refs": [
+        "android/app/src/main/java/org/nsa/hall/transfer/TransferWorker.kt:L113-L147",
+        "services/catalog/app.py:L607-L610"
+      ],
+      "reasoning": "No exception permits ignoring 416 length/full validation; partial rule verdict stands. All 416 are rejected before write and complete local chunks avoid network; no corruption/avoidable completion failure established.",
+      "separate_severity_bearing_finding": false,
+      "reproducer_executed": false
+    },
+    {
+      "id": "DL-06-O02",
+      "decision": "retain_defense_observation_reject_mixing_allegation",
+      "mandatory_identity": true,
+      "client_specific_implementation_required": false,
+      "specification_refs": [
+        "docs/product/产品需求细则.md:L407,L410",
+        "docs/engineering/contracts/domain.schema.json:L693-L716"
+      ],
+      "source_refs": [
+        "android/app/src/main/java/org/nsa/hall/data/Database.kt:L9-L10",
+        "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt:L140-L142",
+        "android/app/src/main/java/org/nsa/hall/transfer/TransferWorker.kt:L110-L147",
+        "services/catalog/app.py:L239-L264,L293-L295"
+      ],
+      "reasoning": "Server enforces stored object/manifest identity and strong-tag contract on checked path; original signed hashes reject changed bytes. Arbitrary faulty grant requires additional broken/replaced service state.",
+      "unsupported_claims": [
+        "Existing arbitrary cross-object append exploit",
+        "A rule explicitly requires ETag in this exact Room entity",
+        "A deployed weak ETag was observed"
+      ]
+    },
+    {
+      "id": "DL-06-O03",
+      "decision": "mandatory_adjacent_DL09_handoff_not_duplicate_integrity_finding",
+      "mandatory": true,
+      "specification_refs": [
+        "docs/engineering/04-transfer-install-save.md:L20-L23",
+        "docs/product/产品需求细则.md:L455-L458"
+      ],
+      "source_refs": [
+        "android/app/src/main/java/org/nsa/hall/transfer/TransferWorker.kt:L124-L130",
+        "services/catalog/app.py:L262-L263,L622"
+      ],
+      "reasoning": "Credential/scope/URL expiry classification is required; server still rejects scope/visibility failures. Keep bounded extra-round-trip/classification observation and assign primary review to DL-09.",
+      "authorization_bypass_established": false
+    },
+    {
+      "id": "DL-06-O04",
+      "decision": "unverified_deployment_evidence_boundary",
+      "mandatory_immutability": true,
+      "specification_refs": [
+        "docs/product/产品需求细则.md:L410,L1222"
+      ],
+      "source_refs": [
+        "services/catalog/app.py:L78-L85",
+        "services/catalog/storage.py:L80-L81"
+      ],
+      "reasoning": "Presigned same logical key is not deployed immutability-policy proof, and missing inspected deployment evidence is not proof of mutable public production content.",
+      "deployment_inspected": false
+    }
+  ],
+  "dependency_recheck": {
+    "declared": "OkHttp 4.12.0",
+    "method": "read-only javap",
+    "path": "tools/hall/gradle-home/caches/modules-2/files-2.1/com.squareup.okhttp3/okhttp/4.12.0/2f4525d4a200e97e1b87449c2cd9bd2e25b7e8cd/okhttp-4.12.0.jar",
+    "result": "BridgeInterceptor offsets 154-184 auto-gzip only with no Range and no Accept-Encoding; transparent decode flag gated at 290-423."
+  },
+  "searched": [
+    {
+      "pattern": "identity|Accept-Encoding|Content-Encoding|416|ETag|同一对象|不可变",
+      "scope": "Specified product/engineering protocol/detail/contracts",
+      "result": "Binding identity requirement appears in engineering04 L13/L17 and product technical L44."
+    },
+    {
+      "pattern": "identity|416",
+      "scope": "docs/engineering/decisions",
+      "result": "No applicable encoding/416 waiver; identity mentions concern other identities."
+    },
+    {
+      "pattern": "Accept-Encoding|Content-Encoding|Interceptor|interceptor|416",
+      "scope": "android/app/src/main Kotlin/XML",
+      "result": "No application encoding header/interceptor/416 handler."
+    }
+  ],
+  "paths_walked": [
+    "signed manifest -> grant create -> stored metadata -> range -> exact 206/range/ETag -> bounded signed chunk SHA -> write/sync -> whole SHA -> install",
+    "401/403 -> close -> authenticated renewal -> fixed owner/object/manifest/visibility -> original grant metadata",
+    "complete local chunks -> no missing range -> whole archive SHA",
+    "local object GET -> exact bounded range -> ordinary raw stream"
+  ],
+  "unchanged_acceptance": {
+    "DL_06": "not_accepted",
+    "AC_D04": "not_run"
+  },
+  "constraints": {
+    "program_edits": false,
+    "public_docs_edits": false,
+    "tests": false,
+    "network": false,
+    "browser": false,
+    "phone": false,
+    "adb": false,
+    "virtualization": false,
+    "subagents": false
+  },
+  "_publication": {
+    "original_record_sha256": "c8fedcce30d97daed6f7894030e09c7663e3c4cf4c31ef962730fd9a1766d119",
+    "review_stage": "independent_spec_refutation",
+    "reviewed_source_revision": "189169fded9cd6557b3cb146b56d8b2e5243d705",
+    "normalizations": [
+      "checkout paths made relative",
+      "evidence paths made collection-relative",
+      "Markdown trailing whitespace normalized",
+      "published text uses LF line endings"
+    ],
+    "final_adjudication": "docs/hall/verification/2026-11-07-transfer-install-review.json"
+  }
+}

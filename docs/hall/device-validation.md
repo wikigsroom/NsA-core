@@ -10,6 +10,10 @@ The [historical targeted source review](source-review.md) led to the [completed 
 
 [历史定向源码核对](source-review.md)对应的[整批源码修正](recovery-round-2026-11-07.md)已有独立电脑端检查与候选身份。真机安装须先完成资源和服务更新准备，再重跑受影响案例；旧截图及通过结果不能转算到新 APK。
 
+The later [download/install review](transfer-install-review-2026-11-07.md) identifies additional pending source corrections. Before a new acceptance run, finish its complete queue/intent, install publication/recovery and cleanup batch and the consolidated computer checks. Then add late enqueue, cancel/replacement, equal-time ordering, same-release repair interrupted after VERIFIED, journal failures and recovered-archive cleanup to the device matrix. No device run or new APK is implied by that review.
+
+后续[下载与安装核对](transfer-install-review-2026-11-07.md)的修正仍未实施。下一验收批次先整批完成代码及电脑检查，再补测新增任务接续、取消/替代、同时间排序、同版本修复在 VERIFIED 后退出、候选失败隔离及恢复后归档清理。目录同步的实际掉电验证与普通进程退出必须分开记录；不破坏真实玩家文件模拟故障。
+
 ## Preparation / 准备
 
 1. Finish intended source changes, then run consolidated checks. Use native Windows tools and one authorized USB physical Android device. No emulator or virtualization environment.

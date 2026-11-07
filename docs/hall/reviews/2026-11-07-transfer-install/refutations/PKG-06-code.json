@@ -1,0 +1,171 @@
+{
+  "requirement_id": "PKG-06",
+  "review_type": "independent_code_refutation",
+  "reviewer_task": "review_queue",
+  "reviewer_is_original_author": false,
+  "source_commit": "189169fded9cd6557b3cb146b56d8b2e5243d705",
+  "inputs": [
+    "../requirements/PKG-06.md",
+    "../requirements/PKG-06.json"
+  ],
+  "summary": "All three source gaps survive; F01 is power-loss/filesystem-conditional; F02 gains a same-release repair process-kill reproducer; F03 needs only process death.",
+  "results": [
+    {
+      "finding_id": "PKG-06-F01",
+      "decision": "survives_narrowed",
+      "severity": "medium",
+      "priority": "P2",
+      "source_confidence": "high",
+      "impact_confidence": "conditional_filesystem_not_executed",
+      "attempted_refutations": [
+        "Per-file fd.sync",
+        "atomicJson READY helper",
+        "publication-parent sync",
+        "safeChild/hash helpers",
+        "save backup or import tree sync"
+      ],
+      "evidence": [
+        "android/app/src/main/java/org/nsa/hall/transfer/Installation.kt:L16-L23,L35,L53-L73,L90-L95",
+        "android/app/src/main/java/org/nsa/hall/security/Trust.kt:L14,L61-L65",
+        "android/app/src/main/java/org/nsa/hall/transfer/SaveManager.kt:L93-L102,L167",
+        "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt:L42-L43"
+      ],
+      "result": "Calls synchronize files, staging root and publication parent only; no nested-tree or newly created ancestor-link sync chain.",
+      "required_narrowing": "Do not describe ordinary application-process death alone as nested-file loss. Exact persistence loss requires power/storage failure and no stronger implicit filesystem guarantee.",
+      "ordinary_process_kill_sufficient": false,
+      "power_loss_or_storage_fault_required_for_missing_name_outcome": true,
+      "reproducer_executed": false
+    },
+    {
+      "finding_id": "PKG-06-F02",
+      "decision": "survives_with_stronger_source_reproducer",
+      "severity": "high",
+      "priority": "P1",
+      "source_confidence": "high",
+      "attempted_refutations": [
+        "Registered-install downgrade",
+        "Room rollback",
+        "retry/restart clearing journal",
+        "runtime lease deliberate skip",
+        "complete valid new-release recovery"
+      ],
+      "evidence": [
+        "android/app/src/main/java/org/nsa/hall/ui/HallApp.kt:L169-L175,L341-L347",
+        "android/app/src/main/java/org/nsa/hall/transfer/Installation.kt:L73-L90,L103-L130,L133-L145",
+        "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt:L80-L88,L144-L157,L234",
+        "android/app/src/main/java/org/nsa/hall/transfer/StorageReconciliation.kt:L33,L40-L44"
+      ],
+      "refined_reproducer": [
+        "Have damaged current R with old READY/index intact and a missing declared file, plus unrelated valid game U.",
+        "Use repair and its same-release redownload action at HallApp.kt:L347; no active transfer already owns R.",
+        "Let replacement .R.staging become VERIFIED at Installation.kt:L73; kill before damaged target is moved at L90.",
+        "Restart. VERIFIED && target.exists at L122 picks old damaged target rather than staging; activation check throws.",
+        "Journal/staging stay, ready remains false, U is inaccessible, and product retry repeats."
+      ],
+      "existing_damage_precondition": true,
+      "ordinary_process_kill_sufficient_after_precondition": true,
+      "power_loss_required": false,
+      "reproducer_executed": false,
+      "refuted_stronger_claims": [
+        "A clean complete new-release directory necessarily becomes invalid merely from process death.",
+        "Permanent means irreversible data destruction."
+      ],
+      "accepted_scope": "Persistent product retry loop until state changes or code is corrected; gated by damaged target/invalid journal candidate."
+    },
+    {
+      "finding_id": "PKG-06-F03",
+      "decision": "survives",
+      "severity": "medium",
+      "priority": "P2",
+      "source_confidence": "high",
+      "attempted_refutations": [
+        "Rescheduled interrupted WorkManager runner",
+        "StorageReconciliation",
+        "MaintenanceWorker",
+        "storage UI temp cleanup",
+        "deleteResources",
+        "completed-row cancel",
+        "DAO row deletion"
+      ],
+      "evidence": [
+        "android/app/src/main/java/org/nsa/hall/transfer/Installation.kt:L96-L100,L125-L130",
+        "android/app/src/main/java/org/nsa/hall/transfer/TransferWorker.kt:L33-L35,L152-L153",
+        "android/app/src/main/java/org/nsa/hall/transfer/StorageReconciliation.kt:L44",
+        "android/app/src/main/java/org/nsa/hall/transfer/MaintenanceWorker.kt:L14-L20",
+        "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt:L175,L252-L269",
+        "android/app/src/main/java/org/nsa/hall/ui/HallApp.kt:L266,L460"
+      ],
+      "result": "Recovery completes row and deletes journal with no root cleanup; all later automatic paths skip or ignore it.",
+      "reproducer": [
+        "Kill after DIRECTORY_PUBLISHED before activation/worker cleanup.",
+        "Restart with intact files. Recovery activates/completes row and deletes journal.",
+        "Full task archive/index root remains; worker/reconciler skip completed; maintenance and UI cleanup do not delete it."
+      ],
+      "ordinary_process_kill_sufficient": true,
+      "power_loss_required": false,
+      "reproducer_executed": false,
+      "correction_to_author": "Completed rows cannot be cleaned by an ordinary cancel; prior-state allowlist excludes completed and UI hides cancel."
+    }
+  ],
+  "paths_walked": [
+    "initialize -> operation lock -> Installation.recover -> SaveManager recovery -> StorageReconciliation -> ready",
+    "worker -> initialize -> sequential archive integrity -> operation lock -> install -> file sync -> READY -> publish -> Room activate -> phase/journal removal -> transfer completion/root cleanup",
+    "repair page -> Installation.repair -> repair_required -> redownload dialog -> enqueue same release -> verified staging -> recovery chooses existing target",
+    "atomicJson/syncDirectory/safeChild/sha256 -> actual helper bodies",
+    "completed row -> worker filter/reconciler filter/maintenance/UI cleanup/deleteResources/cancel"
+  ],
+  "searches": [
+    {
+      "pattern": "syncDirectory|Os\\.fsync|fd\\.sync|mkdirs",
+      "scope": "android/app/src/main/java/org/nsa/hall",
+      "result": "No nested install traversal; separate save-import walk L167 does not run for install."
+    },
+    {
+      "pattern": "Installation\\(|\\.install\\(|installationProblem|recover\\(",
+      "scope": "same",
+      "result": "One resource installer caller and initialization recovery caller; all relevant branches read."
+    },
+    {
+      "pattern": "transferRoot|archive.zip.partial|deleteTransfer\\(",
+      "scope": "same",
+      "result": "No completed transfer sweeper; DAO deletion has no production caller."
+    },
+    {
+      "pattern": "\\.deleteRecursively\\(",
+      "scope": "same",
+      "result": "All deletion sites enumerated; recovered completed transfer has no cleanup route."
+    },
+    {
+      "pattern": "putInstall|activeRelease|deleteInstall",
+      "scope": "same",
+      "result": "Room activation and explicit deletion checked; no automatic old-version GC."
+    }
+  ],
+  "unchanged_acceptance": {
+    "AC_P05": "not_run",
+    "CON_06": "not_run"
+  },
+  "constraints": {
+    "program_edits": false,
+    "public_docs_edits": false,
+    "tests": false,
+    "network": false,
+    "browser": false,
+    "phone": false,
+    "adb": false,
+    "virtualization": false,
+    "subagents": false
+  },
+  "_publication": {
+    "original_record_sha256": "99a8df3ba532d962778e469034d3e544f9d141354b54cf0d17d475d24a64f7ec",
+    "review_stage": "independent_code_refutation",
+    "reviewed_source_revision": "189169fded9cd6557b3cb146b56d8b2e5243d705",
+    "normalizations": [
+      "checkout paths made relative",
+      "evidence paths made collection-relative",
+      "Markdown trailing whitespace normalized",
+      "published text uses LF line endings"
+    ],
+    "final_adjudication": "docs/hall/verification/2026-11-07-transfer-install-review.json"
+  }
+}

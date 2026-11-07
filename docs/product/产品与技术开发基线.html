@@ -8369,7 +8369,7 @@ envelope = schema/purpose/key_id/algorithm/payload_sha256/payload_base64/signatu
 <p>每条结果保存：case_id、requirement_ids/subrule_ids、App commit/version/cert/build、slot/core/profile/driver/content、设备匿名测试编号/OS/能力、前置数据、网络/空间、操作步骤、expected/actual、pass/fail/blocked/not_run、时间/执行人、脱敏证据 URI、缺陷和重测关联。记录可用 JSON/Markdown，不能只写“测试通过”一句。</p>
 <p>签名/契约示例仅使用虚构内容和临时测试密钥，私钥不落库。大文件测试数据可本机生成并忽略；实际游戏/密钥/玩家存档不加入测试仓库。运行报告和日志遵守路径、隐私及浏览器清理要求。</p>
 <p>本套文档提供 <a href="../engineering/verify_baseline.py">只读基线校验器</a> 和 <a href="../engineering/data/baseline-review.json">校验记录</a>，检验规范引用、需求追踪、Schema/OpenAPI、样例与负例。后续实现需另跑与改动有关的测试和真机案例，不能引用本次文档校验代替 G0～G3。</p><a class="backtop" href="#top">返回目录 ↑</a></article><article id="doc-contracts"><p class="source">规范源文件 · <a href="../engineering/contracts/README.md">README.md</a></p><h1 id="doc-contracts-_1">可执行契约与验证说明</h1>
-<p>契约 v1 · 文档基线 v2.0 · 2026-11-06。这里保存后续开发必须遵守的协议，<strong>没有实现服务、安装器或运行模块</strong>。示例均为虚构协议数据，不包含可玩的游戏、真实资源、密钥或生产信任根。</p>
+<p>契约 v1 · 文档基线 v2.0 · 2026-11-06。这里保存开发必须遵守的协议；契约和示例本身不是服务、安装器或运行模块的实现，也不是验收证据。后续程序与已执行结果见<a href="../hall/README.zh-CN.md">实施手册</a>和<a href="../hall/implementation-status.md">验证记录</a>，剩余下载/安装缺口见<a href="../hall/transfer-install-review-2026-11-07.md">定向核对</a>。示例均为虚构协议数据，不包含可玩的游戏、真实资源、密钥或生产信任根。</p>
 <h2 id="doc-contracts-_2">契约清单</h2>
 <div class="table-scroll" tabindex="0" aria-label="可横向滚动的规范表格"><table>
 <thead>

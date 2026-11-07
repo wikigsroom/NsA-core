@@ -1,5 +1,7 @@
 # Implementation and verification record
 
+Latest documentation-only review / 最新文档轮次：[下载与安装核对](transfer-install-review-2026-11-07.md)追踪 `189169f` 的 DL-06、DL-07、PKG-06 十二条细则，并分别保留代码与规范的独立反证。[机器记录](verification/2026-11-07-transfer-install-review.json)固定结论、证据及未检查范围；源码缺口尚待下一整批修正，本轮无新程序测试、APK 或手机操作。后续状态不改写下方各自旧轮次的结果。
+
 New source batch / 新源码批次：[恢复与存档修正轮次](recovery-round-2026-11-07.md)单独记录 APP-05、APP-08、SAVE-04 的修正与集中检查。新候选尚未安装到手机；本页下方表格和 APK、手机操作及素材结果都是各自旧构建的历史记录，不自动适用于新源码。正式游戏、设备与生产发布门槛继续开放。
 
 Historical installed build, recorded 2026-11-07, Asia/Taipei: merged source `3c096c8`, retaining remote main `4d1348c` and feature `8709245`. This is the retained phone build, not the latest repository revision. The physical device is a Motorola edge plus, Android 12 / API 31, arm64-v8a, Adreno 650, with 4096-byte pages.

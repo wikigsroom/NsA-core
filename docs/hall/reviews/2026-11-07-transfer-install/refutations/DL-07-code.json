@@ -1,0 +1,206 @@
+{
+  "requirement_id": "DL-07",
+  "review_role": "independent_code_refutation",
+  "reviewer_is_original_author": false,
+  "source_commit": "189169fded9cd6557b3cb146b56d8b2e5243d705",
+  "inputs": [
+    "../requirements/DL-07.md",
+    "../requirements/DL-07.json"
+  ],
+  "overall": "F01 retained; F02 retained only for DL-07.01/CON-07; F03 task-id ordering retained and display component separated/narrowed",
+  "DL_07_02_ownership_boundary": {
+    "ordinary_paths": "qualified_implemented_by_framework_ownership",
+    "complete_stop_rebuild_handoff": "undecidable_without_further_framework_lifecycle_evidence",
+    "compensating_enforcement": "Durable named WorkManager work and Processor generation deduplication; initialize before transfer writes",
+    "custom_application_lease_mandatory": false,
+    "finding_of_multiple_same_file_writers": false,
+    "reason": "No custom lock is not itself a defect; two task rows do not establish two executors. Blocked synchronous HTTP stop/restart handoff was not proven in all paths."
+  },
+  "findings": [
+    {
+      "id": "DL-07-F01",
+      "disposition": "retain",
+      "severity": "medium",
+      "priority": "P2",
+      "source_gap": "One candidate snapshot plus KEEP enqueue during a running unique worker; no successful drain continuation or transfer-table scheduler observer.",
+      "reachable_impact": "B committed after W's snapshot remains queued after the original snapshot succeeds and no later scheduling event occurs.",
+      "required_interleaving": [
+        "W snapshot already contains only A",
+        "B inserted while A is downloading before its install mutex",
+        "B's asynchronous KEEP enqueue is processed while W is still RUNNING",
+        "All original candidates succeed and no later schedule event occurs"
+      ],
+      "references": [
+        "android/app/src/main/java/org/nsa/hall/transfer/TransferWorker.kt:L35-L50",
+        "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt:L157-L168",
+        "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt:L61",
+        "android/app/src/main/java/org/nsa/hall/MainActivity.kt:L34",
+        "android/app/src/main/java/org/nsa/hall/transfer/MaintenanceWorker.kt:L14-L20"
+      ],
+      "refutations_considered": [
+        "KEEP does dedupe but does not add a successor; independently verified bytecode",
+        "An enqueue processed after W ends may succeed; this does not invalidate the specified earlier processing interleaving",
+        "Errors/retries, explicit actions, session end or process recreation may unstick the queue",
+        "Initialized activity/maintenance and catalogue refresh are not a reliable successor scheduler"
+      ],
+      "not_claimed": [
+        "B cannot ever recover",
+        "Data corruption",
+        "Concurrent connections"
+      ],
+      "verification_pending": "Executed Android scheduling trace, enqueue completion result and persisted B state after A success."
+    },
+    {
+      "id": "DL-07-F02",
+      "disposition": "retain",
+      "established_rules": [
+        "DL-07.01",
+        "CON-07"
+      ],
+      "DL_07_02_violation_established": false,
+      "severity": "medium",
+      "priority": "P2",
+      "source_gap": "Checkpoint read and whole-row progress Upsert are separate from unlocked cancellation; cancelled immediately releases same-game enqueue eligibility; no DB uniqueness/CAS fence.",
+      "reachable_impact": "Cancel is overwritten back to run and A/B become two active same-game task rows with distinct owned roots; old A continues unwanted work.",
+      "required_interleaving": [
+        "A is established state downloading",
+        "Hold worker after L139 run snapshot before L140 Upsert",
+        "Cancel A commits, with no immediate deletion for prior downloading state",
+        "UI Flow observes cancellation and replacement B commits",
+        "Stale L140 restores A intent run/state downloading"
+      ],
+      "references": [
+        "android/app/src/main/java/org/nsa/hall/transfer/TransferWorker.kt:L139-L140",
+        "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt:L144-L157",
+        "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt:L170-L176",
+        "android/app/src/main/java/org/nsa/hall/data/Database.kt:L9-L10",
+        "android/app/src/main/java/org/nsa/hall/data/Database.kt:L27",
+        "android/app/src/main/java/org/nsa/hall/ui/HallApp.kt:L111",
+        "android/app/src/main/java/org/nsa/hall/ui/HallApp.kt:L240-L243",
+        "android/app/src/main/java/org/nsa/hall/MainActivity.kt:L31-L47"
+      ],
+      "refutations_considered": [
+        "UI actionLock does not cover Worker",
+        "enqueue operationLock does not cover cancellation or progress",
+        "Room serializes individual writes but not the read-command-write as a joint transaction",
+        "Next checkpoint sees restored run and cannot recover lost historical cancellation",
+        "WorkManager still serializes actual transfers; install lock still serializes extraction"
+      ],
+      "ancillary_evidence": "Generated unpinned HallDao_Impl.java:L190 updates all transfer fields WHERE id only; pinned @Upsert and source calls independently establish the gap.",
+      "not_claimed": [
+        "Two executors simultaneously write the same archive",
+        "B starts downloading immediately",
+        "Simultaneous extraction"
+      ],
+      "verification_pending": "Android timing-controlled cancellation/replacement/progress interleaving and extra work/space measurements."
+    },
+    {
+      "id": "DL-07-F03",
+      "disposition": "narrow_and_retain",
+      "severity": "low",
+      "priority": "P3",
+      "source_gap": "Queries order by created only; no task-id tie-break. Separately, the download list reverses rows and cards contain no additional effective-order explanation.",
+      "reachable_impact": "Equal-created persistent rows have no enforced task-id ordering. Display interpretability for multiple queued cards is a separate conditional UX question.",
+      "components": [
+        {
+          "component": "task_id_tie_break",
+          "disposition": "retain",
+          "severity": "low",
+          "source_fact": "No secondary id ordering in DAO or coordinator"
+        },
+        {
+          "component": "display_order_explanation",
+          "disposition": "narrow_to_code_fact_pending_spec_interpretation",
+          "counted_separately": false,
+          "source_fact": "Rows reversed, generic queued label, no extra execution-order explanation",
+          "numeric_queue_position_required": false,
+          "allowed_equivalent": "Explain actual order by ordering, grouping, text or other understandable presentation"
+        }
+      ],
+      "references": [
+        "android/app/src/main/java/org/nsa/hall/data/Database.kt:L10",
+        "android/app/src/main/java/org/nsa/hall/data/Database.kt:L24-L25",
+        "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt:L157",
+        "android/app/src/main/java/org/nsa/hall/ui/HallApp.kt:L416-L423",
+        "android/app/src/main/java/org/nsa/hall/ui/HallApp.kt:L443-L461",
+        "android/app/src/main/java/org/nsa/hall/MainActivity.kt:L34"
+      ],
+      "refutations_considered": [
+        "Worker still executes created ascending; reversed presentation does not prove B executes first",
+        "Newest-first history alone can be a valid presentation if effective positions are otherwise conveyed; no such field exists here",
+        "Equal timestamp case is an input condition, not an executed UI observation"
+      ],
+      "narrowed_claim": "Retain deterministic task-id tie-break defect. Keep reversed presentation/no ordering explanation as separate code facts; never require a numeric position solely because it is absent.",
+      "not_claimed": [
+        "Normal distinct-time confirmations always execute out of order",
+        "Data loss",
+        "Concurrency"
+      ],
+      "verification_pending": "Focused equal-created records and multiple queued-card UI acceptance."
+    }
+  ],
+  "searched": [
+    {
+      "scope": "android/app/src/main",
+      "pattern": "scheduleDownloads",
+      "matching_lines": 7,
+      "result": "Declaration plus initialize/enqueue/resume/cellular/preferences/session finish; no completion or transfer observer scheduler"
+    },
+    {
+      "scope": "android/app/src/main",
+      "pattern": "putTransfer\\(",
+      "matching_lines": 15,
+      "result": "All writes reviewed; no conditional progress-only API"
+    },
+    {
+      "scope": "android/app/src/main and app build",
+      "pattern": "one_content_operation|content_operation|command_receipt|CREATE UNIQUE INDEX|unique\\s*=\\s*true|WorkerFactory|Configuration.Provider|defaultProcessName|RemoteCoroutineWorker|RemoteWorker|work-multiprocess",
+      "matching_lines": 0,
+      "result": "No hidden active uniqueness/CAS/alternate transfer adapter; builder and manifest directly read"
+    },
+    {
+      "scope": "data and transfer main source",
+      "pattern": "withTransaction|withLock|update.*Transfer",
+      "result": "Installation/policy/save locks exist, cancellation and progress are not covered jointly"
+    },
+    {
+      "scope": "DAO/repository/MainActivity/UI",
+      "pattern": "sorted|sortBy|ORDER BY created|collect",
+      "result": "Task queries created-only, UI reversed, no id tie-break or queue position computation"
+    }
+  ],
+  "framework_inspection": {
+    "declared_version": "android/app/build.gradle.kts:L55 WorkManager 2.10.5",
+    "cached_jar": "tools/hall/gradle-home/caches/8.13/transforms/2d61aa40fb5c45ed6e369fcbe8c7b0af/transformed/work-runtime-2.10.5-runtime.jar",
+    "method": "Read-only javap bytecode inspection; no application/test execution",
+    "observed": [
+      "EnqueueRunnable.enqueueWorkWithPrerequisites offsets 513-575 KEEP returns false for ENQUEUED/RUNNING",
+      "Processor.startWork offsets 94-204 suppresses already enqueued WorkSpec"
+    ],
+    "qualification": "Cached ancillary dependency, not pinned application source; declaration matches version"
+  },
+  "global_limit": "No evidence of two production executors simultaneously writing the same archive; a missing application lease alone is not reported as such.",
+  "validation": {
+    "tests": false,
+    "builds": false,
+    "network": false,
+    "browser": false,
+    "phone_adb": false,
+    "virtualization": false,
+    "source_or_public_docs_edited": false,
+    "candidate_reports_relabelled": false,
+    "acceptance_status_changed": false
+  },
+  "_publication": {
+    "original_record_sha256": "62f23ef0a3e68400369ee0dacd96e4566510cb207b997a06171263cfa971a9cf",
+    "review_stage": "independent_code_refutation",
+    "reviewed_source_revision": "189169fded9cd6557b3cb146b56d8b2e5243d705",
+    "normalizations": [
+      "checkout paths made relative",
+      "evidence paths made collection-relative",
+      "Markdown trailing whitespace normalized",
+      "published text uses LF line endings"
+    ],
+    "final_adjudication": "docs/hall/verification/2026-11-07-transfer-install-review.json"
+  }
+}

@@ -4,6 +4,8 @@
 
 基线描述保留制定时点；后续实现与测试以[实施手册](../hall/README.zh-CN.md)、[验证记录](../hall/implementation-status.md)、[代码对照](../hall/requirement-coverage.md)和[实施决策](decisions/0005-client-guardrails-and-cache.md)为准。基线未验收状态不会由新增代码自动提升。
 
+[后续下载与安装核对](../hall/transfer-install-review-2026-11-07.md)固定 `189169f` 的范围续传、队列与安装恢复检查，补充下一整批代码、迁移及故障验证约束。该文档轮次不改程序，也不表示新增修正已实现；规范和机器验收编号保持不变。
+
 [定向源码核对](../hall/source-review.md)记录 APP-05、APP-08、SAVE-04 的开放问题、独立反证及下一整批修正/验证约束。该报告没有修改规范编号、降低 P0 要求或提升验收状态；已安装与通常路径存在不等于异常边界已可靠实现。
 
 后续[修正轮次](../hall/recovery-round-2026-11-07.md)与 [ADR 0007](decisions/0007-policy-runtime-save-recovery.md)已补充策略序列、初始化对账、进程归属及可恢复存档交换的具体实现约束。新候选的集中电脑检查、本地服务更新与内容发布单独记录，真机及正式发布仍待验收；历史报告和机器验收状态不改写。

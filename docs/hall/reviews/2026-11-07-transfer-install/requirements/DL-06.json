@@ -1,0 +1,268 @@
+{
+  "requirement_id": "DL-06",
+  "source_commit": "189169fded9cd6557b3cb146b56d8b2e5243d705",
+  "verdict": "partial",
+  "confidence": "high_source_only",
+  "statement": "采用 HTTP Range 与稳定对象标识恢复；ETag、长度或版本改变时不得拼接两份内容。链接过期可续签同一不可变对象，已校验分段继续复用。",
+  "specification": [
+    "docs/product/data/requirements.json:L913-L946",
+    "docs/product/产品需求细则.md:L399-L412",
+    "docs/engineering/04-transfer-install-save.md:L13-L28",
+    "docs/product/开发计划与验收矩阵.md:L91",
+    "docs/product/data/acceptance.json:L147-L154",
+    "docs/engineering/contracts/openapi.json:L450-L563",
+    "docs/engineering/contracts/domain.schema.json:L636-L734"
+  ],
+  "scope": {
+    "mode": "read_only_source_and_dependency_bytecode",
+    "application_or_test_execution": false,
+    "network": false,
+    "browser": false,
+    "phone_or_adb": false,
+    "virtualization": false,
+    "program_or_specification_edits": false,
+    "other_phone_test_accessed": false,
+    "head_matched_pinned_source": true
+  },
+  "rules": [
+    {
+      "id": "DL-06.01",
+      "text": "Range 请求固定 object_id、长度、摘要和强 ETag 条件；临时 URL 只是访问位置。",
+      "verdict": "partial",
+      "implemented": [
+        "Signed persistent manifest and total",
+        "Session object/manifest/length/SHA binding at service",
+        "Range/If-Range",
+        "Exact response range/ETag and signed chunk/whole SHA"
+      ],
+      "gap": "Explicit Accept-Encoding identity request/response constraint is absent.",
+      "references": [
+        "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt:L140-L157",
+        "android/app/src/main/java/org/nsa/hall/data/Api.kt:L141-L145",
+        "android/app/src/main/java/org/nsa/hall/transfer/TransferWorker.kt:L106-L147",
+        "services/catalog/app.py:L239-L264",
+        "services/catalog/app.py:L293-L295"
+      ],
+      "finding_ids": [
+        "DL-06-D01"
+      ]
+    },
+    {
+      "id": "DL-06.02",
+      "text": "恢复接受匹配的 206/Content-Range；非零偏移收到 200 不允许追加。",
+      "verdict": "implemented",
+      "qualification": "Status/range property inspected; encoding omission is D01.",
+      "references": [
+        "android/app/src/main/java/org/nsa/hall/transfer/TransferWorker.kt:L123-L135",
+        "android/app/src/main/java/org/nsa/hall/data/Api.kt:L53"
+      ]
+    },
+    {
+      "id": "DL-06.03",
+      "text": "416 需核对长度并完整校验，不能直接视为下载成功；错误页不能写进分段文件。",
+      "verdict": "partial",
+      "implemented": [
+        "416 is rejected before reading/writing archive body",
+        "200 and disguised error content cannot pass status/range/chunk SHA",
+        "Whole SHA gates normal installation"
+      ],
+      "gap": "No dedicated 416 local length and complete-hash branch.",
+      "finding_ids": [],
+      "non_finding_reason": "No corrupt success or recoverable completion failure established. Complete valid local archives are rehashed without an HTTP request; conforming unchanged objects do not return 416 for valid missing ranges.",
+      "references": [
+        "android/app/src/main/java/org/nsa/hall/transfer/TransferWorker.kt:L113-L147",
+        "services/catalog/app.py:L607-L610"
+      ]
+    },
+    {
+      "id": "DL-06.04",
+      "text": "URL 续签只能授予同一对象，身份改变需新版本任务并显式处理旧临时数据。",
+      "verdict": "implemented",
+      "qualification": "Inspected service/task boundary; production object-store/CDN immutability unverified.",
+      "implemented": [
+        "Stored session owner/object/manifest checks",
+        "Grant builder returns original release/object/length/SHA/ETag",
+        "Renew keeps same range",
+        "Rehash and reuse correct chunks",
+        "New task UUID isolates another release; existing task manifest is not rebound"
+      ],
+      "references": [
+        "services/catalog/app.py:L258-L264",
+        "services/catalog/app.py:L293-L295",
+        "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt:L144-L177",
+        "android/app/src/main/java/org/nsa/hall/transfer/TransferWorker.kt:L103-L138",
+        "android/app/src/main/java/org/nsa/hall/transfer/StorageReconciliation.kt:L44-L71"
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "id": "DL-06-D01",
+      "title": "Range requests omit the specified identity content encoding constraint",
+      "severity": "medium",
+      "priority": "P2",
+      "classification": "conditional_availability_and_protocol_gap",
+      "status": "author_supported_pending_independent_refutation",
+      "source_confidence": "high",
+      "behavioral_impact_confidence": "conditional_not_executed",
+      "required": "Request Accept-Encoding: identity and check identity on 206.",
+      "actual": "Api.open supplies only Range and If-Range; TransferWorker checks status/range/ETag/size/SHA but no Content-Encoding.",
+      "spec_refs": [
+        "docs/engineering/04-transfer-install-save.md:L13",
+        "docs/engineering/04-transfer-install-save.md:L17"
+      ],
+      "code_refs": [
+        "android/app/src/main/java/org/nsa/hall/data/Api.kt:L52-L75",
+        "android/app/src/main/java/org/nsa/hall/data/Api.kt:L141-L145",
+        "android/app/src/main/java/org/nsa/hall/transfer/TransferWorker.kt:L129-L135",
+        "android/app/src/main/java/org/nsa/hall/transfer/TransferWorker.kt:L42-L47"
+      ],
+      "reproducer": [
+        "Prepare a task with one correct 8 MiB chunk and a controlled origin that serves the ordinary immutable representation for explicit Accept-Encoding identity and chooses an encoded representation otherwise.",
+        "Resume the task; observe Range/If-Range without explicit identity header.",
+        "Encoded response fails range/ETag/length/hash checks and is retried until the generic failure limit despite an identity representation being available.",
+        "Capture request header assertion and retained prefix/final state; no such procedure was executed in this review."
+      ],
+      "impact_limit": "No corrupt-file or automatic transparent-decompression vulnerability established. Normal local server serves identity. Operational failure depends on origin/CDN representation behavior.",
+      "refutations_retained": [
+        "Cached OkHttp 4.12.0 BridgeInterceptor bytecode offsets 154-184: auto gzip requires absent Range; 290-423: transparent decompression requires that flag.",
+        "Original signed chunk/whole SHA checks prevent encoded or wrong content from becoming a successful archive."
+      ],
+      "proposed_scope_for_review": "Explicit request/response identity constraints and controlled encoding coverage."
+    }
+  ],
+  "observations_not_counted_as_integrity_findings": [
+    {
+      "id": "DL-06-O01",
+      "observation": "416-specific local-length/whole-digest handling is absent.",
+      "disposition": "Safe rejection; no reachable corrupt-success consequence established.",
+      "refs": [
+        "android/app/src/main/java/org/nsa/hall/transfer/TransferWorker.kt:L130-L147"
+      ]
+    },
+    {
+      "id": "DL-06-O02",
+      "observation": "Client does not compare every grant field to persisted manifest, validate strong ETag syntax, or persist ETag.",
+      "disposition": "Backend preserves those identities and original signed chunk/full SHA prevents wrong-byte success; changed-grant corruption claim not confirmed.",
+      "refs": [
+        "android/app/src/main/java/org/nsa/hall/data/Database.kt:L9-L10",
+        "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt:L140-L142",
+        "android/app/src/main/java/org/nsa/hall/transfer/TransferWorker.kt:L110-L147",
+        "services/catalog/app.py:L239-L264",
+        "services/catalog/app.py:L293-L295"
+      ]
+    },
+    {
+      "id": "DL-06-O03",
+      "observation": "Every object 401/403 triggers one renewal; 404/410 are generic range errors and do not refresh policy in the worker.",
+      "disposition": "Authorization bypass refuted; protocol handling / DL-09 overlap. Not separately counted here.",
+      "refs": [
+        "android/app/src/main/java/org/nsa/hall/transfer/TransferWorker.kt:L124-L130",
+        "services/catalog/app.py:L263",
+        "services/catalog/app.py:L622"
+      ]
+    },
+    {
+      "id": "DL-06-O04",
+      "observation": "Production presigning uses immutable logical object key without inspected deployed bucket/CDN policy.",
+      "disposition": "Deployment evidence boundary, not proof of mutable production content.",
+      "refs": [
+        "services/catalog/app.py:L78-L85",
+        "services/catalog/storage.py:L80-L81"
+      ]
+    }
+  ],
+  "paths_walked": [
+    "HallApp confirm -> HallRepository.enqueue -> Trust.verify/slot -> grant -> API credentials/send -> service createDownloadSession -> immutable session record -> worker scheduling",
+    "TransferWorker.doWork -> initialize -> StorageReconciliation.reconcile -> checkpoint -> auxiliary indexes -> archive grant -> chunk rehash -> missing range -> Api.open -> exact 206/range/ETag -> bounded read -> chunk SHA -> checkpoint -> write/fsync -> total/whole SHA -> Installation.install",
+    "Object 401/403 -> close -> authenticated renewal -> stored owner/object/manifest/expiry/visibility checks -> same record grant -> same range validation",
+    "200/3xx/404/410/412/416/429/5xx -> generic require failure -> bounded waiting/failed state; no response body enters archive",
+    "Restart -> signed index digest/identity -> contiguous chunk rehash -> truncate untrusted tail -> reuse trusted chunks",
+    "Installation/recovery -> verified journal phases and ready/manifest checks -> completion, without an HTTP 416 success bypass"
+  ],
+  "searched": [
+    {
+      "pattern": "416|Accept-Encoding|Content-Encoding|If-Match",
+      "scope": "android/app/src/main",
+      "result": "0 hits"
+    },
+    {
+      "pattern": "etag|ETag|If-Range",
+      "scope": "android/app/src/main",
+      "result": "5 lines: Api.kt L141/L144; TransferWorker.kt L123/L127/L131; no other client validator/persistence path"
+    },
+    {
+      "pattern": "Content-Range|If-Range|Range|ETag|etag|renew|download_url|signed_url|DownloadTicket|object_id",
+      "scope": "application main, service catalogue/tests and OpenAPI/domain contracts",
+      "result": "Located worker/API/session grant/local object delivery/schema/test enforcement; relevant callers/callees read"
+    },
+    {
+      "pattern": "putTransfer|deleteTransfer|TransferWorker|scheduleDownloads|StorageReconciliation|\\.open\\(",
+      "scope": "android/app/src/main",
+      "result": "Enumerated task creation/actions, worker mutations/completion, install/recovery completion, reconciliation; AppUpdater is separate UPD consumer"
+    },
+    {
+      "pattern": "download_grant|createDownloadSession|renewDownloadSession|/v1/download-sessions",
+      "scope": "services and contracts including extensions-v1.1.json",
+      "result": "Two dispatch branches, one grant builder, two base OpenAPI paths; no overriding extension route"
+    },
+    {
+      "pattern": "download|range|renew|416|200|206|ETag|chunk|transfer",
+      "scope": "app unit/instrumentation tests and services/tests",
+      "result": "Normal 206/foreign-owner renewal denial in service tests; corrupt-tail reconciliation instrumentation; no controlled client 416/200/changed-identity/expiry test"
+    },
+    {
+      "pattern": "AC-D04",
+      "scope": "actual product acceptance matrix and acceptance.json",
+      "result": "Controlled response/final SHA scenario located; machine status not_run"
+    },
+    {
+      "pattern": "Initial expected acceptance filename",
+      "scope": "docs/product/验收标准.md",
+      "result": "Path did not exist; corrected by reading 开发计划与验收矩阵.md and data/acceptance.json; not used as absence evidence"
+    }
+  ],
+  "dependency_inspection": {
+    "declared": "android/app/build.gradle.kts:L56 okhttp 4.12.0",
+    "local_file": "tools/hall/gradle-home/caches/modules-2/files-2.1/com.squareup.okhttp3/okhttp/4.12.0/2f4525d4a200e97e1b87449c2cd9bd2e25b7e8cd/okhttp-4.12.0.jar",
+    "method": "javap -c -p, read-only bytecode inspection; no program/test execution",
+    "important_offsets": [
+      "BridgeInterceptor.intercept 154-184 auto gzip gated by no Range",
+      "BridgeInterceptor.intercept 290-423 transparent decode gated by auto gzip flag"
+    ]
+  },
+  "existing_evidence_inspected_not_executed": [
+    "services/tests/test_distribution.py:L77-L103",
+    "android/app/src/androidTest/java/org/nsa/hall/SaveRecoveryTest.kt:L112-L125",
+    "docs/hall/implementation-status.md:L3-L7",
+    "docs/hall/implementation-status.md:L23",
+    "docs/hall/implementation-status.md:L33",
+    "docs/hall/implementation-status.md:L47",
+    "docs/hall/requirement-coverage.md:L34"
+  ],
+  "unverified": [
+    "Controlled origin reproducer and all AC-D04 response injections",
+    "Current APK behavior and final archive SHA",
+    "Process/reboot and resumed traffic on device",
+    "URL expiry and renewal on deployed S3/CDN",
+    "Production object immutability/versioning policy",
+    "Independent refutation of D01"
+  ],
+  "acceptance_status_unchanged": {
+    "DL-06": "not_accepted",
+    "AC-D04": "not_run"
+  },
+  "independent_refutation_status": "pending",
+  "_publication": {
+    "original_record_sha256": "cc2ee4b8eaeafc0ca17fcf86bd04f358c468bfc9a6ed75227ab84bc85dafd5c8",
+    "review_stage": "original_candidate_review",
+    "reviewed_source_revision": "189169fded9cd6557b3cb146b56d8b2e5243d705",
+    "normalizations": [
+      "checkout paths made relative",
+      "evidence paths made collection-relative",
+      "Markdown trailing whitespace normalized",
+      "published text uses LF line endings"
+    ],
+    "final_adjudication": "docs/hall/verification/2026-11-07-transfer-install-review.json"
+  }
+}

@@ -1,5 +1,7 @@
 # NsA · Android 统一游戏大厅
 
+新增[下载与安装源码核对](docs/hall/transfer-install-review-2026-11-07.md)，补充独立复核后的队列、取消、安装恢复和归档清理缺口，以及下一整批开发约束。这些是待修正项目，与下方已有恢复修正分开记录。本次文档轮次未改程序、未操作手机。
+
 新增[恢复与存档修正轮次](docs/hall/recovery-round-2026-11-07.md)，整批落实策略防回退、进程归属恢复与存档交换保护。新源码的构建、测试和安装状态单独记录，不沿用下方历史 APK 和素材的验收结果；继续保留其他项目的手机测试。
 
 后续代码、文档及已审核素材统一更新到 [wikigsroom/NsA-core 的 main 分支](https://github.com/wikigsroom/NsA-core/tree/main)，保留远端已有更新，不强制覆盖历史。

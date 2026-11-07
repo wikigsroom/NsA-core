@@ -1,0 +1,571 @@
+{
+  "review_schema": 1,
+  "date": "2026-11-07",
+  "timezone": "Asia/Taipei",
+  "kind": "bounded_download_install_source_and_specification_review",
+  "source_revision": "189169fded9cd6557b3cb146b56d8b2e5243d705",
+  "documentation_only_round": true,
+  "formal_acceptance": "not_accepted",
+  "application_source_modified": false,
+  "new_apk_built": false,
+  "application_tests_executed": false,
+  "faults_injected": false,
+  "phone_read_or_input": false,
+  "new_device_media": false,
+  "browser_tabs_opened": false,
+  "other_project_test_preserved": true,
+  "reviewed_requirement_ids": [
+    "DL-06",
+    "DL-07",
+    "PKG-06"
+  ],
+  "reviewed_detailed_rules": [
+    {
+      "id": "DL-06.01",
+      "source_verdict": "partial",
+      "qualification": "",
+      "runtime_acceptance": "not_accepted"
+    },
+    {
+      "id": "DL-06.02",
+      "source_verdict": "implemented",
+      "qualification": "",
+      "runtime_acceptance": "not_accepted"
+    },
+    {
+      "id": "DL-06.03",
+      "source_verdict": "partial",
+      "qualification": "",
+      "runtime_acceptance": "not_accepted"
+    },
+    {
+      "id": "DL-06.04",
+      "source_verdict": "implemented",
+      "qualification": "",
+      "runtime_acceptance": "not_accepted"
+    },
+    {
+      "id": "DL-07.01",
+      "source_verdict": "partial",
+      "qualification": "",
+      "runtime_acceptance": "not_accepted"
+    },
+    {
+      "id": "DL-07.02",
+      "source_verdict": "undecidable",
+      "qualification": "Equivalent durable WorkManager ownership and processor deduplication exist. A custom lease is not explicitly required, and same-file parallel writers were not proved. Lifecycle/handoff equivalence needs execution evidence; F02 maps only to DL-07.01/CON-07.",
+      "runtime_acceptance": "not_accepted"
+    },
+    {
+      "id": "DL-07.03",
+      "source_verdict": "implemented",
+      "qualification": "",
+      "runtime_acceptance": "not_accepted"
+    },
+    {
+      "id": "DL-07.04",
+      "source_verdict": "implemented",
+      "qualification": "",
+      "runtime_acceptance": "not_accepted"
+    },
+    {
+      "id": "PKG-06.01",
+      "source_verdict": "partial",
+      "qualification": "",
+      "runtime_acceptance": "not_accepted"
+    },
+    {
+      "id": "PKG-06.02",
+      "source_verdict": "partial",
+      "qualification": "",
+      "runtime_acceptance": "not_accepted"
+    },
+    {
+      "id": "PKG-06.03",
+      "source_verdict": "partial",
+      "qualification": "",
+      "runtime_acceptance": "not_accepted"
+    },
+    {
+      "id": "PKG-06.04",
+      "source_verdict": "implemented",
+      "qualification": "",
+      "runtime_acceptance": "not_accepted"
+    }
+  ],
+  "not_checked_requirement_ids": [
+    "APP-01",
+    "APP-02",
+    "APP-03",
+    "APP-04",
+    "APP-05",
+    "APP-06",
+    "APP-07",
+    "APP-08",
+    "CAT-01",
+    "CAT-02",
+    "CAT-03",
+    "CAT-04",
+    "CAT-05",
+    "CAT-06",
+    "CAT-07",
+    "CAT-08",
+    "CAT-09",
+    "CAT-10",
+    "DL-01",
+    "DL-02",
+    "DL-03",
+    "DL-04",
+    "DL-05",
+    "DL-08",
+    "DL-09",
+    "DL-10",
+    "DL-11",
+    "DL-12",
+    "DL-13",
+    "DL-14",
+    "DL-15",
+    "PKG-01",
+    "PKG-02",
+    "PKG-03",
+    "PKG-04",
+    "PKG-05",
+    "PKG-07",
+    "PKG-08",
+    "PKG-09",
+    "RUN-01",
+    "RUN-02",
+    "RUN-03",
+    "RUN-04",
+    "RUN-05",
+    "RUN-06",
+    "RUN-07",
+    "RUN-08",
+    "RUN-09",
+    "RUN-10",
+    "RUN-11",
+    "RUN-12",
+    "SAVE-01",
+    "SAVE-02",
+    "SAVE-03",
+    "SAVE-04",
+    "SAVE-05",
+    "SAVE-06",
+    "SAVE-07",
+    "SAVE-08",
+    "UPD-01",
+    "UPD-02",
+    "UPD-03",
+    "UPD-04",
+    "UPD-05",
+    "UPD-06",
+    "UPD-07",
+    "UPD-08",
+    "OPS-01",
+    "OPS-02",
+    "OPS-03",
+    "OPS-04",
+    "OPS-05",
+    "OPS-06",
+    "OPS-07",
+    "OPS-08",
+    "OPS-09",
+    "OPS-10",
+    "NFR-01",
+    "NFR-02",
+    "NFR-03",
+    "NFR-04",
+    "NFR-05",
+    "NFR-06",
+    "NFR-07",
+    "NFR-08",
+    "NFR-09",
+    "NFR-10"
+  ],
+  "historical_review": {
+    "path": "docs/hall/verification/2026-11-07-source-review.json",
+    "note": "Different pinned source; original evidence and dispositions are preserved."
+  },
+  "specification_inputs_sha256_lf": {
+    "docs/product/data/requirements.json": "09124a2b27d61be82fdc780bceb7c978dcca4a5d2457c9f844f72e85649b7672",
+    "docs/engineering/04-transfer-install-save.md": "7b9a9088e413b9a289e869d0d92f9c10634b69fd5fa3759c02784e827c99cb24",
+    "docs/engineering/05-data-state.md": "961d58d1c6223edde423a4c3c80909f2f1b465bb9a452247738571e427ef2eb1",
+    "docs/product/data/acceptance.json": "3a215140aa3eb1bb4305fd1c78c7e858f2c2588359ee9f042091f4ffe4dfb47f"
+  },
+  "review_method": {
+    "original_requirement_contexts": 3,
+    "independent_code_refutations": 3,
+    "independent_specification_refutations": 3,
+    "public_evidence_artifacts": 18
+  },
+  "findings": [
+    {
+      "id": "DL-06-D01",
+      "requirement_id": "DL-06",
+      "severity": "P2",
+      "rules": [
+        "DL-06.01"
+      ],
+      "confirmed_defect_core": true,
+      "code_refutation": "upheld_with_limits",
+      "specification_refutation": "upheld_with_limits",
+      "disposition": "pending_complete_source_batch",
+      "summary": "Explicit identity request/response constraint missing; conditional availability/protocol impact only.",
+      "limits": [
+        "No demonstrated corrupt archive or automatic Range gzip decoding.",
+        "Ordinary local service serves identity bytes."
+      ],
+      "reproducer_executed": false,
+      "original_review": "docs/hall/reviews/2026-11-07-transfer-install/requirements/DL-06.json",
+      "code_review": "docs/hall/reviews/2026-11-07-transfer-install/refutations/DL-06-code.json",
+      "specification_review": "docs/hall/reviews/2026-11-07-transfer-install/refutations/DL-06-spec.json"
+    },
+    {
+      "id": "DL-07-F01",
+      "requirement_id": "DL-07",
+      "severity": "P2",
+      "rules": [
+        "DL-07.01"
+      ],
+      "confirmed_defect_core": true,
+      "code_refutation": "upheld_with_limits",
+      "specification_refutation": "upheld_with_limits",
+      "disposition": "pending_complete_source_batch",
+      "summary": "Late enqueue loses successor when the running worker completes its original snapshot successfully.",
+      "limits": [
+        "Another retry or later scheduling action can mask the gap.",
+        "No measured latency claim."
+      ],
+      "reproducer_executed": false,
+      "original_review": "docs/hall/reviews/2026-11-07-transfer-install/requirements/DL-07.json",
+      "code_review": "docs/hall/reviews/2026-11-07-transfer-install/refutations/DL-07-code.json",
+      "specification_review": "docs/hall/reviews/2026-11-07-transfer-install/refutations/DL-07-spec.json"
+    },
+    {
+      "id": "DL-07-F02",
+      "requirement_id": "DL-07",
+      "severity": "P2",
+      "rules": [
+        "DL-07.01"
+      ],
+      "confirmed_defect_core": true,
+      "code_refutation": "upheld_with_limits",
+      "specification_refutation": "upheld_with_limits",
+      "disposition": "pending_complete_source_batch",
+      "summary": "Stale full-row progress update revives cancellation after a replacement is admitted.",
+      "limits": [
+        "No simultaneous connections or same-file writers established.",
+        "Ordinary failed-task UI duplication excluded."
+      ],
+      "reproducer_executed": false,
+      "original_review": "docs/hall/reviews/2026-11-07-transfer-install/requirements/DL-07.json",
+      "code_review": "docs/hall/reviews/2026-11-07-transfer-install/refutations/DL-07-code.json",
+      "specification_review": "docs/hall/reviews/2026-11-07-transfer-install/refutations/DL-07-spec.json"
+    },
+    {
+      "id": "DL-07-F03",
+      "requirement_id": "DL-07",
+      "severity": "P3",
+      "rules": [
+        "DL-07.01"
+      ],
+      "confirmed_defect_core": true,
+      "code_refutation": "upheld_with_limits",
+      "specification_refutation": "upheld_with_limits",
+      "disposition": "pending_complete_source_batch",
+      "summary": "Missing task-ID tie-break and effective queue-order explanation.",
+      "limits": [
+        "Reverse history is not itself forbidden.",
+        "Numeric position is one acceptable UI, not a new requirement."
+      ],
+      "reproducer_executed": false,
+      "original_review": "docs/hall/reviews/2026-11-07-transfer-install/requirements/DL-07.json",
+      "code_review": "docs/hall/reviews/2026-11-07-transfer-install/refutations/DL-07-code.json",
+      "specification_review": "docs/hall/reviews/2026-11-07-transfer-install/refutations/DL-07-spec.json"
+    },
+    {
+      "id": "PKG-06-F01",
+      "requirement_id": "PKG-06",
+      "severity": "P2",
+      "rules": [
+        "PKG-06.02",
+        "PKG-06.03"
+      ],
+      "confirmed_defect_core": true,
+      "code_refutation": "upheld_with_limits",
+      "specification_refutation": "upheld_with_limits",
+      "disposition": "pending_complete_source_batch",
+      "summary": "Nested and new ancestor directory durability barriers omitted.",
+      "limits": [
+        "Actual filesystem power-loss loss is conditional and unexecuted.",
+        "Process death alone is not proof of this loss."
+      ],
+      "reproducer_executed": false,
+      "original_review": "docs/hall/reviews/2026-11-07-transfer-install/requirements/PKG-06.json",
+      "code_review": "docs/hall/reviews/2026-11-07-transfer-install/refutations/PKG-06-code.json",
+      "specification_review": "docs/hall/reviews/2026-11-07-transfer-install/refutations/PKG-06-spec.json"
+    },
+    {
+      "id": "PKG-06-F02",
+      "requirement_id": "PKG-06",
+      "severity": "P1",
+      "rules": [
+        "PKG-06.03"
+      ],
+      "confirmed_defect_core": true,
+      "code_refutation": "upheld_with_limits",
+      "specification_refutation": "upheld_with_limits",
+      "disposition": "pending_complete_source_batch",
+      "summary": "Invalid published/same-release repair candidate persistently aborts global initialization.",
+      "limits": [
+        "Independent code refutation adds a process-exit-only VERIFIED repair trigger.",
+        "Source-derived, not device-observed."
+      ],
+      "reproducer_executed": false,
+      "original_review": "docs/hall/reviews/2026-11-07-transfer-install/requirements/PKG-06.json",
+      "code_review": "docs/hall/reviews/2026-11-07-transfer-install/refutations/PKG-06-code.json",
+      "specification_review": "docs/hall/reviews/2026-11-07-transfer-install/refutations/PKG-06-spec.json"
+    },
+    {
+      "id": "PKG-06-F03",
+      "requirement_id": "PKG-06",
+      "severity": "P2",
+      "rules": [
+        "PKG-06.01",
+        "PKG-06.03"
+      ],
+      "confirmed_defect_core": true,
+      "code_refutation": "upheld_with_limits",
+      "specification_refutation": "upheld_with_limits",
+      "disposition": "pending_complete_source_batch",
+      "summary": "Recovered completion discards journal/cleanup obligation while retaining the full download archive.",
+      "limits": [
+        "Ordinary cleanup also ignores deletion failure.",
+        "No new phone-space measurement or observed user leak."
+      ],
+      "reproducer_executed": false,
+      "original_review": "docs/hall/reviews/2026-11-07-transfer-install/requirements/PKG-06.json",
+      "code_review": "docs/hall/reviews/2026-11-07-transfer-install/refutations/PKG-06-code.json",
+      "specification_review": "docs/hall/reviews/2026-11-07-transfer-install/refutations/PKG-06-spec.json"
+    }
+  ],
+  "unpromoted_observations": [
+    "416 specialized handling absent; safe rejection and complete-local-file reuse refute corrupt-success.",
+    "Client grant field validation alone does not prove mixing against this fixed-identity backend.",
+    "No custom transfer lease is not itself proof of same-file concurrent writers.",
+    "Normal failed-task UI duplicate was refuted.",
+    "Health/rollback, API34 UIDT, active-pointer catalogue races and production storage are separate scope.",
+    "Conservative previous-release retention refutes early automatic GC allegation."
+  ],
+  "acceptance_cases_preserved": [
+    "AC-D04",
+    "AC-D05",
+    "AC-P05",
+    "CON-06",
+    "CON-07"
+  ],
+  "next_batch": {
+    "status": "not_started",
+    "rule": "Complete all scoped source changes, migration, UI/docs and meaningful fault cases before consolidated execution.",
+    "workstreams": [
+      "protocol identity/classification",
+      "queue/intent/uniqueness/migration",
+      "phase-owned durable installation recovery",
+      "idempotent cleanup ownership",
+      "documentation and exact candidate provenance"
+    ]
+  },
+  "space_impact": {
+    "archive_bytes": "15354465247",
+    "possible_unreclaimed_bytes_per_affected_install": "15354465247",
+    "phone_measured_in_this_round": false
+  },
+  "retained_candidate": {
+    "sha256": "e0e4cc749012ef4ff2ad6a3f71ccdb93b31d6f4c16ab95ef9a2b6f240c0ca8b5",
+    "new_build_this_round": false,
+    "installed_on_phone": false
+  },
+  "evidence_artifacts": [
+    {
+      "path": "docs/hall/reviews/2026-11-07-transfer-install/requirements/DL-06.json",
+      "sha256": "ee4ef03f934a8fc65a647d03456329c4f2afb38753704af37df7945b30561404",
+      "original_record_sha256": "cc2ee4b8eaeafc0ca17fcf86bd04f358c468bfc9a6ed75227ab84bc85dafd5c8",
+      "requirement_id": "DL-06",
+      "stage": "original_candidate_review"
+    },
+    {
+      "path": "docs/hall/reviews/2026-11-07-transfer-install/requirements/DL-06.md",
+      "sha256": "f153a7318b8639a72e53b5fb45f783952c91b639318700a9dd65ff036d0a52f7",
+      "original_record_sha256": "4dfa72a45a9d5e674f513a00544dd579b7620559cff8da7e95c11a3637271bb0",
+      "requirement_id": "DL-06",
+      "stage": "original_candidate_review"
+    },
+    {
+      "path": "docs/hall/reviews/2026-11-07-transfer-install/refutations/DL-06-code.json",
+      "sha256": "708b0face0e9e2c6eef9f326403753e074e44cef729646ea455c8ac5566bde95",
+      "original_record_sha256": "d9d00106212f31ab3e9422bc997f873f6a3389400306d656191aabad32ae25e5",
+      "requirement_id": "DL-06",
+      "stage": "independent_code_refutation"
+    },
+    {
+      "path": "docs/hall/reviews/2026-11-07-transfer-install/refutations/DL-06-code.md",
+      "sha256": "b5ee5342660441d61204b4ce64042791db590838850f3f878ef2fe7cd9e4a9ac",
+      "original_record_sha256": "aa126640b4aa06858209cdf68a3d5758935e9b718d87fb950718d0d4dcfaef67",
+      "requirement_id": "DL-06",
+      "stage": "independent_code_refutation"
+    },
+    {
+      "path": "docs/hall/reviews/2026-11-07-transfer-install/refutations/DL-06-spec.json",
+      "sha256": "e0fe212f856e62b82b559bb5fe9c8b66e9721fb4c7ea710ea876eb14a6f645ec",
+      "original_record_sha256": "c8fedcce30d97daed6f7894030e09c7663e3c4cf4c31ef962730fd9a1766d119",
+      "requirement_id": "DL-06",
+      "stage": "independent_spec_refutation"
+    },
+    {
+      "path": "docs/hall/reviews/2026-11-07-transfer-install/refutations/DL-06-spec.md",
+      "sha256": "4510a3c7171cbc59ee4dc704ba94150a7e9cd994b8ef1d215746ef48b3e82920",
+      "original_record_sha256": "656f56ff6fe7d6560f8086a95c0f49916bb8054938bb20624ac5561f944e8c76",
+      "requirement_id": "DL-06",
+      "stage": "independent_spec_refutation"
+    },
+    {
+      "path": "docs/hall/reviews/2026-11-07-transfer-install/requirements/DL-07.json",
+      "sha256": "3e01383edf451a506b4488cc094052fa880948e292dc059fd8641fe7438c6151",
+      "original_record_sha256": "1711288f1f6f17c5c97104be1ef772fed9aaf093df738d7e100efba3f15414e6",
+      "requirement_id": "DL-07",
+      "stage": "original_candidate_review"
+    },
+    {
+      "path": "docs/hall/reviews/2026-11-07-transfer-install/requirements/DL-07.md",
+      "sha256": "7446847344ca26ae1878026b30e52432838493d790521e95d68730c52dfecc72",
+      "original_record_sha256": "65b70ff0412d65fc9658cbccadabbaffbf054e14f04e00e939665bdcf6592310",
+      "requirement_id": "DL-07",
+      "stage": "original_candidate_review"
+    },
+    {
+      "path": "docs/hall/reviews/2026-11-07-transfer-install/refutations/DL-07-code.json",
+      "sha256": "eeb79351c0035fc7ab16b5eba272c077da810a8a6989b9d87387f052d3203083",
+      "original_record_sha256": "62f23ef0a3e68400369ee0dacd96e4566510cb207b997a06171263cfa971a9cf",
+      "requirement_id": "DL-07",
+      "stage": "independent_code_refutation"
+    },
+    {
+      "path": "docs/hall/reviews/2026-11-07-transfer-install/refutations/DL-07-code.md",
+      "sha256": "cd786f897d64368486851f599bb1325459fa0310195139f6853762dfaddc268d",
+      "original_record_sha256": "cbd4750377375ec9fd355ededdfa6b0cd40d38027d4564d2731c63f6189cbd2a",
+      "requirement_id": "DL-07",
+      "stage": "independent_code_refutation"
+    },
+    {
+      "path": "docs/hall/reviews/2026-11-07-transfer-install/refutations/DL-07-spec.json",
+      "sha256": "996f3b0e15e52ce9320aa4cc634f056a8291305c382e0d4397167e581ed0fb12",
+      "original_record_sha256": "478abdb0314bd648c265b24da8acd54cc751bc13ea597bd3ad72f8e7cf1c63e0",
+      "requirement_id": "DL-07",
+      "stage": "independent_spec_refutation"
+    },
+    {
+      "path": "docs/hall/reviews/2026-11-07-transfer-install/refutations/DL-07-spec.md",
+      "sha256": "7a53ec34dad0342e94416d84a11ff68bf3cb8b898f28a277639311e7091460bf",
+      "original_record_sha256": "ddc975f53ad316d3b63a460eb7f401532b7a428426ece3c954b4251aa2dfdc7a",
+      "requirement_id": "DL-07",
+      "stage": "independent_spec_refutation"
+    },
+    {
+      "path": "docs/hall/reviews/2026-11-07-transfer-install/requirements/PKG-06.json",
+      "sha256": "f9f266cc62f9d7766f34c728d7e2d94d67d1ca1b696b50625bc02e3e0783cd3a",
+      "original_record_sha256": "a7b5be40a5806a427223b493eab64a6175f1dae872933ec1204150455ac04a08",
+      "requirement_id": "PKG-06",
+      "stage": "original_candidate_review"
+    },
+    {
+      "path": "docs/hall/reviews/2026-11-07-transfer-install/requirements/PKG-06.md",
+      "sha256": "ea915b3be0b175b4f9a79202a2b1cc1de42f11a75b0ae34ffdc19a597c60ffbb",
+      "original_record_sha256": "6fdcfb74de7adaf253172ad2eab5c948772a479d59dac0c2bdc8527ea18a0eef",
+      "requirement_id": "PKG-06",
+      "stage": "original_candidate_review"
+    },
+    {
+      "path": "docs/hall/reviews/2026-11-07-transfer-install/refutations/PKG-06-code.json",
+      "sha256": "29904e612435bbcefbae845929b12ae5e9673d27c77c381f83f4fb48dda37e55",
+      "original_record_sha256": "99a8df3ba532d962778e469034d3e544f9d141354b54cf0d17d475d24a64f7ec",
+      "requirement_id": "PKG-06",
+      "stage": "independent_code_refutation"
+    },
+    {
+      "path": "docs/hall/reviews/2026-11-07-transfer-install/refutations/PKG-06-code.md",
+      "sha256": "0005cc2272e160b762d7a569e7545312fe40c8f23a12edf93bae44425b71a613",
+      "original_record_sha256": "599efddf06b1aa73df79d890b1ed9794a3b86fe326726d3d283027ae5dba48d3",
+      "requirement_id": "PKG-06",
+      "stage": "independent_code_refutation"
+    },
+    {
+      "path": "docs/hall/reviews/2026-11-07-transfer-install/refutations/PKG-06-spec.json",
+      "sha256": "b1787706830054ff7dcc3b52e41e60d5c0aefd2730f85caf6868b227832724cc",
+      "original_record_sha256": "c93f2477a9640736cc532f0bc2cf4febbc8405a781888017521ab5bab59d7eb7",
+      "requirement_id": "PKG-06",
+      "stage": "independent_spec_refutation"
+    },
+    {
+      "path": "docs/hall/reviews/2026-11-07-transfer-install/refutations/PKG-06-spec.md",
+      "sha256": "bd76f18d8ed2ff1983845b89c3df1838a4a144d3ab4218325fd1d12c361d7799",
+      "original_record_sha256": "c9c1c2a6d34c05040b94789d1da343269b4d4b81ff4302304f471c5b1be45b92",
+      "requirement_id": "PKG-06",
+      "stage": "independent_spec_refutation"
+    }
+  ],
+  "documentation_verification": {
+    "status": "passed",
+    "kind": "documentation_and_contract_checks_only",
+    "checked_at_utc": "2026-11-07T00:41:07.255697+00:00",
+    "markdown_documents": 39,
+    "local_links": 791,
+    "new_evidence_artifacts": 18,
+    "historical_evidence_artifacts_unchanged": 18,
+    "markdown_inputs_sha256_lf": "a1ab4f4b9573e6cf6d2a87bafb31939b4fbe6ed14dadae2510b672a4dbd55bde",
+    "baseline_groups": [
+      {
+        "name": "requirement_and_acceptance_traceability",
+        "status": "passed"
+      },
+      {
+        "name": "json_schema_definitions",
+        "status": "passed"
+      },
+      {
+        "name": "openapi_and_operation_guards",
+        "status": "passed"
+      },
+      {
+        "name": "offline_json_references",
+        "status": "passed"
+      },
+      {
+        "name": "positive_examples_and_signed_byte_bindings",
+        "status": "passed"
+      },
+      {
+        "name": "boundary_and_tampering_negative_vectors",
+        "status": "passed"
+      },
+      {
+        "name": "state_and_error_contract_consistency",
+        "status": "passed"
+      },
+      {
+        "name": "markdown_links_and_structure",
+        "status": "passed"
+      }
+    ],
+    "private_docs_report_sha256": "97cbb1f30a942fdb0930234d73ddf322d90603fb18ee18f09adbc4e5a22529ab",
+    "private_baseline_report_sha256": "9c0c4d3335a110ae5211a61d8481c9a5ddf253e3d1a1b8577654694d419011a0",
+    "offline_handbook": {
+      "path": "docs/product/产品与技术开发基线.html",
+      "source_documents": 14,
+      "bytes": 417864,
+      "sha256": "59248be4ddfb0d396f05fea75fdde7ecaaa83cf61aeae6cbaf9101506ba9bcfc",
+      "browser_visual_review_this_round": false
+    },
+    "application_tests_executed": false,
+    "phone_or_adb_used": false
+  }
+}

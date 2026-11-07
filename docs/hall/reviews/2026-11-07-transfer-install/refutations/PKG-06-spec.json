@@ -1,0 +1,200 @@
+{
+  "requirement_id": "PKG-06",
+  "review_role": "independent_specification_refutation",
+  "reviewer_is_original_author": false,
+  "source_commit": "189169fded9cd6557b3cb146b56d8b2e5243d705",
+  "inputs": [
+    "../requirements/PKG-06.md",
+    "../requirements/PKG-06.json"
+  ],
+  "primary_code_audit_performed": false,
+  "code_facts_treatment": "Author predicates and separate independent code refutation, not newly proven by this specification pass.",
+  "authority": [
+    "docs/product/产品需求细则.md:L642-L655",
+    "docs/product/data/requirements.json:L1505-L1542",
+    "docs/engineering/README.md:L27-L32",
+    "docs/engineering/04-transfer-install-save.md:L53-L72",
+    "docs/engineering/05-data-state.md:L99-L103"
+  ],
+  "overall": "Retain all three normative cores; narrow F01 to durability evidence and F03 to lost eventual cleanup obligation. No independent claim of executed Android failure.",
+  "findings": [
+    {
+      "id": "PKG-06-F01",
+      "disposition": "retain_with_scope_limit",
+      "mandatory": true,
+      "rules": [
+        "PKG-06.02",
+        "PKG-06.03"
+      ],
+      "severity_if_code_predicate_retained": "medium",
+      "priority": "P2",
+      "specification_core": "VERIFIED includes durable READY and directories; file/parent synchronization failures must be reported; rename alone does not establish power-loss durability.",
+      "references": [
+        "docs/product/产品需求细则.md:L644",
+        "docs/product/产品需求细则.md:L651",
+        "docs/engineering/04-transfer-install-save.md:L59",
+        "docs/engineering/04-transfer-install-save.md:L64"
+      ],
+      "source_gap_predicate": "Independent code review finds necessary directory durability operations missing and no equivalent guarantee.",
+      "reachable_impact_predicate": "Power loss on a filesystem without stronger implicit durability can lose an unsynchronized name/link.",
+      "refutations_considered": [
+        "Same-volume rename provides publication atomicity but not automatically durable parent/nested metadata",
+        "File hash/fd sync does not by itself fulfill the named directory durability obligation",
+        "Later repair detection cannot substitute for pre-publication durability",
+        "Specification does not mandate one particular helper call sequence or a fsync on every directory if an equivalent proven mechanism exists"
+      ],
+      "allowed_alternatives": [
+        "Verified equivalent storage durability guarantees",
+        "Reliable complete-directory synchronization mechanism",
+        "Any design proving necessary names and parent links durable before the corresponding durable phase"
+      ],
+      "narrowing": "Do not claim observed target-device loss or insist bottom-up per-directory fsync is the only conforming implementation.",
+      "verification_only": "Target filesystem directory/power-loss behavior and effective durability of the complete candidate."
+    },
+    {
+      "id": "PKG-06-F02",
+      "disposition": "retain",
+      "mandatory": true,
+      "rules": [
+        "PKG-06.03"
+      ],
+      "severity_if_code_predicate_retained": "high",
+      "priority": "P1",
+      "specification_core": "Incomplete/inconsistent candidates must reconcile to completion, rollback or a controlled recover/repair state; valid unblocked older versions remain usable on update failure.",
+      "references": [
+        "docs/product/产品需求细则.md:L644-L652",
+        "docs/engineering/04-transfer-install-save.md:L60-L66",
+        "docs/engineering/05-data-state.md:L99-L103",
+        "docs/product/页面与交互验收规格.md:L106-L110",
+        "docs/product/页面与交互验收规格.md:L386-L389",
+        "docs/product/开发计划与验收矩阵.md:L109",
+        "docs/product/开发计划与验收矩阵.md:L141",
+        "docs/product/产品需求细则.md:L692-L701",
+        "docs/product/data/acceptance.json:L685-L695"
+      ],
+      "source_gap_predicate": "A bad journal repeatedly aborts initialization without a product-controlled way to finish/rollback/repair, withholding otherwise valid versions globally.",
+      "reachable_impact_predicate": "Independently established interrupted install or same-release full-package repair boundary reaches that non-converging state.",
+      "coordinator_code_update": "Separate code refutation reported a stronger same-release repair -> VERIFIED -> process death path; this specification pass confirms repair/boundary scope without redoing its code audit.",
+      "refutations_considered": [
+        "Pending recovery and temporary conservative startup gating are allowed",
+        "A recoverable maintenance flow with actual completion/rollback/repair is acceptable",
+        "No unconditional automatic rollback into a damaged/incompatible old release is required",
+        "No startup full-resource hash is required",
+        "Retaining old files physically does not satisfy availability if a recoverable bad candidate blocks all valid releases indefinitely"
+      ],
+      "allowed_alternatives": [
+        "Per-candidate isolation/quarantine with durable recovery status",
+        "User-reachable repair or controlled completion",
+        "Verified restoration of a valid previous-active reference"
+      ],
+      "narrowing": "The violation is non-converging global denial for an otherwise recoverable candidate, not the presence of a one-time exception or temporary ready gate.",
+      "verification_only": "Fault-boundary recovery, UI repair path and preserved valid-library availability."
+    },
+    {
+      "id": "PKG-06-F03",
+      "disposition": "retain_with_scope_limit",
+      "mandatory": true,
+      "rules": [
+        "PKG-06.01",
+        "PKG-06.03"
+      ],
+      "severity_if_code_predicate_retained": "medium",
+      "priority": "P2",
+      "specification_core": "DB activation can precede cleanup, but CLEANED means unreferenced download/temporary data is actually removed and the operation ends idempotently.",
+      "references": [
+        "docs/product/产品需求细则.md:L650-L652",
+        "docs/engineering/04-transfer-install-save.md:L61-L66",
+        "docs/engineering/04-transfer-install-save.md:L86",
+        "docs/engineering/05-data-state.md:L117-L119"
+      ],
+      "source_gap_predicate": "Archive/index temporaries are unreferenced, CLEANED/terminal ownership is discarded, and no durable/reconstructible cleaner takes responsibility.",
+      "reachable_impact_predicate": "Successful recovery or interruption after terminal transfer state leaves large archives indefinitely, potentially accumulating enough space to obstruct later installs.",
+      "refutations_considered": [
+        "Immediate activation-time deletion is explicitly not required",
+        "An independent durable cleanup job or reconstructible owner ledger can satisfy the rule after journal removal",
+        "Legitimately referenced retained files are not automatically garbage",
+        "A phase name or DB deletion is insufficient evidence of actual cleanup"
+      ],
+      "allowed_alternatives": [
+        "Deferred durable cleanup queue",
+        "Independent idempotent maintenance cleaner",
+        "Reliable reconstructible temporary ownership/refcount mechanism"
+      ],
+      "narrowing": "Report the permanent lost cleanup obligation, not the mere presence of the archive just after activation; exact deletion mechanism is not mandated.",
+      "verification_only": "Recovered/failed cleanup replay, reference checks, actual residual byte counts and eventual reclamation."
+    }
+  ],
+  "exclusions_confirmed": [
+    "Conservative retention without automatic old-version GC satisfies the no-premature-GC restriction",
+    "Missing positive health/rollback transitions belong to adjacent UPD scope and are not counted as early-GC defects",
+    "Safe commit sections may defer cancellation; instantaneous cancellation is not an added requirement",
+    "No new schema-field finding is authored by this specification pass"
+  ],
+  "searches_and_reads": [
+    {
+      "scope": "product detailed rules and requirements.json",
+      "pattern": "PKG-06",
+      "result": "Four mandatory P0 rules and acceptance linkage; not_accepted unchanged"
+    },
+    {
+      "scope": "docs/engineering/04-transfer-install-save.md:L53-L72,L86",
+      "pattern": "VERIFIED|DIRECTORY_PUBLISHED|DB_ACTIVATED|CLEANED|同步|落盘|清理|修复",
+      "result": "Durable phase facts, pending recovery, cleanup deferral and true cleanup semantics"
+    },
+    {
+      "scope": "docs/engineering/05-data-state.md:L99-L103,L117-L119",
+      "pattern": "READY|repair_required|对账|清理|完整资源哈希",
+      "result": "Metadata-first reconciliation/isolation and ownership-aware cleanup; no startup full hash mandate"
+    },
+    {
+      "scope": "S06/S26 page specification",
+      "pattern": "恢复|旧版|修复",
+      "result": "Repair path and valid old-version availability constraints"
+    },
+    {
+      "scope": "acceptance matrix and acceptance.json",
+      "pattern": "AC-P05|CON-06|AC-U02|AC-U03",
+      "result": "Fault boundaries/critical-file deletion and qualified old-version rollback; planned not_run evidence"
+    },
+    {
+      "scope": "docs/product/产品需求细则.md:L692-L701",
+      "pattern": "PKG-09|修复",
+      "result": "Same-version full-package repair is an allowed first-version path"
+    },
+    {
+      "scope": "ADR 0007 L45-L53",
+      "pattern": "初始化|恢复|核对|验收",
+      "result": "Metadata gating preserved; does not waive controlled recovery obligations"
+    },
+    {
+      "scope": "local-records.schema.json:L131-L201",
+      "pattern": "InstallJournal phases and previous_active_release_id/revision",
+      "result": "Machine contract supports recovery identity/stage; no extra code finding authored"
+    }
+  ],
+  "validation": {
+    "primary_pkg06_code_audit": false,
+    "tests": false,
+    "builds": false,
+    "fault_injection": false,
+    "network": false,
+    "browser": false,
+    "phone_adb": false,
+    "virtualization": false,
+    "source_or_public_docs_edited": false,
+    "candidate_reports_relabelled": false,
+    "acceptance_status_changed": false
+  },
+  "_publication": {
+    "original_record_sha256": "c93f2477a9640736cc532f0bc2cf4febbc8405a781888017521ab5bab59d7eb7",
+    "review_stage": "independent_spec_refutation",
+    "reviewed_source_revision": "189169fded9cd6557b3cb146b56d8b2e5243d705",
+    "normalizations": [
+      "checkout paths made relative",
+      "evidence paths made collection-relative",
+      "Markdown trailing whitespace normalized",
+      "published text uses LF line endings"
+    ],
+    "final_adjudication": "docs/hall/verification/2026-11-07-transfer-install-review.json"
+  }
+}

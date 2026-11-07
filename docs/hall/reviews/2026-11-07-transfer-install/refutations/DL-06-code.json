@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "role": "independent_code_refutation",
+  "requirement_id": "DL-06",
+  "source_commit": "189169fded9cd6557b3cb146b56d8b2e5243d705",
+  "reviewer_original_requirement": "PKG-06",
+  "independent_of_original_author": true,
+  "overall_result": "keep_narrowed_conditional_availability_protocol_gap",
+  "candidate_reviews": [
+    {
+      "id": "DL-06-D01",
+      "disposition": "upheld_with_existing_impact_limit",
+      "severity": "medium",
+      "priority": "P2",
+      "source_confidence": "high",
+      "behavioral_impact": "conditional_unexecuted",
+      "reason": "Neither the request builder/client interceptors nor archive response checks enforce the specified identity encoding. The normal service serves stored identity bytes and no deployed failure was demonstrated.",
+      "evidence": [
+        "android/app/src/main/java/org/nsa/hall/data/Api.kt:L52-L75,L141-L145",
+        "android/app/src/main/java/org/nsa/hall/transfer/TransferWorker.kt:L123-L135",
+        "services/catalog/app.py:L603-L621"
+      ],
+      "specification": [
+        "docs/engineering/04-transfer-install-save.md:L13,L17"
+      ],
+      "accepted_consequence": "A representation-negotiating controlled origin can cause safe rejection/retries/failure while identity delivery is available.",
+      "rejected_consequences": [
+        "Demonstrated content corruption or polluted archive",
+        "Automatic Range gzip negotiation/decompression under pinned OkHttp",
+        "Confirmed failure on the ordinary local server or deployed production CDN"
+      ]
+    }
+  ],
+  "counterevidence": [
+    {
+      "claim": "Transparent gzip affects archive Range by default",
+      "result": "refuted",
+      "evidence": "Independently disassembled cached OkHttp 4.12.0 BridgeInterceptor.intercept: offsets 151-184 enable auto gzip only if Accept-Encoding and Range are absent; offsets 290-423 require that flag to decode. Archive calls supply Range."
+    },
+    {
+      "claim": "Encoding omission promotes wrong bytes",
+      "result": "refuted",
+      "evidence": [
+        "android/app/src/main/java/org/nsa/hall/transfer/TransferWorker.kt:L77-L97,L106,L130-L147",
+        "android/app/src/main/java/org/nsa/hall/security/Trust.kt:L73-L86"
+      ],
+      "reason": "Signed chunk length/hash checks precede archive writes; original whole archive SHA precedes installation."
+    },
+    {
+      "claim": "Nonzero 200 or 416 succeeds/appends",
+      "result": "refuted",
+      "evidence": [
+        "android/app/src/main/java/org/nsa/hall/transfer/TransferWorker.kt:L113-L119,L129-L147"
+      ],
+      "reason": "Only exact 206 is read/written. 416-specific local verification is absent but safely rejected; complete valid local archives do not issue another range."
+    },
+    {
+      "claim": "Successful service renewal arbitrarily rebinds objects",
+      "result": "refuted_for_inspected_backend",
+      "evidence": [
+        "services/catalog/app.py:L239-L264,L293-L295",
+        "android/app/src/main/java/org/nsa/hall/transfer/TransferWorker.kt:L133,L147"
+      ],
+      "reason": "Server renews stored session identity and client original SHA checks remain independent."
+    }
+  ],
+  "dependency_inspection": {
+    "path": "tools/hall/gradle-home/caches/modules-2/files-2.1/com.squareup.okhttp3/okhttp/4.12.0/2f4525d4a200e97e1b87449c2cd9bd2e25b7e8cd/okhttp-4.12.0.jar",
+    "declared_at": "android/app/build.gradle.kts:L56",
+    "method": "read_only_javap_bytecode_inspection",
+    "class": "okhttp3.internal.http.BridgeInterceptor",
+    "method_name": "intercept",
+    "important_offsets": [
+      "151-184",
+      "290-423"
+    ],
+    "independently_performed": true
+  },
+  "searched": [
+    {
+      "scope": "android/app/src/main and services/catalog",
+      "pattern": "Accept-Encoding|Content-Encoding|GZip|gzip|Interceptor|addInterceptor|addNetworkInterceptor|416|If-Range",
+      "result": "If-Range write and service 416 response found; no application identity header/response enforcement or compression middleware."
+    },
+    {
+      "scope": "Api/worker/service direct reads",
+      "result": "All archive open calls and response-before-write checks, original manifest/chunk bindings and create/renew grant identity branches read independently."
+    }
+  ],
+  "execution_limits": {
+    "application_tests": false,
+    "builds": false,
+    "fault_injection": false,
+    "network": false,
+    "phone_adb": false,
+    "browser": false,
+    "virtualization": false,
+    "program_or_docs_edits": false
+  },
+  "unverified": [
+    "Controlled encoding-origin reproduction",
+    "Production CDN/S3 representation and immutability configuration",
+    "Current APK/runtime/phone behavior"
+  ],
+  "acceptance_status_changed": false,
+  "_publication": {
+    "original_record_sha256": "d9d00106212f31ab3e9422bc997f873f6a3389400306d656191aabad32ae25e5",
+    "review_stage": "independent_code_refutation",
+    "reviewed_source_revision": "189169fded9cd6557b3cb146b56d8b2e5243d705",
+    "normalizations": [
+      "checkout paths made relative",
+      "evidence paths made collection-relative",
+      "Markdown trailing whitespace normalized",
+      "published text uses LF line endings"
+    ],
+    "final_adjudication": "docs/hall/verification/2026-11-07-transfer-install-review.json"
+  }
+}

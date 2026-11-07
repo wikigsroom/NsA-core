@@ -1,0 +1,393 @@
+{
+  "requirement": "DL-07",
+  "sourceRevision": "189169fded9cd6557b3cb146b56d8b2e5243d705",
+  "verdict": "partial",
+  "confidence": "high",
+  "reviewMode": "read_only_source",
+  "reportStatus": "candidate_pending_independent_refutation",
+  "specification": [
+    {
+      "path": "docs/product/data/requirements.json",
+      "lines": "953-989"
+    },
+    {
+      "path": "docs/product/产品需求细则.md",
+      "lines": "415-428"
+    },
+    {
+      "path": "docs/engineering/04-transfer-install-save.md",
+      "lines": "7-9,30-41,53-70"
+    },
+    {
+      "path": "docs/engineering/05-data-state.md",
+      "lines": "32-34,50-61,101-111"
+    },
+    {
+      "path": "docs/product/data/acceptance.json",
+      "lines": "157-164,698-709"
+    }
+  ],
+  "rules": [
+    {
+      "id": "DL-07.01",
+      "text": "全局同时一个内容传输，其余按确认时间与 task_id 排队；每游戏最多一个活动任务。",
+      "verdict": "partial",
+      "findingIds": [
+        "DL-07-F01",
+        "DL-07-F02",
+        "DL-07-F03"
+      ]
+    },
+    {
+      "id": "DL-07.02",
+      "text": "下载前占用调度租约，进程重建对租约对账，防止两个执行器同时写同一文件。",
+      "verdict": "partial",
+      "findingIds": [
+        "DL-07-F02"
+      ],
+      "implemented": "Unique durable WorkManager work and processor deduplication; initialize before I/O.",
+      "missing": "No application transfer owner/lease claim or lease reconciliation. No proven simultaneous production archive writers."
+    },
+    {
+      "id": "DL-07.03",
+      "text": "重复通知和页面动作不会增加连接数量；单任务首版不分多路并行连接。",
+      "verdict": "implemented",
+      "qualification": "Current adapter ordinary paths, source only; actual duplicate callback/stop-and-restart acceptance not run.",
+      "evidence": [
+        "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt:L166-L168",
+        "android/app/src/main/java/org/nsa/hall/transfer/TransferWorker.kt:L32-L55,L77-L144",
+        "android/app/src/main/java/org/nsa/hall/data/Api.kt:L141-L145"
+      ]
+    },
+    {
+      "id": "DL-07.04",
+      "text": "安装与更新也受同卷空间和重 I/O 调度，不因只有一个网络任务就允许无限解包。",
+      "verdict": "implemented",
+      "qualification": "Game content serial extraction and same private volume checks; not full reservation accounting or device acceptance.",
+      "evidence": [
+        "android/app/src/main/java/org/nsa/hall/transfer/TransferWorker.kt:L148-L151",
+        "android/app/src/main/java/org/nsa/hall/transfer/Installation.kt:L27-L100",
+        "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt:L59-L90,L160-L164"
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "id": "DL-07-F01",
+      "title": "Late confirmed game is stranded by one-time worker snapshot and unique KEEP scheduling",
+      "severity": "medium",
+      "priority": "P2",
+      "confidence": "high",
+      "rules": [
+        "DL-07.01"
+      ],
+      "acceptance": [
+        "AC-D05"
+      ],
+      "status": "candidate_pending_independent_refutation",
+      "primaryLocation": {
+        "path": "android/app/src/main/java/org/nsa/hall/transfer/TransferWorker.kt",
+        "start": 35,
+        "end": 50
+      },
+      "evidence": [
+        "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt:L157-L168",
+        "android/app/src/main/java/org/nsa/hall/transfer/TransferWorker.kt:L35-L50",
+        "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt:L61,L89,L92-L124",
+        "android/app/src/main/java/org/nsa/hall/transfer/MaintenanceWorker.kt:L14-L20"
+      ],
+      "trigger": "Confirm B while W already downloaded its candidates snapshot containing A; A then finishes successfully with no retry path.",
+      "reproducer": [
+        "Confirm A and let W pass TransferWorker.kt:L35 with candidates=[A].",
+        "Confirm a different B while A downloads. B commits; KEEP encounters running W and does not insert a successor.",
+        "Let every candidate in W's original snapshot complete successfully.",
+        "W returns success; B remains run/queued with no executor until another scheduling action."
+      ],
+      "consequence": "Normal second-game download can wait indefinitely after first completes; refreshing a page/catalogue does not schedule it.",
+      "compensatingControls": [
+        "A retry from another candidate or explicit later scheduling action may discover B."
+      ],
+      "limitations": [
+        "Static deduction; no executed Android test.",
+        "Requires an all-success original snapshot; errors may mask it by causing retry."
+      ],
+      "correction": "Make enqueue/drain completion race-safe and persist a successor or continuously drain all runnable committed tasks."
+    },
+    {
+      "id": "DL-07-F02",
+      "title": "Stale full-row worker Upsert revives cancellation after a replacement task is created",
+      "severity": "medium",
+      "priority": "P2",
+      "confidence": "high",
+      "rules": [
+        "DL-07.01",
+        "DL-07.02"
+      ],
+      "acceptance": [
+        "AC-D05",
+        "CON-07"
+      ],
+      "status": "candidate_pending_independent_refutation",
+      "primaryLocation": {
+        "path": "android/app/src/main/java/org/nsa/hall/transfer/TransferWorker.kt",
+        "start": 139,
+        "end": 140
+      },
+      "evidence": [
+        "android/app/src/main/java/org/nsa/hall/transfer/TransferWorker.kt:L139-L140",
+        "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt:L144-L157,L170-L176",
+        "android/app/src/main/java/org/nsa/hall/data/Database.kt:L9-L10,L27",
+        "android/app/src/main/java/org/nsa/hall/ui/HallApp.kt:L111,L243"
+      ],
+      "trigger": "Cancel and replace an established active task between worker checkpoint read and full-row progress Upsert.",
+      "reproducer": [
+        "For established multi-chunk A with stored state downloading, hold worker after L139 reads intent=run and before L140 commits.",
+        "Cancel A. transferAction persists cancel/cancelled; old downloading state means no immediate directory deletion.",
+        "Return to detail and confirm replacement B. UI and enqueue both exclude cancelled A, so B commits.",
+        "Allow stale worker L140 Upsert. It restores A intent=run/state=downloading. A and B are both active for the same game."
+      ],
+      "consequence": "Cancellation is lost and duplicate same-game active operations/copies are admitted; A continues unwanted work.",
+      "compensatingControls": [
+        "Unique WorkManager work still serializes actual game transfers.",
+        "Installation operationLock serializes extraction; A/B task roots differ.",
+        "Normal detail UI treats failed as existing; merely excluding failed in enqueue is not by itself a routine UI reproducer."
+      ],
+      "limitations": [
+        "No claim of simultaneous network connections or simultaneous extraction.",
+        "Race derived from source and suspend/commit interleaving; not executed on Android."
+      ],
+      "correction": "Use conditional state/progress updates preserving current intent, retain cancellation ownership until executor acknowledgement, and enforce one active operation per game in DB and coordinator."
+    },
+    {
+      "id": "DL-07-F03",
+      "title": "Queue does not apply task-ID tie-break and UI displays reverse history without positions",
+      "severity": "low",
+      "priority": "P3",
+      "confidence": "high",
+      "rules": [
+        "DL-07.01"
+      ],
+      "acceptance": [
+        "AC-D05"
+      ],
+      "status": "candidate_pending_independent_refutation",
+      "primaryLocation": {
+        "path": "android/app/src/main/java/org/nsa/hall/data/Database.kt",
+        "start": 24,
+        "end": 25
+      },
+      "evidence": [
+        "android/app/src/main/java/org/nsa/hall/data/Database.kt:L10,L24-L25",
+        "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt:L157",
+        "android/app/src/main/java/org/nsa/hall/ui/HallApp.kt:L420,L443-L461",
+        "docs/product/页面与交互验收规格.md:L477"
+      ],
+      "trigger": "Equal created timestamps, or ordinary A-then-B confirmation while reviewing the download list.",
+      "reproducer": [
+        "Have two queued records with equal created and opposite insertion/task-ID order; no SQL/coordinator tie-break forces required task-ID order.",
+        "Confirm B after active A; UI reverses created-order list and renders B above A without a queue position or reverse-history explanation."
+      ],
+      "consequence": "Execution order is unspecified for ties and users cannot read the effective FIFO order from the displayed list.",
+      "limitations": [
+        "No data loss or concurrency outcome established.",
+        "Source-only ordering/display check; timestamp tie not exercised."
+      ],
+      "correction": "Persist stable confirmation order, sort by it and task ID, and display effective queue position/reason."
+    }
+  ],
+  "pathsWalked": [
+    {
+      "path": "UI confirm -> ViewModel.perform -> enqueue -> DAO -> unique worker -> initialize/foreground -> snapshot -> checkpoint -> auxiliary -> range -> verification -> install -> completion/cleanup",
+      "locations": [
+        "android/app/src/main/java/org/nsa/hall/ui/HallApp.kt:L243,L360-L366",
+        "android/app/src/main/java/org/nsa/hall/MainActivity.kt:L31-L47",
+        "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt:L144-L168",
+        "android/app/src/main/java/org/nsa/hall/transfer/TransferWorker.kt:L32-L154"
+      ],
+      "outcomes": [
+        "success",
+        "interrupted",
+        "cancellation",
+        "error with latest user intent",
+        "automatic retry budget exhausted"
+      ]
+    },
+    {
+      "path": "Downloads actions -> transferAction -> persistent intent/state -> checkpoint/worker",
+      "locations": [
+        "android/app/src/main/java/org/nsa/hall/ui/HallApp.kt:L128,L357,L456-L460",
+        "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt:L170-L176",
+        "android/app/src/main/java/org/nsa/hall/transfer/TransferWorker.kt:L57-L75"
+      ]
+    },
+    {
+      "path": "Notification -> MainActivity -> application-scoped repository -> normal page actions",
+      "locations": [
+        "android/app/src/main/java/org/nsa/hall/transfer/TransferWorker.kt:L52-L55",
+        "android/app/src/main/java/org/nsa/hall/HallApplication.kt:L12-L15",
+        "android/app/src/main/java/org/nsa/hall/MainActivity.kt:L71-L85"
+      ]
+    },
+    {
+      "path": "Recreation -> initialization -> operation lock -> install/save recovery -> StorageReconciliation -> scheduleDownloads",
+      "locations": [
+        "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt:L59-L90",
+        "android/app/src/main/java/org/nsa/hall/transfer/Installation.kt:L110-L131",
+        "android/app/src/main/java/org/nsa/hall/transfer/StorageReconciliation.kt:L40-L72"
+      ]
+    },
+    {
+      "path": "Game update -> same content enqueue/inline install -> Room activation",
+      "locations": [
+        "android/app/src/main/java/org/nsa/hall/ui/HallApp.kt:L227-L244,L257",
+        "android/app/src/main/java/org/nsa/hall/transfer/TransferWorker.kt:L145-L153",
+        "android/app/src/main/java/org/nsa/hall/transfer/Installation.kt:L27-L108"
+      ]
+    },
+    {
+      "path": "Runtime finish/preferences/resume/cellular -> same unique work; maintenance -> log retention only",
+      "locations": [
+        "android/app/src/main/java/org/nsa/hall/runtime/SessionController.kt:L249-L255",
+        "android/app/src/main/java/org/nsa/hall/ui/HallApp.kt:L294",
+        "android/app/src/main/java/org/nsa/hall/transfer/MaintenanceWorker.kt:L14-L20"
+      ]
+    },
+    {
+      "path": "RuntimeLease -> runtime-session.lock; held checked only as game-running blocker",
+      "locations": [
+        "android/app/src/main/java/org/nsa/hall/runtime/RuntimeLease.kt:L9-L22",
+        "android/app/src/main/java/org/nsa/hall/transfer/TransferWorker.kt:L69"
+      ],
+      "result": "Not a held transfer-write lease."
+    },
+    {
+      "path": "AppUpdater prepare -> separate APK HTTP -> later backup operation lock",
+      "locations": [
+        "android/app/src/main/java/org/nsa/hall/transfer/AppUpdater.kt:L18-L52"
+      ],
+      "result": "Adjacent APK path read, excluded from claims of two game transfers."
+    }
+  ],
+  "searched": [
+    {
+      "scope": "android/app/src/main Kotlin/XML/SQL",
+      "pattern": "TransferRecord\\(",
+      "hitLines": 2,
+      "result": "Entity declaration plus one production task producer HallRepository.kt:L157."
+    },
+    {
+      "scope": "android/app/src/main Kotlin/XML/SQL",
+      "pattern": "putTransfer\\(",
+      "hitLines": 15,
+      "result": "All transfer writers read; unrestricted full-row mutation, no conditional intent/revision fence."
+    },
+    {
+      "scope": "android/app/src/main Kotlin/XML/SQL",
+      "pattern": "scheduleDownloads",
+      "hitLines": 7,
+      "result": "Declaration plus initialize/enqueue/actions/preferences/runtime finish. No worker-completion or DB-observer drain."
+    },
+    {
+      "scope": "android/app/src/main Kotlin/XML/SQL",
+      "pattern": "Installation\\(.*\\.install|\\.install\\(row",
+      "hitLines": 1,
+      "result": "Worker L150 is only game extraction caller; recovery separately read."
+    },
+    {
+      "scope": "android/app/src/main Kotlin/XML/SQL",
+      "pattern": "one_content_operation|content_operation|command_receipt|CREATE UNIQUE INDEX|unique\\s*=\\s*true",
+      "hitLines": 0,
+      "result": "Entity/DAO/open read in full; no hidden migration/callback uniqueness constraint."
+    },
+    {
+      "scope": "android/app/src/main Kotlin/XML/SQL",
+      "pattern": "tryLock|FileLock|OverlappingFileLockException",
+      "hitLines": 4,
+      "result": "All runtime/RuntimeLease.kt, game-process lease only."
+    },
+    {
+      "scope": "android/app/src/main Kotlin/XML/SQL",
+      "pattern": "JobScheduler|JobService|UIDT|setUserInitiated",
+      "hitLines": 0,
+      "result": "UIDT path absent; adjacent DL-10 handoff, not a DL-07 candidate finding."
+    },
+    {
+      "scope": "Android source/manifest/build",
+      "pattern": "WorkerFactory|Configuration.Provider|defaultProcessName|work-multiprocess|RemoteCoroutineWorker|RemoteWorker|SystemJobService|android:process|JobScheduler|JobInfo",
+      "result": "Only two :game manifest entries; no alternate transfer producer/process."
+    },
+    {
+      "scope": "Android main source",
+      "pattern": "enqueueUniqueWork|OneTimeWorkRequest|setForeground|doWork",
+      "result": "Single content worker producer; TransferWorker and log-only MaintenanceWorker; foreground at start/progress."
+    },
+    {
+      "scope": "Specified product/engineering documents",
+      "pattern": "DL-07|AC-D05|CON-07",
+      "result": "Four P0 mandatory rules; not_accepted/not_run retained."
+    }
+  ],
+  "ancillaryEvidence": [
+    {
+      "path": "tools/hall/gradle-home/caches/8.13/transforms/2d61aa40fb5c45ed6e369fcbe8c7b0af/transformed/work-runtime-2.10.5-runtime.jar",
+      "method": "Read-only javap disassembly",
+      "result": "EnqueueRunnable.enqueueWorkWithPrerequisites offsets 513-575: KEEP returns without inserting for ENQUEUED/RUNNING; Processor.startWork offsets 94-204 rejects already enqueued generation.",
+      "qualification": "Cached dependency, not pinned application source; no executable app/test/network call."
+    },
+    {
+      "path": "android/app/build/generated/source/kapt/debug/org/nsa/hall/data/HallDatabase_Impl.java",
+      "lines": "37-38",
+      "result": "Only ID primary key and ordinary gameId index.",
+      "qualification": "Unpinned ancillary generated output; findings rest on source annotations."
+    },
+    {
+      "path": "android/app/build/generated/source/kapt/debug/org/nsa/hall/data/HallDao_Impl.java",
+      "lines": "190",
+      "result": "Update writes all fields by ID without state/revision predicate.",
+      "qualification": "Unpinned ancillary generated output; findings rest on pinned @Upsert declaration."
+    }
+  ],
+  "notChecked": [
+    "Actual AC-D05/CON-07 Android execution, connection/file handle logging, process death and filesystem behavior.",
+    "Complete space reservation accounting or all APK updater requirements.",
+    "API34 UIDT compliance as an independent DL-10 finding."
+  ],
+  "unverified": [
+    "All candidates await independent code/spec refutation.",
+    "No proven production interleaving with two executors writing the same archive; unique WorkManager and Processor dedupe are compensating controls.",
+    "Stop/restart during blocked synchronous HTTP may need framework lifecycle/device evidence; absence of app lease alone is not a reproduced collision.",
+    "No test/benchmark/device output generated; source reproducers were not executed."
+  ],
+  "scopeConstraints": {
+    "programEdits": false,
+    "documentationEdits": false,
+    "tests": false,
+    "device": false,
+    "adb": false,
+    "browser": false,
+    "network": false,
+    "virtualization": false,
+    "onlyWrittenFiles": [
+      "DL-07.md",
+      "DL-07.json"
+    ]
+  },
+  "acceptanceStatus": {
+    "requirement": "not_accepted",
+    "AC_D05": "not_run",
+    "CON_07": "not_run",
+    "changed": false
+  },
+  "_publication": {
+    "original_record_sha256": "1711288f1f6f17c5c97104be1ef772fed9aaf093df738d7e100efba3f15414e6",
+    "review_stage": "original_candidate_review",
+    "reviewed_source_revision": "189169fded9cd6557b3cb146b56d8b2e5243d705",
+    "normalizations": [
+      "checkout paths made relative",
+      "evidence paths made collection-relative",
+      "Markdown trailing whitespace normalized",
+      "published text uses LF line endings"
+    ],
+    "final_adjudication": "docs/hall/verification/2026-11-07-transfer-install-review.json"
+  }
+}

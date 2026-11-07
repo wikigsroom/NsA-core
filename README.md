@@ -1,5 +1,7 @@
 # NsA · Unified Android game hall
 
+The [download/install source review](docs/hall/transfer-install-review-2026-11-07.md) adds independently checked queue, cancellation, install-recovery and cleanup gaps, with a complete next-batch plan. These are pending corrections, separate from the recovery fixes below. This documentation round changed no application code and performed no phone operations.
+
 The new [recovery correction round](docs/hall/recovery-round-2026-11-07.md) implements the audited policy, process ownership and save-exchange changes. Its checks and installation status are tracked separately from the historical APK/media below. The other project's phone test is preserved.
 
 [简体中文](README.zh-CN.md) · [Detailed setup and usage](docs/hall/README.md) · [Implementation status](docs/hall/implementation-status.md) · [Product requirements](docs/product/README.md) · [Engineering baseline](docs/engineering/README.md)
@@ -15,7 +17,7 @@ The [historical targeted source review](docs/hall/source-review.md) records the 
 | Layer | Concrete behavior |
 |---|---|
 | Android hall | Cached catalogue, search/filter/detail, installed library, queue, storage, saves, settings, feedback and app updates |
-| Transfer/install | One active transfer, 8 MiB checked ranges, bounded streaming, safe ZIP64 extraction, durable installation journal |
+| Transfer/install | Ordinary transfers are serialized; 8 MiB checked ranges, streaming ZIP64 extraction and installation journals exist. Queue/cancellation and journal-recovery gaps remain in the linked review. |
 | Runtime | Explicit compiled slots, unique SONAMEs, ABI identity binding, one fresh `:game` process per session, actual save events |
 | Services | FastAPI, verification worker, PostgreSQL/private S3 production providers, explicit SQLite/private-directory development providers |
 | Operations | OIDC/PKCE, server roles, idempotency, revision checks, independent reviewers and audit |

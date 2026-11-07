@@ -1,0 +1,398 @@
+{
+  "schema_version": 1,
+  "requirement_id": "PKG-06",
+  "source_commit": "189169fded9cd6557b3cb146b56d8b2e5243d705",
+  "mode": "read_only_source_audit",
+  "verdict": "partial",
+  "confidence": "high",
+  "independent_refutation": "pending",
+  "statement": "安装使用不可变版本目录和提交记录。文件完整落盘并完成标记后，才能切换有效版本；任意阶段断电或进程退出，都能恢复为旧版可用或新版本待恢复。",
+  "specification": [
+    "docs/product/data/requirements.json:L1505-L1542",
+    "docs/product/产品需求细则.md:L642-L655",
+    "docs/engineering/04-transfer-install-save.md:L53-L72",
+    "docs/engineering/05-data-state.md:L25-L61,L97-L111",
+    "docs/engineering/contracts/local-records.schema.json:L5-L57,L131-L201",
+    "docs/product/页面与交互验收规格.md:L100-L111,L380-L391"
+  ],
+  "acceptance": [
+    {
+      "id": "AC-P05",
+      "citation": "docs/product/data/acceptance.json:L278-L286",
+      "executed": false
+    },
+    {
+      "id": "CON-06",
+      "citation": "docs/product/data/acceptance.json:L685-L695",
+      "executed": false
+    }
+  ],
+  "rules": [
+    {
+      "id": "PKG-06.01",
+      "text": "候选安装经过创建、展开、验证、目录发布、DB 激活和清理的持久提交日志。",
+      "verdict": "partial",
+      "findings": [
+        "PKG-06-F03"
+      ]
+    },
+    {
+      "id": "PKG-06.02",
+      "text": "READY 记录绑定清单摘要和校验结果，文件落盘后同卷 rename，再事务更新 active_release。",
+      "verdict": "partial",
+      "findings": [
+        "PKG-06-F01"
+      ]
+    },
+    {
+      "id": "PKG-06.03",
+      "text": "文件系统与数据库不构成一个原子事务，重启按日志和目录对账完成或回滚。",
+      "verdict": "partial",
+      "findings": [
+        "PKG-06-F01",
+        "PKG-06-F02",
+        "PKG-06-F03"
+      ]
+    },
+    {
+      "id": "PKG-06.04",
+      "text": "旧版本到新版本健康与回退条件成立后才回收，不能凭 UI 显示完成就删唯一可用版。",
+      "verdict": "implemented",
+      "qualification": "Conservative retention: different installed versions are never automatically GC'd. This does not accept the adjacent UPD health/rollback feature.",
+      "findings": []
+    }
+  ],
+  "enforcement": [
+    {
+      "property": "Worker awaits initialization and serializes install against recovery/runtime modification",
+      "citations": [
+        "android/app/src/main/java/org/nsa/hall/transfer/TransferWorker.kt:L33,L148-L150",
+        "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt:L59-L90,L215-L216"
+      ]
+    },
+    {
+      "property": "All chunk hashes, full archive hash and extracted file hashes checked before READY",
+      "citations": [
+        "android/app/src/main/java/org/nsa/hall/transfer/TransferWorker.kt:L112-L147",
+        "android/app/src/main/java/org/nsa/hall/transfer/Installation.kt:L37-L73",
+        "android/app/src/main/java/org/nsa/hall/security/Trust.kt:L13-L15"
+      ]
+    },
+    {
+      "property": "Original signed index is retained; READY binds manifest digest and file count",
+      "citations": [
+        "android/app/src/main/java/org/nsa/hall/transfer/Installation.kt:L67-L73",
+        "android/app/src/main/java/org/nsa/hall/transfer/StorageReconciliation.kt:L18-L27"
+      ]
+    },
+    {
+      "property": "Sibling staging/final paths, same-release different-manifest refusal, transactional active pointer and row publication",
+      "citations": [
+        "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt:L52",
+        "android/app/src/main/java/org/nsa/hall/transfer/Installation.kt:L29-L30,L83-L108",
+        "android/app/src/main/java/org/nsa/hall/data/Database.kt:L7-L12"
+      ]
+    },
+    {
+      "property": "Old different release directories retained; prior saves backed up before compatible upgrade",
+      "citations": [
+        "android/app/src/main/java/org/nsa/hall/transfer/Installation.kt:L75-L94",
+        "android/app/src/main/java/org/nsa/hall/transfer/SaveManager.kt:L47-L51,L92-L102"
+      ]
+    },
+    {
+      "property": "Initialization exposes UI only after metadata reconciliation; launch preflight rechecks integrity metadata/signature/runtime",
+      "citations": [
+        "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt:L80-L88,L233-L250",
+        "android/app/src/main/java/org/nsa/hall/transfer/StorageReconciliation.kt:L14-L42"
+      ]
+    }
+  ],
+  "paths_walked": [
+    {
+      "path": "enqueue -> signed manifest/trust.slot -> TransferWorker.perform -> auxiliary -> chunk/full hash -> operationLock/requireIdle -> Installation.install -> activate -> Room transaction -> transfer completed -> root deletion",
+      "citations": [
+        "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt:L144-L158",
+        "android/app/src/main/java/org/nsa/hall/transfer/TransferWorker.kt:L77-L154",
+        "android/app/src/main/java/org/nsa/hall/transfer/Installation.kt:L27-L108"
+      ]
+    },
+    {
+      "path": "HallViewModel.initialize / TransferWorker.doWork -> repository.initialize -> operationLock -> Installation.recover -> StorageReconciliation.reconcile -> ready gate",
+      "citations": [
+        "android/app/src/main/java/org/nsa/hall/MainActivity.kt:L42-L47",
+        "android/app/src/main/java/org/nsa/hall/transfer/TransferWorker.kt:L33",
+        "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt:L59-L90"
+      ]
+    },
+    {
+      "path": "Created/Extracted/Verified target absent -> delete staging -> transfer prefix reconciliation -> queue/pause/cancel; Verified target present or published/activated/cleaned -> marker check -> activation -> completed row -> journal deletion",
+      "citations": [
+        "android/app/src/main/java/org/nsa/hall/transfer/Installation.kt:L110-L131",
+        "android/app/src/main/java/org/nsa/hall/transfer/StorageReconciliation.kt:L44-L72"
+      ]
+    },
+    {
+      "path": "Same-release damaged payload -> .replaced rename -> staging publication; missing target on recovery -> staging marker choice or restore .replaced -> validation",
+      "citations": [
+        "android/app/src/main/java/org/nsa/hall/transfer/Installation.kt:L84-L95,L117-L129"
+      ]
+    },
+    {
+      "path": "Cancel/pause -> persistent intent -> checkpoint before publication; no explicit checkpoint after final VERIFIED checkpoint",
+      "citations": [
+        "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt:L170-L177",
+        "android/app/src/main/java/org/nsa/hall/transfer/TransferWorker.kt:L57-L75",
+        "android/app/src/main/java/org/nsa/hall/transfer/Installation.kt:L48,L74-L100"
+      ]
+    },
+    {
+      "path": "First-launch interactive/save/exit -> session/save facts only; rollback requires healthy previous row; explicit deleteResources is only installed-release deletion",
+      "citations": [
+        "android/app/src/main/java/org/nsa/hall/runtime/SessionController.kt:L181-L213",
+        "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt:L252-L262,L301-L309"
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "id": "PKG-06-F01",
+      "title": "VERIFIED omits nested and new ancestor directory durability barriers",
+      "rules": [
+        "PKG-06.02",
+        "PKG-06.03"
+      ],
+      "severity": "medium",
+      "priority": 2,
+      "confidence": "high",
+      "status": "source_confirmed_pending_independent_refutation",
+      "spec_claim": "VERIFIED means files, READY and directories are durable before publication; file/parent directory synchronization failures must be reported.",
+      "spec_citations": [
+        "docs/engineering/04-transfer-install-save.md:L59-L64"
+      ],
+      "code_behavior": "The extractor fsyncs each file and the staging root, but not nested file-parent directories or all newly created ancestor links. The post-rename sync covers only the versions directory. safeChild performs no synchronization.",
+      "code_citations": [
+        "android/app/src/main/java/org/nsa/hall/transfer/Installation.kt:L26,L35,L53-L73,L83-L100",
+        "android/app/src/main/java/org/nsa/hall/security/Trust.kt:L61-L65",
+        "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt:L42-L43,L52"
+      ],
+      "preconditions": [
+        "A package has nested files such as RomFS/a/b/data.bin, or installation/journal ancestor directories are newly created.",
+        "The Android filesystem does not provide stronger implicit directory durability than the operations request."
+      ],
+      "reproducer": [
+        "Install a release containing RomFS/a/b/data.bin.",
+        "After DIRECTORY_PUBLISHED, model power loss while retaining completed explicit sync writes but dropping nested directory-entry writes that received no directory fsync.",
+        "On restart observe a published candidate whose declared nested name is missing, or a newly created ancestor link absent despite its lower-level directory having been synced."
+      ],
+      "reproducer_executed": false,
+      "consequence": "Power-loss durability is not established for the claimed VERIFIED/activated directory; an invalid published candidate can additionally trigger F02.",
+      "limitation": "Actual loss on the target Android filesystem was not executed or established. The missing required sync operations are source-confirmed.",
+      "repair_direction": "Synchronize extracted directories bottom-up and synchronize newly created ancestor names through their parents before publishing the corresponding durable phase."
+    },
+    {
+      "id": "PKG-06-F02",
+      "title": "Invalid published journal aborts initialization and prevents use of retained valid releases",
+      "rules": [
+        "PKG-06.03"
+      ],
+      "severity": "high",
+      "priority": 1,
+      "confidence": "high",
+      "status": "source_confirmed_pending_independent_refutation",
+      "spec_claim": "Restart must complete or roll back using the journal/directory evidence, preserving old usable releases and exposing repair/recovery for inconsistent candidates.",
+      "spec_citations": [
+        "docs/product/产品需求细则.md:L644-L653",
+        "docs/engineering/04-transfer-install-save.md:L60-L66",
+        "docs/product/页面与交互验收规格.md:L109",
+        "docs/product/data/acceptance.json:L284"
+      ],
+      "code_behavior": "recover uses throwing requirements and activate without per-journal compensation. One invalid marker/index/file aborts before general storage reconciliation, leaves ready false and keeps the same journal. The only UI is retrying the same recovery; old and unrelated valid games cannot launch.",
+      "code_citations": [
+        "android/app/src/main/java/org/nsa/hall/transfer/Installation.kt:L103,L110-L131",
+        "android/app/src/main/java/org/nsa/hall/transfer/StorageReconciliation.kt:L33,L38",
+        "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt:L80-L88,L234",
+        "android/app/src/main/java/org/nsa/hall/ui/HallApp.kt:L169-L175",
+        "android/app/src/main/java/org/nsa/hall/MainActivity.kt:L57-L59"
+      ],
+      "preconditions": [
+        "A valid previous active release exists.",
+        "A DIRECTORY_PUBLISHED journal remains after interruption and the candidate has a missing critical file or invalid marker/index."
+      ],
+      "reproducer": [
+        "Keep v1 valid and active; install v2 and terminate after DIRECTORY_PUBLISHED before DB activation.",
+        "Apply AC-P05's critical-file deletion fault to one v2 resource while preserving its marker/index, or produce the equivalent missing entry through F01.",
+        "Restart: metadata validation fails in activate, initialize rethrows, ready remains false and the journal remains.",
+        "Retry recovery: it reaches the same immutable failing state; v1 and other valid games remain behind the global gate."
+      ],
+      "reproducer_executed": false,
+      "consequence": "A single interrupted/corrupt candidate denies the whole usable library until intervention outside the product; the old copy is physically retained but unusable.",
+      "prior_fix_distinction": "e6ee168's registered-install reconciliation works when invoked. This journal recovery throws before that new reconciler can run.",
+      "repair_direction": "Handle each candidate independently, retain its recovery ownership/error, preserve or restore a verified previous-active reference and expose repair without globally withholding unrelated valid installs."
+    },
+    {
+      "id": "PKG-06-F03",
+      "title": "Recovery completes installation but permanently loses the download-cleanup obligation",
+      "rules": [
+        "PKG-06.01",
+        "PKG-06.03"
+      ],
+      "severity": "medium",
+      "priority": 2,
+      "confidence": "high",
+      "status": "source_confirmed_pending_independent_refutation",
+      "spec_claim": "The durable CLEANED phase means unreferenced downloads/temporaries have been cleaned and replay can finish idempotently.",
+      "spec_citations": [
+        "docs/product/产品需求细则.md:L650-L652",
+        "docs/engineering/04-transfer-install-save.md:L62-L66"
+      ],
+      "code_behavior": "Normal install writes CLEANED/removes its journal before the worker deletes the archive directory. Recovery activates, marks transfer completed and deletes the journal without ever cleaning that directory. Completed transfers are skipped by worker/reconciler, and maintenance only trims session logs.",
+      "code_citations": [
+        "android/app/src/main/java/org/nsa/hall/transfer/Installation.kt:L98-L100,L125-L130",
+        "android/app/src/main/java/org/nsa/hall/transfer/TransferWorker.kt:L35,L152-L153",
+        "android/app/src/main/java/org/nsa/hall/transfer/StorageReconciliation.kt:L44",
+        "android/app/src/main/java/org/nsa/hall/transfer/MaintenanceWorker.kt:L14-L20",
+        "android/app/src/main/java/org/nsa/hall/ui/HallApp.kt:L266"
+      ],
+      "preconditions": [
+        "An interrupted installation is recovered from a valid published directory, or ordinary cleanup is interrupted/fails after the transfer becomes completed."
+      ],
+      "reproducer": [
+        "Finish archive download and terminate after the DIRECTORY_PUBLISHED journal write.",
+        "Restart with valid candidate data; recovery successfully activates and marks the transfer completed.",
+        "Observe transfers/<id>/archive.zip.partial and both index files still present after the journal is removed.",
+        "Repeat startup or run maintenance: neither schedules cleanup of the completed transfer's directory."
+      ],
+      "reproducer_executed": false,
+      "consequence": "Full archives, potentially many GiB per recovered update, remain indefinitely and accumulate storage that can block later installs.",
+      "repair_direction": "Persist/reconstruct an idempotent cleanup obligation, check deletion outcomes and synchronize removal before declaring CLEANED. Keep completed history independent of archive existence."
+    }
+  ],
+  "searched": [
+    {
+      "scope": "android/app/src/main/java/org/nsa/hall/transfer/Installation.kt",
+      "pattern": "syncDirectory|fsync|fd\\.sync|mkdirs",
+      "matching_lines": [
+        17,
+        19,
+        21,
+        23,
+        26,
+        35,
+        53,
+        58,
+        70,
+        72,
+        83,
+        90,
+        91,
+        95,
+        100,
+        120
+      ],
+      "result": "16 lines; no nested-directory walk or ancestor-link synchronization"
+    },
+    {
+      "scope": "android/app/src/main/java/org/nsa/hall/transfer/Installation.kt",
+      "pattern": "CREATED|EXTRACTED|VERIFIED|DIRECTORY_PUBLISHED|DB_ACTIVATED|CLEANED",
+      "matching_lines": [
+        32,
+        66,
+        73,
+        96,
+        98,
+        99,
+        122
+      ],
+      "result": "Six writes plus recovery branch"
+    },
+    {
+      "scope": "android/app/src/main/java/org/nsa/hall/transfer/Installation.kt",
+      "pattern": "previous_active|previousActive|activation_revision|activationRevision|record_schema|revision",
+      "matching_lines": [],
+      "result": "0 hits; direct journal construction and all recovery branches also read"
+    },
+    {
+      "scope": "android/app/src/main/java/org/nsa/hall",
+      "pattern": "healthy\\s*=\\s*true|healthy\"\\s*:",
+      "result": "0 hits; broader healthy matches are default/downgrade/preserve/rollback only"
+    },
+    {
+      "scope": "android/app/src/main/java/org/nsa/hall",
+      "pattern": "Installation\\(|\\.install\\(|\\.recover\\(|putInstall\\(|deleteInstall\\(|releaseRoot\\(|\\.deleteRecursively\\(",
+      "result": "Resource install caller TransferWorker:L150, recovery caller HallRepository:L81; only installed-row deletion caller is explicit deleteResources:L260; followed all install/cleanup and recovery branches"
+    },
+    {
+      "scope": "TransferWorker.kt, StorageReconciliation.kt, MaintenanceWorker.kt",
+      "pattern": "transferRoot|archive.zip.partial|content-transfer|completed|deleteRecursively",
+      "result": "9 lines, all in worker/reconciler; no maintenance transfer cleanup"
+    },
+    {
+      "scope": "docs/product/data/requirements.json, 产品需求细则.md, acceptance.json",
+      "pattern": "PKG-06|AC-P05|CON-06|AC-U02|AC-U03",
+      "result": "All four detailed rules and matching acceptance cases read; health/rollback cases used to bound adjacent scope"
+    }
+  ],
+  "adjacent_observations_not_counted": [
+    {
+      "topic": "UPD health/rollback",
+      "observation": "Healthy is never set true by a normal source path; rollback requires it, but older versions are retained. No PKG-06 early-GC finding is claimed.",
+      "citations": [
+        "android/app/src/main/java/org/nsa/hall/data/Database.kt:L12",
+        "android/app/src/main/java/org/nsa/hall/transfer/Installation.kt:L105,L145",
+        "android/app/src/main/java/org/nsa/hall/runtime/SessionController.kt:L181-L213",
+        "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt:L301-L309"
+      ]
+    },
+    {
+      "topic": "Catalogue upsert / active pointer",
+      "observation": "Coordinator notified about stale whole-GameRecord detail upserts; not included in bounded installation durability/recovery/cleanup finding totals.",
+      "citations": [
+        "android/app/src/main/java/org/nsa/hall/data/HallRepository.kt:L127-L135",
+        "android/app/src/main/java/org/nsa/hall/transfer/Installation.kt:L104-L108"
+      ]
+    }
+  ],
+  "prior_corrections_accounted_for": [
+    "e6ee168 worker initialization and shared operation mutex",
+    "e6ee168 raw signed index preservation and legacy canonical compatibility",
+    "e6ee168 registered READY/index/file-size reconciliation and activation metadata recheck",
+    "e6ee168 runtime lifetime lease and save recovery before backup",
+    "c686201 policy endpoint binding",
+    "a1e0f18 operation-bound save pickers/drafts"
+  ],
+  "verification_limits": {
+    "tests_executed": false,
+    "builds_executed": false,
+    "faults_injected": false,
+    "phone_or_adb_used": false,
+    "browser_used": false,
+    "network_used": false,
+    "virtualization_used": false,
+    "program_or_docs_modified": false,
+    "actual_target_filesystem_power_loss_verified": false
+  },
+  "unverified": [
+    "Actual Android filesystem/power-loss manifestation of F01",
+    "All proposed reproducer scenarios were traced only, not executed",
+    "Independent source/specification refutations of F01-F03 are pending"
+  ],
+  "not_checked": [
+    "Full UPD-04 health and rollback acceptance",
+    "Cross-cutting catalogue active-pointer upsert correction",
+    "Phone acceptance and unrelated requirements"
+  ],
+  "unreadable_documents": [],
+  "_publication": {
+    "original_record_sha256": "a7b5be40a5806a427223b493eab64a6175f1dae872933ec1204150455ac04a08",
+    "review_stage": "original_candidate_review",
+    "reviewed_source_revision": "189169fded9cd6557b3cb146b56d8b2e5243d705",
+    "normalizations": [
+      "checkout paths made relative",
+      "evidence paths made collection-relative",
+      "Markdown trailing whitespace normalized",
+      "published text uses LF line endings"
+    ],
+    "final_adjudication": "docs/hall/verification/2026-11-07-transfer-install-review.json"
+  }
+}

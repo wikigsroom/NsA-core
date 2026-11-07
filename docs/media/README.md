@@ -1,5 +1,7 @@
 # Actual application media
 
+The [download/install documentation review](../hall/transfer-install-review-2026-11-07.md) produced no new APK or captures. Existing media does not demonstrate its unimplemented queue/recovery corrections. / 下载与安装文档核对没有新 APK 或素材，现有实录不能证明后续待实施修正。
+
 Only reviewed captures from the USB physical Android device belong here. Each exported PNG/GIF/MP4 has a neighboring provenance JSON recording the application ID, source hash and conversion. Screens captured from the design prototype stay in `docs/design` and must not be represented as runtime evidence.
 
 The [recovery candidate](../hall/recovery-round-2026-11-07.md) has no new device captures yet. All images and clips below keep their original APK identities; they are not screenshots of the new recovery behavior. / 恢复修正候选尚未采集新真机素材；下方截图与视频继续对应各自旧 APK，不能代表新恢复界面或行为已验证。
