@@ -57,6 +57,8 @@ Post-round main PSS samples were 106,740 / 106,832 / 107,446 / 107,123 / 108,195
 
 ### USB-RECOVER-01: next complete batch / 下一整批恢复修正
 
+The subsequent [complete recovery batch](session-recovery-round-2026-11-07.md) and [ADR 0010](../engineering/decisions/0010-stopped-session-reconciliation.md) implement this correction with separate new-candidate evidence. This preceding record retains its original failures and exact APK identity.
+
 Observed state and source agree: initialization may see a still-held game lease and skip unfinished-session cleanup, while the subsequent `SessionController.recover()` returns immediately once that lease is gone. No later reconciliation closes the orphaned row in the same reconstructed process. This is a confirmed lifecycle timing gap.
 
 The next source batch must cover orphaned-session reconciliation under the operation lock with proven kernel ownership absence; corresponding context cleanup without inventing save success; authenticated reattachment while the original game owns the lease; exit/binder-loss/initialization races; duplicate callbacks and stale generations; and safe retry with unchanged player bytes. Preserve fail-closed behavior when ownership cannot be established. Finish all affected source, regression/device cases and documentation before consolidated build/test. A restart or dismissed dialog cannot by itself mark this fixed.

@@ -20,6 +20,8 @@ import org.nsa.hall.transfer.Installation
 import org.nsa.hall.transfer.SaveManager
 import org.nsa.hall.transfer.StorageReconciliation
 import org.nsa.hall.runtime.RuntimeLease
+import org.nsa.hall.runtime.SessionReconciliation
+import org.nsa.hall.runtime.reconcileStoppedSessionsUnderOperationLock
 import java.io.File
 import java.net.URLEncoder
 import java.util.UUID
@@ -78,10 +80,13 @@ class HallRepository(val context: Context) {
         if (!RuntimeLease.held(context.filesDir)) trimSessionLogs()
         WorkManager.getInstance(context).enqueueUniquePeriodicWork("local-maintenance", ExistingPeriodicWorkPolicy.KEEP, PeriodicWorkRequestBuilder<org.nsa.hall.transfer.MaintenanceWorker>(12, java.util.concurrent.TimeUnit.HOURS).build())
         currentPolicy()?.let { policy -> trust.revokedKeys = policy.getJSONArray("revoked_key_ids").strings().toSet() + (dao.fact("policy-revoked:${endpointKey()}")?.value?.let(::JSONArray)?.strings().orEmpty()) }
-        if (!RuntimeLease.held(context.filesDir)) {
-            Installation(this@HallRepository).recover()
-            SaveManager(this@HallRepository).recoverAllUnderOperationLock()
-            dao.unfinished().forEach { dao.putSession(it.copy(state = "crashed", error = "上次游戏进程已结束；存档状态以上次真实写入为准", updated = System.currentTimeMillis())) }
+        when (reconcileStoppedSessionsUnderOperationLock()) {
+            is SessionReconciliation.Idle -> {
+                Installation(this@HallRepository).recover()
+                SaveManager(this@HallRepository).recoverAllUnderOperationLock()
+            }
+            SessionReconciliation.Owned -> Unit
+            SessionReconciliation.Unknown -> error("无法确认游戏进程状态，继续保护资源与存档；请稍后重试")
         }
         StorageReconciliation(this@HallRepository).reconcile()
         initialized = true

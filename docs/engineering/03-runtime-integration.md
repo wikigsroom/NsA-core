@@ -6,6 +6,8 @@
 
 实施补充见 [ADR 0007](decisions/0007-policy-runtime-save-recovery.md)：游戏进程全生命周期持有内核租约，主进程丢失后按持久 session/generation/nonce 重连；不能只凭数据库行判定运行中或结束。未知归属继续保护资源与存档，确认租约释放后才登记终止。新增私有 IPC 7/8 不改变 bootstrap ABI v1；实际主进程丢失恢复仍须真机验收。
 
+[ADR 0010](decisions/0010-stopped-session-reconciliation.md)补齐初始化与游戏退出之间的竞态：恢复协调器必须重新对账，不得在租约已释放时直接跳过旧会话。操作锁内取得真实内核排他锁，并保持到关闭无主会话和删除对应上下文的短 Room 事务提交；保留原有序列、保存索引和玩家字节，不伪造保存或正常结束事件。拿不到锁沿用认证重连；锁状态不明、上下文损坏或身份不符继续保护，不能启动第二份实例。Android 提交与复用原生库的实际编译提交分别登记；ABI、Room、IPC 与资源身份不变。
+
 ## 1. 模块注册
 
 APK 内固定 bootstrap 和 [runtime-registry.schema.json](contracts/runtime-registry.schema.json)。注册表被 APK 签名保护；library_name 只从该表选择，slot、SONAME和摘要唯一，禁止重复默认libdmhost覆盖。模块对应 core commit、profile digest、完整 module Build ID、shader链、驱动与settings schema。

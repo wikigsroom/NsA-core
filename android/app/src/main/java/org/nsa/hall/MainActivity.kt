@@ -41,7 +41,8 @@ class HallViewModel(val repository: HallRepository, val controller: SessionContr
     init { initialize() }
     fun initialize() = perform {
         repository.initialize(); repository.saveExchange.recover()
-        withContext(Dispatchers.Main) { controller.recover() }
+        val recoveredStoppedSession = withContext(Dispatchers.Main) { controller.recover() }
+        if (recoveredStoppedSession) repository.scheduleDownloads()
         if (repository.preferences.get().welcomed) repository.refresh(repository.catalogueContext.value.optString("query"), repository.catalogueContext.value.optString("genre"))
     }
     fun perform(action: suspend () -> Unit) { viewModelScope.launch { actionLock.withLock { working.value = true; try { withContext(Dispatchers.IO) { action() } } catch (error: CancellationException) { throw error } catch (error: Exception) { notice.value = error.message ?: "操作失败，请重试" } finally { working.value = false } } } }

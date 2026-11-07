@@ -32,6 +32,7 @@ class SessionController(private val repository: HallRepository, private val scop
     @Volatile private var launchToken = ""
     @Volatile private var cancelled = false
     private var finishing = false
+    private var recovering = false
     private var connection: ServiceConnection? = null
     private var pid = 0
     private var lastHeartbeat = 0L
@@ -49,20 +50,47 @@ class SessionController(private val repository: HallRepository, private val scop
         }
     } } }
     /** Reattach using the persisted identity; a database row alone is no proof. */
-    suspend fun recover() {
-        if (session != null || launching.value || finishing) return
-        val active = withContext(Dispatchers.IO) { repository.dao.unfinished().firstOrNull() }
-        if (!RuntimeLease.held(repository.context.filesDir)) return
-        protectedRuntime.value = true
-        if (active == null) { message.value = "发现尚未结束的游戏进程，请先结束后再管理数据"; return }
-        session = active; launchToken = active.id; cancelled = false
-        val stored = withContext(Dispatchers.IO) { repository.dao.fact("runtime-context:${active.id}")?.value?.let(::JSONObject) }
-        if (stored == null || stored.optString("session_id") != active.id || stored.optInt("generation") != active.generation) {
-            message.value = "游戏进程仍占用存档，但恢复信息不完整；可先结束该进程"; return
+    suspend fun recover(): Boolean {
+        if (session != null || launching.value || finishing || recovering) return false
+        recovering = true
+        try {
+            // Initialization may have observed a live lease just before the
+            // old game exited. Recheck now; an empty PID/old row is not proof.
+            val ownership = withContext(Dispatchers.IO) { repository.operationLock.withLock {
+                repository.reconcileStoppedSessionsUnderOperationLock()
+            } }
+            if (session != null || launching.value || finishing) return false
+            when (ownership) {
+                is SessionReconciliation.Idle -> {
+                    if (protectedRuntime.value) message.value = ""
+                    protectedRuntime.value = false
+                    return ownership.closedSessions > 0
+                }
+                SessionReconciliation.Unknown -> {
+                    protectedRuntime.value = true
+                    message.value = "无法确认游戏进程状态，继续保护存档；请稍后重试或结束游戏进程"
+                    return false
+                }
+                SessionReconciliation.Owned -> Unit
+            }
+            val active = withContext(Dispatchers.IO) { repository.dao.unfinished().firstOrNull() }
+            protectedRuntime.value = true
+            if (active == null) { message.value = "发现尚未结束的游戏进程，请先结束后再管理数据"; return false }
+            session = active; launchToken = active.id; cancelled = false
+            val stored = withContext(Dispatchers.IO) { repository.dao.fact("runtime-context:${active.id}")?.value?.let { runCatching { JSONObject(it) }.getOrNull() } }
+            val storedNonce = stored?.opt("nonce") as? String
+            val storedGeneration = stored?.opt("generation") as? Int
+            if (stored == null || stored.opt("session_id") != active.id || storedGeneration != active.generation || storedNonce.isNullOrBlank()) {
+                message.value = "游戏进程仍占用存档，但恢复信息不完整；可先结束该进程"
+                return false
+            }
+            pendingContext = stored; nonce = storedNonce; launching.value = true
+            message.value = "正在重新连接上次游戏；完成前继续保护存档"
+            connect(stored, true)
+            return false
+        } finally {
+            recovering = false
         }
-        pendingContext = stored; nonce = stored.getString("nonce"); launching.value = true
-        message.value = "正在重新连接上次游戏；完成前继续保护存档"
-        connect(stored, true)
     }
     private fun connect(config: JSONObject, reconnect: Boolean) {
         val id = config.getString("session_id")
@@ -106,7 +134,7 @@ class SessionController(private val repository: HallRepository, private val scop
         !finishing && data.getString("session_id") == it.id && data.getInt("generation", -1) == it.generation && data.getInt("pid") == pid
     } ?: false
     fun launch(source: Activity, gameId: String) {
-        if (launching.value || finishing) return
+        if (launching.value || finishing || recovering) return
         session?.let { active ->
             if (active.gameId == gameId && pid > 0) source.startActivity(Intent(source, GameActivity::class.java).putExtra("session_id", active.id).putExtra("nonce", nonce))
             else message.value = "请先返回或结束当前游戏，再开始另一款游戏"
