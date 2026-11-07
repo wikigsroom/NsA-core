@@ -33,7 +33,11 @@ static uint32_t sequence, commit_sequence;
 static uint64_t began;
 static int board_x, board_y, board_size, cell_size;
 static float touch_x, touch_y;
+/* Only loop() opens, starts and closes streams; callbacks only exchange atomics. */
 static AAudioStream *audio;
+static _Atomic int audio_error;
+static int audio_enabled;
+static uint64_t audio_retry_at;
 
 static uint64_t millis(void) { struct timespec t; clock_gettime(CLOCK_MONOTONIC, &t); return (uint64_t)t.tv_sec * 1000 + t.tv_nsec / 1000000; }
 static void event(const char *type, uint32_t save) {
@@ -89,10 +93,50 @@ static void move(int direction) {
 }
 static void undo(void) { if (!undo_available) return; memcpy(state.cells, state.previous, sizeof state.cells); state.score = state.previous_score; undo_available = 0; dirty = 1; save(); }
 static aaudio_data_callback_result_t sound(AAudioStream *stream, void *user, void *data, int32_t frames) {
-    (void)stream; (void)user; float *out = data; static float phase;
-    int remaining = atomic_load(&tone_frames);
+    (void)stream; (void)user; float *out = data; static float phase; static int remaining;
+    /* Do not write an old countdown over a move arriving during this callback. */
+    int requested = atomic_exchange(&tone_frames, 0);
+    if (requested > 0) remaining = requested;
+    if (atomic_load(&paused)) remaining = 0;
     for (int i = 0; i < frames; i++) { float value = (!atomic_load(&paused) && remaining > 0) ? sinf(phase) * .07f * fminf(remaining / 1000.f, 1.f) : 0; phase += .0575959f; if (phase > 6.2831853f) phase -= 6.2831853f; out[i * 2] = out[i * 2 + 1] = value; if (remaining > 0) remaining--; }
-    atomic_store(&tone_frames, remaining); return AAUDIO_CALLBACK_RESULT_CONTINUE;
+    return AAUDIO_CALLBACK_RESULT_CONTINUE;
+}
+static void sound_error(AAudioStream *stream, void *user, aaudio_result_t error) {
+    (void)stream; (void)user;
+    /* AAudio forbids stop/close here: the control thread performs recovery. */
+    atomic_store(&audio_error, error);
+}
+static void close_audio(void) {
+    if (!audio) return;
+    AAudioStream_requestStop(audio); AAudioStream_close(audio); audio = NULL;
+}
+static void update_audio(void) {
+    if (!audio_enabled) return;
+    int error = atomic_exchange(&audio_error, AAUDIO_OK);
+    if (audio && (error != AAUDIO_OK || AAudioStream_getState(audio) == AAUDIO_STREAM_STATE_DISCONNECTED)) {
+        host.log_message(host.host_user, 2, "2048 audio disconnected; reopening on game control thread");
+        close_audio(); atomic_store(&audio_error, AAUDIO_OK); audio_retry_at = millis() + 100;
+    }
+    if (audio || millis() < audio_retry_at) return;
+    AAudioStreamBuilder *builder = NULL;
+    aaudio_result_t result = AAudio_createStreamBuilder(&builder);
+    if (result == AAUDIO_OK) {
+        AAudioStreamBuilder_setDirection(builder, AAUDIO_DIRECTION_OUTPUT);
+        AAudioStreamBuilder_setFormat(builder, AAUDIO_FORMAT_PCM_FLOAT);
+        AAudioStreamBuilder_setChannelCount(builder, 2);
+        AAudioStreamBuilder_setSampleRate(builder, 48000);
+        AAudioStreamBuilder_setUsage(builder, AAUDIO_USAGE_GAME);
+        AAudioStreamBuilder_setContentType(builder, AAUDIO_CONTENT_TYPE_SONIFICATION);
+        AAudioStreamBuilder_setDataCallback(builder, sound, NULL);
+        AAudioStreamBuilder_setErrorCallback(builder, sound_error, NULL);
+        result = AAudioStreamBuilder_openStream(builder, &audio);
+        AAudioStreamBuilder_delete(builder);
+        if (result == AAUDIO_OK) result = AAudioStream_requestStart(audio);
+    }
+    if (result != AAUDIO_OK) {
+        close_audio(); audio_retry_at = millis() + 2000;
+        host.log_message(host.host_user, 2, "2048 audio open/start failed; retry in two seconds");
+    } else host.log_message(host.host_user, 1, "2048 audio output started");
 }
 static void rectangle(ANativeWindow_Buffer *buffer, int x, int y, int width, int height, uint32_t color) {
     int left = x < 0 ? 0 : x, top = y < 0 ? 0 : y, right = x + width > buffer->width ? buffer->width : x + width, bottom = y + height > buffer->height ? buffer->height : y + height;
@@ -142,6 +186,7 @@ static int input(AInputEvent *event) {
 static void *loop(void *user) {
     (void)user; ALooper *looper = ALooper_prepare(ALOOPER_PREPARE_ALLOW_NON_CALLBACKS);
     while (!atomic_load(&stopped) && !host.is_cancel_requested(host.host_user)) {
+        update_audio();
         pthread_mutex_lock(&mutex);
         if (queue != attached) { if (attached) AInputQueue_detachLooper(attached); attached = queue; if (attached) AInputQueue_attachLooper(attached, looper, 1, NULL, NULL); }
         AInputEvent *event;
@@ -150,7 +195,7 @@ static void *loop(void *user) {
         pthread_mutex_unlock(&mutex);
         usleep(16000);
     }
-    if (audio) { AAudioStream_requestStop(audio); AAudioStream_close(audio); audio = NULL; }
+    close_audio();
     event("exit_complete", 0); ANativeActivity_finish(context.activity); return NULL;
 }
 static void created_window(ANativeActivity *a, ANativeWindow *w) { (void)a; pthread_mutex_lock(&mutex); window = w; ANativeWindow_setBuffersGeometry(w, 0, 0, WINDOW_FORMAT_RGBA_8888); dirty = 1; pthread_mutex_unlock(&mutex); }
@@ -170,8 +215,7 @@ NSA_RUNTIME_EXPORT int32_t nsa_runtime_start_v1(const NsaRuntimeContextV1 *value
     if (!state.magic) new_game();
     struct ANativeActivityCallbacks callbacks = {0}; callbacks.onNativeWindowCreated = created_window; callbacks.onNativeWindowDestroyed = destroyed_window; callbacks.onInputQueueCreated = created_queue; callbacks.onInputQueueDestroyed = destroyed_queue; callbacks.onPause = on_pause; callbacks.onResume = on_resume; callbacks.onDestroy = on_destroy;
     if (host.install_activity_callbacks(host.host_user, &callbacks)) return -6;
-    AAudioStreamBuilder *builder = NULL;
-    if (!strstr(value->settings_json, "\"audio\":false") && AAudio_createStreamBuilder(&builder) == AAUDIO_OK) { AAudioStreamBuilder_setFormat(builder, AAUDIO_FORMAT_PCM_FLOAT); AAudioStreamBuilder_setChannelCount(builder, 2); AAudioStreamBuilder_setSampleRate(builder, 48000); AAudioStreamBuilder_setDataCallback(builder, sound, NULL); if (AAudioStreamBuilder_openStream(builder, &audio) == AAUDIO_OK) AAudioStream_requestStart(audio); AAudioStreamBuilder_delete(builder); }
+    audio_enabled = !strstr(value->settings_json, "\"audio\":false");
     event("runtime_entered", 0); pthread_t thread; if (pthread_create(&thread, NULL, loop, NULL)) return -6; pthread_detach(thread); return 0;
 }
 NSA_RUNTIME_EXPORT int32_t nsa_runtime_request_v1(const char *session, uint32_t generation, NsaRuntimeCommandV1 command) {

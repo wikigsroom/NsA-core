@@ -7063,6 +7063,7 @@ porter / nxnative              现有制作与运行代码
 <p>原生验证覆盖360/393/412/600宽、100/130/200%字号、系统insets/IME、TalkBack、键盘/手柄和系统返回。已有浏览器34条断言/56组合只属于设计证据，不替代上述真实系统验收。</p>
 <h2 id="doc-eng02-7">7. 生命周期</h2>
 <p>进程重启先打开数据库、执行有限对账，再渲染真实库与任务。重建失败不能调用清库恢复默认；提供可恢复错误和诊断。声音/输入/Surface随当前会话生命周期，页面退出和大厅重建不能触发全应用终止。</p><a class="backtop" href="#top">返回目录 ↑</a></article><article id="doc-eng03"><p class="source">规范源文件 · <a href="../engineering/03-runtime-integration.md">03-runtime-integration.md</a></p><h1 id="doc-eng03-03-ipc">03 · 原生模块、进程、IPC 与启动协议</h1>
+<p>真机运行补充见<a href="../hall/runtime-round-2026-11-07.md">声音与返回键修正轮次</a>。统一大厅原生输入不得截获系统返回键并绕开 GameActivity 的暂停、退出确认；旧系统应将未处理事件交回 Java，新系统保留平台返回回调。AAudio 断线回调只传递错误，由受控线程关闭、重开音轨；音频流不能在错误回调线程中关闭。适用模块必须用实际路由切换、输入与进程退出验证，非零音频信号与主观听感分别记录。</p>
 <p>实施补充见 <a href="../engineering/decisions/0007-policy-runtime-save-recovery.md">ADR 0007</a>：游戏进程全生命周期持有内核租约，主进程丢失后按持久 session/generation/nonce 重连；不能只凭数据库行判定运行中或结束。未知归属继续保护资源与存档，确认租约释放后才登记终止。新增私有 IPC 7/8 不改变 bootstrap ABI v1；实际主进程丢失恢复仍须真机验收。</p>
 <h2 id="doc-eng03-1">1. 模块注册</h2>
 <p>APK 内固定 bootstrap 和 <a href="../engineering/contracts/runtime-registry.schema.json">runtime-registry.schema.json</a>。注册表被 APK 签名保护；library_name 只从该表选择，slot、SONAME和摘要唯一，禁止重复默认libdmhost覆盖。模块对应 core commit、profile digest、完整 module Build ID、shader链、驱动与settings schema。</p>

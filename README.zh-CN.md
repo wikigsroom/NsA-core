@@ -2,6 +2,8 @@
 
 [下载与安装修正轮次](docs/hall/transfer-round-2026-11-07.md)已覆盖安装并完成 USB 实测：源码 `720c785`、APK `e3b259…742da`，26 项 JVM、13 项 Android 测试通过；2048 完成真实下载与存读档，《旷野之息》完成移动、新写档及新进程重读。音频断线和 BotW 直接返回键仍有已确认缺陷，完整 G0、长期性能和正式发行继续开放。
 
+后续[真机运行修正](docs/hall/runtime-round-2026-11-07.md)集中处理上述两项缺陷并规定下一轮统一验证，新候选单独记录结果。
+
 新版 `720c785` 真机素材，片段无音轨；后方旧图库保留历史身份。
 
 <table><tr><td><img src="docs/media/transfer-discovery.png" width="220" alt="USB discovery"></td><td><img src="docs/media/transfer-installed.png" width="220" alt="USB download history"></td></tr></table>

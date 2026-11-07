@@ -853,8 +853,13 @@ static void touch_event(AInputEvent *e) {
 static int handle_event(AInputEvent *e) {
     int32_t src = AInputEvent_getSource(e), type = AInputEvent_getType(e);
     if (type == AINPUT_EVENT_TYPE_KEY) {
-        if (atomic_load(&g_tx_on)) return tx_key(e);   // the text entry takes every key while it is open
         int32_t k = AKeyEvent_getKeyCode(e), down = AKeyEvent_getAction(e) == AKEY_EVENT_ACTION_DOWN;
+#ifdef DM_HALL_BINDING
+        /* Unhandled native events reach GameActivity's authenticated pause/exit
+           flow. Consuming Back here bypasses its legacy Android callbacks. */
+        if (k == AKEYCODE_BACK) return 0;
+#endif
+        if (atomic_load(&g_tx_on)) return tx_key(e);   // the text entry takes every key while it is open
         if (k == AKEYCODE_BACK || k == AKEYCODE_BUTTON_MODE || k == AKEYCODE_MENU) {   // the menu, both ways (Back would otherwise finish the activity, and the game with it)
             if (down && AKeyEvent_getRepeatCount(e) == 0) { if (atomic_load(&g_menu)) menu_close(); else menu_open(k == AKEYCODE_BACK ? -1 : 0); }
             return 1;

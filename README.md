@@ -2,6 +2,8 @@
 
 The [download/install correction round](docs/hall/transfer-round-2026-11-07.md) is now installed and tested on the USB phone: source `720c785`, APK `e3b259…742da`, 26 JVM tests and 13 Android tests passed. Real 2048 download/input/save/reload and BotW movement/new-save/fresh-process reload were observed. Audio disconnection and direct Android Back in BotW remain confirmed defects; full G0, sustained performance and production release remain open.
 
+The subsequent [USB runtime batch](docs/hall/runtime-round-2026-11-07.md) corrects those two defects and defines the next consolidated checks; its new candidate has separate evidence.
+
 New `720c785` USB captures; clips are silent. The gallery below is historical.
 
 <table><tr><td><img src="docs/media/transfer-discovery.png" width="220" alt="USB discovery"></td><td><img src="docs/media/transfer-installed.png" width="220" alt="USB download history"></td></tr></table>

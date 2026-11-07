@@ -2,6 +2,8 @@
 
 [下载与安装修正轮次](transfer-round-2026-11-07.md)已覆盖安装并完成 USB 实测：源码 `720c785`、APK `e3b259…742da`，26 项 JVM、13 项 Android 测试通过；2048 完成真实下载与存读档，《旷野之息》完成移动、新写档及新进程重读。音频断线和 BotW 直接返回键仍有已确认缺陷，完整 G0、长期性能和正式发行继续开放。 后续先整批修正声音与返回键，再对新 APK 统一执行受影响流程。下方此前等待手机的文字属于历史暂停背景。
 
+声音与直接返回键的整批修正及统一重测步骤见[运行修正轮次](runtime-round-2026-11-07.md)；使用真实音频工具时保留原始信号和失败记录。
+
 [Executed results / 已执行结果](implementation-status.md) · [English guide](README.md) · [中文手册](README.zh-CN.md) · [Normative gates / 技术门槛](../engineering/08-quality-governance.md)
 
 This procedure is for the **next** device run, not a pass report. The merged-main run reached BotW's title and imported Shrine scene, then another USB test stopped NsA. The user requested preserving that test and finishing documentation first. Resume when the phone is available for this run.
