@@ -1,6 +1,20 @@
 # Actual application media
 
-New reviewed USB set / 新真机素材：source `720c785`, APK `e3b259216dbb9685b28040ff1108e586145cdd25f4693c018fb5806f714742da`. [Execution record](../hall/transfer-round-2026-11-07.md). No BotW frames or audio-quality pass are published.
+Current reviewed USB set / 当前实拍素材：source `f1c68f7`, APK `d8c51a63f1c6134ec53237209cfc9253ffa543bc0206bfc6dfb029a1784c79af`. [Runtime execution record](../hall/runtime-round-2026-11-07.md).
+
+| Current actual capture / 本轮实际采集 | Artifact | Provenance |
+|---|---|---|
+| Portrait library / 竖屏游戏库 | [PNG](runtime-library.png) | [JSON](runtime-library.json) |
+| Completed v3 download history / v3 下载完成历史 | [PNG](runtime-installed.png) | [JSON](runtime-installed.json) |
+| Fresh-process 2048 reload / 新进程重读棋盘 | [PNG](runtime-reloaded.png) | [JSON](runtime-reloaded.json) |
+| v3 download/preparation, 15-second requested excerpt / 下载准备 | [GIF](runtime-hall.gif) · [MP4](runtime-hall.mp4) | [JSON](runtime-hall.json) |
+| Actual 2048 input, pause/confirmation and return, 20-second excerpt / 操作与退出 | [GIF](runtime-2048.gif) · [MP4](runtime-2048.mp4) | [JSON](runtime-2048.json) |
+
+Three screenshots and two GIF/MP4 pairs are added. All public clips have no audio track; private tone recordings are analyzed separately. The multiple completed 2048 rows are retained task history, not simultaneous downloads. Raw captures, exact encoded durations, SHA-256 digests and transformations are recorded in each JSON. No BotW frames, personal saves, keys or APKs are exported. / 新增 7 份素材，完成列表保留历史任务。音频结论不由无声视频证明；时间、摘要和转换逐份记录。
+
+## Historical transfer candidate / 历史下载安装候选
+
+Reviewed preceding USB set / 前一轮真机素材：source `720c785`, APK `e3b259216dbb9685b28040ff1108e586145cdd25f4693c018fb5806f714742da`. [Execution record](../hall/transfer-round-2026-11-07.md). No BotW frames or audio-quality pass are published.
 
 | New actual capture | Artifact | Provenance |
 |---|---|---|

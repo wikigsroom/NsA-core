@@ -1,6 +1,6 @@
 # Local storage / 本地存储
 
-本轮新版已实测：最终下载临时目录为 **4 KiB**，旧完成任务的 BotW 整包归档已清理；手机 /data 剩余 **43,911,135,232 字节（40.90 GiB）**。这是该次状态观察，物理断电边界仍未验收。电脑原始输入、服务不可变对象及原始测试证据按下表用途保留。
+下载安装轮次结束时，下载临时目录为 **4 KiB**，旧完成任务的 BotW 整包归档已清理；当时手机 /data 剩余 **43,911,135,232 字节（40.90 GiB）**。运行修正候选覆盖安装和 13 项检查后临时目录仍为 4 KiB；其游玩后的最终快照等待手机恢复可用。以下电脑目录已在运行修正轮次重新测量，物理断电边界仍未验收。
 
 Observed on 2026-11-07. All paths below are relative to this checkout under `游戏移植/`. Values are **logical file sizes**, rounded to GiB; hard links and filesystem allocation can make physical disk use differ. They are measurements of this local development profile, not a minimum download size for every user.
 
@@ -8,15 +8,15 @@ Observed on 2026-11-07. All paths below are relative to this checkout under `游
 
 | Directory | Logical size | Retained purpose / 保留原因 |
 |---|---:|---|
-| `.gamedump/Hall/` | 14.36 GiB | Private packaged resources, native build and raw USB evidence / 私有资源归档、原生构建和真机原始证据 |
+| `.gamedump/Hall/` | 14.43 GiB | Private packaged resources, native build and raw USB evidence / 私有资源归档、原生构建和真机原始证据 |
 | `.gamedump/BOTW/` | 39.42 GiB | Existing extracted inputs, standalone build, original saves and diagnostics / 已有解包输入、单游戏构建、原始存档与诊断 |
 | `services/local/` | 14.31 GiB | Private service object copy, database and development credentials / 目录服务使用的私有对象副本、数据库和开发凭据 |
-| `tools/hall/` | 2.07 GiB | SDK, Gradle and reproducible local build caches / SDK、Gradle 及本地构建缓存 |
+| `tools/hall/` | 2.11 GiB | SDK, Gradle, official scrcpy and reproducible local build caches / SDK、Gradle、官方录音工具及本地构建缓存 |
 | `tools/player/toolchains/` | 2.95 GiB | Existing native Android toolchain / 原生 Android 工具链 |
 | `android/` | 0.29 GiB | Source plus generated app/test packages and build output / 源码、应用及测试包与构建输出 |
-| `output/` | 0.36 GiB | Reviewed design/validation outputs and private prior/current APKs, bindings, database backup and build logs / 设计验证输出、本轮新旧安装包、绑定、数据库备份与日志 |
+| `output/` | 0.43 GiB | Reviewed design/validation outputs and private prior/current APKs, bindings, database backup and build logs / 设计验证输出、本轮新旧安装包、绑定、数据库备份与日志 |
 
-The recovery-round measurement found **496,564,584,448 free bytes** on the development drive (about 462.46 GiB). This is an observation at measurement time, not reserved capacity or the minimum installation requirement. The five retained directories above 1 GiB have their purposes listed above; no original game inputs, progress or published service objects were removed. / 本轮测得开发盘剩余约 462.46 GiB；五个超过 1 GiB 的目录按表中用途保留，未删除原游戏输入、进度或服务已发布对象。
+The runtime-round measurement found **480,535,560,192 free bytes** on the development drive (about 447.53 GiB). This is an observation at measurement time, not reserved capacity or the minimum installation requirement. The five retained directories above 1 GiB have their purposes listed above; no original game inputs, progress or published service objects were removed. / 运行轮次测得开发盘剩余约 447.53 GiB；五个超过 1 GiB 的目录按表中用途保留，未删除原游戏输入、进度或服务已发布对象。
 
 The private BotW archive is **15,354,465,247 bytes** (14.300 GiB), with **41,086 files** and **15,346,165,157 unpacked bytes** (14.292 GiB). The initial phone preparation estimate is **32,848,114,052 additional bytes** (30.592 GiB), including the 2 GiB safety reserve. It excludes the already installed APK, existing saves and a retained previous release during an update. The historical [PKG-06-F03](transfer-install-review-2026-11-07.md) gap could retain completed archives. The [correction round](transfer-round-2026-11-07.md) implements journal-backed/legacy cleanup and observed a 4 KiB transfer directory; physical power-loss coverage remains open. Directory allocation and generated metadata add overhead; the installed resource directory was observed at approximately 14.39 GiB.
 

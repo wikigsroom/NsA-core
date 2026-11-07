@@ -1,21 +1,20 @@
 # Unified hall implementation guide
 
-The [download/install correction round](transfer-round-2026-11-07.md) is now installed and tested on the USB phone: source `720c785`, APK `e3b259…742da`, 26 JVM tests and 13 Android tests passed. Real 2048 download/input/save/reload and BotW movement/new-save/fresh-process reload were observed. Audio disconnection and direct Android Back in BotW remain confirmed defects; full G0, sustained performance and production release remain open.
+The [USB runtime correction round](runtime-round-2026-11-07.md) is installed on the physical phone: source `f1c68f7`, APK `d8c51a…79af`. Thirteen Android tests were rerun and passed. The new 2048 v3 release preserves progress and completes real download, input, direct Back exit and fresh-process save reload. Two recordings contain its expected 440 Hz tone and stream-reopen evidence; subjective audio remains unaccepted. BotW checks on this APK and five cross-game rounds are waiting for the other authorized phone test to finish. Full G0, sustained performance and production release remain open.
 
-New `720c785` USB captures; clips are silent. The gallery below is historical.
+Current USB captures; clips are silent. Historical captures retain their original identities.
 
-<table><tr><td><img src="../media/transfer-discovery.png" width="220" alt="USB discovery"></td><td><img src="../media/transfer-installed.png" width="220" alt="USB download history"></td></tr></table>
+<table><tr><td><img src="../media/runtime-library.png" width="220" alt="Actual portrait library"></td><td><img src="../media/runtime-installed.png" width="220" alt="Actual completed v3 download"></td></tr></table>
 
-![USB hall download](../media/transfer-hall.gif)
+![Actual v3 download and preparation](../media/runtime-hall.gif)
 
-[Hall MP4](../media/transfer-hall.mp4) · [2048 GIF](../media/transfer-2048.gif) · [2048 MP4](../media/transfer-2048.mp4) · [Reloaded board](../media/transfer-reloaded.png) · [Provenance](../media/README.md)
+[Hall MP4](../media/runtime-hall.mp4) · [2048 GIF](../media/runtime-2048.gif) · [2048 MP4](../media/runtime-2048.mp4) · [Reloaded board](../media/runtime-reloaded.png) · [Provenance](../media/README.md)
 
-
-The [new recovery correction round](recovery-round-2026-11-07.md) and [ADR 0007](../engineering/decisions/0007-policy-runtime-save-recovery.md) add the scoped policy sequence, initialization/file reconciliation, kernel runtime ownership, durable picker drafts and recoverable save/index publication. Their validation status is separate from the installed build and existing captures. For save exchange, export now fixes the snapshot before opening the destination picker; import restores its original game/draft and disables cancellation throughout the confirmed operation. Production API rollout requires the database migration described in the ADR.
+The earlier [transfer round](transfer-round-2026-11-07.md) and [recovery round](recovery-round-2026-11-07.md) retain their original evidence. BotW new-save/reload results on the earlier APK do not transfer to this candidate.
 
 [中文使用说明](README.zh-CN.md) · [Main README](../../README.md) · [Product baseline](../product/README.md) · [Engineering constraints](../engineering/README.md)
 
-[Actual verification](implementation-status.md) · [Next device run](device-validation.md) · [Execution summary](verification/2026-11-07-main.json) · [Screenshots and recordings](../media/README.md) · [Storage](storage.md)
+[Actual verification](implementation-status.md) · [Next device run](device-validation.md) · [Current execution summary](verification/2026-11-07-runtime-round.json) · [Screenshots and recordings](../media/README.md) · [Storage](storage.md)
 
 Read the [historical targeted source review](source-review.md) alongside the [subsequent correction round](recovery-round-2026-11-07.md) before relying on offline readiness, process reconstruction or interrupted save exchange. The current APK includes both correction batches and has separate physical-device results in the transfer round. The historical reports remain pinned to their original source; complete acceptance is still open.
 
@@ -207,7 +206,7 @@ Device media is first written to ignored `.gamedump/Hall/device-evidence`, with 
 
 The [media index](../media/README.md) links the actual screenshots, GIFs, MP4s and their hashes. The [90-item requirement map](requirement-coverage.md) connects the normative rules to source entry points and outstanding acceptance boundaries. The operations screenshots are explicitly identified as desktop web captures. Source media, personal saves and raw device diagnostics remain outside Git.
 
-The [execution summary](verification/2026-11-07-main.json) separates merged-main checks from the preceding complete hall/2048 run. The current merged APK loads BotW's imported Shrine scene; movement, a new progress save/reload, audio and combined G0 acceptance remain open. Use the [device procedure](device-validation.md) when the phone becomes available. Do not combine results from different APKs into a same-artifact acceptance claim.
+The [current runtime summary](verification/2026-11-07-runtime-round.json) records this exact candidate. Its 2048 upgrade/input/save/reload and audio-signal observations are separate from the preceding APK's BotW movement/new-save/reload. BotW, repeated switching, sustained performance and subjective audio on the current APK remain open. Continue the [device procedure](device-validation.md) after the other authorized phone test finishes. Each candidate retains its own results.
 
 Completed code, documentation and reviewed media are committed and pushed to `git@github.com:wikigsroom/NsA-core.git`, branch `main`. Fetch and preserve remote updates before merging; do not force-push. Private debug provisioning/APKs, game files, keys and raw evidence stay ignored. Current historical internal runtime labels are explained in the [implementation record](implementation-status.md); issue new matching identities/releases before production.
 

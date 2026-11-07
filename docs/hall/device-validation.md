@@ -1,22 +1,10 @@
 # Physical-device validation / 真机验收操作
 
-[下载与安装修正轮次](transfer-round-2026-11-07.md)已覆盖安装并完成 USB 实测：源码 `720c785`、APK `e3b259…742da`，26 项 JVM、13 项 Android 测试通过；2048 完成真实下载与存读档，《旷野之息》完成移动、新写档及新进程重读。音频断线和 BotW 直接返回键仍有已确认缺陷，完整 G0、长期性能和正式发行继续开放。 后续先整批修正声音与返回键，再对新 APK 统一执行受影响流程。下方此前等待手机的文字属于历史暂停背景。
+[真机运行修正轮次](runtime-round-2026-11-07.md)已覆盖安装到手机：源码 `f1c68f7`、APK `d8c51a…79af`，13 项 Android 测试重新执行并通过。2048 v3 升级保留原进度，完成真实下载、操作、直接返回退出和新进程存档重读。两份录音检出 440 Hz 音效及声音流重开证据，主观音量与音质仍未验收。《旷野之息》新版检查及五轮跨游戏切换，按用户选择等待另一项手机测试结束后继续；完整 G0、长期性能及正式发行仍开放。
 
-声音与直接返回键的整批修正及统一重测步骤见[运行修正轮次](runtime-round-2026-11-07.md)；使用真实音频工具时保留原始信号和失败记录。
+[Executed results / 已执行结果](implementation-status.md) · [Current machine record](verification/2026-11-07-runtime-round.json) · [English guide](README.md) · [中文手册](README.zh-CN.md) · [Normative gates / 技术门槛](../engineering/08-quality-governance.md)
 
-[Executed results / 已执行结果](implementation-status.md) · [English guide](README.md) · [中文手册](README.zh-CN.md) · [Normative gates / 技术门槛](../engineering/08-quality-governance.md)
-
-This procedure is for the **next** device run, not a pass report. The merged-main run reached BotW's title and imported Shrine scene, then another USB test stopped NsA. The user requested preserving that test and finishing documentation first. Resume when the phone is available for this run.
-
-本文件规定下一轮操作，不代表已经验收通过。上次 main 运行至《旷野之息》标题和导入存档的神庙场景，随后被另一项 USB 测试结束。按用户要求保留该测试，先完成文档，待手机可用后继续。
-
-The [historical targeted source review](source-review.md) led to the [completed source correction batch](recovery-round-2026-11-07.md). Its computer-side checks and candidate identity are recorded separately. Install only after content/service rollout is ready, then repeat the affected device cases. Historical screenshots and passes do not transfer to a changed APK.
-
-[历史定向源码核对](source-review.md)对应的[整批源码修正](recovery-round-2026-11-07.md)已有独立电脑端检查与候选身份。真机安装须先完成资源和服务更新准备，再重跑受影响案例；旧截图及通过结果不能转算到新 APK。
-
-The later [download/install review](transfer-install-review-2026-11-07.md) identifies additional pending source corrections. Before a new acceptance run, finish its complete queue/intent, install publication/recovery and cleanup batch and the consolidated computer checks. Then add late enqueue, cancel/replacement, equal-time ordering, same-release repair interrupted after VERIFIED, journal failures and recovered-archive cleanup to the device matrix. No device run or new APK is implied by that review.
-
-后续[下载与安装核对](transfer-install-review-2026-11-07.md)的修正仍未实施。下一验收批次先整批完成代码及电脑检查，再补测新增任务接续、取消/替代、同时间排序、同版本修复在 VERIFIED 后退出、候选失败隔离及恢复后归档清理。目录同步的实际掉电验证与普通进程退出必须分开记录；不破坏真实玩家文件模拟故障。
+This is the reusable device procedure, not a pass report. The transfer correction is implemented and its 13 isolated cases have device evidence; the new runtime candidate repeats those 13 tests. Resume unfinished current-candidate gameplay only after the other authorized phone test finishes. Historical source reviews remain pinned to their original snapshots. / 本文件是可复用操作规范；下载安装修正与 13 项隔离测试已有实际结果，不能再称其“尚未实现”。手机恢复可用后继续本轮尚未执行的游戏检查。
 
 ## Preparation / 准备
 
@@ -38,9 +26,9 @@ services/.venv/Scripts/python.exe devtools/hall_smoke.py all
 
 ## Recovery-candidate cases / 恢复候选专测
 
-The candidate includes **seven compiled instrumentation cases, zero executed in the correction round**. Run the complete `DeviceContractTest`, `NavigationRecoveryTest` and five-case `SaveRecoveryTest` suite on the one authorized phone after preserving its progress. `SaveRecoveryTest` uses separate Room/files roots beneath its own test cache; it never targets the player's installed games or saves. Compilation alone does not establish its filesystem assertions.
+The current candidate has **13 instrumentation cases, all rerun and passed in 21.978 seconds**: `DeviceContractTest`, `NavigationRecoveryTest`, five-case `SaveRecoveryTest` and six-case transfer-persistence coverage. Repeat the complete suite after a relevant candidate change, preserving its progress and exact identity. `SaveRecoveryTest` uses separate Room/files roots beneath its own test cache; it never targets the player's installed games or saves. Compilation alone does not establish its filesystem assertions.
 
-新候选的 7 项仪器测试均已编译、本轮均未执行；其中 5 项新增用例覆盖真实存档导入/再导出与幂等、原游戏确认恢复、2048 暂存排除、安装/分块对账、旧选择器回调归属。待手机可用时整套执行，保留测试报告和失败；测试私有目录与玩家资料隔离。
+当前候选的 13 项仪器测试已实际重跑通过，其中 5 项存档恢复、6 项任务持久化及 2 项能力/导航检查。后续相关变更仍需重新执行，保留测试报告和失败；测试私有目录与玩家资料隔离。下表列出的完整行为矩阵不等于已全部覆盖。
 
 | Case / 场景 | Required observation / 必须观察 |
 |---|---|

@@ -1,0 +1,397 @@
+{
+  "record_version": 1,
+  "recorded_at_utc": "2026-11-07T02:14:56.440486+00:00",
+  "date_local": "2026-11-07",
+  "timezone": "Asia/Taipei",
+  "scope": "Consolidated runtime correction, immutable 2048 v3 publication, overlay and bounded physical-device execution; resumed BotW and G0 pending other authorized phone test",
+  "formal_acceptance": "not_accepted",
+  "source_revision": "f1c68f72e0b0e4d3820fd3b0a1466756cadc8605",
+  "capture_tool_revision": "b872778",
+  "branch": "main",
+  "repository": "https://github.com/wikigsroom/NsA-core",
+  "apk": {
+    "path": "android/app/build/outputs/apk/debug/app-debug.apk",
+    "bytes": 82194663,
+    "sha256": "d8c51a63f1c6134ec53237209cfc9253ffa543bc0206bfc6dfb029a1784c79af"
+  },
+  "test_apk": {
+    "path": "android/app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk",
+    "bytes": 2428862,
+    "sha256": "6ea5b06e8d6d1317b469111bdcf5a1d5791789b9c3326ae168584faf0aa3db66"
+  },
+  "runtime_registry": {
+    "registry_schema": 1,
+    "app_version_code": 1,
+    "bootstrap_api_version": 1,
+    "slots": [
+      {
+        "approved_driver_ids": [
+          "system"
+        ],
+        "core_revision": "f1c68f72e0b0e4d3820fd3b0a1466756cadc8605",
+        "library_name": "libnsa_2048.so",
+        "profile_digest": "721d3bd3427b9cd40ddc9fd0af7d654c046bb257d3b92d558b298d38897420ff",
+        "runtime_api_version": 1,
+        "runtime_slot_id": "nsa-2048-v1",
+        "settings_schema_version": 1,
+        "shader_bundle_versions": [
+          1
+        ],
+        "shader_chain_id": "software-rgba-v1",
+        "supported_module_build_ids": [
+          "721d3bd3427b9cd40ddc9fd0af7d654c046bb257d3b92d558b298d38897420ff"
+        ],
+        "library_sha256": "81796fa6c926881431c5e354f619320526c714edad230356f6013e28bc145952"
+      },
+      {
+        "approved_driver_ids": [
+          "turnip26-sysmem-adreno650"
+        ],
+        "core_revision": "f1c68f72e0b0e4d3820fd3b0a1466756cadc8605",
+        "library_name": "libnsa_botw.so",
+        "profile_digest": "c329645b44fa82a9d72dfb21a7c422d74c9cbf40cd6fca4a33e3d043045f17fa",
+        "runtime_api_version": 1,
+        "runtime_slot_id": "botw-190-arm64-v1",
+        "settings_schema_version": 1,
+        "shader_bundle_versions": [
+          1
+        ],
+        "shader_chain_id": "nx2a-dmsv-v1",
+        "supported_module_build_ids": [
+          "cd57b23fa4bbad65803d9788c01821ee00000000000000000000000000000000",
+          "f39f4c431234c72eb520cfdd1001bbcf02b3e885000000000000000000000000",
+          "574284b40c06cf1821a44857939083bee5716820000000000000000000000000"
+        ],
+        "library_sha256": "266fb2343098529988918bcbb315b18c75f695852e1b8625c939ee0bf730204b"
+      }
+    ]
+  },
+  "room_schema": 2,
+  "runtime_api": 1,
+  "content": {
+    "previous_immutable_records_unchanged": 26,
+    "botw_content_binding_unchanged": true,
+    "core_revision": "f1c68f72e0b0e4d3820fd3b0a1466756cadc8605",
+    "new_release": "nsa-2048-local-v3"
+  },
+  "host_checks": {
+    "native_sources": 145,
+    "native_failures": 0,
+    "android_build": "passed; 90 actionable tasks: 9 executed, 81 up-to-date",
+    "jvm_cases": 26,
+    "jvm_execution": "UP-TO-DATE from transfer round; not rerun in this native-only batch",
+    "lint_errors": 0,
+    "lint_warnings": 16,
+    "apk_slots_verified": 2,
+    "contract_groups_passed": 8,
+    "services_and_existing_core_suite_rerun": false,
+    "readme_media": {
+      "status": "passed",
+      "markdown_documents": 34,
+      "local_links": 720,
+      "media_artifacts": 37,
+      "provenance_records": 29,
+      "full_clip_decode": true,
+      "current_apk_identity_matches": true
+    }
+  },
+  "physical_device": {
+    "model": "Motorola edge plus",
+    "api_level": 31,
+    "abi": "arm64-v8a",
+    "gpu": "Adreno 650",
+    "page_size_bytes": 4096,
+    "overlay_install": true,
+    "data_cleared": false,
+    "instrumentation_passed": 13,
+    "instrumentation_seconds": 21.978,
+    "preexisting_player_files_preserved_after_overlay_and_tests": 20,
+    "after_instrumentation_recovery_facts": [],
+    "after_instrumentation_transfer_allocation_kib": 4,
+    "final_after_games_snapshot": "pending normal game exit after peer test finishes"
+  },
+  "2048": {
+    "release_id": "nsa-2048-local-v3",
+    "archive_bytes": 191,
+    "expanded_bytes": 41,
+    "upgrade": {
+      "installed_apk_sha256": "d8c51a63f1c6134ec53237209cfc9253ffa543bc0206bfc6dfb029a1784c79af",
+      "existing_save_preserved": true,
+      "save_sha256": "ef01e264086705c0018b6f383b0cbfa8f7cc9e9121e6d0cbdc8a0e1df5a2ff1e"
+    },
+    "installed_apk_sha256": "d8c51a63f1c6134ec53237209cfc9253ffa543bc0206bfc6dfb029a1784c79af",
+    "processes": {
+      "hall": "23955",
+      "game": "25109",
+      "reloaded_game": "25486"
+    },
+    "committed_sha256": "0eb99efa6f6fbf385da8009b5e2d166af55b25ada352bf6656a177798881c57d",
+    "reloaded_sha256": "0eb99efa6f6fbf385da8009b5e2d166af55b25ada352bf6656a177798881c57d",
+    "played_board": [
+      2,
+      0,
+      0,
+      0,
+      0,
+      2,
+      4,
+      0,
+      0,
+      32,
+      64,
+      8,
+      8,
+      4,
+      8,
+      4
+    ],
+    "reloaded_board": [
+      2,
+      0,
+      0,
+      0,
+      0,
+      2,
+      4,
+      0,
+      0,
+      32,
+      64,
+      8,
+      8,
+      4,
+      8,
+      4
+    ],
+    "observed_at": "2026-11-07T02:01:55.770582+00:00",
+    "scope": "Actual input, first safe return, fresh process and matching reloaded save/board; final cleanup is a separate step",
+    "direct_android_back_pause_confirm_exit_and_portrait": true,
+    "scope_note": "Saved board/hash describe this completed sequence; subsequent audio moves changed the latest 2048 progress"
+  },
+  "audio": {
+    "original_capture_result": {
+      "at": "2026-11-07T02:03:41.728626+00:00",
+      "installed_apk_sha256": "d8c51a63f1c6134ec53237209cfc9253ffa543bc0206bfc6dfb029a1784c79af",
+      "game_pid": "25771",
+      "source": "official scrcpy Android output, no video/control/playback",
+      "captures": [
+        {
+          "round": 1,
+          "seconds": 19.3716875,
+          "nonzero_samples": 7024,
+          "peak": 75,
+          "rms": 4.0006499239163125,
+          "sha256": "4e6236372ab5e0ad74894fc4400bcd23d70a2329b4e23e9bee5d1d14ec261cef",
+          "events": [
+            {
+              "at_seconds": 2.468851199999335,
+              "key": 21,
+              "save_changed": true
+            },
+            {
+              "at_seconds": 5.065936999999394,
+              "key": 19,
+              "save_changed": true
+            },
+            {
+              "at_seconds": 7.635698300000513,
+              "key": 22,
+              "save_changed": true
+            },
+            {
+              "at_seconds": 10.119345099999919,
+              "key": 20,
+              "save_changed": true
+            },
+            {
+              "at_seconds": 12.649705799998628,
+              "key": 21,
+              "save_changed": true
+            }
+          ]
+        },
+        {
+          "round": 2,
+          "seconds": 15.9535,
+          "nonzero_samples": 17426,
+          "peak": 75,
+          "rms": 6.975345529244266,
+          "sha256": "fdd57e093d47de0b97ae9e967dd805127f7e79ab6c3a491e66e7fdcbd35bc578",
+          "events": [
+            {
+              "at_seconds": 2.5694008999998914,
+              "key": 21,
+              "save_changed": true
+            },
+            {
+              "at_seconds": 5.329676400000608,
+              "key": 19,
+              "save_changed": true
+            },
+            {
+              "at_seconds": 8.082726000000548,
+              "key": 22,
+              "save_changed": true
+            },
+            {
+              "at_seconds": 10.843599300002097,
+              "key": 20,
+              "save_changed": true
+            },
+            {
+              "at_seconds": 13.793358900002204,
+              "key": 21,
+              "save_changed": true
+            }
+          ]
+        }
+      ],
+      "reopen_log_count": 4,
+      "output_start_log_count": 5,
+      "signal_check_passed": false,
+      "subjective_listening_accepted": false,
+      "full_playability_accepted": false
+    },
+    "offline_analysis": {
+      "synthetic_frequency_controls": {
+        "220": 0.002459247854349229,
+        "440": 0.9999717552437796,
+        "660": 0.0017714646376598172,
+        "1000": 1.412080397368539e-05
+      },
+      "noise_fit": 0.001158800571091237,
+      "silence_fit": 0,
+      "actual_captures": [
+        {
+          "path": ".gamedump/Hall/device-evidence/runtime-audio-20261107/output-1.s16le",
+          "sha256": "89464120c04afac50e9faa2e3a92b36e84659ebd2e97416877815c2e93987f9d",
+          "tone_440_fit": 0.9998212849265764,
+          "peak_dbfs": -52.80777343136036
+        },
+        {
+          "path": ".gamedump/Hall/device-evidence/runtime-audio-20261107/output-2.s16le",
+          "sha256": "8993393d6c863dbb0eb7248408c40992439c626d8af1b325a04ff3fca86cb6c4",
+          "tone_440_fit": 0.9998281925545893,
+          "peak_dbfs": -52.80777343136036
+        }
+      ],
+      "scope": "Offline analysis of retained actual output; no new phone input or new capture",
+      "signal_evidence_confirmed": true,
+      "subjective_listening_accepted": false
+    },
+    "assessment": "Expected 440 Hz game signal and stream reopen observed; original fixed peak threshold failed and is preserved",
+    "corrected_capture_criteria": {
+      "nonzero_samples_min": 1000,
+      "peak_min": 8,
+      "tone_440_fit_min": 0.8,
+      "changed_moves_min": 2
+    },
+    "corrected_capture_rerun": "stopped by foreground guard before input when other application became active; pending authorized availability",
+    "subjective_listening_accepted": false,
+    "botw_audio_accepted": false
+  },
+  "botw": {
+    "release_id": "botw-local-v1",
+    "content_reused_without_redownload": true,
+    "current_apk_gameplay_executed": false,
+    "current_apk_direct_back": "pending",
+    "preceding_apk_observation": "verification/2026-11-07-transfer-round.json",
+    "preceding_result_not_inherited": true,
+    "full_playability_accepted": false
+  },
+  "cross_game_five_rounds": {
+    "status": "not_run",
+    "reason": "Preserve other authorized phone test until it finishes"
+  },
+  "public_media": [
+    "runtime-library.png",
+    "runtime-installed.png",
+    "runtime-reloaded.png",
+    "runtime-hall.gif",
+    "runtime-hall.mp4",
+    "runtime-2048.gif",
+    "runtime-2048.mp4"
+  ],
+  "execution_constraints": {
+    "usb_authorized": true,
+    "other_project_test_preserved": true,
+    "docker_wsl_vm_emulator_used": false,
+    "browser_tabs_opened": false,
+    "commercial_game_frames_keys_saves_and_binaries_published": false
+  },
+  "still_required": [
+    "Resume after peer test finishes; repeat corrected audio capture without changing device-wide volume",
+    "BotW current-APK actual movement, new save, direct Back exit and fresh-process reload",
+    "Five same-APK A-to-B-to-A rounds, independent progress and resource samples",
+    "Subjective audio and representative continuous 30-minute performance/gameplay",
+    "Physical power-loss/ENOSPC and remaining detailed requirements/device coverage",
+    "Production signing, deployment, content/device approval and release gates"
+  ],
+  "private_evidence": [
+    {
+      "path": "output/hall/runtime-round-20261107/native-build.log",
+      "bytes": 196,
+      "sha256": "b593232205bb6ce7e52d40f33c2d406b09b330609e8d7964a2526db21d07c68f"
+    },
+    {
+      "path": "output/hall/runtime-round-20261107/android-build.log",
+      "bytes": 5733,
+      "sha256": "2f37e14593aed2f6ff27c0cfd2cea60d8fc6595bf3c439e50d0bce90bda2e043"
+    },
+    {
+      "path": "output/hall/runtime-round-20261107/lint.xml",
+      "bytes": 17965,
+      "sha256": "e28705e576859d7738ce5ffd8505f044319f30f64d01bb8cb719cf4ad5168bf1"
+    },
+    {
+      "path": "output/hall/runtime-round-20261107/baseline.json",
+      "bytes": 7836,
+      "sha256": "46914cafde94bf668cd7c10dfb840ac42de47a446e0241a8396448326dab62cc"
+    },
+    {
+      "path": "output/hall/runtime-round-20261107/binding-check.json",
+      "bytes": 196,
+      "sha256": "81734091e47ce2d93623ce7b2a9ece2cb19f76b546bce4262951c13f7cfdfeee"
+    },
+    {
+      "path": "output/hall/runtime-round-20261107/audio-frequency-analysis.json",
+      "bytes": 982,
+      "sha256": "065606b2948921dd65c3fa7257ea7d391ce9b3be38eb9ba63cc0b734d08d691c"
+    },
+    {
+      "path": "output/hall/runtime-round-20261107/audio-frequency-check.log",
+      "bytes": 636,
+      "sha256": "3d91062ac5a08174e3ab24f46fc8c976db08f587d788d08de51cfda394dba765"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-runtime/instrumentation.txt",
+      "bytes": 9100,
+      "sha256": "43437816da990782e212c8fbb9dc69e49c705ae9b8fe876aaa61a310b4f1fd66"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-runtime/after-instrumentation/snapshot.json",
+      "bytes": 6258,
+      "sha256": "aaad72732577e825105344d30320d6b9964f44f9a858025428bd159aec155b75"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-runtime/v3-install-observation.json",
+      "bytes": 220,
+      "sha256": "20fc4ebd8ac97327ae6af915da5cb3bfb5d911b62bcd7c95ab9a36ce80d50eff"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-runtime/2048-session-observations.json",
+      "bytes": 874,
+      "sha256": "6ec6f02a077058ec48c6c7cb47696682a6ab20e5e9eca790be1943f8346ff925"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/runtime-audio-20261107/observation.json",
+      "bytes": 2172,
+      "sha256": "98244083150cff6ccd6e0fd46995d53d69dd56d42bef06782c171e37282ca833"
+    },
+    {
+      "path": "output/hall/runtime-round-20261107/storage-observation.json",
+      "bytes": 934,
+      "sha256": "a7fb13034e5e3cac62d2c63c8489c8c62c673b35b7ccd6f0a90e3ae3fcbb19bd"
+    }
+  ]
+}

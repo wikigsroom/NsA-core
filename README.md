@@ -1,19 +1,16 @@
 # NsA · Unified Android game hall
 
-The [download/install correction round](docs/hall/transfer-round-2026-11-07.md) is now installed and tested on the USB phone: source `720c785`, APK `e3b259…742da`, 26 JVM tests and 13 Android tests passed. Real 2048 download/input/save/reload and BotW movement/new-save/fresh-process reload were observed. Audio disconnection and direct Android Back in BotW remain confirmed defects; full G0, sustained performance and production release remain open.
+The [USB runtime correction round](docs/hall/runtime-round-2026-11-07.md) is installed on the physical phone: source `f1c68f7`, APK `d8c51a…79af`. Thirteen Android tests were rerun and passed. The new 2048 v3 release preserves progress and completes real download, input, direct Back exit and fresh-process save reload. Two recordings contain its expected 440 Hz tone and stream-reopen evidence; subjective audio remains unaccepted. BotW checks on this APK and five cross-game rounds are waiting for the other authorized phone test to finish. Full G0, sustained performance and production release remain open.
 
-The subsequent [USB runtime batch](docs/hall/runtime-round-2026-11-07.md) corrects those two defects and defines the next consolidated checks; its new candidate has separate evidence.
+Current USB captures; clips are silent. Historical captures retain their original identities.
 
-New `720c785` USB captures; clips are silent. The gallery below is historical.
+<table><tr><td><img src="docs/media/runtime-library.png" width="220" alt="Actual portrait library"></td><td><img src="docs/media/runtime-installed.png" width="220" alt="Actual completed v3 download"></td></tr></table>
 
-<table><tr><td><img src="docs/media/transfer-discovery.png" width="220" alt="USB discovery"></td><td><img src="docs/media/transfer-installed.png" width="220" alt="USB download history"></td></tr></table>
+![Actual v3 download and preparation](docs/media/runtime-hall.gif)
 
-![USB hall download](docs/media/transfer-hall.gif)
+[Hall MP4](docs/media/runtime-hall.mp4) · [2048 GIF](docs/media/runtime-2048.gif) · [2048 MP4](docs/media/runtime-2048.mp4) · [Reloaded board](docs/media/runtime-reloaded.png) · [Provenance](docs/media/README.md)
 
-[Hall MP4](docs/media/transfer-hall.mp4) · [2048 GIF](docs/media/transfer-2048.gif) · [2048 MP4](docs/media/transfer-2048.mp4) · [Reloaded board](docs/media/transfer-reloaded.png) · [Provenance](docs/media/README.md)
-
-
-The new [recovery correction round](docs/hall/recovery-round-2026-11-07.md) implements the audited policy, process ownership and save-exchange changes. Its checks and installation status are tracked separately from the historical APK/media below. The other project's phone test is preserved.
+The earlier [transfer round](docs/hall/transfer-round-2026-11-07.md) and [recovery round](docs/hall/recovery-round-2026-11-07.md) retain their original evidence. BotW new-save/reload results on the earlier APK do not transfer to this candidate.
 
 [简体中文](README.zh-CN.md) · [Detailed setup and usage](docs/hall/README.md) · [Implementation status](docs/hall/implementation-status.md) · [Product requirements](docs/product/README.md) · [Engineering baseline](docs/engineering/README.md)
 
@@ -21,7 +18,7 @@ The new [recovery correction round](docs/hall/recovery-round-2026-11-07.md) impl
 
 This fork builds a unified Kotlin/Compose Android hall on [nx2android](https://github.com/shirai91/nx2android) and [nxnative](https://github.com/seedds/nxnative). The finalized D Obsidian design uses a dark portrait interface with Discovery, Library, Downloads and Settings. A separate operations site handles content rights, builds, uploads, independent review, publication, compatibility evidence and audit.
 
-**Current state: the new APK is running on the physical phone.** The [current execution record](docs/hall/transfer-round-2026-11-07.md) identifies its actual results and two remaining runtime defects. Earlier gallery artifacts retain their original APK identities.
+**Current state: runtime candidate `d8c51a…79af` is installed.** See the [current execution record](docs/hall/runtime-round-2026-11-07.md) for results and pending checks. Earlier gallery artifacts retain their original APK identities.
 
 The [historical targeted source review](docs/hall/source-review.md) records the policy, reconstruction and save-exchange defects that led to this correction batch. Its pinned evidence remains unchanged; source changes and host passes do not close the physical-device acceptance gates. It covers three requirements; the broader source map and existing media are not full acceptance.
 
@@ -34,7 +31,7 @@ The [historical targeted source review](docs/hall/source-review.md) records the 
 | Operations | OIDC/PKCE, server roles, idempotency, revision checks, independent reviewers and audit |
 | Tooling | Native Windows setup/build/publication, USB-only install/capture, bilingual documentation |
 
-Actual Android captures (the app interface currently uses Simplified Chinese):
+Historical Android gallery (the app interface currently uses Simplified Chinese; exact source APKs are in the neighboring provenance records):
 
 <table>
 <tr><td>Discovery</td><td>Library</td><td>Downloads</td></tr>

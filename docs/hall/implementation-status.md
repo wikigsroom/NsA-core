@@ -1,14 +1,26 @@
 # Implementation and verification record
 
-[下载与安装修正轮次](transfer-round-2026-11-07.md)已覆盖安装并完成 USB 实测：源码 `720c785`、APK `e3b259…742da`，26 项 JVM、13 项 Android 测试通过；2048 完成真实下载与存读档，《旷野之息》完成移动、新写档及新进程重读。音频断线和 BotW 直接返回键仍有已确认缺陷，完整 G0、长期性能和正式发行继续开放。
+[真机运行修正轮次](runtime-round-2026-11-07.md)已覆盖安装到手机：源码 `f1c68f7`、APK `d8c51a…79af`，13 项 Android 测试重新执行并通过。2048 v3 升级保留原进度，完成真实下载、操作、直接返回退出和新进程存档重读。两份录音检出 440 Hz 音效及声音流重开证据，主观音量与音质仍未验收。《旷野之息》新版检查及五轮跨游戏切换，按用户选择等待另一项手机测试结束后继续；完整 G0、长期性能及正式发行仍开放。
 
-Current evidence / 当前证据：[机器记录](verification/2026-11-07-transfer-round.json) · [新素材](../media/README.md)。覆盖升级后原 19 个玩家文件保持一致；实际游玩后的变化单独记录。下载临时目录最终为 4 KiB。BotW 正常退出需通过恢复后的 Java 暂停菜单，不能算直接返回键通过。以下旧表格和旧 APK 结果为历史记录。
+[Current machine record / 当前机器记录](verification/2026-11-07-runtime-round.json) · [Current runtime round / 运行轮次](runtime-round-2026-11-07.md) · [Transfer round / 下载安装轮次](transfer-round-2026-11-07.md) · [Reviewed media / 实拍素材](../media/README.md)
 
-新增[下载与安装整批修正](transfer-round-2026-11-07.md)，落实队列接续、取消保护、资源身份校验、安装恢复及归档清理。用户已重新授权 USB 测试；本轮整批代码及必要用例完成后统一执行，新构建、真机和素材结果单独记录，不沿用历史 APK 的通过结果。
+| Current candidate / 当前候选 | Actual result / 实际结果 |
+|---|---|
+| Native + Android | 145 native sources, zero failures; two bound runtime slots; Android build passed; lint 0 errors / 16 warnings |
+| JVM | Existing 26-case report retained, Gradle UP-TO-DATE; no claim of a fresh run for this native-only batch |
+| Documentation/contracts | 8/8 groups passed; this validates contracts, not gameplay |
+| Physical instrumentation | 13/13 actually rerun, 21.978 seconds |
+| Overlay preservation | Room v2; all 20 preexisting player files identical immediately after overlay and instrumentation; no recovery warning; transfer directory 4 KiB at that point |
+| 2048 v3 | 191-byte real download / 41-byte expanded fixture; prior save retained; changed input; direct Back pause/confirmed exit; fresh process reload with all 16 rendered tiles and committed hash matching |
+| Audio | Four stream reopen logs / five starts; two captures contain 440 Hz signal. Initial fixed-amplitude criterion failed and is retained; offline frequency confirmation is separate from the interrupted rerun and subjective listening |
+| BotW / five switching rounds | Existing immutable BotW content remains compatible; execution on this new APK pending other authorized phone test completion |
+| Full acceptance | G0, representative 30-minute performance/audio, physical fault boundaries, remaining device/requirement coverage and production release remain open |
 
-Latest documentation-only review / 最新文档轮次：[下载与安装核对](transfer-install-review-2026-11-07.md)追踪 `189169f` 的 DL-06、DL-07、PKG-06 十二条细则，并分别保留代码与规范的独立反证。[机器记录](verification/2026-11-07-transfer-install-review.json)固定结论、证据及未检查范围；源码缺口尚待下一整批修正，本轮无新程序测试、APK 或手机操作。后续状态不改写下方各自旧轮次的结果。
+The preceding APK `e3b259…742da` did demonstrate BotW movement, a new manual save and a fresh-process reload using a return-menu workaround. Its defects and results remain pinned in the transfer record. The current source fixes audio reconnection and native Back delegation; a source fix is not BotW device acceptance. / 旧版实际结果与新候选分开登记，不改写历史缺陷为旧版已修复。
 
-New source batch / 新源码批次：[恢复与存档修正轮次](recovery-round-2026-11-07.md)单独记录 APP-05、APP-08、SAVE-04 的修正与集中检查。新候选尚未安装到手机；本页下方表格和 APK、手机操作及素材结果都是各自旧构建的历史记录，不自动适用于新源码。正式游戏、设备与生产发布门槛继续开放。
+## Historical execution and review snapshots / 历史快照
+
+The following text, counts, PIDs, APKs and pending labels describe their original snapshots. Consult the current record above for the active candidate. / 下文旧计数、进程、候选和“待执行”均属于原轮次，当前状态以上方新记录为准。
 
 Historical installed build, recorded 2026-11-07, Asia/Taipei: merged source `3c096c8`, retaining remote main `4d1348c` and feature `8709245`. This is the retained phone build, not the latest repository revision. The physical device is a Motorola edge plus, Android 12 / API 31, arm64-v8a, Adreno 650, with 4096-byte pages.
 

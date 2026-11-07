@@ -1,21 +1,20 @@
 # 统一游戏大厅：方案与使用手册
 
-[下载与安装修正轮次](transfer-round-2026-11-07.md)已覆盖安装并完成 USB 实测：源码 `720c785`、APK `e3b259…742da`，26 项 JVM、13 项 Android 测试通过；2048 完成真实下载与存读档，《旷野之息》完成移动、新写档及新进程重读。音频断线和 BotW 直接返回键仍有已确认缺陷，完整 G0、长期性能和正式发行继续开放。
+[真机运行修正轮次](runtime-round-2026-11-07.md)已覆盖安装到手机：源码 `f1c68f7`、APK `d8c51a…79af`，13 项 Android 测试重新执行并通过。2048 v3 升级保留原进度，完成真实下载、操作、直接返回退出和新进程存档重读。两份录音检出 440 Hz 音效及声音流重开证据，主观音量与音质仍未验收。《旷野之息》新版检查及五轮跨游戏切换，按用户选择等待另一项手机测试结束后继续；完整 G0、长期性能及正式发行仍开放。
 
-新版 `720c785` 真机素材，片段无音轨；后方旧图库保留历史身份。
+本轮实拍素材；视频无音轨，历史素材保留各自原身份。
 
-<table><tr><td><img src="../media/transfer-discovery.png" width="220" alt="USB discovery"></td><td><img src="../media/transfer-installed.png" width="220" alt="USB download history"></td></tr></table>
+<table><tr><td><img src="../media/runtime-library.png" width="220" alt="Actual portrait library"></td><td><img src="../media/runtime-installed.png" width="220" alt="Actual completed v3 download"></td></tr></table>
 
-![USB hall download](../media/transfer-hall.gif)
+![Actual v3 download and preparation](../media/runtime-hall.gif)
 
-[Hall MP4](../media/transfer-hall.mp4) · [2048 GIF](../media/transfer-2048.gif) · [2048 MP4](../media/transfer-2048.mp4) · [Reloaded board](../media/transfer-reloaded.png) · [Provenance](../media/README.md)
+[Hall MP4](../media/runtime-hall.mp4) · [2048 GIF](../media/runtime-2048.gif) · [2048 MP4](../media/runtime-2048.mp4) · [Reloaded board](../media/runtime-reloaded.png) · [Provenance](../media/README.md)
 
-
-新增[恢复与存档修正轮次](recovery-round-2026-11-07.md)与 [ADR 0007](../engineering/decisions/0007-policy-runtime-save-recovery.md)：策略采用分范围稳定序列，启动前先对账安装与任务；游戏进程持有独立于大厅的保护租约，存档交换持久保存原游戏、草稿、阶段和本地索引。导出先生成快照再选位置；导入可恢复确认，确认后全程禁取消并显示处理中。正式 API 更新前须按 ADR 迁移数据库。本轮验证状态与已安装版本、历史截图分开记录。
+此前[下载与安装轮次](transfer-round-2026-11-07.md)和[恢复与存档轮次](recovery-round-2026-11-07.md)均保留原始执行范围；旧 APK 的 BotW 新写档与重读不算新版通过。
 
 [English](README.md) · [项目首页](../../README.zh-CN.md) · [完整产品需求](../product/README.md) · [技术开发约束](../engineering/README.md)
 
-[实际验证](implementation-status.md) · [后续真机步骤](device-validation.md) · [机器可读执行记录](verification/2026-11-07-main.json) · [截图与录屏](../media/README.md) · [空间实测](storage.md)
+[实际验证](implementation-status.md) · [后续真机步骤](device-validation.md) · [当前机器可读执行记录](verification/2026-11-07-runtime-round.json) · [截图与录屏](../media/README.md) · [空间实测](storage.md)
 
 [90 项需求实现对照](requirement-coverage.md)关联原有 360 条细则、代码入口与验收边界；[验证记录](implementation-status.md)只登记真实执行结果。
 
@@ -242,6 +241,6 @@ services/.venv/Scripts/python.exe devtools/hall_media.py --source .gamedump/Hall
 
 `all` 复测会删除并重新下载已安装的 **2048 示例资源**，默认保留存档，并核对删除、重新安装前后的存档字节一致。测试仅操作独立 NsA 调试 App，不修改原有商业游戏 App。NsA 一旦失去前台，工具会停止发送输入。视频为静音屏幕录制，不能据此认定声音验收通过。
 
-[执行记录](verification/2026-11-07-main.json)分别登记合并后的 main 与前一 APK，不能把不同 APK 的测试拼成同一构建通过。main 已将《旷野之息》原始存档读入神庙场景；移动、新保存重读、声音和完整 G0 尚待验收，待手机可用后按[真机步骤](device-validation.md)继续。
+[当前运行记录](verification/2026-11-07-runtime-round.json)按精确安装包登记本轮结果。2048 的升级、操作、存读档及音频信号观察，不能替代旧版 BotW 的移动和新写档重读。新版 BotW、连续切换、长期性能和主观音频仍待验收，等另一项授权手机测试结束后按[真机步骤](device-validation.md)继续，各版本保留各自的结果。
 
 已完成的代码、文档和审核素材统一提交、推送到 `git@github.com:wikigsroom/NsA-core.git` 的 `main`，先获取并保留远端更新，不强制覆盖历史。私有调试配置、APK、游戏文件、密钥、存档和原始证据保持忽略。[验证记录](implementation-status.md)说明本地历史运行身份的保留范围；正式发布前必须重新生成匹配身份和不可变版本，完成签名、线上服务与设备验收。
