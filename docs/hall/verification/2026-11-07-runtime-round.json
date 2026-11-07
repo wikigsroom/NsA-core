@@ -10,9 +10,10 @@
   "branch": "main",
   "repository": "https://github.com/wikigsroom/NsA-core",
   "apk": {
-    "path": "android/app/build/outputs/apk/debug/app-debug.apk",
+    "path": ".gamedump/Hall/build-evidence/20261107-native-input/before/app-debug.apk",
     "bytes": 82194663,
-    "sha256": "d8c51a63f1c6134ec53237209cfc9253ffa543bc0206bfc6dfb029a1784c79af"
+    "sha256": "d8c51a63f1c6134ec53237209cfc9253ffa543bc0206bfc6dfb029a1784c79af",
+    "original_build_path": "android/app/build/outputs/apk/debug/app-debug.apk"
   },
   "test_apk": {
     "path": "android/app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk",

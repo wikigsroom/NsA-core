@@ -1,0 +1,27 @@
+{
+  "source": "USB physical Android device",
+  "application_id": "org.nsa.hall.debug",
+  "captured_at": "2026-11-07T03:26:40.134482+00:00",
+  "synthetic": false,
+  "installed_apk_sha256": "5808f5a427a2a0ee8654d7fc9f994a486950048a52bf184ea6f5ca50869e6d06",
+  "source_sha256": "8c716b6c3216dd279aace16d2b9d4d043f917b8dce1eb4b3cebb86585f508b8c",
+  "artifacts": [
+    {
+      "name": "native-hall.gif",
+      "sha256": "3605bf26c08a99de8ace388c7574af3d3b62c005eafb21c0dab3a9124d670f4f",
+      "width": 420,
+      "height": 910,
+      "duration_seconds": "18.000000"
+    },
+    {
+      "name": "native-hall.mp4",
+      "sha256": "e87091604b2db00ee37cbb625094962e41018cd97c50fcd1329d3c661ca1233b",
+      "width": 720,
+      "height": 1560,
+      "duration_seconds": "17.990000"
+    }
+  ],
+  "transform": "resize and GIF palette encoding; no synthetic frames; MP4 has no audio track",
+  "start_seconds": 0,
+  "requested_duration_seconds": 18.0
+}

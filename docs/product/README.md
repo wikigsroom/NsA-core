@@ -31,4 +31,4 @@
 
 项目约束：所有新增工程、依赖、构建、下载与缓存位于 `E:\dev\sandbox\游戏移植`；不调用 Docker/WSL/VM/模拟器，设备验收用 USB 真机；浏览器结束关闭不用 tab。更新推送到 [wikigsroom/NsA-core](https://github.com/wikigsroom/NsA-core)，上游保留 [shirai91/nx2android](https://github.com/shirai91/nx2android)；游戏/密钥/大产物不提交。
 
-当前 BotW 在 Snapdragon 865/Adreno 650 的结果约 7～13 FPS、可操作与写档，实际重载尚未验证，仍为内部实验。后续先从 T-01～04/G0 验证同 APK 双游戏、独立数据、退出与实际存读档，再推进真实服务下载闭环和完整大厅；不能把设计稿当成已上线产品。
+基线制定时 BotW 在 Snapdragon 865/Adreno 650 约 7～13 FPS，仅有操作与写档证据。后续[构建修正轮次](../hall/native-build-round-2026-11-07.md)已取得统一包内的新存档重读证据，同时发现低内存回收后的会话恢复缺口；仍属内部实验，正式可玩性未验收。T-01～04/G0、完整规则与发行门槛继续保留，不能把设计稿或短程运行当成已上线产品。

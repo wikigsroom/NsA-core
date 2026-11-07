@@ -1,10 +1,10 @@
 # Physical-device validation / 真机验收操作
 
-[真机运行修正轮次](runtime-round-2026-11-07.md)已安装：源码 `f1c68f7`、APK `d8c51a…79af`，13 项 Android 测试通过。2048 v3 已完成真实下载、操作、正常返回退出、新进程重读；修正后的两次 440 Hz 音频采集也已通过。**《旷野之息》因运行库编入旧标识，在进入游戏前被 `MODULE_MISMATCH` 拒绝。** [构建修正轮次](native-build-round-2026-11-07.md)补齐中文依赖路径与编译身份检查，再统一重建。五轮跨游戏、完整 G0、长期性能及正式发行仍未验收。
+[构建修正轮次](native-build-round-2026-11-07.md)已安装：源码 `d427f08`、APK `5808f5…6d06`，两个运行库的实际编译身份与安装包一致。2048 v4 已下载、操作、保存并重读；《旷野之息》已进入真实场景，完成触控移动、新手动存档、正常返回与新进程重读。20 项原生回归通过；Android 首次 12/13（导航等待超时），同包重跑 13/13。**系统因内存不足回收大厅后，旧会话曾阻止切换，需显式恢复；自动恢复、持续可玩性和正式发行仍未验收。** 重启大厅后完成 5/5 轮 A → B → A；保留此前中断。完整 G0 仍待验收。
 
-[Executed results / 已执行结果](implementation-status.md) · [Current machine record](verification/2026-11-07-runtime-round.json) · [English guide](README.md) · [中文手册](README.zh-CN.md) · [Normative gates / 技术门槛](../engineering/08-quality-governance.md)
+[Executed results / 已执行结果](implementation-status.md) · [Current machine record](verification/2026-11-07-native-build-round.json) · [English guide](README.md) · [中文手册](README.zh-CN.md) · [Normative gates / 技术门槛](../engineering/08-quality-governance.md)
 
-This is the reusable device procedure, not a pass report. The transfer correction is implemented and its 13 isolated cases have device evidence; the new runtime candidate repeats those 13 tests. The peer test has finished; rebuild the corrected candidate before resuming the blocked BotW/G0 checks. Historical source reviews remain pinned to their original snapshots. / 本文件是可复用操作规范；下载安装修正与 13 项隔离测试已有实际结果，不能再称其“尚未实现”。另一项目的测试已结束；完成构建修正后继续本轮游戏检查。
+This is the reusable device procedure, not a pass report. The transfer correction is implemented and its 13 isolated cases have device evidence; the new runtime candidate repeats those 13 tests. The corrected build has actual BotW save/reload evidence; main-process low-memory recovery remains open. Historical source reviews remain pinned to their original snapshots. / 本文件是可复用操作规范；下载安装修正与 13 项隔离测试已有实际结果，不能再称其“尚未实现”。构建修正已通过限定真机检查；大厅低内存回收后的自动恢复仍需修正和集中验证。
 
 ## Preparation / 准备
 
@@ -26,7 +26,7 @@ services/.venv/Scripts/python.exe devtools/hall_smoke.py all
 
 ## Recovery-candidate cases / 恢复候选专测
 
-The current candidate has **13 instrumentation cases, all rerun and passed in 21.978 seconds**: `DeviceContractTest`, `NavigationRecoveryTest`, five-case `SaveRecoveryTest` and six-case transfer-persistence coverage. Repeat the complete suite after a relevant candidate change, preserving its progress and exact identity. `SaveRecoveryTest` uses separate Room/files roots beneath its own test cache; it never targets the player's installed games or saves. Compilation alone does not establish its filesystem assertions.
+The current candidate has **13 instrumentation cases: the first attempt passed 12/13 with a navigation wait timeout, and the same-APK rerun passed all 13 in 10.31 seconds**: `DeviceContractTest`, `NavigationRecoveryTest`, five-case `SaveRecoveryTest` and six-case transfer-persistence coverage. Repeat the complete suite after a relevant candidate change, preserving its progress and exact identity. `SaveRecoveryTest` uses separate Room/files roots beneath its own test cache; it never targets the player's installed games or saves. Compilation alone does not establish its filesystem assertions.
 
 当前候选的 13 项仪器测试已实际重跑通过，其中 5 项存档恢复、6 项任务持久化及 2 项能力/导航检查。后续相关变更仍需重新执行，保留测试报告和失败；测试私有目录与玩家资料隔离。下表列出的完整行为矩阵不等于已全部覆盖。
 

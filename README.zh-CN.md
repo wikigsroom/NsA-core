@@ -1,16 +1,16 @@
 # NsA · Android 统一游戏大厅
 
-[真机运行修正轮次](docs/hall/runtime-round-2026-11-07.md)已安装：源码 `f1c68f7`、APK `d8c51a…79af`，13 项 Android 测试通过。2048 v3 已完成真实下载、操作、正常返回退出、新进程重读；修正后的两次 440 Hz 音频采集也已通过。**《旷野之息》因运行库编入旧标识，在进入游戏前被 `MODULE_MISMATCH` 拒绝。** [构建修正轮次](docs/hall/native-build-round-2026-11-07.md)补齐中文依赖路径与编译身份检查，再统一重建。五轮跨游戏、完整 G0、长期性能及正式发行仍未验收。
+[构建修正轮次](docs/hall/native-build-round-2026-11-07.md)已安装：源码 `d427f08`、APK `5808f5…6d06`，两个运行库的实际编译身份与安装包一致。2048 v4 已下载、操作、保存并重读；《旷野之息》已进入真实场景，完成触控移动、新手动存档、正常返回与新进程重读。20 项原生回归通过；Android 首次 12/13（导航等待超时），同包重跑 13/13。**系统因内存不足回收大厅后，旧会话曾阻止切换，需显式恢复；自动恢复、持续可玩性和正式发行仍未验收。** 重启大厅后完成 5/5 轮 A → B → A；保留此前中断。完整 G0 仍待验收。
 
 本轮实拍素材；视频无音轨，历史素材保留各自原身份。
 
-<table><tr><td><img src="docs/media/runtime-library.png" width="220" alt="Actual portrait library"></td><td><img src="docs/media/runtime-installed.png" width="220" alt="Actual completed v3 download"></td></tr></table>
+<table><tr><td><img src="docs/media/native-library.png" width="220" alt="Actual portrait library"></td><td><img src="docs/media/native-installed.png" width="220" alt="Actual completed v4 download"></td></tr></table>
 
-![Actual v3 download and preparation](docs/media/runtime-hall.gif)
+![Actual v4 download and preparation](docs/media/native-hall.gif)
 
-[Hall MP4](docs/media/runtime-hall.mp4) · [2048 GIF](docs/media/runtime-2048.gif) · [2048 MP4](docs/media/runtime-2048.mp4) · [Reloaded board](docs/media/runtime-reloaded.png) · [Provenance](docs/media/README.md)
+[Hall MP4](docs/media/native-hall.mp4) · [2048 GIF](docs/media/native-play.gif) · [2048 MP4](docs/media/native-play.mp4) · [Reloaded board](docs/media/native-reloaded.png) · [Provenance](docs/media/README.md)
 
-此前[下载与安装轮次](docs/hall/transfer-round-2026-11-07.md)和[恢复与存档轮次](docs/hall/recovery-round-2026-11-07.md)均保留原始执行范围；旧 APK 的 BotW 新写档与重读不算新版通过。
+此前[运行修正轮次](docs/hall/runtime-round-2026-11-07.md)、[下载与安装轮次](docs/hall/transfer-round-2026-11-07.md)和[恢复与存档轮次](docs/hall/recovery-round-2026-11-07.md)均保留原始执行范围；旧 APK 的 BotW 新写档与重读不算新版通过。
 
 [English](README.md) · [完整方案与使用说明](docs/hall/README.zh-CN.md) · [产品需求](docs/product/README.md) · [技术约束](docs/engineering/README.md)
 
@@ -18,7 +18,7 @@
 
 基于 [nx2android](https://github.com/shirai91/nx2android) 与 [nxnative](https://github.com/seedds/nxnative) 开发。新增 Kotlin/Compose 大厅、独立游戏进程、内容目录与发布服务，沿用已定稿的 D「曜黑极简」设计。源码更新目标是 [wikigsroom/NsA-core](https://github.com/wikigsroom/NsA-core)。
 
-**当前状态：运行修正候选 `d8c51a…79af` 已在真机安装。** 实际结果及待测项见[本轮执行记录](docs/hall/runtime-round-2026-11-07.md)。下方旧素材保留各自原 APK 身份。
+**当前状态：构建修正候选 `5808f5…6d06` 已在真机安装。** 实际结果及待测项见[本轮执行记录](docs/hall/native-build-round-2026-11-07.md)。下方旧素材保留各自原 APK 身份。
 
 [历史定向源码核对](docs/hall/source-review.md)保留了本轮策略、进程重建与存档交换修正的原始问题和证据。其固定记录不改写；已修改源码、电脑端测试通过仍不等于真机验收。本次定向检查覆盖三个需求，原有代码映射、截图与录像均不代表全部验收通过。
 

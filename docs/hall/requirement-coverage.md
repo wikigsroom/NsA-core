@@ -1,5 +1,7 @@
 # Requirement implementation map / 需求实现对照
 
+本轮[编译身份修正及限定真机结果](native-build-round-2026-11-07.md)已实际验证新候选的两款游戏存读档；低内存回收后的会话恢复仍有开放问题。它不会自动通过全部原需求或 G0。
+
 本轮后续源码修正及独立执行状态见[下载与安装修正轮次](transfer-round-2026-11-07.md)。下表保留原源码映射与各自历史审查状态；新增实现不自动通过 AC-P05、CON-06 或其余需求。
 
 Baseline v2.0: 90 requirement identities, 360 detailed rules. This is a source-navigation map, **not 90 passed requirements**. Original machine acceptance statuses remain unchanged. / 本表用于追踪代码入口，不表示 90 项已验收；原机器验收状态保持真实。

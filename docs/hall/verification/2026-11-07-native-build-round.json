@@ -1,0 +1,977 @@
+{
+  "record_version": 1,
+  "recorded_at_utc": "2026-11-07T04:13:28.208967+00:00",
+  "date_local": "2026-11-07",
+  "timezone": "Asia/Taipei",
+  "scope": "Compiled-identity correction, consolidated host checks and bounded physical-device observations; failures retained",
+  "formal_acceptance": "not_accepted",
+  "source_revision": "d427f08356f528d0b4a28910309489ef6cf4d2ab",
+  "branch": "main",
+  "repository": "https://github.com/wikigsroom/NsA-core",
+  "apk": {
+    "path": ".gamedump/Hall/build-evidence/20261107-session-recovery/before/app-debug.apk",
+    "bytes": 82195381,
+    "sha256": "5808f5a427a2a0ee8654d7fc9f994a486950048a52bf184ea6f5ca50869e6d06",
+    "original_build_path": "android/app/build/outputs/apk/debug/app-debug.apk"
+  },
+  "test_apk": {
+    "path": ".gamedump/Hall/build-evidence/20261107-session-recovery/before/app-debug-androidTest.apk",
+    "bytes": 2428862,
+    "sha256": "6ea5b06e8d6d1317b469111bdcf5a1d5791789b9c3326ae168584faf0aa3db66",
+    "original_build_path": "android/app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk"
+  },
+  "runtime_registry": {
+    "registry_schema": 1,
+    "app_version_code": 1,
+    "bootstrap_api_version": 1,
+    "slots": [
+      {
+        "approved_driver_ids": [
+          "system"
+        ],
+        "core_revision": "d427f08356f528d0b4a28910309489ef6cf4d2ab",
+        "library_name": "libnsa_2048.so",
+        "profile_digest": "f4ab9562219beb4c9855c401463fe5eca788ecc6297358f35c8b6d7f4b635d97",
+        "runtime_api_version": 1,
+        "runtime_slot_id": "nsa-2048-v1",
+        "settings_schema_version": 1,
+        "shader_bundle_versions": [
+          1
+        ],
+        "shader_chain_id": "software-rgba-v1",
+        "supported_module_build_ids": [
+          "f4ab9562219beb4c9855c401463fe5eca788ecc6297358f35c8b6d7f4b635d97"
+        ],
+        "library_sha256": "fc5cd424459640a88a076e869cade1cae899cf4f959da8ebc0a24df4e2dbd488"
+      },
+      {
+        "approved_driver_ids": [
+          "turnip26-sysmem-adreno650"
+        ],
+        "core_revision": "d427f08356f528d0b4a28910309489ef6cf4d2ab",
+        "library_name": "libnsa_botw.so",
+        "profile_digest": "c329645b44fa82a9d72dfb21a7c422d74c9cbf40cd6fca4a33e3d043045f17fa",
+        "runtime_api_version": 1,
+        "runtime_slot_id": "botw-190-arm64-v1",
+        "settings_schema_version": 1,
+        "shader_bundle_versions": [
+          1
+        ],
+        "shader_chain_id": "nx2a-dmsv-v1",
+        "supported_module_build_ids": [
+          "cd57b23fa4bbad65803d9788c01821ee00000000000000000000000000000000",
+          "f39f4c431234c72eb520cfdd1001bbcf02b3e885000000000000000000000000",
+          "574284b40c06cf1821a44857939083bee5716820000000000000000000000000"
+        ],
+        "library_sha256": "7910de35023e27402d76b83d27b9ed63c89f3f52f8348079155211f6ded8b4cb"
+      }
+    ]
+  },
+  "room_schema": 2,
+  "runtime_api": 1,
+  "host_checks": {
+    "native_regression": {
+      "executed": 20,
+      "passed": 20,
+      "skipped": 0,
+      "seconds": 18.918,
+      "real_ndk_unicode_compilation": true
+    },
+    "botw_sources": {
+      "checked": 145,
+      "actually_compiled": 1,
+      "cached": 144,
+      "failed": 0
+    },
+    "compiled_metadata_and_soname": "passed both actual ELF slots and final packaged guard",
+    "preceding_stale_host_rejected": "Missing or duplicate compiled slot identity; rebuild the selected runtime",
+    "android": {
+      "result": "passed",
+      "elapsed": "3m 26s",
+      "tasks_executed": 9,
+      "tasks_up_to_date": 81
+    },
+    "jvm": {
+      "existing_cases": 26,
+      "fresh_execution": false,
+      "task_status": "UP-TO-DATE"
+    },
+    "lint": {
+      "errors": 0,
+      "warnings": 16
+    },
+    "baseline": {
+      "groups_passed": 8,
+      "schemas": 13,
+      "positive_examples": 20,
+      "scope": "documentation/contracts only"
+    }
+  },
+  "content": {
+    "new_release": "nsa-2048-local-v4",
+    "published": true,
+    "previous_immutable_records_unchanged": 36,
+    "manifest_profile_module_shader_bindings_match": true,
+    "botw_content_unchanged": true,
+    "archive_bytes": 191,
+    "expanded_bytes": 41,
+    "old_release_ids": [
+      "nsa-2048-local-v1",
+      "nsa-2048-local-v2",
+      "nsa-2048-local-v3",
+      "botw-local-v1"
+    ]
+  },
+  "device": {
+    "model": "Motorola edge plus",
+    "api": 31,
+    "android": "12",
+    "abi": "arm64-v8a",
+    "gpu": "Adreno 650",
+    "page_size": 4096,
+    "overlay": "no uninstall or clear-data; 21 preexisting player files identical after overlay and instrumentation",
+    "instrumentation": {
+      "first_attempt": {
+        "passed": 12,
+        "total": 13,
+        "failure": "NavigationRecoveryTest initial 20-second wait timed out; original report retained"
+      },
+      "same_apk_rerun": {
+        "passed": 13,
+        "total": 13,
+        "seconds": 10.31
+      },
+      "cold_start_latency_accepted": false
+    }
+  },
+  "original_2048": {
+    "installed_apk_sha256": "5808f5a427a2a0ee8654d7fc9f994a486950048a52bf184ea6f5ca50869e6d06",
+    "processes": {
+      "hall": "21188",
+      "game": "21488",
+      "reloaded_game": "21915"
+    },
+    "committed_sha256": "a23d63409c45c36a97e5023d4a7515b0f2ce3faa87113140a68ce315af006e2f",
+    "reloaded_sha256": "a23d63409c45c36a97e5023d4a7515b0f2ce3faa87113140a68ce315af006e2f",
+    "played_board": [
+      0,
+      0,
+      2,
+      0,
+      0,
+      4,
+      2,
+      4,
+      0,
+      128,
+      4,
+      16,
+      0,
+      2,
+      32,
+      4
+    ],
+    "reloaded_board": [
+      0,
+      0,
+      2,
+      0,
+      0,
+      4,
+      2,
+      4,
+      0,
+      128,
+      4,
+      16,
+      0,
+      2,
+      32,
+      4
+    ],
+    "observed_at": "2026-11-07T03:28:08.328701+00:00",
+    "scope": "Actual input, first safe return, fresh process and matching reloaded save/board; final cleanup is a separate step"
+  },
+  "audio": {
+    "record": {
+      "path": ".gamedump/Hall/device-evidence/native-build-audio-20261107/observation.json",
+      "bytes": 2343,
+      "sha256": "4919464fb57659166ee7ec15ee267991a488a38b152f0d423a2809ac864d7c35"
+    },
+    "signal_check_passed": true,
+    "tone_440_fits": [
+      0.9999029778719665,
+      0.999835612428172
+    ],
+    "changed_saved_moves_per_capture": [
+      5,
+      4
+    ],
+    "reopens": 4,
+    "output_starts": 5,
+    "subjective_listening_accepted": false,
+    "botw_sound_accepted": false
+  },
+  "botw": {
+    "at": "2026-11-07T03:38:37.852747+00:00",
+    "apk_sha256": "5808f5a427a2a0ee8654d7fc9f994a486950048a52bf184ea6f5ca50869e6d06",
+    "hall_pid": "23279",
+    "game_pid": "23613",
+    "manual_slot": 1,
+    "displayed_new_label": "11/07/2026 11:37",
+    "before": {
+      "1/game_data.sav": "7b1f7dd5b26ec660e6ca93118d11cbf39bb7f89060a9d8fdd29ad5e7f083c594",
+      "1/caption.sav": "4bab99a4d2d99b459511e720fbe000e4b9a242d01ccce02e779e94782461c58c",
+      "1/caption.jpg": "96d240869bf5f3603c6b78fab0cdd36b720c01ab781012c15453a2be1f69ddf4"
+    },
+    "committed": {
+      "1/game_data.sav": "9634af7eebe9f6d047d4557b147d76364720b5530f740d9ba2af1040ec542206",
+      "1/caption.sav": "d328d8fbd092fb798d8f64269e8ac8a1649d351e50971f6807a87d62b2da0d77",
+      "1/caption.jpg": "f5ece87026d55ad898286455a8809b724a6e2d3455531e28c21efc71a2bb1d0e"
+    },
+    "a_progress_unchanged": true,
+    "a_save_sha256": "9abb3374c0d6e6b4d165a45e9ef5b9485d2cb99950fc674e4a6e8d04a147d770",
+    "actual_touch_movement_reviewed": true,
+    "movement_evidence": "botw-during-upward-movement.png and botw-after-upward-movement.png",
+    "full_playability_accepted": false,
+    "direct_back_pause": true,
+    "cancel_exit_resumed_same_process": true,
+    "normal_confirmed_exit": true,
+    "portrait_restored": true,
+    "hall_survived_exit": true,
+    "reloaded_game_pid": "29126",
+    "gameplay_hud_observed": true,
+    "reloaded_progress": {
+      "1/game_data.sav": "9634af7eebe9f6d047d4557b147d76364720b5530f740d9ba2af1040ec542206",
+      "1/caption.sav": "d328d8fbd092fb798d8f64269e8ac8a1649d351e50971f6807a87d62b2da0d77",
+      "1/caption.jpg": "f5ece87026d55ad898286455a8809b724a6e2d3455531e28c21efc71a2bb1d0e"
+    },
+    "actual_reload_semantic_review_pending": false,
+    "load_samples": [
+      {
+        "at": "2026-11-07T03:41:33.674045+00:00",
+        "health_hud_pixels": 0
+      },
+      {
+        "at": "2026-11-07T03:41:39.453772+00:00",
+        "health_hud_pixels": 0
+      },
+      {
+        "at": "2026-11-07T03:41:46.343993+00:00",
+        "health_hud_pixels": 0
+      },
+      {
+        "at": "2026-11-07T03:41:52.283704+00:00",
+        "health_hud_pixels": 0
+      },
+      {
+        "at": "2026-11-07T03:41:58.258076+00:00",
+        "health_hud_pixels": 0
+      },
+      {
+        "at": "2026-11-07T03:42:04.813134+00:00",
+        "health_hud_pixels": 724
+      }
+    ],
+    "fresh_process_correct_native_slot": true,
+    "observed_at": "2026-11-07T03:42:06.667484+00:00",
+    "main_pid_after_extended_game_idle": "",
+    "actual_reload_scene_reviewed": true,
+    "actual_reload_save_list_reviewed": true,
+    "displayed_reloaded_save_label": "11/07/2026 11:38",
+    "displayed_save_confirmation_label": "11/07/2026 11:37",
+    "fresh_process_normal_exit": true,
+    "hall_pid_after_fresh_exit": "3158",
+    "observed_after_fresh_exit_at": "2026-11-07T03:46:32.205923+00:00"
+  },
+  "main_process_loss": {
+    "hall_pid": "23279",
+    "game_pid": "29126",
+    "android_exit_reason": "LOW_MEMORY",
+    "recorded_local_at": "2026-11-07 11:45:22.087",
+    "game_survived": true,
+    "normal_game_exit": true,
+    "recreated_hall_pid": "3158",
+    "next_launch_blocked_by_stale_session": true,
+    "end_game_confirmation_opened": true,
+    "final_recovery_confirmation_submitted": false,
+    "save_bytes_unchanged_while_confirmation_open": true,
+    "automatic_recovery_accepted": false,
+    "issue": "USB-RECOVER-01: stale persisted session after main loss and native exit; complete recovery and race coverage required"
+  },
+  "cross_game_switching": {
+    "original_attempt": "interrupted before A launched by stale-session guard; not a pass",
+    "second_attempt": "test harness missed final recovery confirmation; remained blocked",
+    "after_fresh_hall_restart": {
+      "apk_sha256": "5808f5a427a2a0ee8654d7fc9f994a486950048a52bf184ea6f5ca50869e6d06",
+      "hall_pid": "6724",
+      "rounds": [
+        {
+          "round": 1,
+          "at": "2026-11-07T03:56:41.563411+00:00",
+          "memory_before": {
+            "total_pss_kib": 251914,
+            "fd_count": 148
+          },
+          "battery_level": 6,
+          "temperature_tenths_c": 392,
+          "a_before_pid": "7310",
+          "a_save_sha256": "37f073f6768affc553b19e8a63ad4538126ca7470783e437bb1cf8dbc1ca9088",
+          "a_board": [
+            0,
+            0,
+            0,
+            2,
+            2,
+            0,
+            2,
+            4,
+            8,
+            8,
+            64,
+            128,
+            2,
+            4,
+            4,
+            2
+          ],
+          "b_pid": "7865",
+          "b_load_samples": [
+            {
+              "elapsed_monotonic": 31042.7312495,
+              "health_hud_pixels": 0
+            },
+            {
+              "elapsed_monotonic": 31048.3811352,
+              "health_hud_pixels": 0
+            },
+            {
+              "elapsed_monotonic": 31053.9699615,
+              "health_hud_pixels": 0
+            },
+            {
+              "elapsed_monotonic": 31059.5773702,
+              "health_hud_pixels": 0
+            },
+            {
+              "elapsed_monotonic": 31065.1305845,
+              "health_hud_pixels": 0
+            },
+            {
+              "elapsed_monotonic": 31071.2228213,
+              "health_hud_pixels": 724
+            }
+          ],
+          "a_reloaded_pid": "8492",
+          "memory_after": {
+            "total_pss_kib": 106740,
+            "fd_count": 141
+          },
+          "passed_observed_boundaries": true
+        },
+        {
+          "round": 2,
+          "at": "2026-11-07T03:59:31.363048+00:00",
+          "memory_before": {
+            "total_pss_kib": 105681,
+            "fd_count": 141
+          },
+          "battery_level": 6,
+          "temperature_tenths_c": 415,
+          "a_before_pid": "8866",
+          "a_save_sha256": "75d88bc781c1ffa89ccda0a19b36098c233b0535c59fb0b98416416a405ca7d3",
+          "a_board": [
+            0,
+            0,
+            0,
+            2,
+            0,
+            0,
+            2,
+            0,
+            0,
+            64,
+            128,
+            0,
+            4,
+            2,
+            32,
+            8
+          ],
+          "b_pid": "10059",
+          "b_load_samples": [
+            {
+              "elapsed_monotonic": 31211.9870852,
+              "health_hud_pixels": 0
+            },
+            {
+              "elapsed_monotonic": 31217.5127347,
+              "health_hud_pixels": 0
+            },
+            {
+              "elapsed_monotonic": 31223.1106356,
+              "health_hud_pixels": 0
+            },
+            {
+              "elapsed_monotonic": 31228.7139704,
+              "health_hud_pixels": 0
+            },
+            {
+              "elapsed_monotonic": 31234.3214791,
+              "health_hud_pixels": 0
+            },
+            {
+              "elapsed_monotonic": 31240.3868469,
+              "health_hud_pixels": 725
+            }
+          ],
+          "a_reloaded_pid": "10744",
+          "memory_after": {
+            "total_pss_kib": 106832,
+            "fd_count": 140
+          },
+          "passed_observed_boundaries": true
+        },
+        {
+          "round": 3,
+          "at": "2026-11-07T04:02:20.248509+00:00",
+          "memory_before": {
+            "total_pss_kib": 105440,
+            "fd_count": 140
+          },
+          "battery_level": 6,
+          "temperature_tenths_c": 415,
+          "a_before_pid": "11118",
+          "a_save_sha256": "5ff473b9bab31e60b18453683730c75e4dcd4b962e3c8bb585fd2a3244076d52",
+          "a_board": [
+            0,
+            0,
+            32,
+            2,
+            0,
+            0,
+            4,
+            8,
+            2,
+            128,
+            64,
+            2,
+            4,
+            2,
+            2,
+            4
+          ],
+          "b_pid": "11621",
+          "b_load_samples": [
+            {
+              "elapsed_monotonic": 31377.2311935,
+              "health_hud_pixels": 0
+            },
+            {
+              "elapsed_monotonic": 31382.7703811,
+              "health_hud_pixels": 0
+            },
+            {
+              "elapsed_monotonic": 31388.3303465,
+              "health_hud_pixels": 0
+            },
+            {
+              "elapsed_monotonic": 31393.8051144,
+              "health_hud_pixels": 0
+            },
+            {
+              "elapsed_monotonic": 31399.3188606,
+              "health_hud_pixels": 0
+            },
+            {
+              "elapsed_monotonic": 31405.3230274,
+              "health_hud_pixels": 725
+            }
+          ],
+          "a_reloaded_pid": "12194",
+          "memory_after": {
+            "total_pss_kib": 107446,
+            "fd_count": 141
+          },
+          "passed_observed_boundaries": true
+        },
+        {
+          "round": 4,
+          "at": "2026-11-07T04:05:04.800609+00:00",
+          "memory_before": {
+            "total_pss_kib": 106018,
+            "fd_count": 141
+          },
+          "battery_level": 6,
+          "temperature_tenths_c": 420,
+          "a_before_pid": "12568",
+          "a_save_sha256": "5e934ed5558776a382b2dd4dcb56e7731ba754c3bb94bf9e38797353217ea35c",
+          "a_board": [
+            0,
+            0,
+            32,
+            0,
+            0,
+            2,
+            8,
+            8,
+            0,
+            8,
+            128,
+            64,
+            2,
+            2,
+            8,
+            8
+          ],
+          "b_pid": "13131",
+          "b_load_samples": [
+            {
+              "elapsed_monotonic": 31543.5657701,
+              "health_hud_pixels": 0
+            },
+            {
+              "elapsed_monotonic": 31549.1319281,
+              "health_hud_pixels": 0
+            },
+            {
+              "elapsed_monotonic": 31554.7577417,
+              "health_hud_pixels": 0
+            },
+            {
+              "elapsed_monotonic": 31560.3087632,
+              "health_hud_pixels": 0
+            },
+            {
+              "elapsed_monotonic": 31565.8665695,
+              "health_hud_pixels": 0
+            },
+            {
+              "elapsed_monotonic": 31571.9302262,
+              "health_hud_pixels": 724
+            }
+          ],
+          "a_reloaded_pid": "13687",
+          "memory_after": {
+            "total_pss_kib": 107123,
+            "fd_count": 140
+          },
+          "passed_observed_boundaries": true
+        },
+        {
+          "round": 5,
+          "at": "2026-11-07T04:07:50.435728+00:00",
+          "memory_before": {
+            "total_pss_kib": 105687,
+            "fd_count": 140
+          },
+          "battery_level": 6,
+          "temperature_tenths_c": 425,
+          "a_before_pid": "14066",
+          "a_save_sha256": "175250c3c5f66fda553f890fa5e9abfa2241d90082575c11c4748ca47e2e2b83",
+          "a_board": [
+            0,
+            0,
+            64,
+            0,
+            2,
+            0,
+            16,
+            4,
+            32,
+            4,
+            8,
+            128,
+            2,
+            4,
+            4,
+            16
+          ],
+          "b_pid": "14580",
+          "b_load_samples": [
+            {
+              "elapsed_monotonic": 31707.631851,
+              "health_hud_pixels": 0
+            },
+            {
+              "elapsed_monotonic": 31713.2060416,
+              "health_hud_pixels": 0
+            },
+            {
+              "elapsed_monotonic": 31718.9046042,
+              "health_hud_pixels": 0
+            },
+            {
+              "elapsed_monotonic": 31724.678273,
+              "health_hud_pixels": 0
+            },
+            {
+              "elapsed_monotonic": 31730.2342382,
+              "health_hud_pixels": 0
+            },
+            {
+              "elapsed_monotonic": 31736.2318252,
+              "health_hud_pixels": 725
+            }
+          ],
+          "a_reloaded_pid": "15148",
+          "memory_after": {
+            "total_pss_kib": 108195,
+            "fd_count": 140
+          },
+          "passed_observed_boundaries": true
+        }
+      ],
+      "botw_progress": {
+        "1/game_data.sav": "9634af7eebe9f6d047d4557b147d76364720b5530f740d9ba2af1040ec542206",
+        "1/caption.sav": "d328d8fbd092fb798d8f64269e8ac8a1649d351e50971f6807a87d62b2da0d77",
+        "1/caption.jpg": "f5ece87026d55ad898286455a8809b724a6e2d3455531e28c21efc71a2bb1d0e"
+      },
+      "semantic_game_frames_reviewed": true,
+      "formal_acceptance": "not_accepted",
+      "semantic_review_note": "All five fresh-load lists show the new 11/07/2026 11:38 manual save; loaded shrine scenes match its position. A board bytes and all 16 rendered tiles are independently checked in every round.",
+      "all_15_game_pids_distinct": true
+    },
+    "completed_rounds": 5,
+    "five_rounds_and_semantic_review_completed": true,
+    "automatic_main_loss_recovery_accepted": false,
+    "two_switch_titles_accepted": false
+  },
+  "performance": {
+    "observation": "short Shrine of Resurrection sample; no representative 30-minute run",
+    "p50_frame_ms": 79.45,
+    "p95_frame_ms": 94.26,
+    "equivalent_inverse_p50_fps": 12.59,
+    "resident_footprint_mib": 1673,
+    "accepted_playable": false
+  },
+  "public_media": {
+    "new_prefixes": [
+      "native-library",
+      "native-installed",
+      "native-reloaded",
+      "native-hall",
+      "native-play"
+    ],
+    "new_artifacts": 7,
+    "source_apk_sha256": "5808f5a427a2a0ee8654d7fc9f994a486950048a52bf184ea6f5ca50869e6d06",
+    "silent": true,
+    "botw_frames_exported": false,
+    "historical_media_identities_preserved": true
+  },
+  "remaining": [
+    "USB-RECOVER-01 automatic recovery and its race cases",
+    "cold-start latency and first instrumentation timeout",
+    "complete G0",
+    "representative continuous 30-minute performance/game-speed/temperature",
+    "subjective sound and BotW audio",
+    "physical power-loss/ENOSPC",
+    "remaining requirement/device coverage",
+    "production content, service deployment and release signing"
+  ],
+  "private_evidence": [
+    {
+      "path": "output/hall/native-build-round-20261107/native-input-tests.log",
+      "bytes": 2551,
+      "sha256": "703888d409660635c48b0bdc420b94dca203c19f73e072cea5190f095fd423dc"
+    },
+    {
+      "path": "output/hall/native-build-round-20261107/native-build.log",
+      "bytes": 219,
+      "sha256": "abbb7150287b6703408b7cc4fd47fc2eaa16dc7ed968b4817ce72d3a470c2320"
+    },
+    {
+      "path": "output/hall/native-build-round-20261107/android-build.log",
+      "bytes": 5794,
+      "sha256": "8fdb692c0caf26b2b6624584b4743070c2298f749ee09e2e4128fceacc7f66b5"
+    },
+    {
+      "path": "output/hall/native-build-round-20261107/baseline.json",
+      "bytes": 7836,
+      "sha256": "e17537776f4f9791e7b1f78041153d8576894e4b87b6009b481a31793177574b"
+    },
+    {
+      "path": "output/hall/native-build-round-20261107/binding-check.json",
+      "bytes": 1981,
+      "sha256": "b447e24276a83cdefb6d93e52afb354b1f431a9da7fa8fef44a1cc399e74658c"
+    },
+    {
+      "path": "output/hall/native-build-round-20261107/publication-check.json",
+      "bytes": 383,
+      "sha256": "08e489e7fcf0e72d8a23a7148018cddc84472999cd797561bd1a2bf13c909564"
+    },
+    {
+      "path": "output/hall/native-build-round-20261107/lint.xml",
+      "bytes": 17965,
+      "sha256": "e28705e576859d7738ce5ffd8505f044319f30f64d01bb8cb719cf4ad5168bf1"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-native-build/preflight.json",
+      "bytes": 4489,
+      "sha256": "4bbd57118d9faf1e89801d4259b715eaa275691272cc8cf1ed7aa946770deb2f"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-native-build/first-instrumentation.txt",
+      "bytes": 10755,
+      "sha256": "13ebce66612cbcf321dbee63b9efbbe9b44fcc46d61331735a79ae01772297ab"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-native-build/instrumentation.txt",
+      "bytes": 9099,
+      "sha256": "9198615579f900719eaabf967be81916f702b54972fa1e5f7bc9db01cacaf6cd"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-native-build/after-instrumentation/snapshot.json",
+      "bytes": 6734,
+      "sha256": "c8c1d7d841778fd96645390b815a191fb5624fae7abbcd181109790d4a5ee742"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-native-build/2048-session-observations.json",
+      "bytes": 878,
+      "sha256": "a8799265d7579b8bfd1949fc84a883007929b7b379013abeab3a9b80e3b44a8d"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-native-build/after-2048/snapshot.json",
+      "bytes": 7180,
+      "sha256": "78ed412125113baa9fad73158090980078c617bbce80ffc7f481b161ec768965"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/native-build-audio-20261107/observation.json",
+      "bytes": 2343,
+      "sha256": "4919464fb57659166ee7ec15ee267991a488a38b152f0d423a2809ac864d7c35"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-native-build/botw-new-progress.json",
+      "bytes": 2812,
+      "sha256": "945bbcedfcfb0779b82ebc344cea412fb8d109e1ee9ee4cabd2d874b0e0ca87a"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-native-build/botw-fresh-save-list.png",
+      "bytes": 606968,
+      "sha256": "e7e56296636dfff9ebe13427964dfbbf7df06025228425e92dcfd63d2be42088"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-native-build/botw-fresh-loaded.png",
+      "bytes": 1021273,
+      "sha256": "7a84ba93e97de0d8a719708b4a4095cf237dc8a18905fa3c0eacafdf2caae8e0"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-native-build/botw-during-upward-movement.png",
+      "bytes": 1078393,
+      "sha256": "eaac1cf81bcc5f0ac18a9571afdbd9f067d77c4d56412fb9bdb538c07350adba"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-native-build/botw-after-upward-movement.png",
+      "bytes": 1080473,
+      "sha256": "17a4c422ba0ee3a3776097538d21afc455b5d8e4e41bc29b911f9d1b76c6ef9e"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-native-build/application-exit-info.txt",
+      "bytes": 8063,
+      "sha256": "2ca5e2f4d73a80158e3857574a59df2a1c4be05face7bec8181f676c356b598f"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-native-build/five-cycles/observations.json",
+      "bytes": 753,
+      "sha256": "71d8284bffed645c307a21dda8d658ba2ed9cf7cf7ad2bc6111d272aed59249d"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-native-build/five-cycles/manual-recovery.json",
+      "bytes": 1541,
+      "sha256": "1b541edfa4e63fd99482e5f987ed699efef38b913bcd6e9659c9258ebbb6c68b"
+    },
+    {
+      "path": "output/hall/native-build-round-20261107/five-cycles.log",
+      "bytes": 469,
+      "sha256": "9a1f79a1b3e6efb31c087d735c772e09b807972c720fb4ea059cc4a960a166cd"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-native-build/five-cycles-after-recovery/observations.json",
+      "bytes": 753,
+      "sha256": "8c2ff0403d78f5b5fcad65b266b90f9c9d23954d37a4e35db4ea12f879bbed9c"
+    },
+    {
+      "path": "output/hall/native-build-round-20261107/five-cycles-after-recovery.log",
+      "bytes": 499,
+      "sha256": "abdaf66d0c1436e68bc59e70ff0fffb01b74401a4ea3c5dd900a9a95df3c4c11"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-native-build/after-interrupted-cycles/snapshot.json",
+      "bytes": 7170,
+      "sha256": "ef407036a070ffb53e338c57864020fe7404ecf330167614430d28001c9f2ca0"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-native-build/restart-before-five-cycles.json",
+      "bytes": 279,
+      "sha256": "4eba1a0b19b85d72c191c9a9653bffdb5f7204f6cc307e7986542866470839ac"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-native-build/five-cycles-after-restart/observations.json",
+      "bytes": 8004,
+      "sha256": "454faf2114be9967b1580be277e9bbbb8852c29751bc8052cbd08338341c4ce5"
+    },
+    {
+      "path": "output/hall/native-build-round-20261107/five-cycles-after-restart.log",
+      "bytes": 181,
+      "sha256": "88344370bfb897b648c23249b3ee5b3d348384be56f270708632f49231562ea8"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-native-build/after-games/snapshot.json",
+      "bytes": 7063,
+      "sha256": "c49c87222f87a232c0f89db60cb4b77fd0654a5338f0bb58c7cfbc649c9b72a9"
+    },
+    {
+      "path": "output/hall/native-build-round-20261107/storage.json",
+      "bytes": 1122,
+      "sha256": "942d5386bec6d7c2ff8642804fdfe81ff636ce4e81ad59f6d5033a1df48124f9"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-native-build/five-cycles-after-restart/1-a-committed.png",
+      "bytes": 24060,
+      "sha256": "c328f959179ced2fbfef32f43082fd995acb4531f4110d0daa72d1ea41d5ee81"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-native-build/five-cycles-after-restart/1-a-reloaded.png",
+      "bytes": 23616,
+      "sha256": "3744dec71f7291d5b8590901ae864c9425cbc0473ab5044ac5020403f315dd8c"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-native-build/five-cycles-after-restart/1-b-save-list.png",
+      "bytes": 763920,
+      "sha256": "7a183916ce8715de47dbff3a1124fd249f31bb8a6df8013066b6fb7ba55a73b9"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-native-build/five-cycles-after-restart/1-b-loaded.png",
+      "bytes": 1063677,
+      "sha256": "4b042244f4fd7103320cf5d60ef30a2086099958da65d4881121e3d88787346a"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-native-build/five-cycles-after-restart/1-a-final-return.png",
+      "bytes": 206758,
+      "sha256": "2fd9cdf7ddf720290089e0b8f760d263daca0a07db68c5ddbdd7a58f8b215abb"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-native-build/five-cycles-after-restart/2-a-committed.png",
+      "bytes": 22345,
+      "sha256": "50b626e885caf2c64656acbfe664f44c0cbbbcb3d327bf724514e6a437d92199"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-native-build/five-cycles-after-restart/2-a-reloaded.png",
+      "bytes": 22260,
+      "sha256": "ed3fd5257868fe9b2135c96d69c19d7faf62df65b0a5313e9d11da4571f1d189"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-native-build/five-cycles-after-restart/2-b-save-list.png",
+      "bytes": 402611,
+      "sha256": "100b91056eb43adb40efe9104b268adad2296703a2542cfff8329034f4db28dd"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-native-build/five-cycles-after-restart/2-b-loaded.png",
+      "bytes": 1064997,
+      "sha256": "1646bc6ff7dd84f1ef1b86f219c474b098919c9a0592b5dde4063ae140d8ddb9"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-native-build/five-cycles-after-restart/2-a-final-return.png",
+      "bytes": 206669,
+      "sha256": "33f473f27beecdb58d65191882fa48bf1e01e0c936e66f433ba4b9b9cc4c6d17"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-native-build/five-cycles-after-restart/3-a-committed.png",
+      "bytes": 24198,
+      "sha256": "2a1a8f005eb02ee4ade1f2f9ac864f99f988fac6238c17fbd44e3687f12c99e4"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-native-build/five-cycles-after-restart/3-a-reloaded.png",
+      "bytes": 23918,
+      "sha256": "2821f2c01969df92d442df98e37414a95e91de4e017b7de2251f8164047f4718"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-native-build/five-cycles-after-restart/3-b-save-list.png",
+      "bytes": 534500,
+      "sha256": "b5a10f06d2260ab0e69c42a15f1230eaa963d5fd105cf9f042d669a44091edf4"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-native-build/five-cycles-after-restart/3-b-loaded.png",
+      "bytes": 1065539,
+      "sha256": "8fb5fa01ac9b2e001abd0cc0ffc6ba5d3dcf81f50155a6ad95bb532312be1e4a"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-native-build/five-cycles-after-restart/3-a-final-return.png",
+      "bytes": 207238,
+      "sha256": "25ab9af94955fb7ddf47510473bd1208702cd905115161c3513f0aa968f5b162"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-native-build/five-cycles-after-restart/4-a-committed.png",
+      "bytes": 23597,
+      "sha256": "665a6b4d7ad6909d79091b3f4b8cfa7f336534e692e3e5e4fad9fe1ecd8d209d"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-native-build/five-cycles-after-restart/4-a-reloaded.png",
+      "bytes": 23322,
+      "sha256": "c0fc7310ae4bc1db757fc7a3ed7b9b75f09dca8f776911420fdafa25a33491ad"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-native-build/five-cycles-after-restart/4-b-save-list.png",
+      "bytes": 529528,
+      "sha256": "ebd2022173449acabee979dc751e7098be77f92fcb0b2f48ccfae221ad8c9b1f"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-native-build/five-cycles-after-restart/4-b-loaded.png",
+      "bytes": 1056808,
+      "sha256": "4381f9527a528c637e96cf4a50e509f2fc6e825a7b05ac0435ea2ad656644996"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-native-build/five-cycles-after-restart/4-a-final-return.png",
+      "bytes": 207016,
+      "sha256": "1372aec65560ede9bfaccc0afafd9d5a66295b945e039efb4d5a6f0f9da8e7e0"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-native-build/five-cycles-after-restart/5-a-committed.png",
+      "bytes": 24664,
+      "sha256": "20065d67047503f44e1a12f9ffc9297310107f1619dc048d8e3604ded6d77f1a"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-native-build/five-cycles-after-restart/5-a-reloaded.png",
+      "bytes": 23689,
+      "sha256": "ee04f966b53ae9942da4738fc256680722fc7086a7125572101421f6c1c13a61"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-native-build/five-cycles-after-restart/5-b-save-list.png",
+      "bytes": 539533,
+      "sha256": "59d7b2c5b7df877f8992a367f6517c1dfeceee18b9df3303b46b57b5a5342d93"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-native-build/five-cycles-after-restart/5-b-loaded.png",
+      "bytes": 1054644,
+      "sha256": "7b6086423f2ee867f2adb75a1830011fa69a447625e4eeec58ee3140cceff8e4"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-native-build/five-cycles-after-restart/5-a-final-return.png",
+      "bytes": 206637,
+      "sha256": "43187fbe3b3c7df98c81544f36a41e268d28a804a191edbe0391cd46bf0b78cd"
+    }
+  ],
+  "post_game_snapshot": {
+    "record": {
+      "path": ".gamedump/Hall/device-evidence/20261107-native-build/after-games/snapshot.json",
+      "bytes": 7063,
+      "sha256": "c49c87222f87a232c0f89db60cb4b77fd0654a5338f0bb58c7cfbc649c9b72a9"
+    },
+    "room_schema": 2,
+    "games": [
+      [
+        "nsa-2048",
+        "nsa-2048-local-v4"
+      ],
+      [
+        "botw",
+        "botw-local-v1"
+      ]
+    ],
+    "transfer_allocation_kib": 4,
+    "recovery_warnings": [],
+    "preexisting_player_files_removed": 0,
+    "player_file_count": 22,
+    "phone_df": "Filesystem       1K-blocks      Used Available Use% Mounted on\r\n/dev/block/sde27 235591276 192727616  42732588  82% /data/user/0\r\n"
+  }
+}

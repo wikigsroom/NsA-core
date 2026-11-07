@@ -1,16 +1,16 @@
 # NsA · Unified Android game hall
 
-The [USB runtime correction round](docs/hall/runtime-round-2026-11-07.md) is installed on the physical phone: source `f1c68f7`, APK `d8c51a…79af`. Thirteen Android tests passed. 2048 v3 completes real download, input, normal Back exit and fresh-process reload; the corrected two-capture 440 Hz audio test also passed. **BotW is blocked before gameplay by a stale compiled core (`MODULE_MISMATCH`).** The [native-build correction](docs/hall/native-build-round-2026-11-07.md) adds Unicode dependency and compiled-identity checks before rebuilding. Five cross-game rounds, full G0, sustained performance and production release remain open.
+The [native-build correction](docs/hall/native-build-round-2026-11-07.md) is installed: source `d427f08`, APK `5808f5…6d06`. Both compiled slot identities now match the packaged registry. 2048 v4 downloads, runs, saves and reloads; BotW now reaches actual gameplay, responds to touch movement, writes a new manual save and reloads it in a fresh process. Twenty native regression cases passed. The first Android run passed 12/13 with a navigation timeout; the same-APK rerun passed 13/13. **Android reclaimed the background hall for low memory; a stale session then blocked switching until a hall restart. Automatic recovery, sustained playability and production acceptance remain open.** 5/5 repeated A → B → A rounds completed after a fresh hall restart; preceding interrupted attempts retained. Full G0 remains open.
 
 Current USB captures; clips are silent. Historical captures retain their original identities.
 
-<table><tr><td><img src="docs/media/runtime-library.png" width="220" alt="Actual portrait library"></td><td><img src="docs/media/runtime-installed.png" width="220" alt="Actual completed v3 download"></td></tr></table>
+<table><tr><td><img src="docs/media/native-library.png" width="220" alt="Actual portrait library"></td><td><img src="docs/media/native-installed.png" width="220" alt="Actual completed v4 download"></td></tr></table>
 
-![Actual v3 download and preparation](docs/media/runtime-hall.gif)
+![Actual v4 download and preparation](docs/media/native-hall.gif)
 
-[Hall MP4](docs/media/runtime-hall.mp4) · [2048 GIF](docs/media/runtime-2048.gif) · [2048 MP4](docs/media/runtime-2048.mp4) · [Reloaded board](docs/media/runtime-reloaded.png) · [Provenance](docs/media/README.md)
+[Hall MP4](docs/media/native-hall.mp4) · [2048 GIF](docs/media/native-play.gif) · [2048 MP4](docs/media/native-play.mp4) · [Reloaded board](docs/media/native-reloaded.png) · [Provenance](docs/media/README.md)
 
-The earlier [transfer round](docs/hall/transfer-round-2026-11-07.md) and [recovery round](docs/hall/recovery-round-2026-11-07.md) retain their original evidence. BotW new-save/reload results on the earlier APK do not transfer to this candidate.
+The [preceding runtime round](docs/hall/runtime-round-2026-11-07.md), earlier [transfer round](docs/hall/transfer-round-2026-11-07.md) and [recovery round](docs/hall/recovery-round-2026-11-07.md) retain their original evidence. BotW new-save/reload results on the earlier APK do not transfer to this candidate.
 
 [简体中文](README.zh-CN.md) · [Detailed setup and usage](docs/hall/README.md) · [Implementation status](docs/hall/implementation-status.md) · [Product requirements](docs/product/README.md) · [Engineering baseline](docs/engineering/README.md)
 
@@ -18,7 +18,7 @@ The earlier [transfer round](docs/hall/transfer-round-2026-11-07.md) and [recove
 
 This fork builds a unified Kotlin/Compose Android hall on [nx2android](https://github.com/shirai91/nx2android) and [nxnative](https://github.com/seedds/nxnative). The finalized D Obsidian design uses a dark portrait interface with Discovery, Library, Downloads and Settings. A separate operations site handles content rights, builds, uploads, independent review, publication, compatibility evidence and audit.
 
-**Current state: runtime candidate `d8c51a…79af` is installed.** See the [current execution record](docs/hall/runtime-round-2026-11-07.md) for results and pending checks. Earlier gallery artifacts retain their original APK identities.
+**Current state: native-build candidate `5808f5…6d06` is installed.** See the [current execution record](docs/hall/native-build-round-2026-11-07.md) for results and pending checks. Earlier gallery artifacts retain their original APK identities.
 
 The [historical targeted source review](docs/hall/source-review.md) records the policy, reconstruction and save-exchange defects that led to this correction batch. Its pinned evidence remains unchanged; source changes and host passes do not close the physical-device acceptance gates. It covers three requirements; the broader source map and existing media are not full acceptance.
 

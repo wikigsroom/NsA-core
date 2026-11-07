@@ -1,5 +1,19 @@
 # Actual application media
 
+Current reviewed USB set / 当前实拍素材：source `d427f08`, APK `5808f5a427a2a0ee8654d7fc9f994a486950048a52bf184ea6f5ca50869e6d06`. [Native-build execution record](../hall/native-build-round-2026-11-07.md).
+
+| Current actual capture / 本轮实际采集 | Artifact | Provenance |
+|---|---|---|
+| Portrait library / 竖屏游戏库 | [PNG](native-library.png) | [JSON](native-library.json) |
+| Completed v4 update / v4 更新完成 | [PNG](native-installed.png) | [JSON](native-installed.json) |
+| Fresh-process reloaded board / 新进程重读棋盘 | [PNG](native-reloaded.png) | [JSON](native-reloaded.json) |
+| v4 download/preparation, requested 18-second excerpt / 下载准备 | [GIF](native-hall.gif) · [MP4](native-hall.mp4) | [JSON](native-hall.json) |
+| Actual input/pause/return, requested 20-second excerpt / 操作与返回 | [GIF](native-play.gif) · [MP4](native-play.mp4) | [JSON](native-play.json) |
+
+This adds seven reviewed artifacts and five provenance records. Clips are silent; exact encoded durations, transformations and source hashes are in their JSON. BotW gameplay/save evidence stays private. The library contains commercial title metadata; no game program, keys or personal saves are included. / 新增七份实拍素材及五份来源记录，具体时间以编码时长为准。无声视频不能证明声音质量；游戏程序、密钥和个人存档均未公开。
+
+## Historical runtime candidate / 历史运行候选
+
 Current reviewed USB set / 当前实拍素材：source `f1c68f7`, APK `d8c51a63f1c6134ec53237209cfc9253ffa543bc0206bfc6dfb029a1784c79af`. [Runtime execution record](../hall/runtime-round-2026-11-07.md).
 
 | Current actual capture / 本轮实际采集 | Artifact | Provenance |

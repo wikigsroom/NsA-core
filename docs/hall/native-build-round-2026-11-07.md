@@ -1,6 +1,75 @@
-# Native build input correction / 原生构建输入修正
+# Native build correction and USB results / 构建修正与真机结果
 
-Source and verification preparation, 2026-11-07. [ADR 0009](../engineering/decisions/0009-compiled-slot-identity-and-unicode-builds.md) fixes the newly observed `USB-BUILD-01`. This page initially records the complete next batch before verification; it is not a new APK pass report. See the [preceding runtime record](runtime-round-2026-11-07.md) and its [machine evidence](verification/2026-11-07-runtime-round.json).
+The corrected candidate is installed: committed source `d427f08356f528d0b4a28910309489ef6cf4d2ab`, APK SHA-256 `5808f5a427a2a0ee8654d7fc9f994a486950048a52bf184ea6f5ca50869e6d06`, **82,195,381 bytes**. BotW now reaches actual gameplay, responds to touch movement, writes a new manual save and reloads it in a fresh process. A subsequent Android low-memory reclamation exposed a separate stale-session recovery gap. **Full G0, sustained playability and production acceptance remain open.**
+
+中文：新版已在真机进入《旷野之息》，完成触控移动、新手动存档、正常退出和新进程重读。随后发现大厅被系统低内存回收后，退出游戏留下未结束的会话记录，会阻止下一款游戏启动。原构建标识问题已解决，这条恢复路径仍待修正；不能把“进入游戏”写成完整可玩或正式发布通过。
+
+[Machine record / 机器记录](verification/2026-11-07-native-build-round.json) · [Current status / 当前状态](implementation-status.md) · [ADR 0009](../engineering/decisions/0009-compiled-slot-identity-and-unicode-builds.md) · [Reviewed captures / 实拍素材](../media/README.md)
+
+## Current consolidated results / 当前集中验证结果
+
+All planned source, regression cases, contracts and implementation documentation were completed and committed before consolidated verification. The expected core was not relabeled, runtime checks were not weakened, and unchanged BotW content was reused.
+
+| Check | Actual result |
+|---|---|
+| Native regression | **20/20 passed**, 18.918 seconds, zero skips; actual NDK compilation under Unicode/spaced paths |
+| BotW host | 145 inputs checked: **1 actually compiled**, 144 cached, 0 failed |
+| Collection/final APK | Both actual ELF identities, strict metadata and SONAMEs match; old host correctly rejected |
+| Android build | Success in **3m 26s**, 9 tasks executed / 81 UP-TO-DATE |
+| JVM | Existing 26-case report retained, task UP-TO-DATE; **not freshly run** |
+| Lint | 0 errors, 16 warnings |
+| Contracts | 8/8 groups, 13 schemas, 20 positive examples; no gameplay inference |
+| Content publication | Real API, independent reviewer and worker published 2048 v4; **36 previous immutable records unchanged** |
+| Android instrumentation | First attempt **12/13**, navigation initial wait timed out; same-APK rerun **13/13 in 10.31s** |
+| Overlay/data | No uninstall or clear-data; Room 2; all **21 preexisting player files** identical after overlay/tests; no recovery warning; transfers 4 KiB |
+
+Both registry slots name source `d427f08356f528d0b4a28910309489ef6cf4d2ab`. 2048's new immutable profile/module is `f4ab9562219beb4c9855c401463fe5eca788ecc6297358f35c8b6d7f4b635d97`; BotW keeps its original content/profile and rebuilt host. Full library/module/driver/shader bindings are in the machine record. Test APK: 2,428,862 bytes, SHA-256 `6ea5b06e8d6d1317b469111bdcf5a1d5791789b9c3326ae168584faf0aa3db66`.
+
+The initial Android navigation timeout remains a failure. The subsequent pass does not establish its precise cause or satisfy the cold-start p95 requirement. File-intensive startup work is a suspected contributor requiring measurement.
+
+## Actual new-candidate game observations / 新候选实际游戏结果
+
+2048 v4 was installed through the real update flow, preserving its prior save and pre-upgrade backup. Eight actual inputs produced checkpoint `a23d63409c45c36a97e5023d4a7515b0f2ce3faa87113140a68ce315af006e2f`. Direct Back opened pause/exit confirmation; normal exit restored portrait. A fresh process reloaded identical bytes and all 16 rendered tiles. Hall PID `21188` survived game PIDs `21488` → `21915` during this sequence.
+
+Two new Android-output captures decoded to 16.029270833 and 15.9535 seconds. Their 440 Hz fits were **0.999902978 / 0.999835612**, peaks 78 / 75 and approximately −52.47 / −52.81 dBFS. Four audio reopens and five output starts were observed. Respectively **five and four moves changed saved state**; one attempted direction did not change the board. This proves the measured tone, not subjective listening or BotW sound. Normal exit afterward preserved checkpoint `9abb3374…47d770`.
+
+BotW launched as PID `23613` from hall `23279` and loaded Shrine of Resurrection. An early fixed wait still showed loading and was not counted as gameplay. The first downward gesture was inconclusive; a later upward left-stick gesture visibly moved Link and changed the scene position. The actual System → Save flow created manual slot 1, changing all three slot files while preserving 2048 progress. The confirmation showed 11:37; the fresh load list showed **11/07/2026 11:38**.
+
+Direct Android Back opened pause; cancelling exit resumed the same process, while confirmed normal exit restored portrait and retained the main process at that point. Fresh BotW PID `29126` mapped only its intended slot and reloaded the new progress. The save list and matching scene were visually reviewed; all three new committed slot hashes matched:
+
+| Slot 1 file | SHA-256 after save and fresh reload |
+|---|---|
+| `game_data.sav` | `9634af7eebe9f6d047d4557b147d76364720b5530f740d9ba2af1040ec542206` |
+| `caption.sav` | `d328d8fbd092fb798d8f64269e8ac8a1649d351e50971f6807a87d62b2da0d77` |
+| `caption.jpg` | `f5ece87026d55ad898286455a8809b724a6e2d3455531e28c21efc71a2bb1d0e` |
+
+A short shrine sample reported p50 **79.45 ms**, p95 **94.26 ms**, p99 interval 121.26 ms and 1,673 MiB footprint. The inverse median is about 12.6 FPS, not a measured average, representative outdoor benchmark or 30-minute acceptance. Audio callback counters do not prove audible output.
+
+## Main loss and switching / 大厅回收与连续切换
+
+Android's exit history records hall PID `23279` ending for **LOW_MEMORY at 11:45:22.087 local**, while game PID `29126` survived. Normal game exit restored portrait with reconstructed hall PID `3158`. The database still retained the old BotW session in `first_frame` with its runtime context, despite no remaining game PID. A was therefore rejected with “请先返回并结束正在运行的游戏”; this is **not a successful switching round**.
+
+The first recovery automation opened “结束游戏进程” but omitted its final confirmation. Its unchanged-save check proves only preservation while the confirmation was open, **not completed recovery**. The next attempt stayed blocked. Both failed attempts and a private database snapshot are retained. A fresh hall restart then used existing startup reconciliation; later switching observations remain separate and cannot establish automatic recovery inside the reconstructed process.
+
+After that restart, **all five A → B → A rounds completed** on the same APK with main PID `6724`. All 15 game PIDs were distinct, each process mapped only its selected slot, A input changed its save and all 16 reloaded tiles matched, while B reloaded the new manual progress without changing A. The five B save lists/scenes were visually reviewed. Each exit returned to portrait; the final snapshot contains 15 ended sessions and no unfinished session.
+
+Post-round main PSS samples were 106,740 / 106,832 / 107,446 / 107,123 / 108,195 KiB; file-descriptor counts were 141 / 140 / 141 / 140 / 140. These bounded samples do not establish long-term leak absence. Battery remained 6% at each round's start. Room remained schema 2, transfer allocation 4 KiB, no recovery warning and no preexisting player file removal. Full G0 remains open because the low-memory recovery gap and other normative gates are separate from these successful ordinary switching rounds.
+
+### USB-RECOVER-01: next complete batch / 下一整批恢复修正
+
+Observed state and source agree: initialization may see a still-held game lease and skip unfinished-session cleanup, while the subsequent `SessionController.recover()` returns immediately once that lease is gone. No later reconciliation closes the orphaned row in the same reconstructed process. This is a confirmed lifecycle timing gap.
+
+The next source batch must cover orphaned-session reconciliation under the operation lock with proven kernel ownership absence; corresponding context cleanup without inventing save success; authenticated reattachment while the original game owns the lease; exit/binder-loss/initialization races; duplicate callbacks and stale generations; and safe retry with unchanged player bytes. Preserve fail-closed behavior when ownership cannot be established. Finish all affected source, regression/device cases and documentation before consolidated build/test. A restart or dismissed dialog cannot by itself mark this fixed.
+
+## Current media and boundaries / 当前素材与边界
+
+Three PNGs and two silent GIF/MP4 pairs are exported under new `native-*` names from this exact APK. Historical media keeps its own provenance. Raw BotW frames, player saves, keys and private APKs stay excluded from public exports. Native Windows/USB only; no browser tabs were opened in this round.
+
+Automatic main-loss recovery, the initial cold-start timeout, full G0, representative continuous 30-minute gameplay/performance/game-speed/temperature, subjective sound and BotW audio, physical power-loss/ENOSPC, remaining requirement/device coverage and production gates remain open. See [storage and retention](storage.md) for retained inputs, immutable objects, backups and toolchains.
+
+## Historical preparation and preceding APK observations / 原计划与前一候选历史记录
+
+The following sections retain their original preparation-time wording and preceding APK identities; current results are above. See the [preceding runtime record](runtime-round-2026-11-07.md) and [machine evidence](verification/2026-11-07-runtime-round.json).
 
 ## Actual resumed observations / 恢复后的实际结果
 

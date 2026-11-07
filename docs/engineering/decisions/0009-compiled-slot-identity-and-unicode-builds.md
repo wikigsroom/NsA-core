@@ -1,6 +1,8 @@
 # ADR 0009: compiled runtime identity and Unicode dependency inputs
 
-Status: implemented source; consolidated verification and a new device candidate required. Date: 2026-11-07.
+Status: implemented and verified on candidate `5808f5…6d06`; formal product acceptance remains open. Date: 2026-11-07.
+
+Source `d427f08` passed all 20 native regression cases with actual NDK compilation and zero skips, both actual slot metadata/SONAME checks and the final APK guard. The preserved older host is rejected. The installed candidate now runs BotW, accepts touch movement and reloads a new manual save in a fresh process. A subsequent Android low-memory reclamation exposed the separate `USB-RECOVER-01` session-reconciliation gap; its source fix and full G0 are not claimed here. The [execution record](../../hall/native-build-round-2026-11-07.md) retains initial instrumentation/switching failures and bounded reruns.
 
 ## Observed failure
 

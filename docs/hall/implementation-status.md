@@ -1,24 +1,25 @@
 # Implementation and verification record
 
-[真机运行修正轮次](runtime-round-2026-11-07.md)的 13 项 Android 测试、2048 v3 下载、操作、正常返回、新进程重读及修正后的两次音频采集通过。源码 `f1c68f7`、APK `d8c51a…79af` 的《旷野之息》实际启动被旧编译标识拒绝，尚未进入游戏。另一项目测试已结束；当前通过[整批构建修正](native-build-round-2026-11-07.md)继续推进，五轮切换、完整 G0、长期性能及正式发行仍未验收。
+[构建修正轮次](native-build-round-2026-11-07.md)已安装：源码 `d427f08`、APK `5808f5…6d06`，两个运行库的实际编译身份与安装包一致。2048 v4 已下载、操作、保存并重读；《旷野之息》已进入真实场景，完成触控移动、新手动存档、正常返回与新进程重读。20 项原生回归通过；Android 首次 12/13（导航等待超时），同包重跑 13/13。**系统因内存不足回收大厅后，旧会话曾阻止切换，需显式恢复；自动恢复、持续可玩性和正式发行仍未验收。** 重启大厅后完成 5/5 轮 A → B → A；保留此前中断。完整 G0 仍待验收。
 
-[Current machine record / 当前机器记录](verification/2026-11-07-runtime-round.json) · [Current runtime round / 运行轮次](runtime-round-2026-11-07.md) · [Transfer round / 下载安装轮次](transfer-round-2026-11-07.md) · [Reviewed media / 实拍素材](../media/README.md)
+[Current machine record / 当前机器记录](verification/2026-11-07-native-build-round.json) · [Current build correction / 构建轮次](native-build-round-2026-11-07.md) · [Preceding runtime record / 前一运行轮次](runtime-round-2026-11-07.md) · [Reviewed media / 实拍素材](../media/README.md)
 
 | Current candidate / 当前候选 | Actual result / 实际结果 |
 |---|---|
-| Native + Android | 145 sources checked, zero compiler failures; historical guard bound bytes but missed stale BotW core; Android build passed; lint 0 errors / 16 warnings |
-| JVM | Existing 26-case report retained, Gradle UP-TO-DATE; no claim of a fresh run for this native-only batch |
-| Documentation/contracts | 8/8 groups passed; this validates contracts, not gameplay |
-| Physical instrumentation | 13/13 actually rerun, 21.978 seconds |
-| Overlay preservation | Room v2; all 20 preexisting player files identical immediately after overlay and instrumentation; no recovery warning; transfer directory 4 KiB at that point |
-| 2048 v3 | 191-byte real download / 41-byte expanded fixture; prior save retained; changed input; direct Back pause/confirmed exit; fresh process reload with all 16 rendered tiles and committed hash matching |
-| Audio | Corrected actual two-capture rerun passed, four reopens/four starts and 440 Hz fits above 0.9998; original fixed-threshold failure retained; no subjective listening pass |
-| BotW / five switching rounds | Content/profile unchanged, but actual launch rejected stale host core with MODULE_MISMATCH; five rounds blocked by USB-BUILD-01 |
-| Full acceptance | G0, representative 30-minute performance/audio, physical fault boundaries, remaining device/requirement coverage and production release remain open |
+| Native + Android | 20/20 native regression cases, no skips, including real NDK compilation under Unicode/spaced paths; 145 BotW inputs checked, 1 actually rebuilt, 144 cached, 0 failed; both ELF identities/SONAMEs and final packaged guard passed |
+| Android + JVM + lint | Build passed in 3m 26s, 9 tasks executed / 81 UP-TO-DATE; existing 26 JVM cases retained rather than freshly run; lint 0 errors / 16 warnings |
+| Documentation/contracts | 8/8 groups, 13 schemas and 20 positive examples; this is contract validation, not gameplay |
+| Physical instrumentation | First run 12/13, navigation initial wait timed out; same-APK rerun 13/13 in 10.31s. Cold-start performance remains open |
+| Overlay preservation | Room v2, all 21 preexisting player files identical after overlay and instrumentation; no recovery warning; transfer directory 4 KiB |
+| Content publication | Immutable 2048 v4 published through real API/reviewer/worker, 191 archive bytes / 41 expanded; 36 earlier immutable records preserved; BotW resources reused |
+| 2048 v4 | Eight actual inputs, normal direct Back exit, fresh game PID and matching committed bytes plus all 16 rendered tiles |
+| Audio | Two actual 440 Hz captures passed with fits 0.999903 / 0.999836; 4 reopens / 5 output starts, 5 and 4 changed saved moves. No subjective or BotW audio acceptance |
+| BotW | Actual touch movement, new manual slot 1, direct Back pause, cancel/resume same process, normal exit/portrait and fresh-process reload; all three committed slot files match |
+| Main-process loss | Android records LOW_MEMORY for hall PID 23279 while game PID 29126 survives. Normal exit recreates hall PID 3158; stale persisted session blocks A. Recovery confirmation was opened but not submitted; a fresh restart reconciled the row. USB-RECOVER-01 remains open |
+| Repeated switching | 5/5 repeated A → B → A rounds completed after a fresh hall restart; preceding interrupted attempts retained. Full G0 remains open. |
+| Performance/release | Short shrine p50 79.45ms / p95 94.26ms is not a representative benchmark or an accepted playable label; full G0, 30-minute performance, sound, physical faults and production remain open |
 
-The corrected two-capture 2048 audio rerun passed after the peer test finished. The [next complete build batch](native-build-round-2026-11-07.md) fixes Unicode dependency reuse and adds compiled ELF identity guards; it requires new candidate checks.
-
-The preceding APK `e3b259…742da` did demonstrate BotW movement, a new manual save and a fresh-process reload using a return-menu workaround. Its defects and results remain pinned in the transfer record. The current source fixes audio reconnection and native Back delegation; a source fix is not BotW device acceptance. / 旧版实际结果与新候选分开登记，不改写历史缺陷为旧版已修复。
+Public captures add three PNGs and two silent GIF/MP4 pairs from APK `5808f5…6d06`. Historical media retains its original source hashes. Failed instrumentation and switching attempts remain recorded; a later rerun does not erase them.
 
 ## Historical execution and review snapshots / 历史快照
 
