@@ -1,5 +1,31 @@
 # Implementation and verification record
 
+## Current session-recovery candidate / 当前恢复候选
+
+Android source **`5c1bff0`**, APK **`3bd6c8…3451d`** is installed and has bounded device evidence. Its 11 packaged native libraries are byte-identical to `d427f08`; resource identities remain 2048 v4 / BotW v1. All 22 preexisting player files were unchanged after overlay/instrumentation. The later game inputs legitimately changed progress without removing player files.
+
+[Current machine record / 当前机器记录](verification/2026-11-07-session-recovery-round.json) · [Execution and failures / 执行与失败](session-recovery-round-2026-11-07.md) · [Media / 实拍](../media/README.md) · [v0.4.0 scope / 发行范围](../releases/v0.4.0.md)
+
+| Current candidate | Actual result |
+|---|---|
+| Android/package | Build 5m 1s; 29 executed / 61 UP-TO-DATE; actual packaged two-slot identities passed |
+| JVM/lint | 26 freshly passed; lint 0 errors / 16 warnings |
+| USB instrumentation | First attempt 22/22 in 22.798s, including nine actual Room/kernel-lock recovery cases |
+| Original 2048 | Eight inputs, changed save, normal exit, fresh-process reload; bytes and all 16 tiles matched |
+| BotW | Actual movement retake, new manual slot, Back/cancel/same-process resume, normal portrait return and matching fresh-process save reload |
+| Natural low-memory recovery | Hall 18943 reclaimed while game 25344 survived; normal game exit rebuilt hall 26934; next game 27431 started and read the new save directly, without manual hall restart/force-exit |
+| Retained unsuccessful attempts | Three controlled termination attempts never successfully killed main. Original retake script interrupted on changed hall PID; follow-up natural recovery is separately recorded |
+| Post-game resources | No recovery warning, Room 2, 22 player files/no removals, transfer directory 4 KiB; recent 15 sessions include 14 ended and one conservatively crashed |
+| Historical scope | Five switching rounds and audio-signal checks belong to the preceding APK; new candidate does not inherit their whole-APK acceptance |
+| Public release | v0.4.0 fixes source, desktop authoring tools and reviewed bilingual docs/media; no public service or production-signed hall APK |
+| Open gates | Full G0, controlled live Binder reconnect, representative 30-minute performance/game speed/temperature, subjective/BotW audio, physical faults, broader devices/16 KiB pages and production deployment |
+
+中文：新候选已经过限定实机验证，实拍低内存回收后的后续启动和读档不再需要手动重启大厅；这仍不是受控存活重连或完整 G0 验收。全部失败和历史包身份保留。当前公开素材共 52 项、40 份来源记录，其中新增 8 项来自本包。
+
+## Preceding compiled-identity candidate / 前一构建身份候选
+
+The following build table is a retained historical snapshot. Its “current” labels describe that preceding round; the active candidate is the section above. / 以下是前一轮原记录，不将旧候选结果改写为本轮结果。
+
 [构建修正轮次](native-build-round-2026-11-07.md)已安装：源码 `d427f08`、APK `5808f5…6d06`，两个运行库的实际编译身份与安装包一致。2048 v4 已下载、操作、保存并重读；《旷野之息》已进入真实场景，完成触控移动、新手动存档、正常返回与新进程重读。20 项原生回归通过；Android 首次 12/13（导航等待超时），同包重跑 13/13。**系统因内存不足回收大厅后，旧会话曾阻止切换，需显式恢复；自动恢复、持续可玩性和正式发行仍未验收。** 重启大厅后完成 5/5 轮 A → B → A；保留此前中断。完整 G0 仍待验收。
 
 [Current machine record / 当前机器记录](verification/2026-11-07-native-build-round.json) · [Current build correction / 构建轮次](native-build-round-2026-11-07.md) · [Preceding runtime record / 前一运行轮次](runtime-round-2026-11-07.md) · [Reviewed media / 实拍素材](../media/README.md)

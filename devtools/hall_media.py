@@ -44,7 +44,7 @@ def main():
         info = json.loads(subprocess.check_output(['ffprobe', '-v', 'error', '-show_streams', '-show_format', '-of', 'json', str(artifact)]))
         video = next(stream for stream in info['streams'] if stream['codec_type'] == 'video')
         exported.append({'name': artifact.name, 'sha256': checksum, 'width': video['width'], 'height': video['height'], 'duration_seconds': info['format'].get('duration')})
-    (target / (name + '.json')).write_text(json.dumps({**record, 'source_sha256': sha, 'artifacts': exported, 'transform': 'copy' if source.suffix.lower() == '.png' else 'resize and GIF palette encoding; no synthetic frames; MP4 has no audio track', 'start_seconds': args.start, 'requested_duration_seconds': args.duration}, indent=2), encoding='utf-8')
+    (target / (name + '.json')).write_text(json.dumps({**record, 'source_relative_path': source.relative_to(ROOT).as_posix(), 'source_sha256': sha, 'artifacts': exported, 'transform': 'copy' if source.suffix.lower() == '.png' else 'resize and GIF palette encoding; no synthetic frames; MP4 has no audio track', 'start_seconds': args.start, 'requested_duration_seconds': args.duration}, indent=2), encoding='utf-8')
     print('Reviewed device media exported to docs/media with provenance.')
 
 if __name__ == '__main__': main()

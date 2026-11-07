@@ -25,13 +25,21 @@ def main():
     files = tracked('nxnative')   # the committed engine and profiles only: no local builds, keys or game files
     for f in files:
         d = APP / f; d.parent.mkdir(parents=True, exist_ok=True); shutil.copy2(ROOT / f, d)
-    for src, dst in (('packaging/INSTALL.md', 'INSTALL.md'), ('README.md', 'README.md'), ('docs/ARCHITECTURE.md', 'docs/ARCHITECTURE.md'), ('docs/DEVELOPMENT_GUIDE.md', 'docs/DEVELOPMENT_GUIDE.md'), ('nxnative/LICENSE', 'LICENSE')):
-        (APP / dst).parent.mkdir(parents=True, exist_ok=True); shutil.copy2(ROOT / src, APP / dst)
-    shutil.copytree(ROOT / 'docs/images', APP / 'docs/images', dirs_exist_ok=True)   # the README's games table
+    for src, dst in (('packaging/INSTALL.md', 'INSTALL.md'), ('packaging/INSTALL.zh-CN.md', 'INSTALL.zh-CN.md'),
+                     ('nxnative/LICENSE', 'LICENSE'), ('android/native-games/2048/LICENSE', 'android/native-games/2048/LICENSE')):
+        (APP / dst).parent.mkdir(parents=True, exist_ok=True)
+        if src.startswith('packaging/INSTALL'):
+            (APP / dst).write_text((ROOT / src).read_text('utf-8').replace('(../', '('), encoding='utf-8')
+        else:
+            shutil.copy2(ROOT / src, APP / dst)
+    # Ship the complete tracked documentation, including both entry points and
+    # reviewed media. Never copy a working directory containing private outputs.
+    for f in tracked('README.md') + tracked('README.zh-CN.md') + tracked('docs') + tracked('packaging/INSTALL.md') + tracked('packaging/INSTALL.zh-CN.md'):
+        d = APP / f; d.parent.mkdir(parents=True, exist_ok=True); shutil.copy2(ROOT / f, d)
     ver = subprocess.run(['git', '-C', str(ROOT), 'describe', '--always', '--dirty'], capture_output=True, text=True).stdout.strip() or 'dev'
     (APP / 'VERSION').write_text(ver + '\n', encoding='utf-8')   # which commit the bundle was built from
     z = DIST / f'nx2android-{ver}-{PLATFORM}.zip'; z.unlink(missing_ok=True)
-    if sys.platform == 'darwin': subprocess.run(['ditto', '-c', '-k', '--keepParent', str(APP), str(z)], check=True)   # keeps the Qt frameworks' symlinks, which zipfile copies as files
+    if sys.platform == 'darwin': subprocess.run(['ditto', '--norsrc', '--noextattr', '-c', '-k', '--keepParent', str(APP), str(z)], check=True)   # retain Qt symlinks without __MACOSX metadata
     else: shutil.make_archive(str(z.with_suffix('')), 'zip', DIST, 'nx2android')
     print(f'{APP} ({len(files)} nxnative files)\n{z} ({z.stat().st_size / 2**20:.0f} MB)')
 

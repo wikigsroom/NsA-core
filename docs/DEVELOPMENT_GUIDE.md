@@ -31,7 +31,7 @@ The APK (`NeoTheWorldEndsWithYou.apk`) and the data pack (`NeoTheWorldEndsWithYo
 
 ### Saves
 
-`porter saves` does what the app's **Saves** tab does (see the README's [Saves](../README.md#saves)):
+`porter saves` does what the app's **Saves** tab does (see the README's [Saves](https://github.com/shirai91/nx2android#saves)):
 
 ```
 python -m porter saves list
@@ -53,7 +53,7 @@ How the export folders are laid out: [ARCHITECTURE.md](ARCHITECTURE.md#saves).
 
 ## Adding a game
 
-Each game is a profile in `nxnative/dm/games/<title ID>/` with an `android.tsv`: [ARCHITECTURE.md](ARCHITECTURE.md#adding-a-game). A finished port updates, in the profile's commit, the games table in the [README](../README.md#games) (its row, with a gameplay frame captured on the device in `docs/images/` and the tag of the nx2android version it was tested on) and [PORT_CHECKLIST.md](PORT_CHECKLIST.md).
+Each game is a profile in `nxnative/dm/games/<title ID>/` with an `android.tsv`: [ARCHITECTURE.md](ARCHITECTURE.md#adding-a-game). A finished port updates, in the profile's commit, the games table in the [README](https://github.com/shirai91/nx2android#games) (its row, with a gameplay frame captured on the device in `docs/images/` and the tag of the nx2android version it was tested on) and [PORT_CHECKLIST.md](PORT_CHECKLIST.md).
 
 ## Releases and version numbers
 

@@ -1,6 +1,8 @@
 # ADR 0010: reconcile stopped sessions after main-process loss
 
-Status: complete source batch prepared; consolidated build/device verification required. Date: 2026-11-07.
+Status: implemented; host checks and 22 physical instrumentation cases passed; bounded natural low-memory recovery observed. Controlled live reattachment/full G0 remain open. Date: 2026-11-07.
+
+Actual new-candidate execution and retained failures are in the [session recovery record](../../hall/session-recovery-round-2026-11-07.md). Source regression, natural process reclamation and controlled surviving-game reconnect remain distinct evidence classes.
 
 ## Observed timing gap
 

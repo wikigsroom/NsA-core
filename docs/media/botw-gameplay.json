@@ -1,0 +1,21 @@
+{
+  "source": "USB physical Android device",
+  "application_id": "org.nsa.hall.debug",
+  "captured_at": "2026-11-07T04:52:40.132776+00:00",
+  "synthetic": false,
+  "installed_apk_sha256": "3bd6c8a7e5a06bc1679df78792f97827455f8c915e5be4c31728ca15f6a3451d",
+  "source_relative_path": ".gamedump/Hall/device-evidence/20261107-session-recovery/gameplay-retake/botw-after-touch-movement.png",
+  "source_sha256": "abb17ef542b52d9e2923779120e783465dc3eb97d789c5742fdabb76af4e7412",
+  "artifacts": [
+    {
+      "name": "botw-gameplay.png",
+      "sha256": "abb17ef542b52d9e2923779120e783465dc3eb97d789c5742fdabb76af4e7412",
+      "width": 2340,
+      "height": 1080,
+      "duration_seconds": null
+    }
+  ],
+  "transform": "copy",
+  "start_seconds": 0,
+  "requested_duration_seconds": 15
+}

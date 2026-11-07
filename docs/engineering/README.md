@@ -1,6 +1,8 @@
 # NsA · 技术开发约束基线 v2.0
 
-大厅被系统回收后的无主会话处理见 [ADR 0010](decisions/0010-stopped-session-reconciliation.md) 与[完整修正批次](../hall/session-recovery-round-2026-11-07.md)：拿到实际内核排他锁后才关闭遗留会话；仍有占用或无法确认时继续保护。九项隔离回归源码已完成，新候选集中构建和真机验证尚待执行。
+大厅被系统回收后的无主会话处理见 [ADR 0010](decisions/0010-stopped-session-reconciliation.md) 与[完整修正批次](../hall/session-recovery-round-2026-11-07.md)：拿到实际内核排他锁后才关闭遗留会话；仍有占用或无法确认时继续保护。Android `5c1bff0` / APK `3bd6c8…3451d` 已通过集中构建、26 项 JVM 与 22 项真机仪器测试，含九项新增 Room/内核锁用例。实拍中自然低内存回收后直接启动并重读成功；受控存活游戏重连和完整 G0 仍未验收。
+
+公开源码、桌面工具和双语实拍文档发行边界见 [ADR 0011](decisions/0011-public-source-and-authoring-release.md) 与 [v0.4.0 说明](../releases/v0.4.0.md)。GitHub 正式版本不等于生产服务或公开签名 APK 已上线。
 
 原生编译依赖与产物身份新增 [ADR 0009](decisions/0009-compiled-slot-identity-and-unicode-builds.md)：中文路径按 UTF-8 读取依赖，缺失依赖强制重建；收集运行库和打包后均核对实际 ELF 的编译身份与 SONAME。[构建修正轮次](../hall/native-build-round-2026-11-07.md)已完成集中电脑检查及新候选限定真机实测；低内存回收后的会话恢复、完整 G0 与正式可玩性仍待修正和验收。
 

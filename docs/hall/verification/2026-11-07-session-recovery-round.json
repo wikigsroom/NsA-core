@@ -1,0 +1,1418 @@
+{
+  "record_version": 1,
+  "recorded_at_utc": "2026-11-07T05:15:17.143482+00:00",
+  "date_local": "2026-11-07",
+  "timezone": "Asia/Taipei",
+  "scope": "Android stopped-session correction, consolidated checks, real gameplay captures and bounded natural low-memory recovery",
+  "formal_acceptance": "not_accepted",
+  "branch": "main",
+  "repository": "https://github.com/wikigsroom/NsA-core",
+  "android_source_revision": "5c1bff02b717ecf3af3cd46ad407c38a7e825f75",
+  "native_source_revision": "d427f08356f528d0b4a28910309489ef6cf4d2ab",
+  "apk": {
+    "path": ".gamedump/Hall/build-evidence/20261107-session-recovery/verified/app-debug.apk",
+    "bytes": 82195381,
+    "sha256": "3bd6c8a7e5a06bc1679df78792f97827455f8c915e5be4c31728ca15f6a3451d"
+  },
+  "test_apk": {
+    "path": ".gamedump/Hall/build-evidence/20261107-session-recovery/verified/app-debug-androidTest.apk",
+    "bytes": 2486258,
+    "sha256": "27fa3458699b4b9cb410a845a37250447b1730162e6200527cf2f664892a43b9"
+  },
+  "runtime_registry": {
+    "registry_schema": 1,
+    "app_version_code": 1,
+    "bootstrap_api_version": 1,
+    "slots": [
+      {
+        "approved_driver_ids": [
+          "system"
+        ],
+        "core_revision": "d427f08356f528d0b4a28910309489ef6cf4d2ab",
+        "library_name": "libnsa_2048.so",
+        "profile_digest": "f4ab9562219beb4c9855c401463fe5eca788ecc6297358f35c8b6d7f4b635d97",
+        "runtime_api_version": 1,
+        "runtime_slot_id": "nsa-2048-v1",
+        "settings_schema_version": 1,
+        "shader_bundle_versions": [
+          1
+        ],
+        "shader_chain_id": "software-rgba-v1",
+        "supported_module_build_ids": [
+          "f4ab9562219beb4c9855c401463fe5eca788ecc6297358f35c8b6d7f4b635d97"
+        ],
+        "library_sha256": "fc5cd424459640a88a076e869cade1cae899cf4f959da8ebc0a24df4e2dbd488"
+      },
+      {
+        "approved_driver_ids": [
+          "turnip26-sysmem-adreno650"
+        ],
+        "core_revision": "d427f08356f528d0b4a28910309489ef6cf4d2ab",
+        "library_name": "libnsa_botw.so",
+        "profile_digest": "c329645b44fa82a9d72dfb21a7c422d74c9cbf40cd6fca4a33e3d043045f17fa",
+        "runtime_api_version": 1,
+        "runtime_slot_id": "botw-190-arm64-v1",
+        "settings_schema_version": 1,
+        "shader_bundle_versions": [
+          1
+        ],
+        "shader_chain_id": "nx2a-dmsv-v1",
+        "supported_module_build_ids": [
+          "cd57b23fa4bbad65803d9788c01821ee00000000000000000000000000000000",
+          "f39f4c431234c72eb520cfdd1001bbcf02b3e885000000000000000000000000",
+          "574284b40c06cf1821a44857939083bee5716820000000000000000000000000"
+        ],
+        "library_sha256": "7910de35023e27402d76b83d27b9ed63c89f3f52f8348079155211f6ded8b4cb"
+      }
+    ]
+  },
+  "room_schema": 2,
+  "runtime_api": 1,
+  "all_packaged_native_libraries_byte_identical_to_previous": true,
+  "packaged_native_library_count": 11,
+  "immutable_content_republished": false,
+  "host_checks": {
+    "android": {
+      "result": "passed",
+      "elapsed": "5m 1s",
+      "tasks": 90,
+      "executed": 29,
+      "up_to_date": 61
+    },
+    "packaged_guard": {
+      "passed": true,
+      "slots": 2
+    },
+    "jvm": {
+      "tests": 26,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "fresh_execution": true,
+      "suite_timestamps_utc": [
+        "2026-11-07T04:33:22.347Z",
+        "2026-11-07T04:33:22.427Z",
+        "2026-11-07T04:33:22.866Z",
+        "2026-11-07T04:33:22.977Z",
+        "2026-11-07T04:33:22.986Z"
+      ]
+    },
+    "lint": {
+      "errors": 0,
+      "warnings": 16
+    },
+    "baseline": {
+      "groups": 8,
+      "schemas": 13,
+      "positive_examples": 20,
+      "passed": true
+    },
+    "native_recompiled": false,
+    "native_regression_reference": "2026-11-07-native-build-round.json"
+  },
+  "device": {
+    "model": "Motorola edge plus",
+    "android": 12,
+    "api": 31,
+    "abi": "arm64-v8a",
+    "soc": "Snapdragon 865",
+    "gpu": "Adreno 650",
+    "page_bytes": 4096,
+    "instrumentation": {
+      "first_attempt": {
+        "passed": 22,
+        "total": 22,
+        "seconds": 22.798
+      },
+      "new_room_kernel_lease_cases": 9
+    },
+    "overlay_and_instrumentation_player_files": {
+      "count": 22,
+      "all_unchanged": true
+    }
+  },
+  "original_2048": {
+    "processes": {
+      "hall": "18943",
+      "game": "19334",
+      "reloaded_game": "19719"
+    },
+    "before_sha256": "175250c3c5f66fda553f890fa5e9abfa2241d90082575c11c4748ca47e2e2b83",
+    "committed_sha256": "5616dc0047a775bd5c6f5b67b1aa4a0502e9370756f2960affff700b87a5a61f",
+    "reloaded_sha256": "5616dc0047a775bd5c6f5b67b1aa4a0502e9370756f2960affff700b87a5a61f",
+    "played_board": [
+      0,
+      0,
+      2,
+      4,
+      0,
+      2,
+      128,
+      16,
+      0,
+      64,
+      8,
+      32,
+      2,
+      32,
+      8,
+      4
+    ],
+    "reloaded_board": [
+      0,
+      0,
+      2,
+      4,
+      0,
+      2,
+      128,
+      16,
+      0,
+      64,
+      8,
+      32,
+      2,
+      32,
+      8,
+      4
+    ],
+    "audio": "Private AAudio pipeline dump retained; audible output requires separate observation",
+    "at": "2026-11-07T04:37:35.500746+00:00",
+    "apk_sha256": "3bd6c8a7e5a06bc1679df78792f97827455f8c915e5be4c31728ca15f6a3451d"
+  },
+  "botw_initial_scenario": {
+    "hall_pid": "18943",
+    "game_pid": "22275",
+    "fresh_game_pid": "23540",
+    "before": {
+      "1/game_data.sav": "9634af7eebe9f6d047d4557b147d76364720b5530f740d9ba2af1040ec542206",
+      "1/caption.sav": "d328d8fbd092fb798d8f64269e8ac8a1649d351e50971f6807a87d62b2da0d77",
+      "1/caption.jpg": "f5ece87026d55ad898286455a8809b724a6e2d3455531e28c21efc71a2bb1d0e"
+    },
+    "committed": {
+      "1/game_data.sav": "c7c36586fd74bac5f8342d5ad3437d571a784a7e79f874a7790f94077660217e",
+      "1/caption.sav": "5e3653953e7c61ebe53777266f1f6b70c1b9a8261722d3a80bfce2219097afbf",
+      "1/caption.jpg": "b50c9f344d69fb112adb73e7d21d93f4f59ef9d9577e61030ea88312b534cbf4"
+    },
+    "reloaded": {
+      "1/game_data.sav": "c7c36586fd74bac5f8342d5ad3437d571a784a7e79f874a7790f94077660217e",
+      "1/caption.sav": "5e3653953e7c61ebe53777266f1f6b70c1b9a8261722d3a80bfce2219097afbf",
+      "1/caption.jpg": "b50c9f344d69fb112adb73e7d21d93f4f59ef9d9577e61030ea88312b534cbf4"
+    },
+    "a_save_sha256": "e1247e1218990f93627aad2935d66eb14cd447ce62d4c835e728b9c6cfda8e38",
+    "a_unchanged": true,
+    "initial_load_samples": [
+      {
+        "at": "2026-11-07T04:45:46.701698+00:00",
+        "health_hud_pixels": 0
+      },
+      {
+        "at": "2026-11-07T04:45:52.305183+00:00",
+        "health_hud_pixels": 0
+      },
+      {
+        "at": "2026-11-07T04:45:57.949331+00:00",
+        "health_hud_pixels": 0
+      },
+      {
+        "at": "2026-11-07T04:46:03.981069+00:00",
+        "health_hud_pixels": 0
+      },
+      {
+        "at": "2026-11-07T04:46:09.561970+00:00",
+        "health_hud_pixels": 0
+      },
+      {
+        "at": "2026-11-07T04:46:15.840178+00:00",
+        "health_hud_pixels": 724
+      }
+    ],
+    "fresh_load_samples": [
+      {
+        "at": "2026-11-07T04:47:39.409078+00:00",
+        "health_hud_pixels": 0
+      },
+      {
+        "at": "2026-11-07T04:47:45.312668+00:00",
+        "health_hud_pixels": 0
+      },
+      {
+        "at": "2026-11-07T04:47:51.388586+00:00",
+        "health_hud_pixels": 0
+      },
+      {
+        "at": "2026-11-07T04:47:56.982027+00:00",
+        "health_hud_pixels": 0
+      },
+      {
+        "at": "2026-11-07T04:48:02.574393+00:00",
+        "health_hud_pixels": 0
+      },
+      {
+        "at": "2026-11-07T04:48:08.776231+00:00",
+        "health_hud_pixels": 725
+      }
+    ],
+    "direct_back_pause": true,
+    "cancel_exit_same_process": true,
+    "normal_exits": true,
+    "portrait_restored": true,
+    "actual_movement_and_reload_review_pending": false,
+    "full_playability_accepted": false,
+    "at": "2026-11-07T04:48:24.718246+00:00",
+    "apk_sha256": "3bd6c8a7e5a06bc1679df78792f97827455f8c915e5be4c31728ca15f6a3451d",
+    "actual_movement_confirmed": false,
+    "actual_reload_scene_reviewed": true,
+    "touch_attempt_result": "Touch woke the overlay, but the first scene pair did not establish displacement; separate reviewed retake follows."
+  },
+  "botw_reviewed_movement_and_natural_recovery": {
+    "old_hall_pid": "18943",
+    "reconstructed_hall_pid": "26934",
+    "old_game_pid": "25344",
+    "fresh_game_pid": "27431",
+    "hall_after_reload_exit": "26934",
+    "android_old_main_exit_reason": "LOW_MEMORY",
+    "android_old_game_exit_reason": "EXIT_SELF",
+    "next_game_started_without_hall_reset": true,
+    "manual_force_exit_used": false,
+    "controlled_main_only_termination_executed": false,
+    "committed": {
+      "1/game_data.sav": "8ebf5e8c62a121d954f68a329e198c1d164a99205ee9436cef7aa98c9e93ccf4",
+      "1/caption.sav": "7a5c4b990b6a39307b33af61d82393f0899ac91c395a0655da5f20e7753fca5b",
+      "1/caption.jpg": "b1e783c43474e2914ee7d5e9b0af32a5fd0d2e295883bb355cef1c6dfa7d0721"
+    },
+    "reloaded": {
+      "1/game_data.sav": "8ebf5e8c62a121d954f68a329e198c1d164a99205ee9436cef7aa98c9e93ccf4",
+      "1/caption.sav": "7a5c4b990b6a39307b33af61d82393f0899ac91c395a0655da5f20e7753fca5b",
+      "1/caption.jpg": "b1e783c43474e2914ee7d5e9b0af32a5fd0d2e295883bb355cef1c6dfa7d0721"
+    },
+    "a_unchanged": true,
+    "a_save_sha256": "e1247e1218990f93627aad2935d66eb14cd447ce62d4c835e728b9c6cfda8e38",
+    "load_samples": [
+      {
+        "at": "2026-11-07T04:59:15.323712+00:00",
+        "health_hud_pixels": 0
+      },
+      {
+        "at": "2026-11-07T04:59:20.897514+00:00",
+        "health_hud_pixels": 0
+      },
+      {
+        "at": "2026-11-07T04:59:26.508010+00:00",
+        "health_hud_pixels": 0
+      },
+      {
+        "at": "2026-11-07T04:59:32.045070+00:00",
+        "health_hud_pixels": 0
+      },
+      {
+        "at": "2026-11-07T04:59:37.946321+00:00",
+        "health_hud_pixels": 0
+      },
+      {
+        "at": "2026-11-07T04:59:43.889515+00:00",
+        "health_hud_pixels": 723
+      }
+    ],
+    "normal_exit": true,
+    "actual_reload_review_pending": false,
+    "initial_retake_interruption_retained": true,
+    "formal_acceptance": "not_accepted",
+    "at": "2026-11-07T04:59:59.886963+00:00",
+    "apk_sha256": "3bd6c8a7e5a06bc1679df78792f97827455f8c915e5be4c31728ca15f6a3451d",
+    "actual_reload_scene_reviewed": true,
+    "actual_touch_movement_reviewed": true,
+    "movement_evidence": [
+      "botw-before-input.png",
+      "botw-after-touch-movement.png",
+      "botw-play-private.mp4",
+      "review-contact.png"
+    ],
+    "scope": "Unplanned Android LOW_MEMORY reclamation while game survived, normal game EXIT_SELF, reconstructed hall and subsequent fresh-process save reload without hall restart. Controlled kill and live Binder reattachment remain untested."
+  },
+  "controlled_main_loss": {
+    "passed": false,
+    "main_process_terminated": false,
+    "reason": "direct run-as kill commands return nonzero on this phone; live reconnect and exit race remain unverified on this candidate",
+    "retained_logs": [
+      "live-reconnect-guard-attempt/observation.json",
+      "live-reconnect-signal-attempt/attempt.log",
+      "output/hall/session-recovery-round-20261107/live-reconnect-named.log"
+    ],
+    "scope": "test harness limitation, not a passing recovery result"
+  },
+  "repeated_switching": {
+    "current_candidate_five_rounds_executed": false,
+    "historical_five_rounds": "2026-11-07-native-build-round.json; APK 5808f5a427a2a0ee8654d7fc9f994a486950048a52bf184ea6f5ca50869e6d06"
+  },
+  "audio": {
+    "current_candidate_acceptance": false,
+    "public_clips_silent": true,
+    "historical_signal_checks": "2026-11-07-native-build-round.json"
+  },
+  "public_media": {
+    "new_prefixes": [
+      "session-library",
+      "session-reloaded",
+      "session-play",
+      "botw-gameplay",
+      "botw-input",
+      "botw-reloaded"
+    ],
+    "new_artifact_count": 8,
+    "all_artifact_count": 52,
+    "provenance_records": 40,
+    "synthetic": false
+  },
+  "post_game_snapshot": {
+    "record": {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/after-games/snapshot.json",
+      "bytes": 7126,
+      "sha256": "ce513a1191b97e0f9b225d8e5a52d5f497478617cb0407ad21344bff2a467a16"
+    },
+    "room_schema": 2,
+    "games": [
+      [
+        "nsa-2048",
+        "nsa-2048-local-v4"
+      ],
+      [
+        "botw",
+        "botw-local-v1"
+      ]
+    ],
+    "transfer_allocation_kib": 4,
+    "recovery_warnings": [],
+    "player_file_count": 22,
+    "preexisting_player_files_removed": [],
+    "changed_by_actual_games": [
+      "local/saves/nsa-2048/committed/state.dat",
+      "local/saves/botw/committed/option.sav",
+      "local/saves/botw/committed.work/option.sav",
+      "local/saves/botw/committed.work/1/caption.jpg",
+      "local/saves/botw/committed.work/1/caption.sav",
+      "local/saves/botw/committed.work/1/game_data.sav",
+      "local/saves/botw/committed.work/tracker/trackblock00.sav",
+      "local/saves/botw/committed/1/caption.jpg",
+      "local/saves/botw/committed/1/caption.sav",
+      "local/saves/botw/committed/1/game_data.sav",
+      "local/saves/botw/committed/tracker/trackblock00.sav"
+    ],
+    "recent_session_states": {
+      "ended": 14,
+      "crashed": 1
+    },
+    "phone_free_bytes": 43748085760
+  },
+  "storage_measurement": {
+    "path": "output/hall/session-recovery-round-20261107/storage.json",
+    "bytes": 1122,
+    "sha256": "aabc34575a9b11c2584498bd17cbe3843e5f1fcc0214ea846b268bbb1b3fd363"
+  },
+  "open_gates": [
+    "full G0",
+    "controlled live Binder reattachment after main-only loss",
+    "representative continuous 30-minute gameplay/game speed/temperature",
+    "subjective and BotW audio",
+    "physical power-loss and ENOSPC",
+    "broader and 16 KiB-page devices",
+    "production service and signed APK"
+  ],
+  "private_evidence": [
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/2048-audio-flinger.txt",
+      "bytes": 69417,
+      "sha256": "c6893ea5a8581ff622380e09de8c67760c95c3143bcfd5ef8bebb79cc9d48cd3"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/2048-audio-pipeline.txt",
+      "bytes": 467,
+      "sha256": "23d57290cabed40772374333cb21d208d387a3468f5c13ffc97338dd7decdf9a"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/2048-before-input-provenance.json",
+      "bytes": 262,
+      "sha256": "a689299f440331dc682599f893347d9915fb507dee9ac38123cdd83fc6b66048"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/2048-before-input.png",
+      "bytes": 23689,
+      "sha256": "ee04f966b53ae9942da4738fc256680722fc7086a7125572101421f6c1c13a61"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/2048-play-provenance.json",
+      "bytes": 262,
+      "sha256": "e211e8a21692c8735b651d80a2ee78ec88dc2150bec63ef9f6171f7cb1088c5e"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/2048-play.mp4",
+      "bytes": 1903695,
+      "sha256": "8f351d9a03c5be41e65d0909195b8454e4f323594a7b693d0f8ec90c8e869c74"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/2048-play.png",
+      "bytes": 24656,
+      "sha256": "17f46a162d58d84d4fd930a49706dec4faedd399cbf7c77f475a5986e6b9edf7"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/2048-reloaded-provenance.json",
+      "bytes": 262,
+      "sha256": "4cb7c850d75f0da4217c7e38ea5c61c997a46fc1f0ecae8a35e2812615ffabe3"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/2048-reloaded.png",
+      "bytes": 23594,
+      "sha256": "7ee990e848f900c70f014b11bffaa3f6d9c0927d6e3711fe9d7a16ca798496ef"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/2048-session-observations.json",
+      "bytes": 882,
+      "sha256": "919a1344d596155551604d546947590e8117634e38930497d8459d723729d685"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/after-games/files/players/local/settings/botw/settings.txt",
+      "bytes": 25,
+      "sha256": "91da2f6f334de5b63ebae79d3f76efeb74b109d213d49a58420c6a91c10e5135"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/after-games/files/players/local/settings/nsa-2048/settings.txt",
+      "bytes": 25,
+      "sha256": "91da2f6f334de5b63ebae79d3f76efeb74b109d213d49a58420c6a91c10e5135"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/after-games/files/sessions/04e5de78-6202-4696-bf22-6b78eece5c1f/logs/log.txt",
+      "bytes": 64255,
+      "sha256": "56515f726d2088539e042a2873413a47ec7116c98282e1acbfcc16ccf70d1f5a"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/after-games/files/sessions/068008d3-b191-41fd-a0f9-735d161f6c93/logs/log.txt",
+      "bytes": 73923,
+      "sha256": "275e6fba62a7350d748d6132dfca619862137a359c530f7b02b8e9464f10b950"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/after-games/files/sessions/2e426b7e-935f-4fcd-af33-047728b85b15/logs/log.txt",
+      "bytes": 58480,
+      "sha256": "080f7e90864e53ea789b60160c0d0b5f380822b911f729be32f9e32030c6ac8d"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/after-games/files/sessions/49c88ae1-e0a7-41f8-a102-705910d69dce/logs/log.txt",
+      "bytes": 54956,
+      "sha256": "1b4f41237c87b74fe1cea6451b3c9f3349f9d5f918730891b4607f8bce9802e5"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/after-games/files/sessions/5b20b03b-984d-464b-a16e-81bd65741bc1/logs/log.txt",
+      "bytes": 82995,
+      "sha256": "9f2eaae4b4a1d41e25995a830efbe97e9f8c1e3ca69441f50f8dcca01b88caa4"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/after-games/files/sessions/72bf14e8-33be-4764-8792-7f5b4ff6df75/logs/log.txt",
+      "bytes": 54928,
+      "sha256": "c4a50a6cd48e9ce2c300685e3ce2334efb330c13a2ba896f7f0d497a406c5402"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/after-games/files/sessions/7c6ddc74-b1ef-4839-bba9-6485d9ba5734/logs/log.txt",
+      "bytes": 54585,
+      "sha256": "054039d8f42a9237bebf3ac1942505df09c9dd29d3bd87a1b91327134747a886"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/after-games/files/sessions/7cffa9d0-21f0-47f6-8346-21cdb657ea77/logs/log.txt",
+      "bytes": 78105,
+      "sha256": "b38479d4ac895f5d2916cb755a95310a377ab6c5041de8af7d85acc2e28ec71d"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/after-games/files/sessions/8b2dd6a0-db8b-42fb-8f9a-80c2610781f3/logs/log.txt",
+      "bytes": 153846,
+      "sha256": "c278e204e0c09403b50ea7cb6082415c7000a3dfc78b05939550294daa25e9e9"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/after-games/files/sessions/934c9884-c527-4a04-9a91-0ec1ce2b2a40/logs/log.txt",
+      "bytes": 55728,
+      "sha256": "124c90e93bb88545cccc210e1941a751873337ef0a8b80d5d2b70f19dbe5ab8e"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/after-games/files/sessions/a0a6eee6-f328-4fa7-814b-416a6b1b43bb/logs/log.txt",
+      "bytes": 76788,
+      "sha256": "bcc8a0a38e628a49481372c3f02d3cccc06fb7cdc31d39019a007c954dbe775e"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/after-games/files/sessions/b9fbf060-e6d1-4b46-972c-40162c366a09/logs/log.txt",
+      "bytes": 54870,
+      "sha256": "1699bec194147db2d4cbbe00e5f15747c7a0c34f833a96cbff2c660a1ff32dc0"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/after-games/files/sessions/e2d4e527-9d09-4dff-af0d-e02ff636abbc/logs/log.txt",
+      "bytes": 103349,
+      "sha256": "54a260136e048d0973a678de763df39c7662a621ff7fba45f6d19abc2918a877"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/after-games/files/sessions/fd194473-1d43-4e8a-82bf-3378652ec10e/logs/log.txt",
+      "bytes": 132364,
+      "sha256": "6e469042c74ac7aeb58815651714707636ceb5e1418779b8ff7e110785033c73"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/after-games/snapshot.json",
+      "bytes": 7126,
+      "sha256": "ce513a1191b97e0f9b225d8e5a52d5f497478617cb0407ad21344bff2a467a16"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/after-instrumentation/files/players/local/settings/botw/settings.txt",
+      "bytes": 25,
+      "sha256": "91da2f6f334de5b63ebae79d3f76efeb74b109d213d49a58420c6a91c10e5135"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/after-instrumentation/files/players/local/settings/nsa-2048/settings.txt",
+      "bytes": 25,
+      "sha256": "91da2f6f334de5b63ebae79d3f76efeb74b109d213d49a58420c6a91c10e5135"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/after-instrumentation/files/sessions/04e5de78-6202-4696-bf22-6b78eece5c1f/logs/log.txt",
+      "bytes": 64255,
+      "sha256": "56515f726d2088539e042a2873413a47ec7116c98282e1acbfcc16ccf70d1f5a"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/after-instrumentation/files/sessions/49c88ae1-e0a7-41f8-a102-705910d69dce/logs/log.txt",
+      "bytes": 54956,
+      "sha256": "1b4f41237c87b74fe1cea6451b3c9f3349f9d5f918730891b4607f8bce9802e5"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/after-instrumentation/files/sessions/5b20b03b-984d-464b-a16e-81bd65741bc1/logs/log.txt",
+      "bytes": 82995,
+      "sha256": "9f2eaae4b4a1d41e25995a830efbe97e9f8c1e3ca69441f50f8dcca01b88caa4"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/after-instrumentation/files/sessions/72bf14e8-33be-4764-8792-7f5b4ff6df75/logs/log.txt",
+      "bytes": 54928,
+      "sha256": "c4a50a6cd48e9ce2c300685e3ce2334efb330c13a2ba896f7f0d497a406c5402"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/after-instrumentation/files/sessions/7c6ddc74-b1ef-4839-bba9-6485d9ba5734/logs/log.txt",
+      "bytes": 54585,
+      "sha256": "054039d8f42a9237bebf3ac1942505df09c9dd29d3bd87a1b91327134747a886"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/after-instrumentation/files/sessions/7cffa9d0-21f0-47f6-8346-21cdb657ea77/logs/log.txt",
+      "bytes": 78105,
+      "sha256": "b38479d4ac895f5d2916cb755a95310a377ab6c5041de8af7d85acc2e28ec71d"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/after-instrumentation/files/sessions/8b2dd6a0-db8b-42fb-8f9a-80c2610781f3/logs/log.txt",
+      "bytes": 153846,
+      "sha256": "c278e204e0c09403b50ea7cb6082415c7000a3dfc78b05939550294daa25e9e9"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/after-instrumentation/files/sessions/934c9884-c527-4a04-9a91-0ec1ce2b2a40/logs/log.txt",
+      "bytes": 55728,
+      "sha256": "124c90e93bb88545cccc210e1941a751873337ef0a8b80d5d2b70f19dbe5ab8e"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/after-instrumentation/files/sessions/e2d4e527-9d09-4dff-af0d-e02ff636abbc/logs/log.txt",
+      "bytes": 103349,
+      "sha256": "54a260136e048d0973a678de763df39c7662a621ff7fba45f6d19abc2918a877"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/after-instrumentation/files/sessions/fd194473-1d43-4e8a-82bf-3378652ec10e/logs/log.txt",
+      "bytes": 132364,
+      "sha256": "6e469042c74ac7aeb58815651714707636ceb5e1418779b8ff7e110785033c73"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/after-instrumentation/snapshot.json",
+      "bytes": 7063,
+      "sha256": "cc6acf3fe272bbe7ba6fe2dee75476d9fac7f44a98c628be04cabf2f1e4d7357"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/before-upgrade/files/players/local/settings/botw/settings.txt",
+      "bytes": 25,
+      "sha256": "91da2f6f334de5b63ebae79d3f76efeb74b109d213d49a58420c6a91c10e5135"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/before-upgrade/files/players/local/settings/nsa-2048/settings.txt",
+      "bytes": 25,
+      "sha256": "91da2f6f334de5b63ebae79d3f76efeb74b109d213d49a58420c6a91c10e5135"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/before-upgrade/files/sessions/04e5de78-6202-4696-bf22-6b78eece5c1f/logs/log.txt",
+      "bytes": 64255,
+      "sha256": "56515f726d2088539e042a2873413a47ec7116c98282e1acbfcc16ccf70d1f5a"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/before-upgrade/files/sessions/49c88ae1-e0a7-41f8-a102-705910d69dce/logs/log.txt",
+      "bytes": 54956,
+      "sha256": "1b4f41237c87b74fe1cea6451b3c9f3349f9d5f918730891b4607f8bce9802e5"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/before-upgrade/files/sessions/5b20b03b-984d-464b-a16e-81bd65741bc1/logs/log.txt",
+      "bytes": 82995,
+      "sha256": "9f2eaae4b4a1d41e25995a830efbe97e9f8c1e3ca69441f50f8dcca01b88caa4"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/before-upgrade/files/sessions/72bf14e8-33be-4764-8792-7f5b4ff6df75/logs/log.txt",
+      "bytes": 54928,
+      "sha256": "c4a50a6cd48e9ce2c300685e3ce2334efb330c13a2ba896f7f0d497a406c5402"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/before-upgrade/files/sessions/7c6ddc74-b1ef-4839-bba9-6485d9ba5734/logs/log.txt",
+      "bytes": 54585,
+      "sha256": "054039d8f42a9237bebf3ac1942505df09c9dd29d3bd87a1b91327134747a886"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/before-upgrade/files/sessions/7cffa9d0-21f0-47f6-8346-21cdb657ea77/logs/log.txt",
+      "bytes": 78105,
+      "sha256": "b38479d4ac895f5d2916cb755a95310a377ab6c5041de8af7d85acc2e28ec71d"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/before-upgrade/files/sessions/8b2dd6a0-db8b-42fb-8f9a-80c2610781f3/logs/log.txt",
+      "bytes": 153846,
+      "sha256": "c278e204e0c09403b50ea7cb6082415c7000a3dfc78b05939550294daa25e9e9"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/before-upgrade/files/sessions/934c9884-c527-4a04-9a91-0ec1ce2b2a40/logs/log.txt",
+      "bytes": 55728,
+      "sha256": "124c90e93bb88545cccc210e1941a751873337ef0a8b80d5d2b70f19dbe5ab8e"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/before-upgrade/files/sessions/e2d4e527-9d09-4dff-af0d-e02ff636abbc/logs/log.txt",
+      "bytes": 103349,
+      "sha256": "54a260136e048d0973a678de763df39c7662a621ff7fba45f6d19abc2918a877"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/before-upgrade/files/sessions/fd194473-1d43-4e8a-82bf-3378652ec10e/logs/log.txt",
+      "bytes": 132364,
+      "sha256": "6e469042c74ac7aeb58815651714707636ceb5e1418779b8ff7e110785033c73"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/botw-after-touch-movement-provenance.json",
+      "bytes": 262,
+      "sha256": "f65c3cc9d89666194d8a37881cee4f15f44d564431082866efed17666e19a2ab"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/botw-after-touch-movement.png",
+      "bytes": 1077525,
+      "sha256": "d9d77d28b2c0514d27c03d0e526d33da70b11880c73116098ff1d1e687d24af5"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/botw-before-input-loading-0-provenance.json",
+      "bytes": 262,
+      "sha256": "fdaac75e2a0375e614bd895ef05551c618b7b0d3fde428b558fe300386a25ee2"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/botw-before-input-loading-0.png",
+      "bytes": 621334,
+      "sha256": "c21e7c2a9f990330fae764e2b83c384df8444cf822a4063f16eb680608048f0d"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/botw-before-input-loading-1-provenance.json",
+      "bytes": 262,
+      "sha256": "3d82666bf1fae10bd907a0675600a9a6b86dc7c22256198c80edc812a84c025c"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/botw-before-input-loading-1.png",
+      "bytes": 131037,
+      "sha256": "bcdb9d4c106504d50457e8f1b2b2127415b87116170512e4baa6c6b3ce06d9e1"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/botw-before-input-loading-2-provenance.json",
+      "bytes": 262,
+      "sha256": "41e8f046f8afe591aed252096c8c4e18504b7a3269f9402ee851f417c05dddc5"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/botw-before-input-loading-2.png",
+      "bytes": 149843,
+      "sha256": "24178a86acda3396a308099086d3666e30f877029a15ee8d48e20fc3d4c352cb"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/botw-before-input-loading-3-provenance.json",
+      "bytes": 262,
+      "sha256": "b6201e78b3f9d4aaf5aa7d9c1ec55185deff769875a3c6f0e171a94d8462f0e2"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/botw-before-input-loading-3.png",
+      "bytes": 24940,
+      "sha256": "6507c3716b9bcf73c910abeb00ea42a2217a3468b61be31eb6e9c1f40312f7a6"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/botw-before-input-loading-4-provenance.json",
+      "bytes": 262,
+      "sha256": "145a3510d070058cdff36c9eedaa4ba07b05fdfb0659401dfd2b74253579482a"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/botw-before-input-loading-4.png",
+      "bytes": 24899,
+      "sha256": "c695113a98cc5d53e6129b36d3572a6cac0100d80448c1f6f51e485e05711e2c"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/botw-before-input-loading-5-provenance.json",
+      "bytes": 262,
+      "sha256": "776f0b6e3b417e429554bf51f0de5573aee52577cf69d905bad4203f9dd2e1a4"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/botw-before-input-loading-5.png",
+      "bytes": 1079802,
+      "sha256": "f19092d079b723431fd42cb4ac6102156dcc47151f259b7c028441e505e0d9dd"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/botw-before-input-provenance.json",
+      "bytes": 262,
+      "sha256": "7f1df9f7c7384274e411deb21f6ce2c9bb57411d64f971caf5574241a1ebb3d9"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/botw-before-input.png",
+      "bytes": 1041211,
+      "sha256": "48b340de265f5eb2f177228aaa781d42fc0b93c59d6e3113cba3063ed35049ee"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/botw-exit-confirmation-provenance.json",
+      "bytes": 262,
+      "sha256": "8775ba35ba8bd317508f93b47a460e4c2dbfd27293e1ecb8d18dc191236fa68e"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/botw-exit-confirmation.png",
+      "bytes": 500462,
+      "sha256": "0e66c4872b2fd8d990306514199b6fb38d1211e2f6f6975f401bcd7301d7bf7b"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/botw-first-return-provenance.json",
+      "bytes": 262,
+      "sha256": "953ebd4934bcbfb54fd4cef20d4c54894a46ff9a8aabe9a8c5b789dc14aa5556"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/botw-first-return.png",
+      "bytes": 239002,
+      "sha256": "1efe91a539522d7ddbd6a33eddaca94a74de322a39e8aa649acc8fa8f12176fa"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/botw-fresh-loaded-loading-0-provenance.json",
+      "bytes": 262,
+      "sha256": "885905666d31780ae17d7b4dee44604ef6c9088103686e351b195ef56bb2f051"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/botw-fresh-loaded-loading-0.png",
+      "bytes": 250541,
+      "sha256": "6ef0bb3eb2c546a9fdd7fee35a47278474906b8e919100a8130ddb21ba1aad2b"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/botw-fresh-loaded-loading-1-provenance.json",
+      "bytes": 262,
+      "sha256": "b3dfde9c556d01bf3f14b6132f8e1e729b8e8f7277daee5d5fad64b19d5468d0"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/botw-fresh-loaded-loading-1.png",
+      "bytes": 141306,
+      "sha256": "930acbd5599c811e67b8802e5b428c051c1757c56f1500a6af751c7160a6c3c4"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/botw-fresh-loaded-loading-2-provenance.json",
+      "bytes": 262,
+      "sha256": "d9a31ba1a73886405a5274f9586f80b18baff6a8e114914a6c00c319e449402b"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/botw-fresh-loaded-loading-2.png",
+      "bytes": 156736,
+      "sha256": "bb5bdba09ffde2dbda031c7e96ea31ad9caaa87e100667d2aff6cfb5af601521"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/botw-fresh-loaded-loading-3-provenance.json",
+      "bytes": 262,
+      "sha256": "725517a63debf82dbc2889c1ef7aefb685d38cc3e6c0f0219a0b2fa55e22d2b2"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/botw-fresh-loaded-loading-3.png",
+      "bytes": 24894,
+      "sha256": "a0d141ee38b4817f978bdec37fb89aba511479d14b7bf1a341a8f480d1475355"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/botw-fresh-loaded-loading-4-provenance.json",
+      "bytes": 262,
+      "sha256": "21dcfe085d980dd605ef324a77d70c95b5b7a5160ba43266e2c1d0d5249575d9"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/botw-fresh-loaded-loading-4.png",
+      "bytes": 24949,
+      "sha256": "7d1737ec6c00741f26e747a2352a94007cfa43cfbc9f5b2caa31a46ab2cf8717"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/botw-fresh-loaded-loading-5-provenance.json",
+      "bytes": 262,
+      "sha256": "31a235d840aa253cc1e207060345f7ed8f9dbec4c477ba0350e95478541edd7a"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/botw-fresh-loaded-loading-5.png",
+      "bytes": 1041491,
+      "sha256": "ecab84ba3ab3ee628b78e93c0ae26ddb69c877e8b2757011d4f8595c434ad2fb"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/botw-fresh-loaded-provenance.json",
+      "bytes": 262,
+      "sha256": "3787e69176d09b50913752f70af7319816f5754933c589bebab89e24a97d1e8b"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/botw-fresh-loaded.png",
+      "bytes": 1043295,
+      "sha256": "1e4969c47db10958d712928c5f3448196e0d03e3745d7aa8d34bace012a0b9d9"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/botw-fresh-return-provenance.json",
+      "bytes": 262,
+      "sha256": "38a1bca0e08b81846264ada5efaecd30d48418894896a4cda2a5fa4a23f66f1e"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/botw-fresh-return.png",
+      "bytes": 239468,
+      "sha256": "899094c4b1782828912cff367572930a200ee5539d202dc5ba73f2f0c08b9caa"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/botw-fresh-save-list-provenance.json",
+      "bytes": 262,
+      "sha256": "dabee9946b40dc0e9cf33ce4cc6474fbf3079887d30385e06c03885e054c8362"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/botw-fresh-save-list.png",
+      "bytes": 313016,
+      "sha256": "5ad259fa6ea07399ac21646b55d4d9504c78323728a5d8792e855e318481614c"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/botw-new-save-result-provenance.json",
+      "bytes": 262,
+      "sha256": "f8311ad69138beefe003c2670fba4ed72e3194bd661534dd347c109ff18130a0"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/botw-new-save-result.png",
+      "bytes": 264970,
+      "sha256": "9c677352f74ede066d686a305d0e3d7e6d1762f99549f311f478c0ec5ed69323"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/botw-old-save-list-provenance.json",
+      "bytes": 262,
+      "sha256": "215cce437172947f00bfc6d980470899fd3494e4d8ab27dd63bf56e194f7b3aa"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/botw-old-save-list.png",
+      "bytes": 650052,
+      "sha256": "8a527a113bbc4186545de99bf108bfce484fd4f68e4cd4f26baf3ba680a65785"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/botw-play-private-provenance.json",
+      "bytes": 262,
+      "sha256": "2a47fece58e5815f6db75c8fe9732dc6731c22e5b3614c61f4e1d44cd99bd478"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/botw-play-private.mp4",
+      "bytes": 1184051,
+      "sha256": "efa657a024e1fea6bdf1725ed48a69982da058a72b4ff5df699677bbc6e4e085"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/botw-progress.json",
+      "bytes": 2845,
+      "sha256": "97f4d4e7cdaa29d8bb226feddfc644cedcff4645ec2bcf0ed2051aea1d788ea1"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/botw-save-confirmation-provenance.json",
+      "bytes": 262,
+      "sha256": "d5cb60612718ea5826f71b4c89b41fbbe71b43b75cebc6b4174f3a546b3e0526"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/botw-save-confirmation.png",
+      "bytes": 332612,
+      "sha256": "e32591bb5c730ded7820840393e97d7c636fe0f1d040a8febc3bcb694c85ca3a"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/botw-save-system-provenance.json",
+      "bytes": 262,
+      "sha256": "1e9d15f0e0f221dadd05678389c3e6fc6737d729e54f2b45e404542fb359cb04"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/botw-save-system.png",
+      "bytes": 386400,
+      "sha256": "41b2aed9f9859fc4a1cefc9a4cc5540daf958df498447c32c68e9441e03df69a"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/botw-title-provenance.json",
+      "bytes": 262,
+      "sha256": "264fdbb6ccbacd101ad14790f5ec84b4a0db9df50b3eba483d2f1185b85c3b2b"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/botw-title.png",
+      "bytes": 2073998,
+      "sha256": "71796e5605d3497357af2acf73c005a73dc8b9ca529bea3bb49758c15f65ae91"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/game-exit-provenance.json",
+      "bytes": 262,
+      "sha256": "8cc5a2d50672274af9add9f75070b9b31ab8001eb3550d9b7441b3d13df441de"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/game-exit.png",
+      "bytes": 77213,
+      "sha256": "63549902e17509ad6f081b99a25b5b2a7c9f479f4a27335c4c8c7ce013147553"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/game-pause-provenance.json",
+      "bytes": 262,
+      "sha256": "8f39eda9c8fb2c81120f376a796ffd7c1e643336b98d427f42808f11fe0e6309"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/game-pause.png",
+      "bytes": 70492,
+      "sha256": "94544ed54c8df7f7538ae9dc360bc7710d4ed5623853ca103f76758d8498c9e9"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/gameplay-retake/application-exit-info.txt",
+      "bytes": 7858,
+      "sha256": "21ad193012fb3fca67a1d26fd29726053e260bfe36bf3b816526072425c6c86c"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/gameplay-retake/botw-after-touch-movement-provenance.json",
+      "bytes": 262,
+      "sha256": "aa6bf2098ab0830967256b4a9bef6c7089b26674e8eea39b9ef348cc9ee7e9c4"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/gameplay-retake/botw-after-touch-movement.png",
+      "bytes": 1001062,
+      "sha256": "abb17ef542b52d9e2923779120e783465dc3eb97d789c5742fdabb76af4e7412"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/gameplay-retake/botw-before-input-loading-0-provenance.json",
+      "bytes": 262,
+      "sha256": "893ac5ce55e2edc16e8d5616506f9519fc82ca98ca6b88977ca05b8be18bea95"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/gameplay-retake/botw-before-input-loading-0.png",
+      "bytes": 409079,
+      "sha256": "4a3a35e0c017aaa5c61194e3033e0a7130cced5839b79d955c3119fc642d993a"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/gameplay-retake/botw-before-input-loading-1-provenance.json",
+      "bytes": 262,
+      "sha256": "b809fd65c241971476d3571a921a130f79fe17ebcaf2d5f06b0d37aa1a8bdf6e"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/gameplay-retake/botw-before-input-loading-1.png",
+      "bytes": 132691,
+      "sha256": "01e92a9412151dc843b08067e6c975b7ed38a8bf1ab92d4c4c64369b81de535d"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/gameplay-retake/botw-before-input-loading-2-provenance.json",
+      "bytes": 262,
+      "sha256": "d3c434e5c0f0cf73981840390a4dc58011c82a631dbee1217f408fe50e6fe5c2"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/gameplay-retake/botw-before-input-loading-2.png",
+      "bytes": 155318,
+      "sha256": "6ab462865879b0f2b9bae36808f5a1b7b9c5e0ca595192026cdfc18e36e34a38"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/gameplay-retake/botw-before-input-loading-3-provenance.json",
+      "bytes": 262,
+      "sha256": "0dce1f7fd8666f7c661234071eacaa7f4bb75ca64093d974e3d3bf321728c6c7"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/gameplay-retake/botw-before-input-loading-3.png",
+      "bytes": 24907,
+      "sha256": "fd8d8cb109bbf9e3dccdebdd5909b66193c6bd2efd1feebdb435aab4f3b68fe4"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/gameplay-retake/botw-before-input-loading-4-provenance.json",
+      "bytes": 262,
+      "sha256": "0e82f2ceb42701a84ff3d6b7157a64fbc80db83dba5989c5bfab46bb783d2043"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/gameplay-retake/botw-before-input-loading-4.png",
+      "bytes": 24939,
+      "sha256": "03a30935b62ef06a90f158ed32012c1e1f0532e6e25ea2065085ae6956e9c703"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/gameplay-retake/botw-before-input-loading-5-provenance.json",
+      "bytes": 262,
+      "sha256": "4d2e1535fbf126da2185081bb4f5fd988d6eb2494b90b8c946f614c988145437"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/gameplay-retake/botw-before-input-loading-5.png",
+      "bytes": 1079291,
+      "sha256": "11b86df021e9d679504d068b3f9141eea4eab7305514c5086e4fddecbcca6f91"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/gameplay-retake/botw-before-input-provenance.json",
+      "bytes": 262,
+      "sha256": "0ccae01d695879dccefdaff9f851efd7ab7738d518268aff557fb14e3601ecb8"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/gameplay-retake/botw-before-input.png",
+      "bytes": 1059977,
+      "sha256": "3d6e3e07543d862a2604c681f048571668fe4a61138204c352e19b14360434aa"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/gameplay-retake/botw-exit-confirmation-provenance.json",
+      "bytes": 262,
+      "sha256": "1bacd6f6148d5eb9ff90ef2be6e32822d9c2aa61f28d87f6e1b1dc6196f6ebe2"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/gameplay-retake/botw-exit-confirmation.png",
+      "bytes": 137512,
+      "sha256": "23152bffe77b259b8ee5a34c5c0fad1825ecc03af64acb6ed189fdd65a9d1488"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/gameplay-retake/botw-first-return-provenance.json",
+      "bytes": 262,
+      "sha256": "04af79922304e94fd0671455473a2672c1a51356191e4cb6939cf09cd104e068"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/gameplay-retake/botw-first-return.png",
+      "bytes": 239246,
+      "sha256": "3fc50d96518a38e28136fc568c3511ee7b12997504bc14a7b19fddd6e8e87947"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/gameplay-retake/botw-new-save-result-provenance.json",
+      "bytes": 262,
+      "sha256": "b1e8a048dfe29e67fffe98cf0674a917162b4c8975b6f7805575c90440f92786"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/gameplay-retake/botw-new-save-result.png",
+      "bytes": 281613,
+      "sha256": "26acd8b7c481ac03b5b4704970c591aaea46abe3336967dc7a1fe8cf61fb8812"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/gameplay-retake/botw-old-save-list-provenance.json",
+      "bytes": 262,
+      "sha256": "a3fd777f18c86b13a124998a3ce601832dff3044c3d23d288025e3325ceab434"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/gameplay-retake/botw-old-save-list.png",
+      "bytes": 458584,
+      "sha256": "5e505b9e2812629fbcf2dc0eb3b586164e829795731c14f5508bc04413bd4d21"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/gameplay-retake/botw-play-private-provenance.json",
+      "bytes": 262,
+      "sha256": "139001d790a8dae5d480bc0d07f95e0708b075e0962a12bbaa1460fb4fd106b5"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/gameplay-retake/botw-play-private.mp4",
+      "bytes": 1772359,
+      "sha256": "7682d35939a17f9e53fd1dd8f30be40d4ec5a2f317b402e6f5343299ae71d06a"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/gameplay-retake/botw-recovery-portrait-provenance.json",
+      "bytes": 262,
+      "sha256": "a8f576c74d522d72ea528489d993a2d34c582b2a97cdea24973b67a44fe91376"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/gameplay-retake/botw-recovery-portrait.png",
+      "bytes": 239655,
+      "sha256": "91bf620e8e5be884239e6791c285fac5a46986dfd1014746807a5158bd4f9109"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/gameplay-retake/botw-recovery-reloaded-loading-0-provenance.json",
+      "bytes": 262,
+      "sha256": "6c5e31430907c7dce22288f87b5b0bc8aba4f512ef69937e4f72b2aef049f30b"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/gameplay-retake/botw-recovery-reloaded-loading-0.png",
+      "bytes": 619231,
+      "sha256": "98b85f5bc63281ab052f9f285ac0dd33d44d5dfe2ddb6a27fc75cf8caa6d601a"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/gameplay-retake/botw-recovery-reloaded-loading-1-provenance.json",
+      "bytes": 262,
+      "sha256": "f716f32b4c93dd378e6d1a4f2bbe22ca2a73d82114b5a6f9d5dacf3a8ead591c"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/gameplay-retake/botw-recovery-reloaded-loading-1.png",
+      "bytes": 172860,
+      "sha256": "71edc46323d5bafd75e2e54d9b72df96a46f1d33b6df29e0839665c98e43d86b"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/gameplay-retake/botw-recovery-reloaded-loading-2-provenance.json",
+      "bytes": 262,
+      "sha256": "e768ec31d9f6f0942845528cdf21c6c119c963e026c62a7454efcdd25bca9d16"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/gameplay-retake/botw-recovery-reloaded-loading-2.png",
+      "bytes": 192330,
+      "sha256": "cdc8614fe90ecbee8e51c70f5e0631ede1a585fd7c7776e0b0cbebb102adbb19"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/gameplay-retake/botw-recovery-reloaded-loading-3-provenance.json",
+      "bytes": 262,
+      "sha256": "76dd0988baf5026ecf5db4babf3d2124d67608976364c4e4c7b23dd8628f48d6"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/gameplay-retake/botw-recovery-reloaded-loading-3.png",
+      "bytes": 24939,
+      "sha256": "03a30935b62ef06a90f158ed32012c1e1f0532e6e25ea2065085ae6956e9c703"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/gameplay-retake/botw-recovery-reloaded-loading-4-provenance.json",
+      "bytes": 262,
+      "sha256": "fe1cf467afb46ab715d6ab8d092c205f291bc1aca4a50c4516ae28019ab0eb7e"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/gameplay-retake/botw-recovery-reloaded-loading-4.png",
+      "bytes": 693104,
+      "sha256": "03d324104b9757af2ef284d807fc7cf3b424960caea2fabf5f47d8e29d4187f5"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/gameplay-retake/botw-recovery-reloaded-loading-5-provenance.json",
+      "bytes": 262,
+      "sha256": "8107d2fb33b68e74f58c4d3034858df2a79ffec92c306f5ab2618c979538eec6"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/gameplay-retake/botw-recovery-reloaded-loading-5.png",
+      "bytes": 928797,
+      "sha256": "6324d96289b34455a334fe836101c7e5fe018600546b749e0b7ee39e01daf565"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/gameplay-retake/botw-recovery-reloaded-provenance.json",
+      "bytes": 262,
+      "sha256": "858a6162752283848dfeff71dd029be5d648a69f6f6820b362944b89e700dab7"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/gameplay-retake/botw-recovery-reloaded.png",
+      "bytes": 905801,
+      "sha256": "0eb8f374c6f60eb43de84704572cd8918530c6b3246ef7abc3de79c8cfd2d334"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/gameplay-retake/botw-recovery-save-list-provenance.json",
+      "bytes": 262,
+      "sha256": "512c65990155f6997b361d688dd935e99716014e97cd9278f57022cba9a23d8a"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/gameplay-retake/botw-recovery-save-list.png",
+      "bytes": 653411,
+      "sha256": "7e3af57120499a94921c2f7e80148a657f4ffa1bf8a1f0c9975d745a3ec4c8e9"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/gameplay-retake/botw-recovery-title-provenance.json",
+      "bytes": 262,
+      "sha256": "59d688684cc6a2f739c5eb73a4c6213766a1e4ce5c6ecd807e0d67c992b8ce65"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/gameplay-retake/botw-recovery-title.png",
+      "bytes": 2079957,
+      "sha256": "d0348e87b8a064360236902dba88f94067d7bff2ceed4e4da388773b96a9e2d9"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/gameplay-retake/botw-save-confirmation-provenance.json",
+      "bytes": 262,
+      "sha256": "d97a734453d729a1857ff41f429d30a79944d352572c751805cffbd1223b07d3"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/gameplay-retake/botw-save-confirmation.png",
+      "bytes": 328021,
+      "sha256": "861d06ecde0a85d8c5b4a66915c6e305960e0e2c73dc2160df2e48c7d2c44c81"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/gameplay-retake/botw-save-system-provenance.json",
+      "bytes": 262,
+      "sha256": "bf7291aeb8f4ca88cd4674c4b4653aa4806dc33f80af1b948c918ddfb7b96d95"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/gameplay-retake/botw-save-system.png",
+      "bytes": 379867,
+      "sha256": "fe9701165f67ee5916ba4b33cb0d96ffc6a11122503e5e1b56b3b287a6745a5c"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/gameplay-retake/botw-title-provenance.json",
+      "bytes": 262,
+      "sha256": "89f64c2178eb0049a0ff27d797e9fa2021821e558cad745407510db7016426db"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/gameplay-retake/botw-title.png",
+      "bytes": 1962176,
+      "sha256": "c470f52e33bc481eb2b454fa8665a57a2bc7d905e10f8a7858acc1283b533226"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/gameplay-retake/natural-main-loss-reload.json",
+      "bytes": 2466,
+      "sha256": "1283e358bd9316919ea9e3a7d4de23bfb2f8df7e4869a7056cf3928bd53e44fb"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/gameplay-retake/review-contact.png",
+      "bytes": 550699,
+      "sha256": "b13f1564ff66fdb9b7b4d53265b18e249ce924bd73abe70cda750572131ba60c"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/hall-library-provenance.json",
+      "bytes": 262,
+      "sha256": "8a0f9f47f5903a95049fa6b1b0ade48aaf61dfcaeb0c28ef17b90ec2185ed993"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/hall-library.png",
+      "bytes": 351202,
+      "sha256": "6ddace493ebcb86c25fe8156349f1b7c715faa37003bffd091f3c7de85595eb7"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/instrumentation.txt",
+      "bytes": 15224,
+      "sha256": "8e95826e6cabcd6c5a72eea4f8a1d564f464daab13da7e0ef9a1714753ba867f"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/live-before-main-loss-provenance.json",
+      "bytes": 262,
+      "sha256": "f49fe343778f21048ed786695444f64681275a5564293d17e66b67121a4f141c"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/live-before-main-loss.png",
+      "bytes": 25385,
+      "sha256": "f23eebfb8c28b08f9acd83152838a401be1944a1d04e52d94ed869a675930e9a"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/live-reconnect-guard-attempt/live-before-main-loss-provenance.json",
+      "bytes": 262,
+      "sha256": "a8283d5a0bd8fcf52a2713414f2b069cfe143d4cbb715b035cd75a6953599748"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/live-reconnect-guard-attempt/live-before-main-loss.png",
+      "bytes": 24478,
+      "sha256": "75b43fd3edebad71e394e6b98600b1c6e22f6052f57c40702b879bb21869d68b"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/live-reconnect-guard-attempt/observation.json",
+      "bytes": 267,
+      "sha256": "aa6c9acd9dbda3b2fede71576458f06b4cdd330e72b540f0d3a3d9e4dbd95dec"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/live-reconnect-signal-attempt/attempt.log",
+      "bytes": 1088,
+      "sha256": "5555b8aa1760c6e633f1aca32350accbdb4d94d14d2d95a9c6659e7ee70ef51e"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/live-reconnect-signal-attempt/live-before-main-loss-provenance.json",
+      "bytes": 262,
+      "sha256": "fda475bff9c4e38a339b525f700c0b5b67bbb10ed65a2773aca2a35bd5d763ac"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/live-reconnect-signal-attempt/live-before-main-loss.png",
+      "bytes": 24516,
+      "sha256": "94cbe805a1169385c99effd7ebf47e7dd2bcd73768d4bd9c9c0e9f339deea4d4"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/live-reconnect-signal-attempt/observation.json",
+      "bytes": 259,
+      "sha256": "23bb368c091d809ec2087a95b51a20fe7b43269949ff5c47aa19eb26e9ab654a"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/main-loss-attempt-status.json",
+      "bytes": 479,
+      "sha256": "f44ed7c474ae221666c684360654a9a31671a1464d5109e3adac47c947cdfe40"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/pause-cleanup.json",
+      "bytes": 419,
+      "sha256": "b917f4fb797056f219935e39aaba51c7362ac477a874efc79818ecd1ab134e3b"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/paused-return-portrait-provenance.json",
+      "bytes": 262,
+      "sha256": "aff63344ce5906041dd59998d7f5adba50a80c1dc78edfe8b21ed2843c0317e2"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/paused-return-portrait.png",
+      "bytes": 230085,
+      "sha256": "e4e5754c919892d0c7e75719150a28c2c9025de404aea06bdd54b9e87503235e"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/play-complete.json",
+      "bytes": 923,
+      "sha256": "d90850fea1bd95c33331c89121c86a21fa304ee693eb94825b2c476fb452c142"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/preflight.json",
+      "bytes": 4823,
+      "sha256": "39c2e9a158e26391662d99838a0e83637d66ebfe51c7f3407146e73cb59f17d2"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/returned-portrait-provenance.json",
+      "bytes": 262,
+      "sha256": "4f3caf5feae73c71bb1159caffb50d8f28b0f46c1bae7bbd69a666930f67598f"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-session-recovery/returned-portrait.png",
+      "bytes": 229605,
+      "sha256": "fd752faf106abc9ba51987528bfd8e80917b9588cf620b1b6b4802121ce944c1"
+    },
+    {
+      "path": "output/hall/session-recovery-round-20261107/android-build-state.json",
+      "bytes": 202,
+      "sha256": "db4a94b0a4cdc5577533d5b1ebed9cca068f26c722ebb0463809fd28e2f27c5f"
+    },
+    {
+      "path": "output/hall/session-recovery-round-20261107/android-build.log",
+      "bytes": 7212,
+      "sha256": "c7c5c2a886ce91e6304a858698f702a5a23e811b8836113da1f2d64f28079104"
+    },
+    {
+      "path": "output/hall/session-recovery-round-20261107/baseline.json",
+      "bytes": 7836,
+      "sha256": "94425e6a3e6d9a35f4ce72b68d15dabb6a0636852131a454d198fbdbd57610e0"
+    },
+    {
+      "path": "output/hall/session-recovery-round-20261107/botw-direct.log",
+      "bytes": 15,
+      "sha256": "16290b75a3a6cb352cb1cf9e8eeab1da5634739c15d3f706559e353d6450dcaf"
+    },
+    {
+      "path": "output/hall/session-recovery-round-20261107/gameplay-retake.log",
+      "bytes": 290,
+      "sha256": "697cd198e8d54d1f1f21b5e5646709d4312fcc1547451e43a601e0f5b016ac1a"
+    },
+    {
+      "path": "output/hall/session-recovery-round-20261107/host-binding.json",
+      "bytes": 4896,
+      "sha256": "c74a114d37001b42f74ca24f56e70df8509883dbeed1b9210f6d9982ea5aacb3"
+    },
+    {
+      "path": "output/hall/session-recovery-round-20261107/lint.xml",
+      "bytes": 17965,
+      "sha256": "e28705e576859d7738ce5ffd8505f044319f30f64d01bb8cb719cf4ad5168bf1"
+    },
+    {
+      "path": "output/hall/session-recovery-round-20261107/live-reconnect-named.log",
+      "bytes": 1146,
+      "sha256": "e4dcfa7381495ad80f6dc3b7b9ffc219be197de118ffb7ea6204385570792bab"
+    },
+    {
+      "path": "output/hall/session-recovery-round-20261107/live-reconnect.log",
+      "bytes": 1088,
+      "sha256": "5555b8aa1760c6e633f1aca32350accbdb4d94d14d2d95a9c6659e7ee70ef51e"
+    },
+    {
+      "path": "output/hall/session-recovery-round-20261107/retake-reload.log",
+      "bytes": 26,
+      "sha256": "550d02a0013dd32358f929e3ba80ab8f4059016ba6ce5f1a041594e2531ee752"
+    },
+    {
+      "path": "output/hall/session-recovery-round-20261107/storage.json",
+      "bytes": 1122,
+      "sha256": "aabc34575a9b11c2584498bd17cbe3843e5f1fcc0214ea846b268bbb1b3fd363"
+    },
+    {
+      "path": "output/hall/session-recovery-round-20261107/storage.log",
+      "bytes": 1122,
+      "sha256": "aabc34575a9b11c2584498bd17cbe3843e5f1fcc0214ea846b268bbb1b3fd363"
+    },
+    {
+      "path": "output/hall/session-recovery-round-20261107/TEST-org.nsa.hall.CapabilityTest.xml",
+      "bytes": 552,
+      "sha256": "8de6c23700f0f42486f4eac98151f455c0ba208fd0c4473d8267b427391f9c37"
+    },
+    {
+      "path": "output/hall/session-recovery-round-20261107/TEST-org.nsa.hall.RecoveryBoundaryTest.xml",
+      "bytes": 1663,
+      "sha256": "0214de5689da1ab086fa1295f2c0c3dcc2bd8773b341aff1920e161bdd1b3781"
+    },
+    {
+      "path": "output/hall/session-recovery-round-20261107/TEST-org.nsa.hall.SignatureVerifierTest.xml",
+      "bytes": 437,
+      "sha256": "ac43b99adb15c6b32e8879fcbab463461e0798f16247c5a909c01a4acde44e8c"
+    },
+    {
+      "path": "output/hall/session-recovery-round-20261107/TEST-org.nsa.hall.StorageBoundaryTest.xml",
+      "bytes": 654,
+      "sha256": "e6ce4680392d9685664a1938fe703e1f9e2439c99b65afbbb37de469360a4f33"
+    },
+    {
+      "path": "output/hall/session-recovery-round-20261107/TEST-org.nsa.hall.TransferBoundaryTest.xml",
+      "bytes": 1760,
+      "sha256": "4a5a0fd3731bfca821fe73da85aa6aa73df6158dfd7f90d02910aa226941b50d"
+    }
+  ]
+}

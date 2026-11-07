@@ -1,0 +1,21 @@
+{
+  "source": "USB physical Android device",
+  "application_id": "org.nsa.hall.debug",
+  "captured_at": "2026-11-07T04:59:44.666137+00:00",
+  "synthetic": false,
+  "installed_apk_sha256": "3bd6c8a7e5a06bc1679df78792f97827455f8c915e5be4c31728ca15f6a3451d",
+  "source_relative_path": ".gamedump/Hall/device-evidence/20261107-session-recovery/gameplay-retake/botw-recovery-reloaded.png",
+  "source_sha256": "0eb8f374c6f60eb43de84704572cd8918530c6b3246ef7abc3de79c8cfd2d334",
+  "artifacts": [
+    {
+      "name": "botw-reloaded.png",
+      "sha256": "0eb8f374c6f60eb43de84704572cd8918530c6b3246ef7abc3de79c8cfd2d334",
+      "width": 2340,
+      "height": 1080,
+      "duration_seconds": null
+    }
+  ],
+  "transform": "copy",
+  "start_seconds": 0,
+  "requested_duration_seconds": 15
+}

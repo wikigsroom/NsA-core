@@ -1,0 +1,88 @@
+name: NsA release
+
+on:
+  push:
+    tags: ['v0.*']
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing annotated release tag to build
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ inputs.tag || github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.tag.outputs.tag }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.tag || github.ref }}
+          fetch-depth: 0
+      - id: tag
+        name: Validate committed version, tag and release notes
+        env:
+          RELEASE_TAG: ${{ inputs.tag || github.ref_name }}
+        run: |
+          python packaging/release_assets.py validate-tag "$RELEASE_TAG"
+          echo "tag=$RELEASE_TAG" >> "$GITHUB_OUTPUT"
+
+  windows:
+    needs: validate
+    uses: ./.github/workflows/release-windows.yml
+    with:
+      ref: ${{ needs.validate.outputs.tag }}
+    permissions:
+      contents: write
+
+  macos:
+    needs: validate
+    uses: ./.github/workflows/release-macos.yml
+    with:
+      ref: ${{ needs.validate.outputs.tag }}
+    permissions:
+      contents: write
+
+  publish:
+    needs: [validate, windows, macos]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      RELEASE_TAG: ${{ needs.validate.outputs.tag }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.validate.outputs.tag }}
+          fetch-depth: 0
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: nx2android-*
+          path: release-assets
+          merge-multiple: true
+      - name: Inspect both bundles and create checksums
+        run: python packaging/release_assets.py prepare "$RELEASE_TAG" --directory release-assets
+      - name: Upload to an unpublished draft
+        run: |
+          if gh release view "$RELEASE_TAG" --repo wikigsroom/NsA-core >/dev/null 2>&1; then
+            echo "A release already exists. Inspect it before replacing published artifacts."
+            exit 1
+          fi
+          gh release create "$RELEASE_TAG" release-assets/* --verify-tag --draft \
+            --title "NsA Core $RELEASE_TAG · Game hall and native porting tools" \
+            --notes-file "docs/releases/$RELEASE_TAG.md" --repo wikigsroom/NsA-core
+      - name: Verify uploaded bytes before publication
+        run: |
+          gh release download "$RELEASE_TAG" --dir release-readback --repo wikigsroom/NsA-core
+          python packaging/release_assets.py verify-download --directory release-readback
+      - name: Publish the completed release
+        run: gh release edit "$RELEASE_TAG" --draft=false --latest --repo wikigsroom/NsA-core

@@ -1,0 +1,28 @@
+{
+  "source": "USB physical Android device",
+  "application_id": "org.nsa.hall.debug",
+  "captured_at": "2026-11-07T04:53:09.501918+00:00",
+  "synthetic": false,
+  "installed_apk_sha256": "3bd6c8a7e5a06bc1679df78792f97827455f8c915e5be4c31728ca15f6a3451d",
+  "source_relative_path": ".gamedump/Hall/device-evidence/20261107-session-recovery/gameplay-retake/botw-play-private.mp4",
+  "source_sha256": "7682d35939a17f9e53fd1dd8f30be40d4ec5a2f317b402e6f5343299ae71d06a",
+  "artifacts": [
+    {
+      "name": "botw-input.gif",
+      "sha256": "0c5978e514ac0e941bc054ac4bedbde99f0a646a0e14f123cc3a8a4b615bc22c",
+      "width": 720,
+      "height": 332,
+      "duration_seconds": "9.000000"
+    },
+    {
+      "name": "botw-input.mp4",
+      "sha256": "fd93670f39189c1472e692597bd0eb26546816758673a3abe76c19402ba59926",
+      "width": 720,
+      "height": 332,
+      "duration_seconds": "9.005002"
+    }
+  ],
+  "transform": "resize and GIF palette encoding; no synthetic frames; MP4 has no audio track",
+  "start_seconds": 0,
+  "requested_duration_seconds": 9.0
+}

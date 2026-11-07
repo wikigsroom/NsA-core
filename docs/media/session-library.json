@@ -1,0 +1,21 @@
+{
+  "source": "USB physical Android device",
+  "application_id": "org.nsa.hall.debug",
+  "captured_at": "2026-11-07T04:37:35.416040+00:00",
+  "synthetic": false,
+  "installed_apk_sha256": "3bd6c8a7e5a06bc1679df78792f97827455f8c915e5be4c31728ca15f6a3451d",
+  "source_relative_path": ".gamedump/Hall/device-evidence/20261107-session-recovery/hall-library.png",
+  "source_sha256": "6ddace493ebcb86c25fe8156349f1b7c715faa37003bffd091f3c7de85595eb7",
+  "artifacts": [
+    {
+      "name": "session-library.png",
+      "sha256": "6ddace493ebcb86c25fe8156349f1b7c715faa37003bffd091f3c7de85595eb7",
+      "width": 1080,
+      "height": 2340,
+      "duration_seconds": null
+    }
+  ],
+  "transform": "copy",
+  "start_seconds": 0,
+  "requested_duration_seconds": 15
+}

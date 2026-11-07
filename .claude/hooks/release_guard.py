@@ -1,13 +1,13 @@
 # PreToolUse hook (.claude/settings.json): checks release commands against CLAUDE.md's release rules before they run.
-#   gh release create|upload|edit  needs --repo shirai91/nx2android (gh here defaults to seedds/nxnative) and attaches no zip (the
-#                                  release-windows.yml and release-macos.yml workflows build and attach them on publish, --clobber)
+#   gh release create|upload|edit  needs --repo wikigsroom/NsA-core (the user-selected destination) and attaches no local zip (the
+#                                  the annotated-tag pipeline builds and verifies both CI artifacts before publication)
 #   gh release create <tag>        and git tag <tag>: the tag is v + porter/__init__.py's __version__ (bump it first)
 # A refused command gets the reason back; an allowed gh release create gets the steps that follow publishing.
 import json, re, shlex, sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-REPO = 'shirai91/nx2android'
+REPO = 'wikigsroom/NsA-core'
 
 
 def version():
@@ -51,7 +51,7 @@ def check_git_tag(w):
     return None
 
 
-AFTER = ('Release rules (CLAUDE.md, Releases): after publishing, watch the "Windows release" and "macOS release" runs '
+AFTER = ('Release rules (CLAUDE.md, Releases): watch the "NsA release" workflow and its Windows/macOS jobs '
          f'(gh run list --repo {REPO} --limit 4) and check that both zips are on the release; a failed run means the release has no zip for that OS.')
 
 

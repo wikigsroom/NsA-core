@@ -1,0 +1,28 @@
+{
+  "source": "USB physical Android device",
+  "application_id": "org.nsa.hall.debug",
+  "captured_at": "2026-11-07T04:37:31.100509+00:00",
+  "synthetic": false,
+  "installed_apk_sha256": "3bd6c8a7e5a06bc1679df78792f97827455f8c915e5be4c31728ca15f6a3451d",
+  "source_relative_path": ".gamedump/Hall/device-evidence/20261107-session-recovery/2048-play.mp4",
+  "source_sha256": "8f351d9a03c5be41e65d0909195b8454e4f323594a7b693d0f8ec90c8e869c74",
+  "artifacts": [
+    {
+      "name": "session-play.gif",
+      "sha256": "c2c20f1fc4be39aebd7feaac254fcda7df3378fd36850918b8e75887fdfcbe49",
+      "width": 720,
+      "height": 332,
+      "duration_seconds": "20.000000"
+    },
+    {
+      "name": "session-play.mp4",
+      "sha256": "3b0ab816b9e6bed8faef66dd1f254690b502ad3e8e33f1a6f5c838910aab7c97",
+      "width": 720,
+      "height": 332,
+      "duration_seconds": "20.061924"
+    }
+  ],
+  "transform": "resize and GIF palette encoding; no synthetic frames; MP4 has no audio track",
+  "start_seconds": 0,
+  "requested_duration_seconds": 20.0
+}

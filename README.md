@@ -1,158 +1,192 @@
-# NsA · Unified Android game hall
+# NsA Core
 
-The [native-build correction](docs/hall/native-build-round-2026-11-07.md) is installed: source `d427f08`, APK `5808f5…6d06`. Both compiled slot identities now match the packaged registry. 2048 v4 downloads, runs, saves and reloads; BotW now reaches actual gameplay, responds to touch movement, writes a new manual save and reloads it in a fresh process. Twenty native regression cases passed. The first Android run passed 12/13 with a navigation timeout; the same-APK rerun passed 13/13. **Android reclaimed the background hall for low memory; a stale session then blocked switching until a hall restart. Automatic recovery, sustained playability and production acceptance remain open.** 5/5 repeated A → B → A rounds completed after a fresh hall restart; preceding interrupted attempts retained. Full G0 remains open.
+[简体中文](README.zh-CN.md) · [Documentation](docs/README.md) · [v0.4.0 release notes](docs/releases/v0.4.0.md) · [Releases](https://github.com/wikigsroom/NsA-core/releases)
 
-Current USB captures; clips are silent. Historical captures retain their original identities.
+**One Android app: discover a supported game, download its resources, and play locally.** NsA adds a portrait game hall, content delivery, installation, saves and operations services to the native nx2android/nxnative runtime.
 
-<table><tr><td><img src="docs/media/native-library.png" width="220" alt="Actual portrait library"></td><td><img src="docs/media/native-installed.png" width="220" alt="Actual completed v4 download"></td></tr></table>
+The interface follows the finalized **Obsidian** design: dark surfaces, restrained accents and portrait navigation. A game switches to landscape only when its runtime takes over; leaving it restores the portrait hall.
 
-![Actual v4 download and preparation](docs/media/native-hall.gif)
+## Actual gameplay on a physical phone
 
-[Hall MP4](docs/media/native-hall.mp4) · [2048 GIF](docs/media/native-play.gif) · [2048 MP4](docs/media/native-play.mp4) · [Reloaded board](docs/media/native-reloaded.png) · [Provenance](docs/media/README.md)
+![Breath of the Wild running on the USB-connected Android phone](docs/media/botw-gameplay.png)
 
-The [preceding runtime round](docs/hall/runtime-round-2026-11-07.md), earlier [transfer round](docs/hall/transfer-round-2026-11-07.md) and [recovery round](docs/hall/recovery-round-2026-11-07.md) retain their original evidence. BotW new-save/reload results on the earlier APK do not transfer to this candidate.
+![Actual Breath of the Wild touch input](docs/media/botw-input.gif)
 
-[简体中文](README.zh-CN.md) · [Detailed setup and usage](docs/hall/README.md) · [Implementation status](docs/hall/implementation-status.md) · [Product requirements](docs/product/README.md) · [Engineering baseline](docs/engineering/README.md)
+[Gameplay MP4](docs/media/botw-input.mp4) · [Capture provenance](docs/media/botw-input.json) · [Full screenshot and recording index](docs/media/README.md)
 
-**One installed app: discover → download → verify and install → play in landscape → save and return to the portrait hall.**
-
-This fork builds a unified Kotlin/Compose Android hall on [nx2android](https://github.com/shirai91/nx2android) and [nxnative](https://github.com/seedds/nxnative). The finalized D Obsidian design uses a dark portrait interface with Discovery, Library, Downloads and Settings. A separate operations site handles content rights, builds, uploads, independent review, publication, compatibility evidence and audit.
-
-**Current state: native-build candidate `5808f5…6d06` is installed.** See the [current execution record](docs/hall/native-build-round-2026-11-07.md) for results and pending checks. Earlier gallery artifacts retain their original APK identities.
-
-The [historical targeted source review](docs/hall/source-review.md) records the policy, reconstruction and save-exchange defects that led to this correction batch. Its pinned evidence remains unchanged; source changes and host passes do not close the physical-device acceptance gates. It covers three requirements; the broader source map and existing media are not full acceptance.
-
-| Layer | Concrete behavior |
-|---|---|
-| Android hall | Cached catalogue, search/filter/detail, installed library, queue, storage, saves, settings, feedback and app updates |
-| Transfer/install | Persisted per-game ownership, FIFO, checked 8 MiB ranges, ZIP64 extraction and journal-backed publication/cleanup; isolated fault tests passed, physical power-loss cases remain open. |
-| Runtime | Explicit compiled slots, unique SONAMEs, ABI identity binding, one fresh `:game` process per session, actual save events |
-| Services | FastAPI, verification worker, PostgreSQL/private S3 production providers, explicit SQLite/private-directory development providers |
-| Operations | OIDC/PKCE, server roles, idempotency, revision checks, independent reviewers and audit |
-| Tooling | Native Windows setup/build/publication, USB-only install/capture, bilingual documentation |
-
-Historical Android gallery (the app interface currently uses Simplified Chinese; exact source APKs are in the neighboring provenance records):
+These are real USB captures from a Motorola edge plus, Android 12, Snapdragon 865 / Adreno 650. BotW is an **experimental local integration**: actual scene loading, touch movement, a new manual save and fresh-process reload have been observed. The short shrine measurements were approximately 7–13 FPS; this is not sustained playability acceptance. Exact APK identities and the boundaries of each observation are recorded beside the media. Clips are silent.
 
 <table>
-<tr><td>Discovery</td><td>Library</td><td>Downloads</td></tr>
-<tr><td><img src="docs/media/discovery.png" width="230" alt="Actual portrait discovery page"></td><td><img src="docs/media/library.png" width="230" alt="Actual portrait game library"></td><td><img src="docs/media/downloads.png" width="230" alt="Actual download history"></td></tr>
-<tr><td>Settings</td><td>Saves and backups</td><td>Download confirmation</td></tr>
-<tr><td><img src="docs/media/settings.png" width="230" alt="Actual settings page"></td><td><img src="docs/media/saves.png" width="230" alt="Actual save management page"></td><td><img src="docs/media/download-confirmation.png" width="230" alt="Actual size and compatibility confirmation"></td></tr>
+<tr><td><img src="docs/media/session-library.png" width="240" alt="Actual portrait game library"></td><td><img src="docs/media/download-confirmation.png" width="240" alt="Download confirmation and storage requirements"></td><td><img src="docs/media/settings.png" width="240" alt="Portrait settings"></td></tr>
+<tr><td>Portrait library</td><td>Download confirmation</td><td>Settings</td></tr>
 </table>
 
-<details>
-<summary>Actual download walkthrough, native game input, recordings and provenance</summary>
+![Original native 2048 input and return](docs/media/session-play.gif)
 
-![Actual download and preparation flow](docs/media/hall-walkthrough.gif)
+[2048 MP4](docs/media/session-play.mp4) · [Reloaded board](docs/media/session-reloaded.png) · [Media identities and historical captures](docs/media/README.md)
 
-![Real directional input in the original native 2048 game](docs/media/native-2048.gif)
+## What this release contains
 
-[Hall MP4](docs/media/hall-walkthrough.mp4) · [2048 MP4](docs/media/native-2048.mp4) · [16 Android screenshots, 3 desktop screenshots and provenance](docs/media/README.md). These silent captures show the 171-byte open-source demo download and short real game input. Each artifact records its own APK identity; the gallery includes a preceding build with identical Android/service source. See the [verification record](docs/hall/implementation-status.md) and [next device-validation procedure](docs/hall/device-validation.md).
+**v0.4.0 is a formal GitHub release of the source and desktop authoring tools.** Download the Windows or macOS archive, or check out the tagged source. The archives include both README languages, the full documentation and reviewed screenshots/GIFs. `SHA256SUMS.txt` and `release-manifest.json` identify the actual assets and source commit.
 
-</details>
+| Deliverable | Purpose | Prerequisites |
+|---|---|---|
+| Tagged source | Build and operate the unified Android hall and services | Native Android toolchain, Python and a configured catalogue |
+| Windows x64 bundle | Desktop GUI/CLI for preparing supported native ports | Windows, tool downloads, your own required game inputs |
+| macOS bundle | Desktop GUI/CLI; architecture is in the asset name | Matching macOS architecture and tool downloads |
+| Reviewed media | See the actual hall and phone gameplay | Any image/video viewer |
+| Internal two-game APK | Retained locally for USB integration tests | Local credentials and private game modules; **not a public release attachment** |
+
+There is no hosted public game catalogue or ready-to-install public hall APK in this release. The documented local setup builds the open-source 2048 profile without commercial game inputs. An operator must deploy a real service, configure signing/trust and prepare approved content before offering the target player flow to general users. Source publication does not include game programs, keys, personal saves or the internal APK.
+
+## Player experience
+
+1. **Install and open the configured app.** Complete the welcome page. The hall remains portrait.
+2. **Find a game.** Browse Discovery, search, filter by genre or inspect the local library. Compatibility is evaluated for this device and APK, including its compiled slots.
+3. **Read the detail page.** Check the download size, preparation space, language, controls and compatibility. Experimental access requires an appropriate entitlement and explicit confirmation.
+4. **Download.** Confirm the task. The download centre shows progress, speed, estimated time and its actual state. Pause/resume/retry/cancel affect the persisted task.
+5. **Prepare resources.** The client checks signatures, blocks, archive hashes and every indexed file before activating the installation.
+6. **Play.** Tap Play/Continue after preparation. A fresh native game process opens in landscape; no second app is launched.
+7. **Save and return.** Save inside the game, press Back, then confirm return to the hall. Reopening starts a fresh process and reads the game's committed save.
+8. **Manage the library.** Export/import backups, repair resources, change per-game options or remove resources while retaining saves by default.
+
+The current app UI is Simplified Chinese. This repository's entry points and operating guides are bilingual; English documentation does not imply a fully localized English app.
+
+## Functional scope
+
+| Area | Implementation |
+|---|---|
+| Hall | Welcome, discovery/search/filtering, details, library, download centre, settings, device/storage/help and game management |
+| Transfers | Single active queue, persistent intent, verified 8 MiB checkpoints, Range/ETag checks, scoped URL renewal and shared failure budget |
+| Installation | Signed manifests, ZIP64 streaming, file indexes, path/link/collision rejection, staging and journal-backed activation/recovery |
+| Runtime | Compiled native slots, exact ELF/registry identity checks, distinct SONAMEs, authenticated session/generation/nonce handshake, fresh `:game` process |
+| Lifecycle | Application-owned coordinator, pause/exit, Surface/input restoration, protected recovery and conservative stopped-session reconciliation |
+| Saves | Per-game committed directories, versioned hashed exports, import validation, pre-swap backup and recoverable swap journals |
+| Updates | Separate app/content updates, compatible save rules, previous-install retention and healthy-version rollback rules |
+| Services | Catalogue, installation credentials, compatibility, immutable objects, publication, worker verification, policies and feedback |
+| Staff website | Metadata, rights/build/release records, uploads, independent review, evidence, feedback, roles and audit |
+| Engineering | Native Windows tooling, USB verification, structured contracts, requirement tracing and capture provenance |
+
+Implementation and formal acceptance are tracked separately in the [verification record](docs/hall/implementation-status.md) and [90-requirement map](docs/hall/requirement-coverage.md).
+
+## Architecture and execution model
+
+```mermaid
+flowchart LR
+    Staff[Operations website] --> API[HTTPS catalogue API]
+    API --> DB[PostgreSQL or local development SQLite]
+    API --> Objects[Private immutable object storage]
+    Worker[Verification worker] --> Objects
+    Worker --> DB
+    Phone[Portrait Android hall] --> API
+    Phone --> Download[Download and verified staging]
+    Objects --> Download
+    Download --> Install[Activated per-game resources]
+    Install --> Game[Landscape native game process]
+    Game --> Saves[Independent committed saves]
+    Game --> Phone
+```
+
+The main process owns Compose, Room, transfers, installation and save management. Each session uses a fresh `:game` process. A compiled slot identifies its game modules, profile, shader chain, permitted drivers and native-library digest. The catalogue delivers resources; adding a new native slot requires an APK update.
+
+This is local native execution. Switch system services and graphics are adapted by the host; a phone does not decrypt or compile arbitrary new games when the user taps Download. Every offered game must be prepared, integrated and checked beforehand.
+
+The API and worker run as separate services. Local development uses SQLite and filesystem object storage. Production providers use PostgreSQL, private S3-compatible storage and OIDC. The staff website is separate from the player app.
+
+## Build the open-source local demo
+
+Use native Windows and a USB-connected physical Android device. All new tools, caches and outputs stay inside this checkout under `游戏移植/`. No Docker, WSL, virtual machine or emulator is used.
+
+Prerequisites: Git, Python 3.13, Java 21, Android SDK 36 / build-tools 36.0.0, NDK r27c (`27.2.12479018`), and an arm64 Android 12+ device. Set `NSA_SDK_SOURCE` / `NSA_NDK_SOURCE` when these are installed elsewhere. The setup copies required components into the project tool directory.
 
 ```powershell
+git clone git@github.com:wikigsroom/NsA-core.git
+Set-Location NsA-core
 ./devtools/hall_bootstrap.ps1
 ./devtools/hall.ps1 native
 ./devtools/hall.ps1 build
 ```
 
-The default bootstrap prepares the original open-source 2048 slot without private game inputs. Git, Python 3.13, Java 21, SDK 36 and NDK r27c are prerequisites. See the [full guide](docs/hall/README.md) for service startup, TLS, content publication, device installation, recovery, production configuration and checks. Existing local BotW inputs are an explicit `-WithBotw` profile. No game files, keys, private APKs or saves are included; 2048 is not Switch compatibility evidence.
+Run the catalogue and verification worker in separate terminals:
 
-New tools, caches, credentials, outputs and game material remain under `游戏移植/`. No Docker, WSL, virtual machine or Android emulator is used. Capture screenshots/video from the physical device; review provenance and private content before publishing README media. Design-prototype screenshots are not app runtime evidence.
+```powershell
+./devtools/hall.ps1 serve
+```
 
-The update destination is [wikigsroom/NsA-core, main branch](https://github.com/wikigsroom/NsA-core/tree/main). Subsequent code, documentation and reviewed media are synchronized to `main`, preserving existing remote changes. Upstream attribution and the original standalone port instructions are retained below.
+```powershell
+./devtools/hall.ps1 worker
+```
 
-For the complete solution, follow the [architecture and usage guide](docs/hall/README.md), [Chinese guide](docs/hall/README.zh-CN.md), [requirements](docs/product/README.md), [90-item source and acceptance map](docs/hall/requirement-coverage.md), [engineering constraints](docs/engineering/README.md), [design baseline](docs/design/obsidian-portrait/README.md) and [implementation decisions](docs/engineering/decisions/0005-client-guardrails-and-cache.md). Production service deployment, distribution signing and accepted game/device combinations are separate release gates.
+Then prepare, publish and install the original open-source 2048 demo:
 
----
+```powershell
+./devtools/hall.ps1 content
+./devtools/hall.ps1 publish-2048
+./devtools/hall.ps1 install
+```
 
-## Retained upstream standalone porter documentation
+Unlock the phone and authorize USB debugging. The installer connects the phone's localhost port to the computer with ADB reverse. Keep API/worker running while fetching content. Select the experimental filter when using the invited internal development catalogue. Development credentials stay under ignored `services/local/` and must not be shared.
 
-The game list and porting instructions in this section describe the original
-per-game APK workflow. The unified hall has its own published catalogue and
-[device verification record](docs/hall/implementation-status.md).
+Do not regenerate runtime identities for an already published immutable release. Source/profile changes require newly compiled identities and a new content release ID. See the [development guide](docs/development.md) for prerequisites, repeat builds, private BotW integration and complete checks.
 
-<h1 align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="docs/images/logo-dark.svg">
-    <img alt="nx2android" src="docs/images/logo.svg" height="140">
-  </picture>
-</h1>
+## Storage and device support
 
-Port your own Nintendo Switch games to Android, natively: the game's own arm64 code runs on the device, with the Switch's system services stood in for by a host and NVN graphics replayed on Vulkan. Pick the game's folder, click **Port**, and get an APK plus the game's data, installed on your device if you like. Bring your own game files and keys; nothing from any game is in this repository.
+| Item | Measured or required scope |
+|---|---|
+| Open-source 2048 | Tiny separate content package; no Switch files or keys required |
+| Internal two-game APK | About 78.4 MiB; contains private compiled game code, so retained locally |
+| BotW archive | 14.300 GiB, with 14.292 GiB indexed expanded content |
+| Initial BotW phone preparation | About **30.592 GiB additional free space**, including a 2 GiB reserve; installed resources about 14.39 GiB |
+| Development material | Source inputs, extracted data, compiled output, service copies and toolchains consume separate space |
 
-This is the Android port of [nxnative](https://github.com/seedds/nxnative), which does the same on iPhone and iPad. Supported games: [Games](#games).
+General additional space: `max(archive − downloaded, 0) + max(expanded − installed, 0) + working + max(2 GiB, ceil(expanded × 5%))`. Updates also retain the previous version and required backups. See [measured storage](docs/hall/storage.md).
 
-## Games
+The hall targets Android API 31+, arm64-v8a. The tested phone has 4096-byte pages. Individual Switch integrations additionally depend on graphics features, driver and game profile; upstream results on another device do not verify this phone. Mali/PowerVR and 16 KiB-page devices are not accepted by this local record.
 
-These games play on Android. Tested on a Lenovo Legion Y700 (Snapdragon 8 Elite, Adreno 830), unless a game names another device. The device's GPU must read BC-compressed textures (Adreno, Xclipse; not Mali or PowerVR).
+## Verification and known limits
 
-| | |
-|:---:|:---:|
-| ![13 Sentinels: Aegis Rim](docs/images/13-sentinels.jpg)<br>13 Sentinels: Aegis Rim<br><sub>`v0.1.3` · update 1.10 · 60 fps</sub> | ![Advance Wars 1+2: Re-Boot Camp](docs/images/advance-wars-1-2-re-boot-camp.jpg)<br>Advance Wars 1+2: Re-Boot Camp<br><sub>`v0.1.3` · base game 1.0.0 · 60 fps (30 in battle on Switch)</sub> |
-| ![Blasphemous 2](docs/images/blasphemous-2.jpg)<br>Blasphemous 2<br><sub>`v0.1.3` · update 1.0.8 · 60 fps</sub> | ![Captain Toad: Treasure Tracker](docs/images/captain-toad-treasure-tracker.jpg)<br>Captain Toad: Treasure Tracker<br><sub>`v0.1.3` · update 1.4.2 · 60 fps</sub> |
-| ![Castlevania: Belmont's Curse](docs/images/castlevania-belmonts-curse.jpg)<br>Castlevania: Belmont's Curse<br><sub>`v0.2.0` · update 1.1.0 · 60 fps</sub> | ![Celeste](docs/images/celeste.jpg)<br>Celeste<br><sub>`v0.1.3` · update 1.4.1.1 · 60 fps</sub> |
-| ![Dark Souls: Remastered](docs/images/dark-souls-remastered.jpg)<br>Dark Souls: Remastered<br><sub>`v0.4.0` · update 1.0.3 · 30 fps</sub> | ![Donkey Kong Country Returns HD](docs/images/donkey-kong-country-returns-hd.jpg)<br>Donkey Kong Country Returns HD<br><sub>`v0.1.3` · update 1.1.0 · 60 fps</sub> |
-| ![Final Fantasy Resonance](docs/images/final-fantasy-resonance.jpg)<br>Final Fantasy Resonance<br><sub>`v0.4.0` · update 1.0.1 · 60 fps</sub> | ![Football Manager 26 Touch](docs/images/football-manager-26-touch.jpg)<br>Football Manager 26 Touch<br><sub>`v0.4.0` · update 1.0.2 · 30 fps (as on Switch) · played by touch · **match view not tested yet**</sub> |
-| ![Graveyard Keeper 2](docs/images/graveyard-keeper-2.jpg)<br>Graveyard Keeper 2<br><sub>`v0.1.2` · update 1.0.4 · 60 fps (30 on Switch)</sub> | ![Hades II](docs/images/hades-ii.jpg)<br>Hades II<br><sub>`v0.1.2` · update 1.0 · 60 fps</sub> |
-| ![Hollow Knight: Silksong](docs/images/hollow-knight-silksong.jpg)<br>Hollow Knight: Silksong<br><sub>`v0.1.3` · update 1.0.30000 · 60 fps</sub> | ![Lonely Mountains: Downhill](docs/images/lonely-mountains-downhill.png)<br>Lonely Mountains: Downhill<br><sub>`v0.3.0` · base game 1.0.5 · 60 fps on Retroid Pocket 6 with PurpleVK · **work in progress**: brief transition glitch and occasional black/white flashes</sub> |
-| ![Mario vs. Donkey Kong](docs/images/mario-vs-donkey-kong.jpg)<br>Mario vs. Donkey Kong<br><sub>`v0.1.3` · update 1.0.1 · 60 fps</sub> | ![Metroid Dread](docs/images/metroid-dread.jpg)<br>Metroid Dread<br><sub>`v0.3.0` · update 2.1.0 · 60 fps</sub> |
-| ![NEO: The World Ends with You](docs/images/neo-the-world-ends-with-you.jpg)<br>NEO: The World Ends with You<br><sub>`v0.1.2` · update 1.03</sub> | ![Paper Mario: The Origami King](docs/images/paper-mario-the-origami-king.jpg)<br>Paper Mario: The Origami King<br><sub>`v0.2.0` · update 1.0.1 · 60 fps (30 on Switch)</sub> |
-| ![Paper Mario: The Thousand-Year Door](docs/images/paper-mario-the-thousand-year-door.jpg)<br>Paper Mario: The Thousand-Year Door<br><sub>`v0.2.0` · update 1.0.1 · 60 fps (30 on Switch) · **work in progress**: playable, but lighting flickers (walls go black for single frames after a fall)</sub> | ![Pokémon Legends: Arceus](docs/images/pokemon-legends-arceus.jpg)<br>Pokémon Legends: Arceus<br><sub>`v0.2.0` · update 1.1.1 · 60 fps (30 on Switch)</sub> |
-| ![Pokémon Legends: Z-A](docs/images/pokemon-legends-z-a.jpg)<br>Pokémon Legends: Z-A<br><sub>`v0.3.0` · update 2.0.2 · 30 fps (as on Switch) · **tested to Lumiose station**: the city and battles not checked yet</sub> | ![South Park: The Stick of Truth](docs/images/south-park-the-stick-of-truth.jpg)<br>South Park: The Stick of Truth<br><sub>`v0.3.1` · base game 1.0.0 · 30 fps · a Vulkan 1.3 driver is needed (Turnip packed on the Adreno 640)</sub> |
-| ![Super Mario Bros. Wonder](docs/images/super-mario-bros-wonder.jpg)<br>Super Mario Bros. Wonder<br><sub>`v0.1.3` · update 1.2.1 · 60 fps, dips to 40</sub> | ![Super Mario Odyssey](docs/images/super-mario-odyssey.jpg)<br>Super Mario Odyssey<br><sub>`v0.2.0` · update 1.4.1 · 60 fps · shake the device to throw Cappy</sub> |
-| ![Tales of Eternia Remastered](docs/images/tales-of-eternia-remastered.jpg)<br>Tales of Eternia Remastered<br><sub>`v0.1.2` · update 2.0.0 · 60 fps</sub> | ![The Legend of Zelda: Tears of the Kingdom](docs/images/the-legend-of-zelda-tears-of-the-kingdom.jpg)<br>The Legend of Zelda: Tears of the Kingdom<br><sub>`v0.3.0` · update 1.4.3 · 30 fps, 60 in caves and shrines · smoothest with a Turnip Vulkan driver · **work in progress**: 60 fps in the open world</sub> |
-| ![The World Ends with You -Final Remix-](docs/images/the-world-ends-with-you-final-remix.jpg)<br>The World Ends with You -Final Remix-<br><sub>`v0.4.0` · base game 1.0.0 · 60 fps · played by touch</sub> | ![UNDER NIGHT IN-BIRTH Exe:Late[cl-r]](docs/images/under-night-in-birth-exe-late-cl-r.jpg)<br>UNDER NIGHT IN-BIRTH Exe:Late[cl-r]<br><sub>`v0.2.0` · update 1.0.3 · 60 fps</sub> |
-| ![UNDER NIGHT IN-BIRTH II Sys:Celes](docs/images/under-night-in-birth-ii-sys-celes.jpg)<br>UNDER NIGHT IN-BIRTH II Sys:Celes<br><sub>`v0.2.0` · update 1.42 · 60 fps</sub> | ![Unicorn Overlord](docs/images/unicorn-overlord.jpg)<br>Unicorn Overlord<br><sub>`v0.1.3` · update 1.05 · 60 fps · **boots**: saving and a full battle not tested yet</sub> |
-| ![Unpacking](docs/images/unpacking.jpg)<br>Unpacking<br><sub>`v0.1.2` · update 2.01 · 60 fps · played by touch</sub> | ![Untitled Goose Game](docs/images/untitled-goose-game.jpg)<br>Untitled Goose Game<br><sub>`v0.4.0` · update 1.1.2 · 60 fps</sub> |
-| ![Viractal: Will You Trust Your Party?](docs/images/viractal.jpg)<br>Viractal: Will You Trust Your Party?<br><sub>`v0.1.0` · update 1.4.5</sub> | ![Xenoblade Chronicles 3](docs/images/xenoblade-chronicles-3.jpg)<br>Xenoblade Chronicles 3<br><sub>`v0.1.0` · update 2.2.0 · 30 fps · **work in progress**: some effects and models don't draw yet</sub> |
+| Evidence | Actual scope |
+|---|---|
+| Recovery candidate | Android source `5c1bff0`; APK `3bd6c8…3451d`; native libraries reused exactly from `d427f08` |
+| Computer checks | Build/package guard passed; 26 JVM cases freshly passed; lint 0 errors / 16 warnings |
+| USB instrumentation | All 22 cases passed, including nine Room/kernel-lock recovery cases; all 22 preexisting player files unchanged after overlay/tests |
+| Original 2048 | Actual input, changed save, normal portrait return and byte/16-tile-identical fresh-process reload |
+| BotW | Experimental actual input, new manual save and reload; exact per-candidate details in the execution record |
+| Previous switching batch | Five A → B → A rounds on the preceding `5808f5…6d06` APK; evidence is not relabeled as a newer build |
+| Open gates | Full G0, controlled live-main-loss recovery, representative 30-minute performance/game speed/temperature, subjective/BotW sound, physical power-loss/ENOSPC and broader device coverage |
 
-The tag (`v0.1.3`) is the latest nx2android version the game was tested on. Older games are not tested again for each release: if a later version breaks one, a patch release fixes it. A tag newer than the [latest release](https://github.com/shirai91/nx2android/releases/latest) is the next release, and the game needs the development checkout until it ships.
+A GitHub release records a software version; the open gameplay and production gates remain visible. The source regression cases do not prove every physical recovery timing. Do not describe BotW as verified/playable or infer audio quality from silent GIFs.
 
-A game that is not in this table is not supported yet. The games we look at next, and the ones done: [docs/PORT_CHECKLIST.md](docs/PORT_CHECKLIST.md).
+## Documentation by role
 
-## For players: port a game without programming
+| Start here | Details |
+|---|---|
+| [Documentation index](docs/README.md) | Complete bilingual reading paths |
+| [Player/operating guide](docs/hall/README.md) | All player actions, states, saves, failures and recovery |
+| [Development guide](docs/development.md) | Build, service startup, content preparation, testing and adding games |
+| [Deployment guide](docs/deployment.md) | Production configuration, signing/trust, identity, storage and maintenance |
+| [Media index](docs/media/README.md) | Real phone screenshots, game GIF/MP4, desktop captures and provenance |
+| [v0.4.0 release notes](docs/releases/v0.4.0.md) | Contents, changes, upgrade path, validation and limits |
+| [Product baseline](docs/product/README.md) | 90 requirements, 360 detailed rules and page/acceptance definitions |
+| [Engineering constraints](docs/engineering/README.md) | Architecture, contracts, runtime/install/save/release rules |
+| [Finalized design](docs/design/obsidian-portrait/README.md) | Portrait Obsidian design, screens, components and prototype |
+| [Implementation evidence](docs/hall/implementation-status.md) | Results pinned to actual source/APK snapshots |
 
-1. Download `nx2android-<version>-windows-x64.zip` (Windows) or `nx2android-<version>-macos-arm64.zip` (Mac with Apple silicon) from [Releases](https://github.com/shirai91/nx2android/releases/latest), unzip it and start **nx2android** (on a Mac, see [packaging/INSTALL.md](packaging/INSTALL.md#1-start-the-app) first).
-2. **Setup** tab: click **Download missing tools** (the Android NDK, the .NET SDK and platform-tools, about 1 GB, from Google and Microsoft), then set your **prod.keys**. Every line turns green.
-3. **Port** tab: choose the folder with the game's NSP, XCI, NSZ or XCZ files (base game, update, DLC) and click **Port**.
-4. Tick **Install on the device when done** with the device plugged in and USB debugging on, or copy the APK and the data folder yourself.
+## Troubleshooting
 
-Pokémon Legends: Arceus and Pokémon Legends: Z-A need the device during the port, even without **Install on the device when done**: their shaders are in Oodle-compressed archives, which the port decodes with the game's own decoder on the device. Have platform-tools (adb) from step 2, and plug in the device with USB debugging on before you click **Port**.
+| Symptom | Action |
+|---|---|
+| Empty development catalogue | Check API/worker, device entitlement, filter and published release; cached empty results are not proof of support |
+| Cannot reach localhost | Keep USB connected; check authorization and `adb reverse tcp:8443 tcp:8443`; use the matching local debug CA |
+| App update required | The APK lacks the matching compiled slot/profile; downloading more resources cannot repair it |
+| Download waits | Inspect network consent, explicit pause, active game and remaining storage; resume deliberately when required |
+| Resource verification fails | Keep the error, repair or redownload the matching immutable release; preserve saves |
+| Session protection remains | Use retry/confirmed process exit as offered; unknown ownership must keep player data protected |
+| APK signature differs | Use the same application identity and signing key; uninstalling can delete private progress |
+| Black screen/low speed | Record exact APK/content/driver/device and filtered diagnostics; do not promote the title to verified |
 
-A game played by touch: tick **Touch game** on the Port tab (`--touch`). The on-screen gamepad then starts hidden and every touch but one on the menu button goes to the game; the pause menu shows the gamepad again.
+## Repository and attribution
 
-Chinese or Korean text drawn as `???`: choose a TrueType font with those characters as **System font** on the Port tab (`--shared-font`, a single `.ttf`, not a `.ttc`). It goes in the data pack; the tool ships none. The tool's own text entry panel still shows only ASCII, so its title stays `???` and names are typed in ASCII.
+Updates are published to [wikigsroom/NsA-core](https://github.com/wikigsroom/NsA-core), branch `main`. The root README files now describe NsA; the old upstream game list and standalone README text have been removed. The original standalone workflow remains available through the desktop tool and [upstream documentation](https://github.com/shirai91/nx2android).
 
-A game slowed by its draw calls in busy scenes: tick **Multithread replay** on the Port tab (`--mt-replay`). The game's Vulkan commands are then recorded on a thread of their own. It stays on until you port the game again without it.
-
-To arrange the on-screen controls, open the pause menu's **Gamepad** tab and choose **Edit layout**: drag a control to move it, pinch or use **− / +** to resize it. **Save** keeps the layout for the next launch and **Cancel** discards your edits. **Snap to grid** (off at first, and remembered) shows a square grid and snaps each control's center to it as you drag.
-
-For the experimental external-screen controller, port from the command line with `--external-display`. The game moves to a connected display and the phone shows the gamepad; the sound menu selects the phone or an external output. This option requires `javac` and an Android SDK with a platform and build-tools (`ANDROID_HOME`). Android 12 or newer uses the saved native layout; Android 10–11 use the fallback controller. Support varies by device and game.
-
-Already have the game on the device for an emulator? The app can read the game's files (its RomFS, most of its size) from that dump's folder instead of a second copy: type the dump's RomFS folder in the app's **RomFS on the device** field (or give it to `--romfs-at`) before you install, which must be the same game version as the port. [packaging/INSTALL.md](packaging/INSTALL.md#the-game-is-already-on-the-device) says how.
-
-A game that crashes with "AllocateAddressRegion … refused (0x1803)" in its log needs more address space: port it again with a larger **Extra address space** on the Port tab (`--alias-headroom` on the command line). [packaging/INSTALL.md](packaging/INSTALL.md#when-something-goes-wrong) says more.
-
-The step-by-step guide is [packaging/INSTALL.md](packaging/INSTALL.md). You need your own game files and `prod.keys`, dumped from your own Switch; the tool never ships or downloads either. NSZ and XCZ files are decompressed during the port (into the build folder's `tmp/`, deleted once extracted).
-
-## Saves
-
-The game's pause menu (Game tab) has **Export save** and **Import save**: an export is a folder in `Android/data/<package>/files/saves/` on the device, the save's files as a console's save tools copy them, so a save from a console imports the same way. The app's **Saves** tab moves them between the device and the PC.
-
-An import replaces the save the game has; the app exports that one first on the device (a folder ending `-before-import`). Uninstalling the app deletes its saves and its exports: copy them to the PC first.
-
-## For developers
-
-Running from the repository, the command line, the repository layout, building the bundle, tests and commit messages: [docs/DEVELOPMENT_GUIDE.md](docs/DEVELOPMENT_GUIDE.md). How it is put together: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
-
-## Keys and game files
-
-nx2android decrypts your game files with your `prod.keys` while it ports them, as Switch emulators do. This repository and its releases contain no keys, no game files and nothing extracted from them, and the tool never downloads either. Dump both from your own Switch, and don't share them or the APKs and data packs built from them.
-
-Nintendo's takedown notices so far have gone to whoever hosts a project (13 Switch emulator repositories on GitHub in February 2026), not to players. Whether decrypting your own games for your own use is allowed depends on where you live.
-
-## License
-
-MIT, as nxnative (see `nxnative/LICENSE`). Third-party code keeps its own license.
+The native runtime comes from [nx2android](https://github.com/shirai91/nx2android) and [nxnative](https://github.com/seedds/nxnative). Preserve their [MIT license](nxnative/LICENSE) and third-party notices. The original native 2048 has its own [MIT license](android/native-games/2048/LICENSE). Game names and captured game imagery belong to their respective owners; the public source and tool archives contain no commercial game programs, private keys or player saves.
