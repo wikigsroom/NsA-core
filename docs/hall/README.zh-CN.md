@@ -1,6 +1,15 @@
 # 统一游戏大厅：方案与使用手册
 
-新增[下载与安装整批修正](transfer-round-2026-11-07.md)，落实队列接续、取消保护、资源身份校验、安装恢复及归档清理。用户已重新授权 USB 测试；本轮整批代码及必要用例完成后统一执行，新构建、真机和素材结果单独记录，不沿用历史 APK 的通过结果。
+[下载与安装修正轮次](transfer-round-2026-11-07.md)已覆盖安装并完成 USB 实测：源码 `720c785`、APK `e3b259…742da`，26 项 JVM、13 项 Android 测试通过；2048 完成真实下载与存读档，《旷野之息》完成移动、新写档及新进程重读。音频断线和 BotW 直接返回键仍有已确认缺陷，完整 G0、长期性能和正式发行继续开放。
+
+新版 `720c785` 真机素材，片段无音轨；后方旧图库保留历史身份。
+
+<table><tr><td><img src="../media/transfer-discovery.png" width="220" alt="USB discovery"></td><td><img src="../media/transfer-installed.png" width="220" alt="USB download history"></td></tr></table>
+
+![USB hall download](../media/transfer-hall.gif)
+
+[Hall MP4](../media/transfer-hall.mp4) · [2048 GIF](../media/transfer-2048.gif) · [2048 MP4](../media/transfer-2048.mp4) · [Reloaded board](../media/transfer-reloaded.png) · [Provenance](../media/README.md)
+
 
 新增[恢复与存档修正轮次](recovery-round-2026-11-07.md)与 [ADR 0007](../engineering/decisions/0007-policy-runtime-save-recovery.md)：策略采用分范围稳定序列，启动前先对账安装与任务；游戏进程持有独立于大厅的保护租约，存档交换持久保存原游戏、草稿、阶段和本地索引。导出先生成快照再选位置；导入可恢复确认，确认后全程禁取消并显示处理中。正式 API 更新前须按 ADR 迁移数据库。本轮验证状态与已安装版本、历史截图分开记录。
 
@@ -10,7 +19,7 @@
 
 [90 项需求实现对照](requirement-coverage.md)关联原有 360 条细则、代码入口与验收边界；[验证记录](implementation-status.md)只登记真实执行结果。
 
-[历史定向源码核对](source-review.md)保留手机现有内部版在离线准备、进程重建和存档交换方面的问题及独立复核证据；[后续修正轮次](recovery-round-2026-11-07.md)单独记录新候选的实现、构建与检查。新候选尚未安装或通过真机验收；下面的通常流程说明不代替异常路径验收。
+[历史定向源码核对](source-review.md)保留手机现有内部版在离线准备、进程重建和存档交换方面的问题及独立复核证据；[后续修正轮次](recovery-round-2026-11-07.md)单独记录新候选的实现、构建与检查。包含这两批修正的新版 APK 已执行本轮真机检查，实际范围见下载与安装轮次；下面的通常流程说明不代替全部异常路径验收。
 
 ```mermaid
 flowchart TD

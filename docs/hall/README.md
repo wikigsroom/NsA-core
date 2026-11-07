@@ -1,6 +1,15 @@
 # Unified hall implementation guide
 
-The complete [download/install correction batch](transfer-round-2026-11-07.md) implements the reviewed queue, cancellation, HTTP identity and install-recovery/cleanup boundaries. The user has reauthorized USB testing. Source and necessary test cases are prepared before consolidated execution; new build/device results are recorded separately and do not inherit historical APK passes.
+The [download/install correction round](transfer-round-2026-11-07.md) is now installed and tested on the USB phone: source `720c785`, APK `e3b259…742da`, 26 JVM tests and 13 Android tests passed. Real 2048 download/input/save/reload and BotW movement/new-save/fresh-process reload were observed. Audio disconnection and direct Android Back in BotW remain confirmed defects; full G0, sustained performance and production release remain open.
+
+New `720c785` USB captures; clips are silent. The gallery below is historical.
+
+<table><tr><td><img src="../media/transfer-discovery.png" width="220" alt="USB discovery"></td><td><img src="../media/transfer-installed.png" width="220" alt="USB download history"></td></tr></table>
+
+![USB hall download](../media/transfer-hall.gif)
+
+[Hall MP4](../media/transfer-hall.mp4) · [2048 GIF](../media/transfer-2048.gif) · [2048 MP4](../media/transfer-2048.mp4) · [Reloaded board](../media/transfer-reloaded.png) · [Provenance](../media/README.md)
+
 
 The [new recovery correction round](recovery-round-2026-11-07.md) and [ADR 0007](../engineering/decisions/0007-policy-runtime-save-recovery.md) add the scoped policy sequence, initialization/file reconciliation, kernel runtime ownership, durable picker drafts and recoverable save/index publication. Their validation status is separate from the installed build and existing captures. For save exchange, export now fixes the snapshot before opening the destination picker; import restores its original game/draft and disables cancellation throughout the confirmed operation. Production API rollout requires the database migration described in the ADR.
 
@@ -8,7 +17,7 @@ The [new recovery correction round](recovery-round-2026-11-07.md) and [ADR 0007]
 
 [Actual verification](implementation-status.md) · [Next device run](device-validation.md) · [Execution summary](verification/2026-11-07-main.json) · [Screenshots and recordings](../media/README.md) · [Storage](storage.md)
 
-Read the [historical targeted source review](source-review.md) alongside the [subsequent correction round](recovery-round-2026-11-07.md) before relying on offline readiness, process reconstruction or interrupted save exchange. The phone's retained build has the reviewed gaps. The new candidate implements their source corrections and has its own checks; it has not been installed or accepted on the physical device.
+Read the [historical targeted source review](source-review.md) alongside the [subsequent correction round](recovery-round-2026-11-07.md) before relying on offline readiness, process reconstruction or interrupted save exchange. The current APK includes both correction batches and has separate physical-device results in the transfer round. The historical reports remain pinned to their original source; complete acceptance is still open.
 
 ## What runs where
 

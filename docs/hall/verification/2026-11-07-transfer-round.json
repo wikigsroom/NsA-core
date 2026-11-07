@@ -1,0 +1,251 @@
+{
+  "record_version": 1,
+  "recorded_at_utc": "2026-11-07T01:47:37.244286+00:00",
+  "date_local": "2026-11-07",
+  "timezone": "Asia/Taipei",
+  "scope": "Consolidated transfer/install correction, actual overlay migration, isolated faults and USB game observations; no full G0 or production acceptance",
+  "formal_acceptance": "not_accepted",
+  "source_revision": "720c785c6e8be1cd51b0e99247f59a0bdaee3056",
+  "branch": "main",
+  "repository": "https://github.com/wikigsroom/NsA-core",
+  "apk": {
+    "path": "android/app/build/outputs/apk/debug/app-debug.apk",
+    "bytes": 82194533,
+    "sha256": "e3b259216dbb9685b28040ff1108e586145cdd25f4693c018fb5806f714742da"
+  },
+  "test_apk": {
+    "path": "android/app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk",
+    "bytes": 2428862,
+    "sha256": "6ea5b06e8d6d1317b469111bdcf5a1d5791789b9c3326ae168584faf0aa3db66"
+  },
+  "native_clean_revision": "e6ee168bd9f733023f3338949df9f283555120fb",
+  "native_inputs_changed": false,
+  "room_schema": 2,
+  "host_checks": {
+    "jvm_suites": [
+      {
+        "name": "org.nsa.hall.CapabilityTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "org.nsa.hall.RecoveryBoundaryTest",
+        "tests": 10,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "org.nsa.hall.SignatureVerifierTest",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "org.nsa.hall.StorageBoundaryTest",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "org.nsa.hall.TransferBoundaryTest",
+        "tests": 10,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "jvm_passed": 26,
+    "lint_errors": 0,
+    "lint_warnings": 16,
+    "apk_slots_verified": 2,
+    "contract_groups_passed": 8,
+    "private_journal_invalid_vectors_rejected": 5,
+    "first_build_compile_failure": "OsConstants.O_DIRECTORY unavailable in public SDK; corrected with O_NOFOLLOW, fstat/S_ISDIR and fsync before successful rebuild",
+    "services_and_core_rerun": false
+  },
+  "physical_device": {
+    "model": "Motorola edge plus",
+    "api_level": 31,
+    "abi": "arm64-v8a",
+    "gpu": "Adreno 650",
+    "page_size_bytes": 4096,
+    "overlay_install": true,
+    "data_cleared": false,
+    "instrumentation_passed": 13,
+    "preexisting_player_files_preserved_after_migration": 19,
+    "games_after_run": [
+      [
+        "nsa-2048",
+        "nsa-2048-local-v2"
+      ],
+      [
+        "botw",
+        "botw-local-v1"
+      ]
+    ],
+    "pending_recovery_facts": 0,
+    "transfer_directory_allocation_kib": 4,
+    "available_data_bytes": 43911135232
+  },
+  "2048": {
+    "release_id": "nsa-2048-local-v2",
+    "archive_bytes": 191,
+    "expanded_bytes": 41,
+    "actual_download_install_input_exit_reload": true,
+    "installed_apk_sha256": "e3b259216dbb9685b28040ff1108e586145cdd25f4693c018fb5806f714742da",
+    "processes": {
+      "hall": "13829",
+      "game": "15209",
+      "reloaded_game": "15623"
+    },
+    "committed_sha256": "a7ccf3f67db53b880f5891afb89463b0864e1c6b2e42f99ab4a41adcc06893f9",
+    "reloaded_sha256": "a7ccf3f67db53b880f5891afb89463b0864e1c6b2e42f99ab4a41adcc06893f9",
+    "played_board": [
+      0,
+      0,
+      0,
+      0,
+      2,
+      0,
+      8,
+      4,
+      0,
+      0,
+      64,
+      16,
+      0,
+      2,
+      2,
+      8
+    ],
+    "reloaded_board": [
+      0,
+      0,
+      0,
+      0,
+      2,
+      0,
+      8,
+      4,
+      0,
+      0,
+      64,
+      16,
+      0,
+      2,
+      2,
+      8
+    ],
+    "observed_at": "2026-11-07T01:24:42.690317+00:00",
+    "scope": "Actual input, first safe return, fresh process and matching reloaded save/board; final cleanup is a separate step"
+  },
+  "botw": {
+    "release_id": "botw-local-v1",
+    "movement_observed": true,
+    "new_manual_save_and_fresh_process_reload": true,
+    "manual_save_slot": "1",
+    "new_save_label": "11/07/2026 09:39 Shrine of Resurrection",
+    "processes": {
+      "old_pid": "17407",
+      "new_pid": "21520",
+      "installed_apk_sha256": "e3b259216dbb9685b28040ff1108e586145cdd25f4693c018fb5806f714742da",
+      "exit": "normal_exit_via_resumed_pause_dialog",
+      "back_key_route_defect": true
+    },
+    "progress_files_identical_after_reload": true,
+    "game_data_sha256": "7b1f7dd5b26ec660e6ca93118d11cbf39bb7f89060a9d8fdd29ad5e7f083c594",
+    "new_progress_changed_files": [
+      "option.sav",
+      "tracker/trackblock00.sav",
+      "1/game_data.sav",
+      "1/caption.sav",
+      "1/caption.jpg"
+    ],
+    "normal_exit_workaround": "Home, launch hall, back to resume GameActivity, then normal exit through Java pause dialog; direct Back is defective",
+    "full_playability_accepted": false
+  },
+  "new_confirmed_defects": [
+    {
+      "id": "USB-AUDIO-01",
+      "component": "2048 AAudio",
+      "observation": "Output route change disconnects AAudio stream; no error callback/reopen, 15.9935-second capture is all-zero PCM",
+      "fixed": false
+    },
+    {
+      "id": "USB-BACK-01",
+      "component": "GameActivity/native BotW input",
+      "observation": "Native frontend consumes legacy Back before onKeyDown, leaving the old overlay without hall return; resumed Java pause dialog can exit normally",
+      "fixed": false
+    }
+  ],
+  "public_media": [
+    "transfer-discovery.png",
+    "transfer-installed.png",
+    "transfer-reloaded.png",
+    "transfer-hall.gif",
+    "transfer-hall.mp4",
+    "transfer-2048.gif",
+    "transfer-2048.mp4"
+  ],
+  "execution_constraints": {
+    "usb_authorized": true,
+    "other_project_test_preserved": true,
+    "docker_wsl_vm_emulator_used": false,
+    "browser_tabs_opened": false,
+    "game_frames_saves_keys_and_binaries_published": false
+  },
+  "still_required": [
+    "Fix audio disconnection and legacy Back routing, then rebuild and repeat affected checks",
+    "Five same-APK A-to-B-to-A rounds with independent progress",
+    "Audible output and representative 30-minute gameplay/performance",
+    "Physical power-loss/ENOSPC and remaining detailed requirement/device matrix",
+    "Production deployment, signing and content/device release approval"
+  ],
+  "private_evidence": [
+    {
+      "path": "output/hall/transfer-round-20261107/android-build.log",
+      "bytes": 7279,
+      "sha256": "d0ccc925072c475a83f9389c734afedb62b3296eaaaba5e1a9cd36ae208bbf7c"
+    },
+    {
+      "path": "output/hall/transfer-round-20261107/android-first-build.log",
+      "bytes": 4439,
+      "sha256": "f306056aa1ef02cc0ab14ff758cd130313807fd71b4fbd26f27a872fe558d35f"
+    },
+    {
+      "path": "output/hall/transfer-round-20261107/lint.xml",
+      "bytes": 17965,
+      "sha256": "e28705e576859d7738ce5ffd8505f044319f30f64d01bb8cb719cf4ad5168bf1"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-transfer/instrumentation.txt",
+      "bytes": 9100,
+      "sha256": "009a9c8029c637fccb0d5509e8f2412d507c5be5ad8651942149629393052c31"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-transfer/2048-session-observations.json",
+      "bytes": 874,
+      "sha256": "95e989ba7d7f17837699b92e67a694f0f35fba5561c560e8d2a6d924328c6c10"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-transfer/botw-progress-reload-observations.json",
+      "bytes": 1939,
+      "sha256": "5887edda34b2811619f467e63e850cfd349481948efa3f064336167a67557d80"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-transfer/2048-audio-observation.json",
+      "bytes": 5505,
+      "sha256": "01dea108fe6e6e91d3307cbeeb6b23fe9ddd3fefe4ed3c833be4c84f4607ba37"
+    },
+    {
+      "path": ".gamedump/Hall/device-evidence/20261107-transfer/after-games/snapshot.json",
+      "bytes": 6258,
+      "sha256": "8ed3bdd497975ff421a5c6fc14eb80eaac7d2ed283b7b6b42123b61c9c4e839c"
+    }
+  ]
+}

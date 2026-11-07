@@ -1,0 +1,27 @@
+{
+  "source": "USB physical Android device",
+  "application_id": "org.nsa.hall.debug",
+  "captured_at": "2026-11-07T01:24:56.738463+00:00",
+  "synthetic": false,
+  "installed_apk_sha256": "e3b259216dbb9685b28040ff1108e586145cdd25f4693c018fb5806f714742da",
+  "source_sha256": "d42cbbadcffc4dc46057f89c5914b86877a0b5c04c2dc832b7b494142c5da9b9",
+  "artifacts": [
+    {
+      "name": "transfer-2048.gif",
+      "sha256": "202a4bc5d29506c11eefe0c8601cfbe9158094f66abf7cc49834c451fa629030",
+      "width": 640,
+      "height": 296,
+      "duration_seconds": "20.000000"
+    },
+    {
+      "name": "transfer-2048.mp4",
+      "sha256": "d6d28cbd17dd5feffaaba4013b22a6d6dfb61007e36f8b3a63f09cc4dc21bd41",
+      "width": 720,
+      "height": 332,
+      "duration_seconds": "20.060447"
+    }
+  ],
+  "transform": "resize and GIF palette encoding; no synthetic frames; MP4 has no audio track",
+  "start_seconds": 0.0,
+  "requested_duration_seconds": 20.0
+}

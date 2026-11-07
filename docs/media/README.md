@@ -1,6 +1,18 @@
 # Actual application media
 
-本轮已重新获得 USB 测试授权；[下载与安装修正](../hall/transfer-round-2026-11-07.md)的新素材必须单独记录精确 APK 与采集来源。下方旧素材身份保持不变，不因源码更新自动成为新版截图。
+New reviewed USB set / 新真机素材：source `720c785`, APK `e3b259216dbb9685b28040ff1108e586145cdd25f4693c018fb5806f714742da`. [Execution record](../hall/transfer-round-2026-11-07.md). No BotW frames or audio-quality pass are published.
+
+| New actual capture | Artifact | Provenance |
+|---|---|---|
+| Discovery / 发现 | [PNG](transfer-discovery.png) | [JSON](transfer-discovery.json) |
+| Completed v2 download / 下载历史 | [PNG](transfer-installed.png) | [JSON](transfer-installed.json) |
+| Fresh-process reloaded 2048 / 重读棋盘 | [PNG](transfer-reloaded.png) | [JSON](transfer-reloaded.json) |
+| Hall download excerpt, about 20 s / 大厅下载片段 | [GIF](transfer-hall.gif) · [MP4](transfer-hall.mp4) | [JSON](transfer-hall.json) |
+| Native 2048 input and return excerpt, 20 s / 原生操作与返回 | [GIF](transfer-2048.gif) · [MP4](transfer-2048.mp4) | [JSON](transfer-2048.json) |
+
+The new set adds 3 screenshots and 2 GIF/MP4 pairs. All clips are silent, with raw source hash, conversion and exact APK identity. The historical 23 artifacts below remain unchanged and belong to their original candidates. / 新增三张截图与两组 GIF/MP4；视频无音轨。后方 23 份旧素材保持原有身份。
+
+以下历史素材说明保留其制作时点。本轮已重新获得 USB 测试授权；[下载与安装修正](../hall/transfer-round-2026-11-07.md)的新素材必须单独记录精确 APK 与采集来源。下方旧素材身份保持不变，不因源码更新自动成为新版截图。
 
 The [download/install documentation review](../hall/transfer-install-review-2026-11-07.md) produced no new APK or captures. Existing media does not demonstrate its unimplemented queue/recovery corrections. / 下载与安装文档核对没有新 APK 或素材，现有实录不能证明后续待实施修正。
 

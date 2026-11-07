@@ -1,6 +1,6 @@
 # Local storage / 本地存储
 
-本轮源码增加恢复后整包归档清理及终态历史清理，但未执行前不预扣或宣称释放空间。实际手机清理前后空间与 APK 身份将记录到[下载与安装修正轮次](transfer-round-2026-11-07.md)；电脑保留目录用途不变。
+本轮新版已实测：最终下载临时目录为 **4 KiB**，旧完成任务的 BotW 整包归档已清理；手机 /data 剩余 **43,911,135,232 字节（40.90 GiB）**。这是该次状态观察，物理断电边界仍未验收。电脑原始输入、服务不可变对象及原始测试证据按下表用途保留。
 
 Observed on 2026-11-07. All paths below are relative to this checkout under `游戏移植/`. Values are **logical file sizes**, rounded to GiB; hard links and filesystem allocation can make physical disk use differ. They are measurements of this local development profile, not a minimum download size for every user.
 
@@ -18,9 +18,9 @@ Observed on 2026-11-07. All paths below are relative to this checkout under `游
 
 The recovery-round measurement found **496,564,584,448 free bytes** on the development drive (about 462.46 GiB). This is an observation at measurement time, not reserved capacity or the minimum installation requirement. The five retained directories above 1 GiB have their purposes listed above; no original game inputs, progress or published service objects were removed. / 本轮测得开发盘剩余约 462.46 GiB；五个超过 1 GiB 的目录按表中用途保留，未删除原游戏输入、进度或服务已发布对象。
 
-The private BotW archive is **15,354,465,247 bytes** (14.300 GiB), with **41,086 files** and **15,346,165,157 unpacked bytes** (14.292 GiB). The initial phone preparation estimate is **32,848,114,052 additional bytes** (30.592 GiB), including the 2 GiB safety reserve. It excludes the already installed APK, existing saves and a retained previous release during an update. The normal worker attempts to remove the download after installation, but [PKG-06-F03](transfer-install-review-2026-11-07.md) identifies a recovery/cleanup gap: a completed task can retain the entire archive indefinitely. Do not assume every completed path has reclaimed those bytes. Directory allocation and generated metadata add overhead; the installed resource directory was observed at approximately 14.39 GiB.
+The private BotW archive is **15,354,465,247 bytes** (14.300 GiB), with **41,086 files** and **15,346,165,157 unpacked bytes** (14.292 GiB). The initial phone preparation estimate is **32,848,114,052 additional bytes** (30.592 GiB), including the 2 GiB safety reserve. It excludes the already installed APK, existing saves and a retained previous release during an update. The historical [PKG-06-F03](transfer-install-review-2026-11-07.md) gap could retain completed archives. The [correction round](transfer-round-2026-11-07.md) implements journal-backed/legacy cleanup and observed a 4 KiB transfer directory; physical power-loss coverage remains open. Directory allocation and generated metadata add overhead; the installed resource directory was observed at approximately 14.39 GiB.
 
-本机《旷野之息》首次准备需约 **30.592 GiB 新增可用空间**，资源目录实测约 14.39 GiB。归档清理是预期行为；当前恢复路径可能遗留约 **14.30 GiB** 的完整归档，多次受影响安装可能累积。本轮仅源码确认该路径，没有重新测量手机或认定手机已经发生此残留。更新保留旧版本、存档备份和图形缓存时，还需另行计算。电脑同时保留打包归档和服务对象副本，各占约 14.30 GiB。
+本机《旷野之息》首次准备需约 **30.592 GiB 新增可用空间**，资源目录实测约 14.39 GiB。归档清理是预期行为；旧版本恢复路径可能遗留约 **14.30 GiB** 完整归档；本轮已修正并实测当前临时目录仅 4 KiB，不代表全部掉电边界通过。更新保留旧版本、存档备份和图形缓存时，还需另行计算。电脑同时保留打包归档和服务对象副本，各占约 14.30 GiB。
 
 General additional-space rule: `max(archive - downloaded, 0) + max(expanded - installed, 0) + working + max(2 GiB, ceil(expanded × 5%))`. The client rechecks remaining space while downloading and extracting. The APK alone is not the total footprint. The default open-source 2048 profile is much smaller and does not require BotW resources.
 

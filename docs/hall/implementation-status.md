@@ -1,5 +1,9 @@
 # Implementation and verification record
 
+[下载与安装修正轮次](transfer-round-2026-11-07.md)已覆盖安装并完成 USB 实测：源码 `720c785`、APK `e3b259…742da`，26 项 JVM、13 项 Android 测试通过；2048 完成真实下载与存读档，《旷野之息》完成移动、新写档及新进程重读。音频断线和 BotW 直接返回键仍有已确认缺陷，完整 G0、长期性能和正式发行继续开放。
+
+Current evidence / 当前证据：[机器记录](verification/2026-11-07-transfer-round.json) · [新素材](../media/README.md)。覆盖升级后原 19 个玩家文件保持一致；实际游玩后的变化单独记录。下载临时目录最终为 4 KiB。BotW 正常退出需通过恢复后的 Java 暂停菜单，不能算直接返回键通过。以下旧表格和旧 APK 结果为历史记录。
+
 新增[下载与安装整批修正](transfer-round-2026-11-07.md)，落实队列接续、取消保护、资源身份校验、安装恢复及归档清理。用户已重新授权 USB 测试；本轮整批代码及必要用例完成后统一执行，新构建、真机和素材结果单独记录，不沿用历史 APK 的通过结果。
 
 Latest documentation-only review / 最新文档轮次：[下载与安装核对](transfer-install-review-2026-11-07.md)追踪 `189169f` 的 DL-06、DL-07、PKG-06 十二条细则，并分别保留代码与规范的独立反证。[机器记录](verification/2026-11-07-transfer-install-review.json)固定结论、证据及未检查范围；源码缺口尚待下一整批修正，本轮无新程序测试、APK 或手机操作。后续状态不改写下方各自旧轮次的结果。

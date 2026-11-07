@@ -1,6 +1,15 @@
 # NsA · Android 统一游戏大厅
 
-新增[下载与安装整批修正](docs/hall/transfer-round-2026-11-07.md)，落实队列接续、取消保护、资源身份校验、安装恢复及归档清理。用户已重新授权 USB 测试；本轮整批代码及必要用例完成后统一执行，新构建、真机和素材结果单独记录，不沿用历史 APK 的通过结果。
+[下载与安装修正轮次](docs/hall/transfer-round-2026-11-07.md)已覆盖安装并完成 USB 实测：源码 `720c785`、APK `e3b259…742da`，26 项 JVM、13 项 Android 测试通过；2048 完成真实下载与存读档，《旷野之息》完成移动、新写档及新进程重读。音频断线和 BotW 直接返回键仍有已确认缺陷，完整 G0、长期性能和正式发行继续开放。
+
+新版 `720c785` 真机素材，片段无音轨；后方旧图库保留历史身份。
+
+<table><tr><td><img src="docs/media/transfer-discovery.png" width="220" alt="USB discovery"></td><td><img src="docs/media/transfer-installed.png" width="220" alt="USB download history"></td></tr></table>
+
+![USB hall download](docs/media/transfer-hall.gif)
+
+[Hall MP4](docs/media/transfer-hall.mp4) · [2048 GIF](docs/media/transfer-2048.gif) · [2048 MP4](docs/media/transfer-2048.mp4) · [Reloaded board](docs/media/transfer-reloaded.png) · [Provenance](docs/media/README.md)
+
 
 新增[恢复与存档修正轮次](docs/hall/recovery-round-2026-11-07.md)，整批落实策略防回退、进程归属恢复与存档交换保护。新源码的构建、测试和安装状态单独记录，不沿用下方历史 APK 和素材的验收结果；继续保留其他项目的手机测试。
 
@@ -12,7 +21,7 @@
 
 基于 [nx2android](https://github.com/shirai91/nx2android) 与 [nxnative](https://github.com/seedds/nxnative) 开发。新增 Kotlin/Compose 大厅、独立游戏进程、内容目录与发布服务，沿用已定稿的 D「曜黑极简」设计。源码更新目标是 [wikigsroom/NsA-core](https://github.com/wikigsroom/NsA-core)。
 
-**当前已构建新的恢复修正候选，尚未安装到手机。** 手机保留源码 `3c096c8` 对应的内部版；该版两项真机测试和《旷野之息》导入存档后的复苏神庙场景，继续作为历史证据。更早的 APK 完成过大厅及 2048 短程操作、写档和重读。新候选的恢复行为、游戏新进度保存重读及持续游玩仍待真机验收。[修正轮次记录](docs/hall/recovery-round-2026-11-07.md)列明新构建、资源更新与集中检查；[实现与验证记录](docs/hall/implementation-status.md)保留此前结果。
+**当前状态：新版 APK 已在真机运行。** 具体结果与两个运行缺陷见[本轮执行记录](docs/hall/transfer-round-2026-11-07.md)。下方旧素材继续保留各自原 APK 身份。
 
 [历史定向源码核对](docs/hall/source-review.md)保留了本轮策略、进程重建与存档交换修正的原始问题和证据。其固定记录不改写；已修改源码、电脑端测试通过仍不等于真机验收。本次定向检查覆盖三个需求，原有代码映射、截图与录像均不代表全部验收通过。
 

@@ -1,6 +1,15 @@
 # NsA · Unified Android game hall
 
-The complete [download/install correction batch](docs/hall/transfer-round-2026-11-07.md) implements the reviewed queue, cancellation, HTTP identity and install-recovery/cleanup boundaries. The user has reauthorized USB testing. Source and necessary test cases are prepared before consolidated execution; new build/device results are recorded separately and do not inherit historical APK passes.
+The [download/install correction round](docs/hall/transfer-round-2026-11-07.md) is now installed and tested on the USB phone: source `720c785`, APK `e3b259…742da`, 26 JVM tests and 13 Android tests passed. Real 2048 download/input/save/reload and BotW movement/new-save/fresh-process reload were observed. Audio disconnection and direct Android Back in BotW remain confirmed defects; full G0, sustained performance and production release remain open.
+
+New `720c785` USB captures; clips are silent. The gallery below is historical.
+
+<table><tr><td><img src="docs/media/transfer-discovery.png" width="220" alt="USB discovery"></td><td><img src="docs/media/transfer-installed.png" width="220" alt="USB download history"></td></tr></table>
+
+![USB hall download](docs/media/transfer-hall.gif)
+
+[Hall MP4](docs/media/transfer-hall.mp4) · [2048 GIF](docs/media/transfer-2048.gif) · [2048 MP4](docs/media/transfer-2048.mp4) · [Reloaded board](docs/media/transfer-reloaded.png) · [Provenance](docs/media/README.md)
+
 
 The new [recovery correction round](docs/hall/recovery-round-2026-11-07.md) implements the audited policy, process ownership and save-exchange changes. Its checks and installation status are tracked separately from the historical APK/media below. The other project's phone test is preserved.
 
@@ -10,14 +19,14 @@ The new [recovery correction round](docs/hall/recovery-round-2026-11-07.md) impl
 
 This fork builds a unified Kotlin/Compose Android hall on [nx2android](https://github.com/shirai91/nx2android) and [nxnative](https://github.com/seedds/nxnative). The finalized D Obsidian design uses a dark portrait interface with Discovery, Library, Downloads and Settings. A separate operations site handles content rights, builds, uploads, independent review, publication, compatibility evidence and audit.
 
-**Current state: a new recovery candidate is built for computer-side verification; it is not installed on the phone.** The phone's retained internal build is source `3c096c8`, whose two instrumentation tests and BotW imported Shrine of Resurrection scene remain historical evidence. A preceding APK completed the short hall/2048 input-save-reload sequence. New progress save/reload, sustained gameplay and the new recovery behavior still require physical-device acceptance. The [correction-round record](docs/hall/recovery-round-2026-11-07.md) identifies the new candidate, content rollout and consolidated checks; the [implementation record](docs/hall/implementation-status.md) retains the earlier results.
+**Current state: the new APK is running on the physical phone.** The [current execution record](docs/hall/transfer-round-2026-11-07.md) identifies its actual results and two remaining runtime defects. Earlier gallery artifacts retain their original APK identities.
 
 The [historical targeted source review](docs/hall/source-review.md) records the policy, reconstruction and save-exchange defects that led to this correction batch. Its pinned evidence remains unchanged; source changes and host passes do not close the physical-device acceptance gates. It covers three requirements; the broader source map and existing media are not full acceptance.
 
 | Layer | Concrete behavior |
 |---|---|
 | Android hall | Cached catalogue, search/filter/detail, installed library, queue, storage, saves, settings, feedback and app updates |
-| Transfer/install | Ordinary transfers are serialized; 8 MiB checked ranges, streaming ZIP64 extraction and installation journals exist. Queue/cancellation and journal-recovery gaps remain in the linked review. |
+| Transfer/install | Persisted per-game ownership, FIFO, checked 8 MiB ranges, ZIP64 extraction and journal-backed publication/cleanup; isolated fault tests passed, physical power-loss cases remain open. |
 | Runtime | Explicit compiled slots, unique SONAMEs, ABI identity binding, one fresh `:game` process per session, actual save events |
 | Services | FastAPI, verification worker, PostgreSQL/private S3 production providers, explicit SQLite/private-directory development providers |
 | Operations | OIDC/PKCE, server roles, idempotency, revision checks, independent reviewers and audit |

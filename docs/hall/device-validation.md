@@ -1,6 +1,6 @@
 # Physical-device validation / 真机验收操作
 
-USB 已重新获用户授权。当前执行轮次见[下载与安装修正](transfer-round-2026-11-07.md)：整批实现及必要用例完成后统一构建，再核对手机实际占用、覆盖安装并执行隔离测试和真实流程。下方“等待手机”的文字保留此前暂停背景；最新执行结论以修正轮次为准。
+[下载与安装修正轮次](transfer-round-2026-11-07.md)已覆盖安装并完成 USB 实测：源码 `720c785`、APK `e3b259…742da`，26 项 JVM、13 项 Android 测试通过；2048 完成真实下载与存读档，《旷野之息》完成移动、新写档及新进程重读。音频断线和 BotW 直接返回键仍有已确认缺陷，完整 G0、长期性能和正式发行继续开放。 后续先整批修正声音与返回键，再对新 APK 统一执行受影响流程。下方此前等待手机的文字属于历史暂停背景。
 
 [Executed results / 已执行结果](implementation-status.md) · [English guide](README.md) · [中文手册](README.zh-CN.md) · [Normative gates / 技术门槛](../engineering/08-quality-governance.md)
 

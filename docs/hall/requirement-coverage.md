@@ -6,7 +6,7 @@ Baseline v2.0: 90 requirement identities, 360 detailed rules. This is a source-n
 
 Read [current execution evidence](implementation-status.md), [the 360 normative rules](../product/产品需求细则.md) and [the engineering constraints](../engineering/README.md) together. Each P0 row remains subject to its complete rules and linked acceptance cases. P1 is deferred unless separately scoped. / 每项 P0 仍须满足完整细则和关联案例；P1 未默认进入首版。
 
-The [historical source review](source-review.md) follows APP-05, APP-08 and SAVE-04; its [correction batch](recovery-round-2026-11-07.md) has separate host checks and pending device acceptance. The later [download/install review](transfer-install-review-2026-11-07.md) checks DL-06, DL-07 and PKG-06 at source `189169f`, with pending corrections. These are six distinct requirement identities reviewed at different snapshots; this table is not a current audit of all 90 requirements or of all later changes. / 前三项已有整批修正和电脑检查，后三项新核对的缺口尚待整批开发；不同快照的六项核对不能合成全部需求或当前完整源码已验收。
+The [historical source review](source-review.md) follows APP-05, APP-08 and SAVE-04; its [correction batch](recovery-round-2026-11-07.md) has separate host checks and pending device acceptance. The later [download/install review](transfer-install-review-2026-11-07.md) checks DL-06, DL-07 and PKG-06 at source `189169f`, with corrections and bounded device results now recorded in the transfer round. These are six distinct requirement identities reviewed at different snapshots; this table is not a current audit of all 90 requirements or of all later changes. / 前三项已有整批修正和电脑检查，后三项已完成整批开发、电脑检查及限定真机用例；不同快照的六项核对不能合成全部需求或当前完整源码已验收。
 
 | Requirement / 需求 | Priority | Normative behavior / 规范行为 | Source entry / 代码入口 | Acceptance boundary / 验收边界 |
 |---|---|---|---|---|
